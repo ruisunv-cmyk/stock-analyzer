@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>OUR JOURNEY MAP | Together & Apart</title>
+    <title>OUR JOURNEY MAP | Rui & Kalang</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;400;500;600;700&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
@@ -22,7 +22,7 @@
             background: rgba(254, 252, 248, 0.95);
             backdrop-filter: blur(10px);
             border-bottom: 1px solid #e8e4db;
-            padding: 20px 40px;
+            padding: 16px 40px;
             position: sticky;
             top: 0;
             z-index: 100;
@@ -38,22 +38,12 @@
         }
         .logo {
             font-family: 'Cormorant Garamond', serif;
-            text-align: center;
-        }
-        .logo-main {
             font-size: 28px;
             font-weight: 500;
             letter-spacing: 2px;
             color: #8b5e3c;
         }
-        .logo-main i { margin-right: 8px; color: #c9a88b; }
-        .logo-sub {
-            font-family: 'Inter', sans-serif;
-            font-size: 10px;
-            letter-spacing: 2px;
-            color: #9e9b92;
-            margin-top: 2px;
-        }
+        .logo i { margin-right: 8px; color: #c9a88b; }
         .nav-tabs {
             display: flex;
             gap: 4px;
@@ -138,6 +128,10 @@
         }
         .stat-card:hover { transform: translateY(-3px); border-bottom-color: #8b5e3c; }
         .stat-icon { font-size: 28px; margin-bottom: 8px; }
+        .stat-icon.green { color: #4a9b6e; }
+        .stat-icon.rui { color: #5b8cc9; }
+        .stat-icon.kalang { color: #e8a34b; }
+        .stat-icon.gold { color: #d4af37; }
         .stat-value { font-size: 32px; font-weight: 600; font-family: 'Cormorant Garamond', serif; }
         .stat-label { font-size: 10px; text-transform: uppercase; letter-spacing: 1px; color: #9e9b92; margin-top: 6px; }
         .card {
@@ -210,9 +204,9 @@
             display: inline-block;
             margin-right: 10px;
         }
-        .badge-together { background: #ef4444; }
-        .badge-rui { background: #eab308; }
-        .badge-kalang { background: #3b82f6; }
+        .badge-together { background: #4a9b6e; }
+        .badge-rui { background: #5b8cc9; }
+        .badge-kalang { background: #e8a34b; }
         .badge-dream { background: #d4af37; }
         .modal {
             display: none;
@@ -287,22 +281,12 @@
         @media (max-width: 768px) { .container { padding: 16px; } .search-overlay { min-width: 220px; } }
         .memory-text { font-size: 12px; color: #6b6a64; margin-top: 4px; }
         hr { margin: 15px 0; border: none; border-top: 1px solid #e8e4db; }
-        .custom-marker {
-            background: transparent;
-            border: none;
-        }
-        .pin-shadow {
-            filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3));
-        }
     </style>
 </head>
 <body>
 <div class="header">
     <div class="header-content">
-        <div class="logo">
-            <div class="logo-main"><i class="fas fa-heart"></i> OUR JOURNEY MAP</div>
-            <div class="logo-sub">Together & Apart</div>
-        </div>
+        <div class="logo"><i class="fas fa-heart"></i> OUR JOURNEY MAP</div>
         <div class="nav-tabs">
             <button class="nav-tab active" data-page="map">🗺️ MAP</button>
             <button class="nav-tab" data-page="destinations">📍 DESTINATIONS</button>
@@ -322,10 +306,10 @@
             </div>
         </div>
         <div class="stats-grid">
-            <div class="stat-card" onclick="filterByType('together')"><div class="stat-icon">🔴</div><div class="stat-value" id="togetherCount">0</div><div class="stat-label">TOGETHER</div></div>
-            <div class="stat-card" onclick="filterByType('rui')"><div class="stat-icon">🟡</div><div class="stat-value" id="ruiCount">0</div><div class="stat-label">RUI</div></div>
-            <div class="stat-card" onclick="filterByType('kalang')"><div class="stat-icon">🔵</div><div class="stat-value" id="kalangCount">0</div><div class="stat-label">KALANG</div></div>
-            <div class="stat-card" onclick="filterByType('dream')"><div class="stat-icon">✨</div><div class="stat-value" id="dreamCount">0</div><div class="stat-label">DREAM</div></div>
+            <div class="stat-card" onclick="filterByType('together')"><div class="stat-icon green">❤️</div><div class="stat-value" id="togetherCount">0</div><div class="stat-label">TOGETHER</div></div>
+            <div class="stat-card" onclick="filterByType('rui')"><div class="stat-icon rui">👩</div><div class="stat-value" id="ruiCount">0</div><div class="stat-label">RUI</div></div>
+            <div class="stat-card" onclick="filterByType('kalang')"><div class="stat-icon kalang">👨</div><div class="stat-value" id="kalangCount">0</div><div class="stat-label">KALANG</div></div>
+            <div class="stat-card" onclick="filterByType('dream')"><div class="stat-icon gold">✨</div><div class="stat-value" id="dreamCount">0</div><div class="stat-label">DREAM</div></div>
         </div>
         <div class="card">
             <div class="card-header"><div class="card-title"><i class="fas fa-map-pin"></i> RECENT PLACES</div><button class="btn-primary" onclick="openAddModal()"><i class="fas fa-plus"></i> ADD PLACE</button></div>
@@ -338,9 +322,9 @@
             <div class="card-header"><div class="card-title"><i class="fas fa-flag-checkered"></i> ALL DESTINATIONS</div></div>
             <div class="filter-buttons" id="destinationFilters">
                 <button class="filter-btn active" data-filter="all">ALL</button>
-                <button class="filter-btn" data-filter="together">TOGETHER 🔴</button>
-                <button class="filter-btn" data-filter="rui">RUI 🟡</button>
-                <button class="filter-btn" data-filter="kalang">KALANG 🔵</button>
+                <button class="filter-btn" data-filter="together">TOGETHER ❤️</button>
+                <button class="filter-btn" data-filter="rui">RUI 👩</button>
+                <button class="filter-btn" data-filter="kalang">KALANG 👨</button>
                 <button class="filter-btn" data-filter="dream">DREAM ✨</button>
             </div>
             <div id="allDestinationsList"></div>
@@ -368,12 +352,12 @@
         <h3 id="modalTitle" style="margin-bottom: 20px; font-family: 'Cormorant Garamond', serif; font-size: 24px;">Add Destination</h3>
         <div class="form-group"><label>📍 DESTINATION</label><input type="text" id="destName" placeholder="e.g., Kyoto, Japan"></div>
         <div class="form-group"><label>🏷️ WHO VISITED?</label><select id="destType">
-            <option value="together">Together 🔴</option>
-            <option value="rui">Rui 🟡</option>
-            <option value="kalang">Kalang 🔵</option>
+            <option value="together">Together ❤️</option>
+            <option value="rui">Rui only 👩</option>
+            <option value="kalang">Kalang only 👨</option>
             <option value="dream">Dream together ✨</option>
         </select></div>
-        <div class="form-group"><label>💭 MEMORY / NOTE</label><textarea id="destMemory" rows="2" placeholder="What made this place special? (optional)"></textarea></div>
+        <div class="form-group"><label>💭 MEMORY / NOTE</label><textarea id="destMemory" rows="2" placeholder="What made this place special?"></textarea></div>
         <div class="form-group"><label>🖼️ PHOTO URL (optional)</label><input type="text" id="destPhoto" placeholder="https://..."></div>
         <div id="photoPreview" class="photo-preview"></div>
         <hr>
@@ -398,44 +382,6 @@
     let map, markers = [], nextId = 6;
     let chart;
     let currentFilter = 'all';
-
-    // ========== CUSTOM COLORED PINS ==========
-    function getCustomIcon(type) {
-        let pinColor = '';
-        let pinIcon = '';
-        
-        if (type === 'together') {
-            pinColor = '#ef4444'; // Red
-            pinIcon = '📍';
-        } else if (type === 'rui') {
-            pinColor = '#eab308'; // Yellow
-            pinIcon = '📍';
-        } else if (type === 'kalang') {
-            pinColor = '#3b82f6'; // Blue
-            pinIcon = '📍';
-        } else {
-            pinColor = '#d4af37'; // Gold for dreams
-            pinIcon = '⭐';
-        }
-        
-        // Create a custom SVG-like pin using HTML/CSS
-        const html = `
-            <div style="position: relative; width: 24px; height: 24px; cursor: pointer;">
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z" fill="${pinColor}" stroke="white" stroke-width="1.5"/>
-                    <circle cx="12" cy="9" r="2.5" fill="white"/>
-                </svg>
-                <div style="position: absolute; top: 2px; left: 6px; font-size: 10px;">${type === 'together' ? '❤️' : type === 'rui' ? '👧' : type === 'kalang' ? '👦' : '✨'}</div>
-            </div>
-        `;
-        
-        return L.divIcon({
-            className: 'custom-marker',
-            html: html,
-            iconSize: [24, 24],
-            popupAnchor: [0, -10]
-        });
-    }
 
     // ========== INIT MAP ==========
     function initMap() {
@@ -471,13 +417,7 @@
             
             map.flyTo([lat, lng], 12);
             
-            // Temporary marker
-            const tempIcon = L.divIcon({
-                className: 'custom-marker',
-                html: `<div style="position: relative; width: 24px; height: 24px;"><svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z" fill="#10b981" stroke="white" stroke-width="1.5"/><circle cx="12" cy="9" r="2.5" fill="white"/></svg><div style="position: absolute; top: 2px; left: 7px; font-size: 10px;">📍</div></div>`,
-                iconSize: [24, 24]
-            });
-            L.marker([lat, lng], { icon: tempIcon }).addTo(map)
+            L.marker([lat, lng]).addTo(map)
                 .bindPopup(`<b>${name}</b><br>Click + to add this place!`)
                 .openPopup();
             
@@ -496,25 +436,30 @@
     }
 
     // ========== MARKERS ==========
+    function getMarkerColor(type) {
+        return { together: '#4a9b6e', rui: '#5b8cc9', kalang: '#e8a34b', dream: '#d4af37' }[type] || '#9e9b92';
+    }
+
     function updateMarkers() {
         markers.forEach(m => map.removeLayer(m));
         markers = [];
         
         destinations.forEach(d => {
             if (d.lat && d.lng && d.type !== 'dream') {
-                const icon = getCustomIcon(d.type);
-                const marker = L.marker([d.lat, d.lng], { icon: icon }).addTo(map);
+                const marker = L.marker([d.lat, d.lng], {
+                    icon: L.divIcon({
+                        className: 'custom-marker',
+                        html: `<div style="background: ${getMarkerColor(d.type)}; width: 12px; height: 12px; border-radius: 50%; border: 2px solid white; box-shadow: 0 1px 4px rgba(0,0,0,0.3);"></div>`,
+                        iconSize: [12, 12]
+                    })
+                }).addTo(map);
                 
-                let whoText = d.type === 'together' ? '🔴 Together' : d.type === 'rui' ? '🟡 Rui' : '🔵 Kalang';
-                let emoji = d.type === 'together' ? '❤️' : d.type === 'rui' ? '👧' : '👦';
-                
+                let whoText = d.type === 'together' ? '❤️ Together' : d.type === 'rui' ? '👩 Rui' : '👨 Kalang';
                 marker.bindPopup(`
-                    <div style="min-width: 150px;">
-                        <b>${d.name}</b><br>
-                        ${emoji} ${whoText}<br>
-                        ${d.memory ? `<small>${d.memory.substring(0, 80)}</small><br>` : ''}
-                        <button onclick="openEditModal(${d.id})" style="margin-top:8px; padding:4px 12px; background:#8b5e3c; color:white; border:none; border-radius:20px; cursor:pointer;">✏️ EDIT</button>
-                    </div>
+                    <b>${d.name}</b><br>
+                    ${whoText}<br>
+                    <small>${d.memory?.substring(0, 80) || ''}</small><br>
+                    <button onclick="openEditModal(${d.id})" style="margin-top:6px; padding:4px 12px; background:#8b5e3c; color:white; border:none; border-radius:20px; cursor:pointer;">✏️ EDIT</button>
                 `);
                 markers.push(marker);
             }
@@ -534,11 +479,10 @@
         const container = document.getElementById('featuredList');
         if (recent.length === 0) { container.innerHTML = '<p style="text-align:center; padding:30px;">No places yet. Add your first adventure!</p>'; return; }
         container.innerHTML = recent.map(d => {
-            let typeLabel = d.type === 'together' ? '🔴 Together' : d.type === 'rui' ? '🟡 Rui' : '🔵 Kalang';
-            const memoryHtml = d.memory && d.memory.trim() ? `<div class="memory-text">${d.memory.substring(0, 60)}</div>` : '';
+            let typeLabel = d.type === 'together' ? 'Together' : d.type === 'rui' ? 'Rui' : 'Kalang';
             return `
             <div class="destination-item" onclick="openEditModal(${d.id})">
-                <div><span class="destination-badge badge-${d.type}"></span><strong>${d.name}</strong><div class="memory-text" style="font-size:11px; color:#9e9b92; margin-top:2px;">${typeLabel}</div>${memoryHtml}</div>
+                <div><span class="destination-badge badge-${d.type}"></span><strong>${d.name}</strong><div class="memory-text">${typeLabel} · ${d.memory?.substring(0, 60) || 'No memory yet'}</div></div>
                 <div><i class="fas fa-chevron-right" style="color:#c9a88b"></i></div>
             </div>
         `}).join('');
@@ -549,11 +493,10 @@
         const container = document.getElementById('allDestinationsList');
         if (filtered.length === 0) { container.innerHTML = '<p style="text-align:center; padding:30px;">No destinations found.</p>'; return; }
         container.innerHTML = filtered.map(d => {
-            let typeLabel = d.type === 'together' ? '🔴 Together' : d.type === 'rui' ? '🟡 Rui' : d.type === 'kalang' ? '🔵 Kalang' : '✨ Dream';
-            const memoryHtml = d.memory && d.memory.trim() ? `<div class="memory-text">${d.memory.substring(0, 50)}</div>` : '';
+            let typeLabel = d.type === 'together' ? 'Together' : d.type === 'rui' ? 'Rui' : d.type === 'kalang' ? 'Kalang' : 'Dream';
             return `
             <div class="destination-item" onclick="openEditModal(${d.id})">
-                <div><span class="destination-badge badge-${d.type}"></span><strong>${d.name}</strong><div class="memory-text" style="font-size:11px; color:#9e9b92; margin-top:2px;">${typeLabel}</div>${memoryHtml}</div>
+                <div><span class="destination-badge badge-${d.type}"></span><strong>${d.name}</strong><div class="memory-text">${typeLabel} · ${d.memory?.substring(0, 50) || 'No memory yet'}</div></div>
                 <div><i class="fas fa-edit" style="color:#c9a88b"></i></div>
             </div>
         `}).join('');
@@ -563,14 +506,12 @@
         const dreams = destinations.filter(d => d.type === 'dream');
         const container = document.getElementById('bucketListContainer');
         if (dreams.length === 0) { container.innerHTML = '<p style="text-align:center; padding:30px;">No dream destinations yet. Add your first! ✨</p>'; return; }
-        container.innerHTML = dreams.map(d => {
-            const memoryHtml = d.memory && d.memory.trim() ? `<div class="memory-text">${d.memory.substring(0, 60)}</div>` : '';
-            return `
+        container.innerHTML = dreams.map(d => `
             <div class="destination-item" onclick="openEditModal(${d.id})">
-                <div><span class="destination-badge badge-dream"></span><strong>⭐ ${d.name}</strong>${memoryHtml}</div>
+                <div><span class="destination-badge badge-dream"></span><strong>⭐ ${d.name}</strong><div class="memory-text">${d.memory?.substring(0, 60) || 'Dream destination'}</div></div>
                 <div><i class="fas fa-star" style="color:#d4af37"></i></div>
             </div>
-        `}).join('');
+        `).join('');
     }
 
     function updateChart() {
@@ -579,7 +520,7 @@
         const ctx = document.getElementById('travelChart').getContext('2d');
         chart = new Chart(ctx, {
             type: 'doughnut',
-            data: { labels: ['Together 🔴', 'Rui 🟡', 'Kalang 🔵', 'Dream ✨'], datasets: [{ data: counts, backgroundColor: ['#ef4444', '#eab308', '#3b82f6', '#d4af37'], borderWidth: 0 }] },
+            data: { labels: ['Together ❤️', 'Rui 👩', 'Kalang 👨', 'Dream ✨'], datasets: [{ data: counts, backgroundColor: ['#4a9b6e', '#5b8cc9', '#e8a34b', '#d4af37'], borderWidth: 0 }] },
             options: { responsive: true, maintainAspectRatio: true, plugins: { legend: { position: 'bottom', labels: { font: { size: 11 } } } } }
         });
         document.getElementById('statDetails').innerHTML = `
