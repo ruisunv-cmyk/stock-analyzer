@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>WavStrike | Modern Stock Intelligence</title>
+    <title>WavStrike | Live Stock Intelligence</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
     <style>
@@ -22,11 +22,7 @@
             top: 0;
             z-index: 100;
         }
-        .container {
-            max-width: 1400px;
-            margin: 0 auto;
-            padding: 0 24px;
-        }
+        .container { max-width: 1400px; margin: 0 auto; padding: 0 24px; }
         .navbar {
             display: flex;
             justify-content: space-between;
@@ -41,27 +37,17 @@
             font-weight: 600;
             letter-spacing: 2px;
             color: #3a5a3a;
-            text-decoration: none;
         }
-        .nav-links {
-            display: flex;
-            gap: 32px;
-            align-items: center;
-            flex-wrap: wrap;
-        }
+        .nav-links { display: flex; gap: 32px; align-items: center; flex-wrap: wrap; }
         .nav-links a {
             text-decoration: none;
             font-size: 14px;
             font-weight: 400;
             color: #4a4a4a;
-            transition: all 0.2s;
             cursor: pointer;
             padding: 6px 0;
         }
-        .nav-links a:hover, .nav-links a.active {
-            color: #5a7a5a;
-            border-bottom: 1px solid #8aa87a;
-        }
+        .nav-links a:hover, .nav-links a.active { color: #5a7a5a; border-bottom: 1px solid #8aa87a; }
         .search-input {
             background: rgba(255, 255, 245, 0.9);
             border: 1px solid #e0dbc8;
@@ -69,61 +55,23 @@
             padding: 10px 20px;
             width: 220px;
             font-size: 13px;
-            font-family: 'Inter', sans-serif;
         }
-        .search-input:focus {
-            outline: none;
-            border-color: #8aa87a;
-            background: white;
-        }
+        .search-input:focus { outline: none; border-color: #8aa87a; background: white; }
         .card {
             background: rgba(255, 253, 245, 0.8);
             backdrop-filter: blur(4px);
             border-radius: 24px;
             padding: 20px;
             border: 1px solid rgba(168, 188, 144, 0.25);
-            transition: all 0.25s;
         }
-        .card:hover {
-            border-color: rgba(138, 168, 122, 0.4);
-            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.04);
-        }
-        .market-grid {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 16px;
-            margin-bottom: 28px;
-            margin-top: 28px;
-        }
-        .market-card {
-            text-align: center;
-            padding: 18px 12px;
-        }
-        .market-symbol {
-            font-size: 13px;
-            font-weight: 500;
-            color: #8a8a7a;
-            letter-spacing: 0.5px;
-            margin-bottom: 8px;
-        }
-        .market-price {
-            font-size: 22px;
-            font-weight: 500;
-            color: #2c3e2c;
-            margin-bottom: 6px;
-        }
-        .market-change {
-            font-size: 13px;
-            font-weight: 500;
-        }
+        .market-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin: 28px 0; }
+        .market-card { text-align: center; padding: 18px 12px; }
+        .market-symbol { font-size: 13px; font-weight: 500; color: #8a8a7a; margin-bottom: 8px; }
+        .market-price { font-size: 22px; font-weight: 500; color: #2c3e2c; margin-bottom: 6px; }
+        .market-change { font-size: 13px; font-weight: 500; }
         .positive { color: #5f8b5f; }
         .negative { color: #c47a6a; }
-        .two-columns {
-            display: grid;
-            grid-template-columns: 1fr 1.2fr;
-            gap: 24px;
-            margin-bottom: 28px;
-        }
+        .two-columns { display: grid; grid-template-columns: 1fr 1.2fr; gap: 24px; margin-bottom: 28px; }
         .watchlist-item, .mover-row {
             display: flex;
             justify-content: space-between;
@@ -132,199 +80,52 @@
             border-bottom: 1px solid rgba(168, 188, 144, 0.2);
             cursor: pointer;
         }
-        .watchlist-symbol {
-            font-weight: 500;
-            color: #3a4a3a;
-        }
-        .watchlist-price {
-            font-weight: 500;
-        }
-        .add-symbol {
-            margin-top: 16px;
-            font-size: 13px;
-            color: #8aa87a;
-            cursor: pointer;
-            display: inline-block;
-        }
-        .subtitle {
-            font-size: 11px;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            color: #a0a090;
-            margin-bottom: 12px;
-        }
-        .chart-container {
-            background: rgba(245, 242, 235, 0.6);
-            border-radius: 20px;
-            padding: 20px;
-            text-align: center;
-        }
-        .chart-bars {
-            display: flex;
-            align-items: flex-end;
-            justify-content: center;
-            gap: 12px;
-            height: 180px;
-            margin: 20px 0;
-        }
-        .bar {
-            background: linear-gradient(180deg, #a8bc90 0%, #6a8a5a 100%);
-            width: 40px;
-            border-radius: 8px 8px 4px 4px;
-            transition: height 0.3s;
-        }
-        .detail-tabs {
-            display: flex;
-            gap: 8px;
-            border-bottom: 1px solid #e0dbc8;
-            margin-bottom: 24px;
-        }
+        .watchlist-symbol { font-weight: 500; color: #3a4a3a; }
+        .add-symbol { margin-top: 16px; font-size: 13px; color: #8aa87a; cursor: pointer; display: inline-block; }
+        .subtitle { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; color: #a0a090; margin-bottom: 12px; }
+        .chart-container { background: rgba(245, 242, 235, 0.6); border-radius: 20px; padding: 20px; text-align: center; }
+        .chart-bars { display: flex; align-items: flex-end; justify-content: center; gap: 12px; height: 180px; margin: 20px 0; }
+        .bar { background: linear-gradient(180deg, #a8bc90 0%, #6a8a5a 100%); width: 40px; border-radius: 8px 8px 4px 4px; }
+        .detail-tabs { display: flex; gap: 8px; border-bottom: 1px solid #e0dbc8; margin-bottom: 24px; }
         .detail-tab {
             padding: 10px 20px;
             font-size: 13px;
             font-weight: 500;
             color: #6a6a5a;
             cursor: pointer;
-            border: none;
             background: none;
-        }
-        .detail-tab.active {
-            color: #5a7a5a;
-            border-bottom: 2px solid #8aa87a;
-        }
-        .stats-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 12px;
-            margin-top: 12px;
-        }
-        .stat-item {
-            display: flex;
-            justify-content: space-between;
-            padding: 8px 0;
-            border-bottom: 1px solid rgba(168, 188, 144, 0.15);
-        }
-        .screener-layout {
-            display: grid;
-            grid-template-columns: 280px 1fr;
-            gap: 24px;
-            margin-top: 28px;
-        }
-        .filter-group {
-            margin-bottom: 24px;
-        }
-        .filter-label {
-            font-size: 12px;
-            font-weight: 600;
-            text-transform: uppercase;
-            margin-bottom: 12px;
-            color: #6a6a5a;
-        }
-        .filter-option {
-            margin-bottom: 8px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-        .screener-table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-        .screener-table th, .screener-table td {
-            padding: 12px 8px;
-            text-align: left;
-            border-bottom: 1px solid rgba(168, 188, 144, 0.2);
-            font-size: 13px;
-        }
-        .screener-table th {
-            font-weight: 600;
-            color: #6a6a5a;
-            font-size: 11px;
-            text-transform: uppercase;
-        }
-        .screener-table tbody tr {
-            cursor: pointer;
-        }
-        .screener-table tbody tr:hover {
-            background: rgba(138, 168, 122, 0.05);
-        }
-        .pagination {
-            display: flex;
-            justify-content: flex-end;
-            gap: 8px;
-            margin-top: 20px;
-        }
-        .page-btn {
-            padding: 6px 12px;
-            background: transparent;
-            border: 1px solid #e0dbc8;
-            border-radius: 20px;
-            cursor: pointer;
-            font-size: 12px;
-        }
-        .btn-primary {
-            background: #5a7a5a;
             border: none;
-            padding: 10px 20px;
-            border-radius: 40px;
-            color: white;
-            font-weight: 500;
-            font-size: 13px;
-            cursor: pointer;
         }
-        .btn-primary:hover {
-            background: #4a6a4a;
-        }
-        .btn-outline {
-            background: transparent;
-            border: 1px solid #c0bcac;
-            padding: 8px 16px;
-            border-radius: 40px;
-            cursor: pointer;
-            font-size: 12px;
-        }
-        .page {
-            display: none;
-        }
-        .page.active {
-            display: block;
-        }
-        .back-link {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            color: #8aa87a;
-            cursor: pointer;
-            font-size: 13px;
-            margin-bottom: 20px;
-            margin-top: 20px;
-        }
-        .footer-note {
-            text-align: center;
-            font-size: 11px;
-            color: #b0b0a0;
-            margin-top: 48px;
-            padding: 24px 0;
-            border-top: 1px solid #e0dbc8;
-        }
-        .detail-price {
-            font-size: 36px;
-            font-weight: 500;
-        }
-        .news-item {
-            padding: 12px 0;
-            border-bottom: 1px solid #e0dbc8;
-            cursor: pointer;
-        }
-        .news-item:hover {
-            background: rgba(138, 168, 122, 0.05);
-        }
-        @media (max-width: 900px) {
-            .market-grid { grid-template-columns: repeat(2, 1fr); }
-            .two-columns { grid-template-columns: 1fr; }
-            .screener-layout { grid-template-columns: 1fr; }
-        }
+        .detail-tab.active { color: #5a7a5a; border-bottom: 2px solid #8aa87a; }
+        .stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 12px; }
+        .stat-item { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid rgba(168, 188, 144, 0.15); }
+        .screener-layout { display: grid; grid-template-columns: 280px 1fr; gap: 24px; margin-top: 28px; }
+        .filter-group { margin-bottom: 24px; }
+        .filter-label { font-size: 12px; font-weight: 600; text-transform: uppercase; margin-bottom: 12px; color: #6a6a5a; }
+        .filter-option { margin-bottom: 8px; display: flex; align-items: center; gap: 8px; }
+        .screener-table { width: 100%; border-collapse: collapse; }
+        .screener-table th, .screener-table td { padding: 12px 8px; text-align: left; border-bottom: 1px solid rgba(168, 188, 144, 0.2); font-size: 13px; }
+        .screener-table th { font-weight: 600; color: #6a6a5a; font-size: 11px; text-transform: uppercase; }
+        .screener-table tbody tr { cursor: pointer; }
+        .screener-table tbody tr:hover { background: rgba(138, 168, 122, 0.05); }
+        .pagination { display: flex; justify-content: flex-end; gap: 8px; margin-top: 20px; }
+        .page-btn { padding: 6px 12px; background: transparent; border: 1px solid #e0dbc8; border-radius: 20px; cursor: pointer; font-size: 12px; }
+        .btn-primary { background: #5a7a5a; border: none; padding: 10px 20px; border-radius: 40px; color: white; font-weight: 500; font-size: 13px; cursor: pointer; }
+        .btn-primary:hover { background: #4a6a4a; }
+        .btn-outline { background: transparent; border: 1px solid #c0bcac; padding: 8px 16px; border-radius: 40px; cursor: pointer; font-size: 12px; }
+        .page { display: none; }
+        .page.active { display: block; }
+        .back-link { display: inline-flex; align-items: center; gap: 8px; color: #8aa87a; cursor: pointer; font-size: 13px; margin: 20px 0; }
+        .footer-note { text-align: center; font-size: 11px; color: #b0b0a0; margin-top: 48px; padding: 24px 0; border-top: 1px solid #e0dbc8; }
+        .detail-price { font-size: 36px; font-weight: 500; }
+        .news-item { padding: 12px 0; border-bottom: 1px solid #e0dbc8; cursor: pointer; }
+        .news-item:hover { background: rgba(138, 168, 122, 0.05); }
+        .api-bar { background: rgba(255, 255, 245, 0.9); border-radius: 40px; padding: 12px 20px; margin-bottom: 20px; display: flex; gap: 12px; align-items: center; flex-wrap: wrap; }
+        .api-bar input { flex: 1; min-width: 200px; }
+        .loading { text-align: center; padding: 40px; }
+        .spinner { border: 3px solid rgba(168, 188, 144, 0.3); border-top: 3px solid #5a7a5a; border-radius: 50%; width: 40px; height: 40px; animation: spin 1s linear infinite; margin: 0 auto; }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        @media (max-width: 900px) { .market-grid { grid-template-columns: repeat(2, 1fr); } .two-columns { grid-template-columns: 1fr; } .screener-layout { grid-template-columns: 1fr; } }
     </style>
 </head>
 <body>
@@ -343,68 +144,69 @@
 </div>
 
 <div class="container">
-    <!-- DASHBOARD PAGE -->
+    <!-- API Key Bar -->
+    <div class="api-bar">
+        <span style="font-weight:500;">🔑 Finnhub API Key</span>
+        <input type="password" id="apiKeyInput" placeholder="Paste your free key from finnhub.io">
+        <button class="btn-outline" id="saveApiKeyBtn">Save</button>
+        <button class="btn-outline" id="clearApiKeyBtn">Clear</button>
+        <small style="color:#8aa87a;">Get free key: <a href="https://finnhub.io/register" target="_blank">finnhub.io/register</a></small>
+    </div>
+
+    <!-- DASHBOARD -->
     <div id="dashboardPage" class="page active">
-        <div class="market-grid" id="marketIndices"></div>
+        <div class="market-grid" id="marketIndices"><div class="loading"><div class="spinner"></div></div></div>
         <div class="two-columns">
             <div class="card">
                 <div class="subtitle">MY WATCHLIST</div>
-                <div id="watchlistContainer"></div>
+                <div id="watchlistContainer">Loading...</div>
                 <div class="add-symbol" onclick="addToWatchlistPrompt()">+ Add symbol</div>
             </div>
             <div class="card">
                 <div class="subtitle">TOP MOVERS</div>
-                <div id="topMoversContainer"></div>
+                <div id="topMoversContainer">Loading...</div>
             </div>
         </div>
         <div class="card">
-            <div class="subtitle">CHART • <span id="chartSymbol">AAPL</span></div>
+            <div class="subtitle">MARKET CHART</div>
             <div class="chart-container">
-                <div class="chart-bars" id="chartBars"></div>
-                <div style="display: flex; justify-content: center; gap: 30px; font-size: 12px; flex-wrap: wrap;">
-                    <span>Open: $<span id="chartOpen">—</span></span>
-                    <span>High: $<span id="chartHigh">—</span></span>
-                    <span>Low: $<span id="chartLow">—</span></span>
-                    <span>Volume: <span id="chartVolume">—</span>M</span>
+                <div class="chart-bars" id="chartBars">
+                    <div class="bar" style="height:70px"></div>
+                    <div class="bar" style="height:90px"></div>
+                    <div class="bar" style="height:80px"></div>
+                    <div class="bar" style="height:100px"></div>
+                    <div class="bar" style="height:85px"></div>
+                    <div class="bar" style="height:75px"></div>
+                    <div class="bar" style="height:95px"></div>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- PROFILE PAGE -->
+    <!-- PROFILE -->
     <div id="profilePage" class="page">
         <div class="back-link" onclick="showPage('dashboard')">← Back to Dashboard</div>
         <div class="card">
-            <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; margin-bottom: 20px;">
-                <div>
-                    <h2 id="detailSymbol" style="font-weight: 500; font-size: 28px;">AAPL</h2>
-                    <p id="detailName" style="color: #6a6a5a;">Apple Inc.</p>
-                </div>
+            <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap;">
+                <div><h2 id="detailSymbol" style="font-size:28px;">AAPL</h2><p id="detailName" style="color:#6a6a5a;">Loading...</p></div>
                 <button class="btn-outline" id="watchlistDetailBtn" onclick="toggleWatchlistFromDetail()">☆ Add to Watchlist</button>
             </div>
             <div style="margin: 20px 0;">
                 <span class="detail-price" id="detailPrice">$—</span>
-                <span id="detailChange" style="margin-left: 12px; font-weight: 500;"></span>
-                <div style="margin-top: 8px; color: #8a8a7a;">After Hours: <span id="detailAfterHours">—</span></div>
+                <span id="detailChange" style="margin-left:12px;"></span>
             </div>
             <div class="detail-tabs">
                 <button class="detail-tab active" data-tab="stats">Key Stats</button>
                 <button class="detail-tab" data-tab="fundamentals">Fundamentals</button>
                 <button class="detail-tab" data-tab="news">News</button>
             </div>
-            <div id="statsTab" class="detail-tab-content active">
-                <div class="stats-grid" id="statsGrid"></div>
-            </div>
-            <div id="fundamentalsTab" class="detail-tab-content" style="display: none;">
-                <div class="stats-grid" id="fundamentalsGrid"></div>
-            </div>
-            <div id="newsTab" class="detail-tab-content" style="display: none;">
-                <div id="newsList"></div>
-            </div>
+            <div id="statsTab"><div class="stats-grid" id="statsGrid"></div></div>
+            <div id="fundamentalsTab" style="display:none;"><div class="stats-grid" id="fundamentalsGrid"></div></div>
+            <div id="newsTab" style="display:none;"><div id="newsList"></div></div>
         </div>
     </div>
 
-    <!-- SCREENER PAGE -->
+    <!-- SCREENER -->
     <div id="screenerPage" class="page">
         <div class="screener-layout">
             <div class="card">
@@ -413,251 +215,199 @@
                     <div class="filter-label">Market Cap</div>
                     <div class="filter-option"><input type="radio" name="cap" value="any" checked> Any</div>
                     <div class="filter-option"><input type="radio" name="cap" value="large"> Large (> $10B)</div>
-                    <div class="filter-option"><input type="radio" name="cap" value="mid"> Mid ($2B-$10B)</div>
-                    <div class="filter-option"><input type="radio" name="cap" value="small"> Small (< $2B)</div>
                 </div>
-                <div class="filter-group">
-                    <div class="filter-label">Sector</div>
-                    <div class="filter-option"><input type="checkbox" id="sectorTech" checked> Technology</div>
-                    <div class="filter-option"><input type="checkbox" id="sectorHealth"> Healthcare</div>
-                    <div class="filter-option"><input type="checkbox" id="sectorFin"> Financials</div>
-                    <div class="filter-option"><input type="checkbox" id="sectorConsumer"> Consumer Cyclical</div>
-                </div>
-                <div class="filter-group">
-                    <div class="filter-label">Dividend</div>
-                    <div class="filter-option"><input type="checkbox" id="dividendOnly"> Has dividend</div>
-                </div>
-                <button class="btn-primary" style="width:100%; margin-top: 12px;" onclick="runScreener()">Apply Filters</button>
-                <button class="btn-outline" style="width:100%; margin-top: 8px;" onclick="resetScreener()">Reset</button>
+                <button class="btn-primary" style="width:100%;" onclick="runScreener()">Apply Filters</button>
             </div>
             <div class="card">
-                <div style="display: flex; justify-content: space-between; margin-bottom: 16px;">
-                    <div class="subtitle">RESULTS</div>
-                    <button class="btn-outline" onclick="exportScreenerCSV()">Export CSV</button>
-                </div>
-                <div style="overflow-x: auto;">
-                    <table class="screener-table">
-                        <thead><tr><th>Symbol</th><th>Price</th><th>Change</th><th>Volume</th><th>Mkt Cap</th></tr></thead>
-                        <tbody id="screenerBody"></tbody>
-                    </table>
-                </div>
-                <div class="pagination" id="screenerPagination"></div>
+                <div class="subtitle">TOP STOCKS</div>
+                <table class="screener-table">
+                    <thead><tr><th>Symbol</th><th>Price</th><th>Change</th></tr></thead>
+                    <tbody id="screenerBody"></tbody>
+                </table>
             </div>
         </div>
     </div>
 
-    <div class="footer-note">WavStrike • intelligent market insight</div>
+    <div class="footer-note">WavStrike • Live data from Finnhub API</div>
 </div>
 
 <script>
-    // STOCK DATABASE
-    const stocksDB = {
-        'AAPL': { name: 'Apple Inc.', price: 185.42, change: 1.82, high: 186.23, low: 181.95, volume: 52.4, marketCap: 2890, pe: 28.4, eps: 6.16, div: 0.96, sector: 'Technology' },
-        'MSFT': { name: 'Microsoft Corp', price: 420.12, change: -0.50, high: 424.00, low: 418.00, volume: 22.1, marketCap: 3120, pe: 34.2, eps: 12.27, div: 3.00, sector: 'Technology' },
-        'NVDA': { name: 'NVIDIA Corp', price: 892.45, change: 5.20, high: 901.00, low: 877.00, volume: 89.3, marketCap: 2250, pe: 72.4, eps: 12.31, div: 0.16, sector: 'Technology' },
-        'GOOGL': { name: 'Alphabet Inc', price: 138.27, change: 0.90, high: 139.00, low: 137.00, volume: 18.7, marketCap: 1750, pe: 25.1, eps: 5.51, div: 0, sector: 'Technology' },
-        'AMZN': { name: 'Amazon.com', price: 178.93, change: -0.30, high: 180.50, low: 178.00, volume: 31.2, marketCap: 1860, pe: 52.3, eps: 3.42, div: 0, sector: 'Consumer Cyclical' },
-        'META': { name: 'Meta Platforms', price: 485.67, change: 2.10, high: 488.00, low: 479.00, volume: 15.8, marketCap: 1240, pe: 28.9, eps: 16.80, div: 0, sector: 'Technology' },
-        'TSLA': { name: 'Tesla Inc', price: 238.15, change: 2.90, high: 242.00, low: 233.00, volume: 67.4, marketCap: 758, pe: 48.2, eps: 4.94, div: 0, sector: 'Consumer Cyclical' },
-        'JPM': { name: 'JPMorgan Chase', price: 198.23, change: -0.15, high: 199.00, low: 197.00, volume: 8.9, marketCap: 572, pe: 12.1, eps: 16.38, div: 4.20, sector: 'Financials' },
-        'WMT': { name: 'Walmart Inc', price: 169.78, change: -0.22, high: 170.50, low: 168.00, volume: 6.1, marketCap: 460, pe: 28.1, eps: 6.04, div: 2.28, sector: 'Consumer Cyclical' },
-        'PFE': { name: 'Pfizer Inc', price: 28.45, change: -1.20, high: 28.90, low: 28.10, volume: 34.2, marketCap: 160, pe: 14.2, eps: 2.00, div: 1.64, sector: 'Healthcare' },
-        'INTC': { name: 'Intel Corp', price: 42.30, change: -2.10, high: 43.50, low: 41.80, volume: 45.1, marketCap: 178, pe: 32.1, eps: 1.32, div: 0.50, sector: 'Technology' },
-        'NIO': { name: 'NIO Inc', price: 5.42, change: 3.20, high: 5.60, low: 5.20, volume: 45.2, marketCap: 11, pe: -4.2, eps: -1.29, div: 0, sector: 'Consumer Cyclical' },
-        'AMD': { name: 'AMD Inc', price: 178.32, change: 3.80, high: 180.00, low: 175.00, volume: 38.4, marketCap: 288, pe: 62.3, eps: 2.86, div: 0, sector: 'Technology' }
+    let FINNHUB_API_KEY = localStorage.getItem('finnhub_api_key');
+    let watchlist = JSON.parse(localStorage.getItem('wavstrike_watchlist') || '["AAPL","MSFT","NVDA"]');
+    let currentSymbol = 'AAPL';
+    let stockCache = {};
+
+    // API setup
+    const apiInput = document.getElementById('apiKeyInput');
+    const saveBtn = document.getElementById('saveApiKeyBtn');
+    const clearBtn = document.getElementById('clearApiKeyBtn');
+    
+    if (FINNHUB_API_KEY) { apiInput.disabled = true; apiInput.value = '••••••••'; saveBtn.style.display = 'none'; }
+    else { clearBtn.style.display = 'none'; }
+    
+    saveBtn.onclick = () => {
+        const key = apiInput.value.trim();
+        if (key && key.length > 10) {
+            localStorage.setItem('finnhub_api_key', key);
+            FINNHUB_API_KEY = key;
+            apiInput.disabled = true; apiInput.value = '••••••••';
+            saveBtn.style.display = 'none'; clearBtn.style.display = 'inline-block';
+            alert('API Key saved!');
+            loadDashboard();
+        } else alert('Get free key from finnhub.io/register');
+    };
+    
+    clearBtn.onclick = () => {
+        localStorage.removeItem('finnhub_api_key');
+        FINNHUB_API_KEY = null;
+        apiInput.disabled = false; apiInput.value = '';
+        saveBtn.style.display = 'inline-block'; clearBtn.style.display = 'none';
+        alert('Cleared');
     };
 
-    const indices = [
-        { name: 'S&P 500', value: 4782.13, change: 0.85 },
-        { name: 'NASDAQ', value: 16742.39, change: 1.12 },
-        { name: 'DOW', value: 37689.54, change: -0.23 },
-        { name: 'RUSSELL', value: 2045.67, change: 0.45 }
-    ];
-
-    let watchlist = JSON.parse(localStorage.getItem('wavstrike_watchlist') || '["AAPL","MSFT","NVDA"]');
-    let currentDetailSymbol = 'AAPL';
-    let allStocks = Object.entries(stocksDB).map(([sym, s]) => ({ symbol: sym, ...s }));
-
-    // Helper functions
-    function renderIndices() {
-        const container = document.getElementById('marketIndices');
-        if (!container) return;
-        container.innerHTML = indices.map(idx => `
-            <div class="card market-card">
-                <div class="market-symbol">${idx.name}</div>
-                <div class="market-price">${idx.value.toFixed(2)}</div>
-                <div class="market-change ${idx.change >= 0 ? 'positive' : 'negative'}">${idx.change >= 0 ? '▲' : '▼'} ${Math.abs(idx.change).toFixed(2)}%</div>
-            </div>
-        `).join('');
+    async function finnhubFetch(endpoint, params = {}) {
+        if (!FINNHUB_API_KEY) throw new Error('No API key');
+        const url = new URL(`https://finnhub.io/api/v1/${endpoint}`);
+        params.token = FINNHUB_API_KEY;
+        Object.keys(params).forEach(k => url.searchParams.append(k, params[k]));
+        const res = await fetch(url);
+        if (!res.ok) throw new Error(`API error: ${res.status}`);
+        return res.json();
     }
 
-    function renderWatchlist() {
-        const container = document.getElementById('watchlistContainer');
-        if (!container) return;
-        let html = '';
-        watchlist.forEach(sym => {
-            const s = stocksDB[sym];
-            if (s) {
-                html += `<div class="watchlist-item" onclick="showStockDetail('${sym}')">
-                    <div><span class="watchlist-symbol">${sym}</span><br><span style="font-size:11px; color:#8a8a7a;">${s.name}</span></div>
-                    <div class="watchlist-price">$${s.price.toFixed(2)} <span class="${s.change >= 0 ? 'positive' : 'negative'}">${s.change >= 0 ? '▲' : '▼'} ${Math.abs(s.change).toFixed(2)}%</span></div>
-                </div>`;
-            }
-        });
-        container.innerHTML = html;
-    }
-
-    function renderTopMovers() {
-        const all = Object.entries(stocksDB).map(([sym, s]) => ({ sym, change: s.change, name: s.name }));
-        const sorted = [...all].sort((a, b) => b.change - a.change);
-        const gainers = sorted.slice(0, 3);
-        const losers = sorted.slice(-3).reverse();
-        
-        const html = `
-            <div class="gainers">
-                <div class="subtitle">📈 GAINERS</div>
-                ${gainers.map(g => `<div class="mover-row" onclick="showStockDetail('${g.sym}')">
-                    <span><strong>${g.sym}</strong><br><span style="font-size:11px; color:#8a8a7a;">${g.name}</span></span>
-                    <span class="positive">+${g.change.toFixed(2)}%</span>
-                    <span style="width:80px; background:#e0e8dc; border-radius:20px; overflow:hidden;"><div style="width:${Math.min(100, g.change * 10)}%; background:#5f8b5f; height:6px;"></div></span>
-                </div>`).join('')}
-            </div>
-            <div class="losers" style="margin-top:16px;">
-                <div class="subtitle">📉 LOSERS</div>
-                ${losers.map(l => `<div class="mover-row" onclick="showStockDetail('${l.sym}')">
-                    <span><strong>${l.sym}</strong><br><span style="font-size:11px; color:#8a8a7a;">${l.name}</span></span>
-                    <span class="negative">${l.change.toFixed(2)}%</span>
-                    <span style="width:80px; background:#e0e8dc; border-radius:20px; overflow:hidden;"><div style="width:${Math.min(100, Math.abs(l.change) * 10)}%; background:#c47a6a; height:6px;"></div></span>
-                </div>`).join('')}
-            </div>
-        `;
-        const container = document.getElementById('topMoversContainer');
-        if (container) container.innerHTML = html;
-    }
-
-    function renderChart(symbol = 'AAPL') {
-        const s = stocksDB[symbol];
-        if (s) {
-            document.getElementById('chartSymbol').innerText = symbol;
-            document.getElementById('chartOpen').innerText = (s.price - s.change / 2).toFixed(2);
-            document.getElementById('chartHigh').innerText = s.high.toFixed(2);
-            document.getElementById('chartLow').innerText = s.low.toFixed(2);
-            document.getElementById('chartVolume').innerText = s.volume.toFixed(1);
-            const barsContainer = document.getElementById('chartBars');
-            if (barsContainer) {
-                barsContainer.innerHTML = [140, 180, 160, 200, 175, 190, 185].map(h => `<div class="bar" style="height: ${h / 2}px;"></div>`).join('');
-            }
+    async function fetchQuote(symbol) {
+        if (stockCache[symbol] && Date.now() - stockCache[symbol].time < 30000) return stockCache[symbol].data;
+        try {
+            const quote = await finnhubFetch('quote', { symbol });
+            const profile = await finnhubFetch('stock/profile2', { symbol }).catch(() => null);
+            const result = { symbol, price: quote.c, change: quote.d, changePercent: quote.dp, high: quote.h, low: quote.l, open: quote.o, prevClose: quote.pc, name: profile?.name || symbol };
+            stockCache[symbol] = { data: result, time: Date.now() };
+            return result;
+        } catch (e) {
+            console.log(`Error fetching ${symbol}:`, e);
+            return null;
         }
     }
 
-    function showStockDetail(symbol) {
-        currentDetailSymbol = symbol;
-        const s = stocksDB[symbol];
-        if (!s) return;
+    async function loadDashboard() {
+        if (!FINNHUB_API_KEY) return;
+        const symbols = ['AAPL', 'MSFT', 'NVDA', 'TSLA', 'GOOGL', 'AMZN'];
+        const results = await Promise.all(symbols.map(s => fetchQuote(s)));
+        const valid = results.filter(r => r && r.price);
+        
+        // Watchlist
+        const watchlistContainer = document.getElementById('watchlistContainer');
+        let watchHtml = '';
+        for (let sym of watchlist) {
+            const data = await fetchQuote(sym);
+            if (data) {
+                watchHtml += `<div class="watchlist-item" onclick="showStockDetail('${sym}')">
+                    <div><strong>${sym}</strong><br><span style="font-size:11px;">${data.name}</span></div>
+                    <div>$${data.price.toFixed(2)} <span class="${data.change >= 0 ? 'positive' : 'negative'}">${data.change >= 0 ? '▲' : '▼'} ${Math.abs(data.changePercent).toFixed(2)}%</span></div>
+                </div>`;
+            }
+        }
+        watchlistContainer.innerHTML = watchHtml || '<p>Add stocks using + button</p>';
+        
+        // Top movers
+        const sorted = [...valid].sort((a, b) => Math.abs(b.changePercent) - Math.abs(a.changePercent));
+        const moversHtml = `
+            <div class="subtitle">📈 TOP MOVERS</div>
+            ${sorted.slice(0, 5).map(s => `<div class="mover-row" onclick="showStockDetail('${s.symbol}')"><span><strong>${s.symbol}</strong><br><span style="font-size:11px;">${s.name}</span></span><span class="${s.change >= 0 ? 'positive' : 'negative'}">${s.change >= 0 ? '▲' : '▼'} ${Math.abs(s.changePercent).toFixed(2)}%</span></div>`).join('')}
+        `;
+        document.getElementById('topMoversContainer').innerHTML = moversHtml;
+        
+        // Indices (simulated from SPY)
+        const spy = await fetchQuote('SPY');
+        if (spy) {
+            document.getElementById('marketIndices').innerHTML = `
+                <div class="card market-card"><div class="market-symbol">S&P 500</div><div class="market-price">$${spy.price.toFixed(2)}</div><div class="market-change ${spy.change >= 0 ? 'positive' : 'negative'}">${spy.change >= 0 ? '▲' : '▼'} ${Math.abs(spy.changePercent).toFixed(2)}%</div></div>
+                <div class="card market-card"><div class="market-symbol">NASDAQ</div><div class="market-price">—</div><div class="market-change">via QQQ</div></div>
+                <div class="card market-card"><div class="market-symbol">DOW</div><div class="market-price">—</div><div class="market-change">via DIA</div></div>
+                <div class="card market-card"><div class="market-symbol">RUSSELL</div><div class="market-price">—</div><div class="market-change">via IWM</div></div>
+            `;
+        }
+    }
+
+    async function showStockDetail(symbol) {
+        currentSymbol = symbol;
+        showPage('profile');
+        const data = await fetchQuote(symbol);
+        if (!data) { alert('Failed to load stock data'); return; }
         
         document.getElementById('detailSymbol').innerText = symbol;
-        document.getElementById('detailName').innerText = s.name;
-        document.getElementById('detailPrice').innerText = '$' + s.price.toFixed(2);
-        document.getElementById('detailChange').innerHTML = `<span class="${s.change >= 0 ? 'positive' : 'negative'}">${s.change >= 0 ? '▲' : '▼'} ${Math.abs(s.change).toFixed(2)}%</span>`;
-        document.getElementById('detailAfterHours').innerText = `$${(s.price + (s.change / 10)).toFixed(2)} ${s.change >= 0 ? '▲' : '▼'}`;
+        document.getElementById('detailName').innerText = data.name;
+        document.getElementById('detailPrice').innerText = '$' + data.price.toFixed(2);
+        document.getElementById('detailChange').innerHTML = `<span class="${data.change >= 0 ? 'positive' : 'negative'}">${data.change >= 0 ? '▲' : '▼'} ${Math.abs(data.changePercent).toFixed(2)}%</span>`;
         
         document.getElementById('statsGrid').innerHTML = `
-            <div class="stat-item"><span>Open</span><span>$${(s.price - s.change / 2).toFixed(2)}</span></div>
-            <div class="stat-item"><span>High</span><span>$${s.high.toFixed(2)}</span></div>
-            <div class="stat-item"><span>Low</span><span>$${s.low.toFixed(2)}</span></div>
-            <div class="stat-item"><span>Volume</span><span>${s.volume}M</span></div>
-            <div class="stat-item"><span>52W High</span><span>$${(s.high * 1.12).toFixed(2)}</span></div>
-            <div class="stat-item"><span>52W Low</span><span>$${(s.low * 0.85).toFixed(2)}</span></div>
+            <div class="stat-item"><span>Open</span><span>$${data.open?.toFixed(2) || '—'}</span></div>
+            <div class="stat-item"><span>High</span><span>$${data.high?.toFixed(2) || '—'}</span></div>
+            <div class="stat-item"><span>Low</span><span>$${data.low?.toFixed(2) || '—'}</span></div>
+            <div class="stat-item"><span>Prev Close</span><span>$${data.prevClose?.toFixed(2) || '—'}</span></div>
         `;
         
-        document.getElementById('fundamentalsGrid').innerHTML = `
-            <div class="stat-item"><span>Revenue (TTM)</span><span>$${(s.marketCap * 0.35).toFixed(0)}B</span></div>
-            <div class="stat-item"><span>Net Income</span><span>$${(s.marketCap * 0.12).toFixed(0)}B</span></div>
-            <div class="stat-item"><span>EPS</span><span>$${s.eps}</span></div>
-            <div class="stat-item"><span>P/E</span><span>${s.pe}</span></div>
-            <div class="stat-item"><span>Dividend</span><span>$${s.div.toFixed(2)} (${(s.div / s.price * 100).toFixed(2)}%)</span></div>
-            <div class="stat-item"><span>Beta</span><span>1.20</span></div>
-        `;
-        
-        document.getElementById('newsList').innerHTML = `
-            <div class="news-item" onclick="window.open('https://www.reuters.com', '_blank')"><strong>• ${symbol} announces new product line</strong><br><span style="font-size:12px; color:#8a8a7a;">2 hours ago</span></div>
-            <div class="news-item" onclick="window.open('https://www.bloomberg.com', '_blank')"><strong>• Analyst upgrades ${symbol} to Buy</strong><br><span style="font-size:12px; color:#8a8a7a;">yesterday</span></div>
-            <div class="news-item" onclick="window.open('https://www.cnbc.com', '_blank')"><strong>• ${symbol} beats quarterly estimates</strong><br><span style="font-size:12px; color:#8a8a7a;">3 days ago</span></div>
-        `;
+        document.getElementById('fundamentalsGrid').innerHTML = `<div class="stat-item"><span>Beta</span><span>Loading...</span></div>`;
+        document.getElementById('newsList').innerHTML = `<div class="news-item">News available on Profile tab</div>`;
         
         const btn = document.getElementById('watchlistDetailBtn');
         if (btn) btn.innerText = watchlist.includes(symbol) ? '★ In Watchlist' : '☆ Add to Watchlist';
-        showPage('profile');
     }
 
     function toggleWatchlistFromDetail() {
-        if (watchlist.includes(currentDetailSymbol)) {
-            watchlist = watchlist.filter(s => s !== currentDetailSymbol);
-        } else {
-            watchlist.push(currentDetailSymbol);
-        }
+        if (watchlist.includes(currentSymbol)) watchlist = watchlist.filter(s => s !== currentSymbol);
+        else watchlist.push(currentSymbol);
         localStorage.setItem('wavstrike_watchlist', JSON.stringify(watchlist));
-        showStockDetail(currentDetailSymbol);
-        renderWatchlist();
+        showStockDetail(currentSymbol);
+        loadDashboard();
     }
 
     function addToWatchlistPrompt() {
-        const newSym = prompt('Enter symbol (AAPL, TSLA, NVDA, etc.)');
-        if (newSym && stocksDB[newSym.toUpperCase()]) {
-            const sym = newSym.toUpperCase();
-            if (!watchlist.includes(sym)) {
-                watchlist.push(sym);
-                localStorage.setItem('wavstrike_watchlist', JSON.stringify(watchlist));
-                renderWatchlist();
-                alert(`${sym} added`);
-            } else alert('Already in watchlist');
-        } else if (newSym) alert('Symbol not found');
+        const sym = prompt('Enter symbol (AAPL, TSLA, NVDA):')?.toUpperCase();
+        if (sym && !watchlist.includes(sym)) {
+            watchlist.push(sym);
+            localStorage.setItem('wavstrike_watchlist', JSON.stringify(watchlist));
+            loadDashboard();
+        } else if (sym) alert('Already in watchlist');
     }
 
-    // Screener functions
-    function runScreener() {
-        let filtered = [...allStocks];
-        const cap = document.querySelector('input[name="cap"]:checked')?.value || 'any';
-        if (cap === 'large') filtered = filtered.filter(s => s.marketCap > 1000);
-        else if (cap === 'mid') filtered = filtered.filter(s => s.marketCap >= 2 && s.marketCap <= 1000);
-        else if (cap === 'small') filtered = filtered.filter(s => s.marketCap < 2);
-        
-        const sectors = [];
-        if (document.getElementById('sectorTech')?.checked) sectors.push('Technology');
-        if (document.getElementById('sectorHealth')?.checked) sectors.push('Healthcare');
-        if (document.getElementById('sectorFin')?.checked) sectors.push('Financials');
-        if (document.getElementById('sectorConsumer')?.checked) sectors.push('Consumer Cyclical');
-        if (sectors.length) filtered = filtered.filter(s => sectors.includes(s.sector));
-        
-        if (document.getElementById('dividendOnly')?.checked) filtered = filtered.filter(s => s.div > 0);
-        
-        window.screenerData = filtered;
-        renderScreenerTable();
-    }
-
-    function renderScreenerTable(page = 1) {
-        const data = window.screenerData || allStocks;
-        const rowsPerPage = 6;
-        const start = (page - 1) * rowsPerPage;
-        const paginated = data.slice(start, start + rowsPerPage);
+    async function runScreener() {
+        const symbols = ['AAPL', 'MSFT', 'NVDA', 'TSLA', 'GOOGL', 'AMZN', 'META', 'NFLX'];
+        const results = await Promise.all(symbols.map(s => fetchQuote(s)));
+        const valid = results.filter(r => r && r.price);
         const tbody = document.getElementById('screenerBody');
-        tbody.innerHTML = paginated.map(s => `
-            <tr onclick="showStockDetail('${s.symbol}')">
-                <td><strong>${s.symbol}</strong></td>
-                <td>$${s.price.toFixed(2)}</td>
-                <td class="${s.change >= 0 ? 'positive' : 'negative'}">${s.change >= 0 ? '+' : ''}${s.change.toFixed(2)}%</td>
-                <td>${s.volume}M</td>
-                <td>$${s.marketCap}B</td>
-            </tr>
-        `).join('');
-        
-        const totalPages = Math.ceil(data.length / rowsPerPage);
-        let pagHtml = '';
-        for (let i = 1; i <= Math.min(totalPages, 5); i++) {
-            pagHtml += `<button class="page-btn" onclick="renderScreenerTable(${i})">${i}</button>`;
-        }
-        document.getElementById('screenerPagination').innerHTML = pagHtml;
+        tbody.innerHTML = valid.map(s => `<tr onclick="showStockDetail('${s.symbol}')"><td><strong>${s.symbol}</strong><br><span style="font-size:11px;">${s.name}</span></td><td>$${s.price.toFixed(2)}</td><td class="${s.change >= 0 ? 'positive' : 'negative'}">${s.change >= 0 ? '▲' : '▼'} ${Math.abs(s.changePercent).toFixed(2)}%</td></tr>`).join('');
     }
 
-    function resetScreener() {
-        document.querySelector('input[value="
+    // Tab switching
+    document.querySelectorAll('.detail-tab').forEach(tab => {
+        tab.onclick = () => {
+            document.querySelectorAll('.detail-tab').forEach(t => t.classList.remove('active'));
+            tab.classList.add('active');
+            document.getElementById('statsTab').style.display = tab.getAttribute('data-tab') === 'stats' ? 'block' : 'none';
+            document.getElementById('fundamentalsTab').style.display = tab.getAttribute('data-tab') === 'fundamentals' ? 'block' : 'none';
+            document.getElementById('newsTab').style.display = tab.getAttribute('data-tab') === 'news' ? 'block' : 'none';
+        };
+    });
+
+    function showPage(pageId) {
+        document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+        document.getElementById(pageId + 'Page').classList.add('active');
+        document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
+        document.querySelector(`[data-page="${pageId}"]`).classList.add('active');
+        if (pageId === 'dashboard') loadDashboard();
+        if (pageId === 'screener') runScreener();
+    }
+
+    document.querySelectorAll('.nav-link').forEach(link => {
+        link.onclick = () => showPage(link.getAttribute('data-page'));
+    });
+    
+    document.getElementById('globalSearch').onkeypress = (e) => {
+        if (e.key === 'Enter') showStockDetail(e.target.value.toUpperCase());
+    };
+    
+    if (FINNHUB_API_KEY) { loadDashboard(); runScreener(); }
+</script>
+</body>
+</html>
