@@ -141,16 +141,29 @@
             padding-top: 16px;
             border-top: 1px solid #e2e8f0;
         }
-        .badge {
-            display: inline-block;
-            padding: 2px 8px;
-            border-radius: 4px;
-            font-size: 0.7rem;
-            font-weight: 600;
+        .api-input-area {
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 20px;
         }
-        .buy { background: #d1fae5; color: #065f46; }
-        .sell { background: #fee2e2; color: #991b1b; }
-        .hold { background: #fed7aa; color: #92400e; }
+        .api-input-area label {
+            display: block;
+            font-size: 0.8rem;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: #0f172a;
+        }
+        .api-input-area input {
+            width: 100%;
+            margin-bottom: 10px;
+        }
+        .api-input-area small {
+            display: block;
+            font-size: 0.7rem;
+            color: #64748b;
+        }
     </style>
 </head>
 <body>
@@ -158,71 +171,120 @@
     <h1>📊 Pro Stock Analyzer</h1>
     <div class="sub">Institutional Holdings • Analyst Ratings • News • Real Market Data</div>
     
+    <!-- API Key Input Section -->
+    <div class="api-input-area" id="apiKeySection">
+        <label>🔑 Enter Your Finnhub API Key</label>
+        <input type="password" id="apiKeyInput" placeholder="Paste your Finnhub API key here">
+        <small>Get your free key at <a href="https://finnhub.io/register" target="_blank">finnhub.io/register</a> → then click "Save Key" below</small>
+        <button id="saveApiKeyBtn" style="margin-top: 10px; width: auto;">💾 Save API Key</button>
+        <button id="clearApiKeyBtn" style="margin-top: 10px; width: auto; background: #64748b;">🗑️ Clear Key</button>
+    </div>
+    
     <div class="search-box">
         <input type="text" id="stockInput" placeholder="Stock symbol: AAPL, TSLA, NVDA, NIO, MSFT" value="AAPL">
         <button id="analyzeBtn">🔍 Analyze</button>
     </div>
     
     <div id="results">
-        <div class="loading"><div class="spinner"></div><p>Loading real data from Finnhub API...</p></div>
+        <div class="loading"><div class="spinner"></div><p>Enter your API key above, then analyze a stock...</p></div>
     </div>
-    <div class="note">Powered by Finnhub.io • Real-time data for supported symbols • Free tier: 60 calls/minute</div>
+    <div class="note">Powered by Finnhub.io • Your API key is stored locally in your browser</div>
 </div>
 
 <script>
-    // ============================================================
-    // 🔑 PASTE YOUR FINNHUB API KEY HERE:
-    // Get it from https://finnhub.io/dashboard after signing up
-    // ============================================================
-    const FINNHUB_API_KEY = 'YOUR_API_KEY_HERE';  // <-- REPLACE THIS
+    // Get API key from localStorage
+    let FINNHUB_API_KEY = localStorage.getItem('finnhub_api_key');
     
-    // Base URL for Finnhub API
+    // DOM elements
+    const apiKeyInput = document.getElementById('apiKeyInput');
+    const saveBtn = document.getElementById('saveApiKeyBtn');
+    const clearBtn = document.getElementById('clearApiKeyBtn');
+    const apiKeySection = document.getElementById('apiKeySection');
+    
+    // Load saved key into input field
+    if (FINNHUB_API_KEY) {
+        apiKeyInput.value = '••••••••••••••••';
+        apiKeyInput.type = 'text';
+        apiKeyInput.disabled = true;
+        saveBtn.style.display = 'none';
+        clearBtn.style.display = 'inline-block';
+    } else {
+        clearBtn.style.display = 'none';
+    }
+    
+    // Save API key
+    saveBtn.addEventListener('click', () => {
+        const newKey = document.getElementById('apiKeyInput').value.trim();
+        if (newKey && newKey.length > 10) {
+            localStorage.setItem('finnhub_api_key', newKey);
+            FINNHUB_API_KEY = newKey;
+            apiKeyInput.value = '••••••••••••••••';
+            apiKeyInput.type = 'text';
+            apiKeyInput.disabled = true;
+            saveBtn.style.display = 'none';
+            clearBtn.style.display = 'inline-block';
+            alert('API Key saved! Now analyze a stock.');
+            analyzeStock();
+        } else {
+            alert('Please enter a valid API key from finnhub.io');
+        }
+    });
+    
+    // Clear API key
+    clearBtn.addEventListener('click', () => {
+        localStorage.removeItem('finnhub_api_key');
+        FINNHUB_API_KEY = null;
+        apiKeyInput.value = '';
+        apiKeyInput.type = 'password';
+        apiKeyInput.disabled = false;
+        saveBtn.style.display = 'inline-block';
+        clearBtn.style.display = 'none';
+        alert('API Key cleared. Please enter a new key.');
+        document.getElementById('results').innerHTML = '<div class="loading"><div class="spinner"></div><p>Enter your API key above, then analyze a stock...</p></div>';
+    });
+    
+    // Finnhub API base
     const FINNHUB_BASE = 'https://finnhub.io/api/v1';
     
-    // Helper function for API calls
     async function finnhubFetch(endpoint, params = {}) {
         const url = new URL(`${FINNHUB_BASE}/${endpoint}`);
         params.token = FINNHUB_API_KEY;
         Object.keys(params).forEach(key => url.searchParams.append(key, params[key]));
         
         const response = await fetch(url.toString());
+        if (response.status === 429) {
+            throw new Error('Rate limit exceeded. Finnhub free tier: 60 calls/minute. Please wait.');
+        }
         if (!response.ok) {
-            const errorText = await response.text();
-            throw new Error(`Finnhub API error: ${response.status} - ${errorText}`);
+            throw new Error(`API error: ${response.status}`);
         }
         return response.json();
     }
     
-    // Fetch stock quote (current price, change, etc.)
     async function fetchQuote(symbol) {
         return finnhubFetch('quote', { symbol });
     }
     
-    // Fetch company profile (market cap, industry, etc.)
     async function fetchCompanyProfile(symbol) {
         try {
             return await finnhubFetch('stock/profile2', { symbol });
         } catch (e) {
-            console.log('Profile fetch failed:', e);
             return null;
         }
     }
     
-    // Fetch analyst recommendations
     async function fetchRecommendations(symbol) {
         try {
             const data = await finnhubFetch('stock/recommendation', { symbol });
             if (data && data.length > 0) {
-                return data[0]; // Most recent month
+                return data[0];
             }
             return null;
         } catch (e) {
-            console.log('Recommendations fetch failed:', e);
             return null;
         }
     }
     
-    // Fetch company news (last 7 days)
     async function fetchNews(symbol) {
         try {
             const today = new Date();
@@ -234,51 +296,18 @@
             
             return await finnhubFetch('company-news', { symbol, from, to });
         } catch (e) {
-            console.log('News fetch failed:', e);
             return [];
         }
     }
     
-    // Fetch basic financial metrics for technical rating
-    async function fetchMetrics(symbol) {
-        try {
-            return await finnhubFetch('stock/metric', { symbol, metric: 'all' });
-        } catch (e) {
-            console.log('Metrics fetch failed:', e);
-            return null;
-        }
-    }
-    
-    // Calculate technical rating from metrics and price data
-    function getTechnicalRating(currentPrice, metrics, quote) {
+    function getTechnicalRating(currentPrice, quote) {
         let score = 50;
-        let details = [];
         
-        // Use 52-week high/low if available
-        if (metrics && metrics.metric) {
-            const high52 = metrics.metric['52WeekHigh'];
-            const low52 = metrics.metric['52WeekLow'];
-            if (high52 && low52 && currentPrice) {
-                const percentFromLow = ((currentPrice - low52) / (high52 - low52)) * 100;
-                if (percentFromLow > 80) {
-                    score += 15;
-                    details.push('Near 52-week high');
-                } else if (percentFromLow < 20) {
-                    score -= 15;
-                    details.push('Near 52-week low');
-                }
-            }
-        }
-        
-        // Based on daily change
         if (quote && quote.dp) {
-            if (quote.dp > 2) {
-                score += 10;
-                details.push(`Up ${quote.dp.toFixed(1)}% today`);
-            } else if (quote.dp < -2) {
-                score -= 10;
-                details.push(`Down ${Math.abs(quote.dp).toFixed(1)}% today`);
-            }
+            if (quote.dp > 2) score += 15;
+            else if (quote.dp > 0.5) score += 5;
+            else if (quote.dp < -2) score -= 15;
+            else if (quote.dp < -0.5) score -= 5;
         }
         
         score = Math.min(100, Math.max(0, score));
@@ -291,7 +320,7 @@
         else if (score >= 30) { rating = 'Bearish'; color = '#f97316'; }
         else { rating = 'Strong Bearish'; color = '#ef4444'; }
         
-        return { rating, color, score, details: details.join(', ') };
+        return { rating, color, score };
     }
     
     async function analyzeStock() {
@@ -301,13 +330,13 @@
             return;
         }
         
-        if (FINNHUB_API_KEY === 'YOUR_API_KEY_HERE') {
+        if (!FINNHUB_API_KEY) {
             document.getElementById('results').innerHTML = `
                 <div class="error">
-                    ⚠️ API Key Not Configured
+                    ⚠️ No API Key Found
                     <br><br>
-                    Please get a free API key from <a href="https://finnhub.io/register" target="_blank" style="color: #3b82f6;">finnhub.io/register</a>
-                    <br>Then paste it in the code where it says "YOUR_API_KEY_HERE"
+                    Please enter your Finnhub API key in the box above.
+                    <br>Get a free key at <a href="https://finnhub.io/register" target="_blank">finnhub.io/register</a>
                 </div>
             `;
             return;
@@ -316,18 +345,15 @@
         document.getElementById('results').innerHTML = '<div class="loading"><div class="spinner"></div><p>Loading real data for ' + symbol + ' from Finnhub...</p></div>';
         
         try {
-            // Fetch all data in parallel
-            const [quote, profile, recommendations, news, metrics] = await Promise.all([
+            const [quote, profile, recommendations, news] = await Promise.all([
                 fetchQuote(symbol),
                 fetchCompanyProfile(symbol),
                 fetchRecommendations(symbol),
-                fetchNews(symbol),
-                fetchMetrics(symbol)
+                fetchNews(symbol)
             ]);
             
-            // Check if quote data is valid
             if (!quote || quote.c === undefined || quote.c === 0) {
-                throw new Error(`No data found for symbol "${symbol}". Please check the ticker symbol.`);
+                throw new Error(`No data found for "${symbol}". Check the symbol.`);
             }
             
             const currentPrice = quote.c;
@@ -337,28 +363,15 @@
             const low = quote.l || currentPrice;
             const previousClose = quote.pc || currentPrice;
             
-            const marketCap = profile?.marketCapitalization || null;
-            const industry = profile?.finnhubIndustry || 'N/A';
+            const marketCap = profile?.marketCapitalization ? (profile.marketCapitalization / 1000).toFixed(2) : null;
             const name = profile?.name || symbol;
             
-            const technical = getTechnicalRating(currentPrice, metrics, quote);
+            const technical = getTechnicalRating(currentPrice, quote);
             
-            // Process analyst recommendations
             let analystHTML = '<p>No analyst data available</p>';
             let analystColor = '#64748b';
-            let totalRatings = 0;
             
             if (recommendations) {
-                const ratings = [
-                    { name: 'Strong Buy', value: recommendations.strongBuy || 0 },
-                    { name: 'Buy', value: recommendations.buy || 0 },
-                    { name: 'Hold', value: recommendations.hold || 0 },
-                    { name: 'Sell', value: recommendations.sell || 0 },
-                    { name: 'Strong Sell', value: recommendations.strongSell || 0 }
-                ];
-                totalRatings = ratings.reduce((sum, r) => sum + r.value, 0);
-                
-                // Determine overall rating
                 const buySum = (recommendations.strongBuy || 0) + (recommendations.buy || 0);
                 const sellSum = (recommendations.sell || 0) + (recommendations.strongSell || 0);
                 let overallRating = '';
@@ -382,11 +395,9 @@
                         <div class="rating"><span>Sell</span><span>${recommendations.sell || 0}</span></div>
                         <div class="rating"><span>Strong Sell</span><span>${recommendations.strongSell || 0}</span></div>
                     </div>
-                    <div style="margin-top: 8px; font-size: 0.7rem; color: #64748b; text-align: center;">Based on ${totalRatings} analyst ratings</div>
                 `;
             }
             
-            // Process news
             let newsHTML = '<p>No recent news found</p>';
             if (news && news.length > 0) {
                 newsHTML = news.slice(0, 8).map(article => `
@@ -397,10 +408,9 @@
                 `).join('');
             }
             
-            // Sentiment score
             let sentimentScore = 50;
-            if (changePercent > 2) sentimentScore += 15;
-            if (changePercent < -2) sentimentScore -= 15;
+            if (changePercent > 2) sentimentScore += 20;
+            if (changePercent < -2) sentimentScore -= 20;
             if (recommendations) {
                 const buyWeight = (recommendations.strongBuy || 0) * 2 + (recommendations.buy || 0);
                 const sellWeight = (recommendations.strongSell || 0) * 2 + (recommendations.sell || 0);
@@ -426,13 +436,12 @@
                                 <span style="font-size: 0.75rem;">Day Low: $${low.toFixed(2)}</span>
                                 <span style="font-size: 0.75rem;">Prev Close: $${previousClose.toFixed(2)}</span>
                             </div>
-                            ${marketCap ? `<div style="font-size: 0.75rem; color: #64748b; text-align: center; margin-top: 12px;">Market Cap: $${(marketCap / 1000).toFixed(2)}B | Industry: ${industry}</div>` : ''}
+                            ${marketCap ? `<div style="font-size: 0.75rem; color: #64748b; text-align: center; margin-top: 12px;">Market Cap: $${marketCap}B</div>` : ''}
                         </div>
                         
                         <div class="card">
                             <h3>⚡ TECHNICAL RATING</h3>
                             <div class="metric-big" style="color: ${technical.color}">${technical.rating}</div>
-                            ${technical.details ? `<div style="text-align: center; color: #64748b; font-size: 0.85rem;">${technical.details}</div>` : ''}
                             <div class="progress-bar"><div class="progress-fill" style="width: ${technical.score}%; background: linear-gradient(90deg, #ef4444, #f59e0b, #10b981)"></div></div>
                         </div>
                     </div>
@@ -448,11 +457,11 @@
                 <div class="grid-2">
                     <div>
                         <div class="card">
-                            <h3>🏛️ INSTITUTIONAL HOLDINGS NOTE</h3>
+                            <h3>🏛️ INSTITUTIONAL HOLDINGS</h3>
                             <div style="padding: 12px 0;">
-                                <p style="color: #64748b; font-size: 0.85rem;">Full institutional holdings data requires Finnhub's premium tier.</p>
-                                <p style="margin-top: 12px; color: #475569; font-size: 0.8rem;">Free tier provides: Analyst ratings, real-time quotes, news, and company metrics.</p>
-                                <p style="margin-top: 12px; color: #0f172a; font-size: 0.8rem;">💡 For 13F institutional holdings data, check <a href="https://www.sec.gov/edgar" target="_blank" style="color: #3b82f6;">SEC EDGAR</a> directly (free).</p>
+                                <p style="color: #64748b; font-size: 0.85rem;">Full institutional holdings (13F filings) require Finnhub's premium tier ($).</p>
+                                <p style="margin-top: 12px; color: #0f172a; font-size: 0.8rem;">💡 Free alternative: <a href="https://www.sec.gov/edgar/search/" target="_blank" style="color: #3b82f6;">SEC EDGAR</a> - search "13F" + company name</p>
+                                <p style="margin-top: 8px; color: #0f172a; font-size: 0.8rem;">💡 <a href="https://whalewisdom.com" target="_blank" style="color: #3b82f6;">WhaleWisdom</a> - tracks hedge fund holdings for free</p>
                             </div>
                         </div>
                     </div>
@@ -474,23 +483,26 @@
             `;
             
         } catch (error) {
-            console.error('Error:', error);
+            console.error(error);
             document.getElementById('results').innerHTML = `
                 <div class="error">
                     ⚠️ Error: ${error.message}
                     <br><br>
                     <strong>Possible fixes:</strong>
-                    <br>1. Make sure you've replaced YOUR_API_KEY_HERE with your actual Finnhub key
-                    <br>2. Check that the stock symbol is valid (try AAPL, TSLA, NVDA)
-                    <br>3. Free tier has 60 calls/minute limit - wait a moment and try again
-                    <br>4. Get a free key at <a href="https://finnhub.io/register" target="_blank" style="color: #3b82f6;">finnhub.io/register</a>
+                    <br>1. Make sure your API key is correct
+                    <br>2. Wait a moment (60 calls/minute limit)
+                    <br>3. Try a different symbol (AAPL, TSLA, NVDA)
                 </div>
             `;
         }
     }
     
     document.getElementById('analyzeBtn').addEventListener('click', () => analyzeStock());
-    analyzeStock();
+    
+    // Auto-run if key exists
+    if (FINNHUB_API_KEY) {
+        analyzeStock();
+    }
 </script>
 </body>
 </html>
