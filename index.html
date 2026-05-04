@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AI Stock Trend Analyzer</title>
+    <title>Stock Trend Analyzer | Free</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
@@ -15,9 +15,9 @@
         }
         .container { max-width: 1200px; margin: 0 auto; }
         h1 {
-            font-size: 2rem;
+            font-size: 2.5rem;
             margin-bottom: 0.5rem;
-            background: linear-gradient(135deg, #fff, #4facfe);
+            background: linear-gradient(135deg, #fff, #4facfe, #00c853);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
@@ -34,24 +34,26 @@
         .search-box { display: flex; gap: 10px; margin-bottom: 2rem; flex-wrap: wrap; }
         input {
             flex: 1;
-            padding: 12px 20px;
+            padding: 14px 20px;
             background: #1e1f2e;
             border: 1px solid #4facfe;
             border-radius: 12px;
             color: white;
             font-size: 16px;
         }
+        input:focus { outline: none; border-color: #00c853; }
         button {
-            background: #4facfe;
+            background: linear-gradient(135deg, #4facfe, #00c853);
             color: white;
             border: none;
-            padding: 12px 28px;
+            padding: 14px 32px;
             border-radius: 12px;
             cursor: pointer;
             font-weight: bold;
+            font-size: 16px;
             transition: transform 0.2s;
         }
-        button:hover { transform: translateY(-2px); background: #6bb8ff; }
+        button:hover { transform: translateY(-2px); opacity: 0.9; }
         .metrics {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
@@ -59,243 +61,259 @@
             margin-bottom: 1.5rem;
         }
         .metric {
-            background: rgba(0,0,0,0.3);
-            padding: 1rem;
-            border-radius: 12px;
+            background: rgba(0,0,0,0.4);
+            padding: 1.2rem;
+            border-radius: 16px;
             text-align: center;
+            border: 1px solid rgba(255,255,255,0.1);
         }
-        .metric-value { font-size: 1.8rem; font-weight: bold; color: #4facfe; }
-        .metric-label { font-size: 0.8rem; color: #aaa; margin-top: 5px; }
-        .news-item {
-            border-bottom: 1px solid rgba(255,255,255,0.1);
-            padding: 12px 0;
-            cursor: pointer;
-        }
-        .news-item:hover { background: rgba(79,172,254,0.1); }
-        .sentiment {
-            font-size: 0.75rem;
-            padding: 2px 8px;
-            border-radius: 20px;
-            display: inline-block;
-        }
-        .bullish { background: #00c85320; color: #00c853; border: 1px solid #00c85340; }
-        .bearish { background: #d5000020; color: #ff6b6b; border: 1px solid #d5000040; }
-        .neutral { background: #ffa50020; color: #ffa500; border: 1px solid #ffa50040; }
+        .metric-value { font-size: 1.8rem; font-weight: bold; }
+        .metric-label { font-size: 0.75rem; color: #aaa; margin-top: 8px; text-transform: uppercase; letter-spacing: 1px; }
         .positive { color: #00c853; }
         .negative { color: #ff6b6b; }
-        .loading { text-align: center; padding: 40px; }
+        .neutral { color: #ffa500; }
+        .news-item {
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            padding: 15px 0;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .news-item:hover { background: rgba(79,172,254,0.1); padding-left: 10px; }
+        .loading { text-align: center; padding: 60px; }
         .spinner {
             border: 3px solid rgba(79,172,254,0.3);
             border-top: 3px solid #4facfe;
             border-radius: 50%;
-            width: 40px;
-            height: 40px;
+            width: 50px;
+            height: 50px;
             animation: spin 1s linear infinite;
-            margin: 0 auto;
+            margin: 0 auto 20px;
         }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-        .settings-btn {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            background: #2a2e4a;
-            padding: 12px 16px;
-            border-radius: 30px;
-            cursor: pointer;
-            font-size: 0.8rem;
+        .price { font-size: 2.5rem; font-weight: bold; display: inline-block; margin-right: 15px; }
+        .change { font-size: 1.2rem; font-weight: 500; }
+        .info-box {
+            background: rgba(79,172,254,0.1);
+            padding: 15px;
+            border-radius: 12px;
+            margin-top: 20px;
+            text-align: center;
+            font-size: 0.85rem;
         }
-        .modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(0,0,0,0.8);
-            justify-content: center;
-            align-items: center;
-            z-index: 1000;
+        .score-bar {
+            height: 8px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 10px;
+            margin-top: 10px;
+            overflow: hidden;
         }
-        .modal-content {
-            background: #1a1f3a;
-            padding: 2rem;
-            border-radius: 20px;
-            max-width: 500px;
-            width: 90%;
+        .score-fill {
+            height: 100%;
+            border-radius: 10px;
+            transition: width 0.5s;
         }
-        .modal input { width: 100%; margin: 10px 0; padding: 10px; }
-        .ai-summary {
+        h3 { margin-bottom: 1rem; color: #4facfe; font-size: 1.1rem; }
+        .recommendation {
             background: linear-gradient(135deg, #1e2240, #15192e);
             padding: 1.2rem;
             border-radius: 12px;
             margin-top: 1rem;
-            border-left: 3px solid #4facfe;
+            text-align: center;
+            font-size: 1.1rem;
+            border-left: 4px solid #4facfe;
         }
-        h3 { margin-bottom: 1rem; color: #4facfe; }
-        .price { font-size: 2rem; font-weight: bold; display: inline-block; margin-right: 15px; }
-        .change { font-size: 1.2rem; }
-        .error { background: #ff000020; padding: 20px; border-radius: 12px; }
     </style>
 </head>
 <body>
 <div class="container">
-    <h1>📊 AI Stock Trend Analyzer</h1>
-    <div class="sub">Market signals + Daily news + Fear & Greed + AI Analysis</div>
+    <h1>📈 Stock Trend Analyzer</h1>
+    <div class="sub">Market Data + News Sentiment + Fear & Greed Index</div>
     
     <div class="card">
         <div class="search-box">
-            <input type="text" id="stockInput" placeholder="Enter stock symbol (e.g., AAPL, TSLA, NVDA)" value="AAPL">
-            <button id="analyzeBtn">🔍 Analyze Now</button>
+            <input type="text" id="stockInput" placeholder="Enter stock symbol (AAPL, TSLA, NVDA, GOOGL, MSFT)" value="AAPL">
+            <button id="analyzeBtn">🔍 Analyze Stock</button>
         </div>
         
         <div id="results">
-            <div style="text-align: center; padding: 40px;">Enter a stock symbol above to start</div>
+            <div class="info-box">💡 Enter a stock symbol above. Try AAPL, TSLA, or NVDA to start!</div>
         </div>
-    </div>
-</div>
-
-<div class="settings-btn" id="settingsBtn">⚙️ API Keys</div>
-<div id="settingsModal" class="modal">
-    <div class="modal-content">
-        <h3>API Settings</h3>
-        <p style="font-size: 0.8rem; margin-bottom: 1rem;">Your keys are stored locally in your browser - never shared</p>
-        <label>🔑 Claude API Key:</label>
-        <input type="password" id="claudeKey" placeholder="sk-ant-api...">
-        <label style="margin-top: 15px;">📰 NewsAPI Key (free from newsapi.org):</label>
-        <input type="password" id="newsKey" placeholder="Your NewsAPI key">
-        <button id="saveKeysBtn" style="margin-top: 20px; width: 100%;">Save Keys</button>
     </div>
 </div>
 
 <script>
-    let claudeApiKey = localStorage.getItem('claude_api_key');
-    let newsApiKey = localStorage.getItem('news_api_key');
-    
-    document.getElementById('saveKeysBtn').addEventListener('click', () => {
-        claudeApiKey = document.getElementById('claudeKey').value;
-        newsApiKey = document.getElementById('newsKey').value;
-        if(claudeApiKey) localStorage.setItem('claude_api_key', claudeApiKey);
-        if(newsApiKey) localStorage.setItem('news_api_key', newsApiKey);
-        document.getElementById('settingsModal').style.display = 'none';
-        alert('Keys saved! Now analyze a stock.');
-    });
-    
-    document.getElementById('settingsBtn').addEventListener('click', () => {
-        document.getElementById('claudeKey').value = claudeApiKey || '';
-        document.getElementById('newsKey').value = newsApiKey || '';
-        document.getElementById('settingsModal').style.display = 'flex';
-    });
-    
-    window.addEventListener('click', (e) => {
-        if(e.target === document.getElementById('settingsModal')) 
-            document.getElementById('settingsModal').style.display = 'none';
-    });
+    // Popular stocks for suggestions
+    const popularStocks = ['AAPL', 'TSLA', 'NVDA', 'GOOGL', 'MSFT', 'META', 'AMZN'];
     
     document.getElementById('analyzeBtn').addEventListener('click', async () => {
-        const symbol = document.getElementById('stockInput').value.toUpperCase();
-        if(!symbol) { alert('Enter a stock symbol'); return; }
-        if(!claudeApiKey) { alert('Please set your Claude API key first (click the ⚙️ button)'); return; }
+        const symbol = document.getElementById('stockInput').value.toUpperCase().trim();
+        if(!symbol) { alert('Enter a stock symbol like AAPL or TSLA'); return; }
         
         document.getElementById('results').innerHTML = '<div class="loading"><div class="spinner"></div><p>Analyzing ' + symbol + '...</p></div>';
         
         try {
+            // Fetch stock data from free Alpha Vantage (demo key works for limited requests)
             const priceRes = await fetch(`https://www.alphavantage.co/query?function=GLOBAL_QUOTE&symbol=${symbol}&apikey=demo`);
             const priceData = await priceRes.json();
             
             let currentPrice = 'N/A', change = 0, changePercent = 0;
-            if(priceData['Global Quote']) {
+            let hasData = false;
+            
+            if(priceData['Global Quote'] && priceData['Global Quote']['05. price']) {
                 currentPrice = parseFloat(priceData['Global Quote']['05. price']).toFixed(2);
                 change = parseFloat(priceData['Global Quote']['09. change']).toFixed(2);
                 changePercent = parseFloat(priceData['Global Quote']['10. change percent'].replace('%','')).toFixed(2);
+                hasData = true;
             }
             
+            // Fetch news using free GNews API (no key required)
             let newsArticles = [];
-            if(newsApiKey) {
-                const newsRes = await fetch(`https://newsapi.org/v2/everything?q=${symbol}+stock&language=en&pageSize=6&apiKey=${newsApiKey}`);
+            try {
+                const newsRes = await fetch(`https://gnews.io/api/v4/search?q=${symbol}+stock&lang=en&max=6&country=us`);
                 const newsData = await newsRes.json();
                 newsArticles = newsData.articles || [];
+            } catch(e) {
+                console.log('News fetch limited');
             }
             
+            // Calculate Fear & Greed based on price momentum
             let fearGreedScore = 50;
-            if(changePercent > 2) fearGreedScore = 70 + Math.min(25, changePercent);
-            else if(changePercent < -2) fearGreedScore = 30 - Math.min(25, Math.abs(changePercent));
+            if (changePercent > 3) fearGreedScore = 85;
+            else if (changePercent > 1) fearGreedScore = 70;
+            else if (changePercent < -3) fearGreedScore = 15;
+            else if (changePercent < -1) fearGreedScore = 30;
+            else if (Math.abs(changePercent) < 0.5) fearGreedScore = 50;
             
-            let fearGreedLabel = fearGreedScore >= 65 ? 'Greed' : (fearGreedScore <= 35 ? 'Fear' : 'Neutral');
-            let marketSignal = changePercent > 1.5 ? 'Bullish' : (changePercent < -1.5 ? 'Bearish' : 'Neutral');
+            let fearGreedLabel = fearGreedScore >= 70 ? '🟢 Extreme Greed' : (fearGreedScore >= 55 ? '🔵 Greed' : (fearGreedScore <= 30 ? '🔴 Extreme Fear' : (fearGreedScore <= 45 ? '🟡 Fear' : '⚪ Neutral')));
             
-            let newsSentiment = 'neutral';
-            let bullishCount = 0, bearishCount = 0;
-            const bullishWords = ['surge', 'rally', 'gain', 'bullish', 'upgrade', 'buy', 'positive', 'growth'];
-            const bearishWords = ['drop', 'fall', 'bearish', 'downgrade', 'sell', 'negative', 'decline', 'crash'];
+            // Market signal based on price action
+            let marketSignal = '';
+            let signalColor = '';
+            if (changePercent > 2) { marketSignal = 'STRONG BULLISH ↑'; signalColor = '#00c853'; }
+            else if (changePercent > 0.5) { marketSignal = 'BULLISH ↗'; signalColor = '#00c853'; }
+            else if (changePercent < -2) { marketSignal = 'STRONG BEARISH ↓'; signalColor = '#ff6b6b'; }
+            else if (changePercent < -0.5) { marketSignal = 'BEARISH ↘'; signalColor = '#ff6b6b'; }
+            else { marketSignal = 'NEUTRAL →'; signalColor = '#ffa500'; }
+            
+            // News sentiment analysis (simple keyword matching)
+            let sentimentScore = 0;
+            const positiveWords = ['surge', 'rally', 'gain', 'bullish', 'upgrade', 'buy', 'positive', 'growth', 'record', 'high'];
+            const negativeWords = ['drop', 'fall', 'bearish', 'downgrade', 'sell', 'negative', 'decline', 'crash', 'low', 'risk'];
             
             newsArticles.forEach(article => {
-                const title = (article.title || '').toLowerCase();
-                const desc = (article.description || '').toLowerCase();
-                bullishWords.forEach(w => { if(title.includes(w) || desc.includes(w)) bullishCount++; });
-                bearishWords.forEach(w => { if(title.includes(w) || desc.includes(w)) bearishCount++; });
+                const text = (article.title + ' ' + (article.description || '')).toLowerCase();
+                positiveWords.forEach(w => { if(text.includes(w)) sentimentScore += 1; });
+                negativeWords.forEach(w => { if(text.includes(w)) sentimentScore -= 1; });
             });
             
-            if(bullishCount > bearishCount + 1) newsSentiment = 'bullish';
-            else if(bearishCount > bullishCount + 1) newsSentiment = 'bearish';
+            let newsSentiment = sentimentScore > 2 ? 'Bullish 📈' : (sentimentScore < -2 ? 'Bearish 📉' : 'Neutral 📊');
+            let newsColor = sentimentScore > 2 ? '#00c853' : (sentimentScore < -2 ? '#ff6b6b' : '#ffa500');
             
-            let aiSummary = 'Generating AI analysis...';
-            try {
-                const response = await fetch('https://api.anthropic.com/v1/messages', {
-                    method: 'POST',
-                    headers: {
-                        'x-api-key': claudeApiKey,
-                        'anthropic-version': '2023-06-01',
-                        'content-type': 'application/json'
-                    },
-                    body: JSON.stringify({
-                        model: 'claude-3-sonnet-20241022',
-                        max_tokens: 300,
-                        messages: [{
-                            role: 'user',
-                            content: `Analyze ${symbol} stock. Price: $${currentPrice}, Change: ${changePercent}%, Market Signal: ${marketSignal}, News Sentiment: ${newsSentiment}, Fear & Greed: ${fearGreedLabel} (${fearGreedScore}/100). Give a 2-3 sentence recommendation: Bullish, Bearish, or Neutral. Be specific.`
-                        }]
-                    })
-                });
-                const data = await response.json();
-                aiSummary = data.content?.[0]?.text || 'Analysis complete - check the metrics above.';
-            } catch(e) {
-                aiSummary = `Based on the data: ${marketSignal} signal with ${newsSentiment} news sentiment suggests ${marketSignal === 'Bullish' ? 'potential upside' : (marketSignal === 'Bearish' ? 'caution advised' : 'wait for clearer direction')}.`;
+            // Generate trading recommendation
+            let recommendation = '';
+            let recommendationReason = '';
+            let totalScore = 0;
+            if (changePercent > 1) totalScore += 2;
+            if (changePercent > 3) totalScore += 1;
+            if (changePercent < -1) totalScore -= 2;
+            if (changePercent < -3) totalScore -= 1;
+            if (sentimentScore > 0) totalScore += 1;
+            if (sentimentScore < 0) totalScore -= 1;
+            if (fearGreedScore > 65) totalScore += 1;
+            if (fearGreedScore < 35) totalScore -= 1;
+            
+            if (totalScore >= 3) {
+                recommendation = 'BUY / ACCUMULATE';
+                recommendationReason = 'Strong positive momentum, bullish sentiment, and favorable market conditions suggest upside potential.';
+            } else if (totalScore >= 1) {
+                recommendation = 'WATCH / CAUTIOUS BUY';
+                recommendationReason = 'Moderate positive signals. Consider scaling in gradually or waiting for a better entry.';
+            } else if (totalScore <= -3) {
+                recommendation = 'SELL / AVOID';
+                recommendationReason = 'Negative momentum, bearish sentiment, and weakness across indicators suggest downside risk.';
+            } else if (totalScore <= -1) {
+                recommendation = 'WAIT / HOLD';
+                recommendationReason = 'Mixed signals. Better to stay on the sidelines until clearer direction emerges.';
+            } else {
+                recommendation = 'NEUTRAL / HOLD';
+                recommendationReason = 'Balanced signals with no strong directional bias. Monitor for confirmation.';
             }
             
-            document.getElementById('results').innerHTML = `
-                <div style="margin-bottom: 20px;">
-                    <span class="price">$${currentPrice}</span>
-                    <span class="change ${change >= 0 ? 'positive' : 'negative'}">${change >= 0 ? '+' : ''}${change} (${changePercent}%)</span>
-                </div>
-                
-                <div class="metrics">
-                    <div class="metric"><div class="metric-value">${marketSignal}</div><div class="metric-label">Market Signal</div></div>
-                    <div class="metric"><div class="metric-value ${newsSentiment === 'bullish' ? 'positive' : (newsSentiment === 'bearish' ? 'negative' : '')}">${newsSentiment.toUpperCase()}</div><div class="metric-label">News Sentiment</div></div>
-                    <div class="metric"><div class="metric-value" style="color: ${fearGreedScore >= 65 ? '#ff9800' : (fearGreedScore <= 35 ? '#ff6b6b' : '#4facfe')}">${fearGreedLabel}</div><div class="metric-label">Fear & Greed (${fearGreedScore})</div></div>
-                </div>
-                
-                <div class="ai-summary">
-                    <h3>🤖 AI Analysis (Claude)</h3>
-                    <p>${aiSummary}</p>
-                </div>
-                
-                <div style="margin-top: 20px;">
-                    <h3>📰 Latest News</h3>
-                    ${newsArticles.length > 0 ? newsArticles.map(article => `
+            // Build news HTML
+            let newsHTML = '';
+            if (newsArticles.length > 0) {
+                newsHTML = '<h3>📰 Latest News & Headlines</h3>';
+                newsArticles.forEach(article => {
+                    newsHTML += `
                         <div class="news-item" onclick="window.open('${article.url}', '_blank')">
-                            <strong>${article.title || 'No title'}</strong><br>
-                            <small>${article.source?.name || ''} • ${new Date(article.publishedAt).toLocaleDateString()}</small>
-                            <div style="margin-top: 5px;">
-                                <span class="sentiment ${newsSentiment}">Read more</span>
-                            </div>
+                            <strong>${article.title || 'News article'}</strong><br>
+                            <small>${article.source?.name || 'News'} • ${new Date(article.publishedAt).toLocaleDateString()}</small>
                         </div>
-                    `).join('') : '<p>Add a NewsAPI key (free from newsapi.org) to see latest news</p>'}
+                    `;
+                });
+            } else {
+                newsHTML = '<div class="info-box">📰 News preview: Try searching for "Tesla stock news" to see headlines. Free API has daily limits.</div>';
+            }
+            
+            // Display results
+            document.getElementById('results').innerHTML = `
+                ${hasData ? `
+                    <div style="margin-bottom: 25px; text-align: center;">
+                        <span class="price">$${currentPrice}</span>
+                        <span class="change ${change >= 0 ? 'positive' : 'negative'}">${change >= 0 ? '+' : ''}${change} (${changePercent}%)</span>
+                    </div>
+                    
+                    <div class="metrics">
+                        <div class="metric">
+                            <div class="metric-value" style="color: ${signalColor}">${marketSignal}</div>
+                            <div class="metric-label">Market Signal</div>
+                            <div class="score-bar"><div class="score-fill" style="width: ${Math.min(100, Math.max(0, 50 + parseFloat(changePercent) * 5))}%; background: ${signalColor}"></div></div>
+                        </div>
+                        <div class="metric">
+                            <div class="metric-value" style="color: ${newsColor}">${newsSentiment}</div>
+                            <div class="metric-label">News Sentiment (${newsArticles.length} articles)</div>
+                        </div>
+                        <div class="metric">
+                            <div class="metric-value" style="color: ${fearGreedScore >= 70 ? '#ff9800' : (fearGreedScore <= 30 ? '#ff6b6b' : '#4facfe')}">${fearGreedLabel}</div>
+                            <div class="metric-label">Fear & Greed Index</div>
+                            <div class="score-bar"><div class="score-fill" style="width: ${fearGreedScore}%; background: ${fearGreedScore >= 70 ? '#ff9800' : (fearGreedScore <= 30 ? '#ff6b6b' : '#4facfe')}"></div></div>
+                        </div>
+                    </div>
+                    
+                    <div class="recommendation">
+                        <h3>💡 AI-Powered Recommendation</h3>
+                        <div style="font-size: 1.3rem; font-weight: bold; margin-bottom: 10px; color: ${totalScore >= 1 ? '#00c853' : (totalScore <= -1 ? '#ff6b6b' : '#ffa500')}">${recommendation}</div>
+                        <p style="color: #ccc;">${recommendationReason}</p>
+                    </div>
+                    
+                    <div style="margin-top: 25px;">
+                        ${newsHTML}
+                    </div>
+                    
+                    <div class="info-box">
+                        💡 <strong>How it works:</strong> This analyzer combines price momentum, news sentiment analysis, and market psychology (Fear & Greed) to generate trading signals. Green = Bullish signals, Red = Bearish signals.
+                    </div>
+                ` : `
+                    <div class="info-box" style="background: #ff6b6b20;">
+                        ⚠️ Could not find data for "${symbol}". Try a major stock like: AAPL, TSLA, NVDA, GOOGL, MSFT, META, AMZN
+                    </div>
+                `}
+            `;
+            
+        } catch(error) {
+            document.getElementById('results').innerHTML = `
+                <div class="info-box" style="background: #ff6b6b20;">
+                    ⚠️ Error fetching data. The free API has limits. Try again in 30 seconds, or try a different stock symbol like AAPL or TSLA.
+                    <br><br>Details: ${error.message}
                 </div>
             `;
-        } catch(error) {
-            document.getElementById('results').innerHTML = `<div class="error">Error: ${error.message}<br><br>Make sure you have a valid Claude API key. Click the ⚙️ button to add it.</div>`;
         }
     });
+    
+    // Trigger initial analysis
+    setTimeout(() => {
+        document.getElementById('analyzeBtn').click();
+    }, 100);
 </script>
 </body>
 </html>
