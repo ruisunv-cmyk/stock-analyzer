@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>WavStrike · Spotify Music Player</title>
+    <title>WavStrike · Personal Music Library</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
         * {
@@ -13,7 +13,7 @@
         }
 
         body {
-            background: linear-gradient(135deg, #0b0b14 0%, #12121f 50%, #0a0a10 100%);
+            background: linear-gradient(135deg, #0f0f1a 0%, #1a1a2e 50%, #0f0f1a 100%);
             font-family: 'Inter', sans-serif;
             color: #ffffff;
             min-height: 100vh;
@@ -25,25 +25,24 @@
             padding: 24px;
         }
 
-        /* Glassmorphism cards - WavStrike style */
         .glass-card {
             background: rgba(18, 22, 40, 0.75);
             backdrop-filter: blur(16px);
             border-radius: 32px;
-            border: 1px solid rgba(29, 185, 84, 0.25);
+            border: 1px solid rgba(100, 108, 255, 0.25);
             padding: 28px;
             transition: all 0.3s ease;
         }
 
         .glass-card:hover {
-            border-color: rgba(29, 185, 84, 0.5);
-            box-shadow: 0 8px 32px rgba(29, 185, 84, 0.1);
+            border-color: rgba(100, 108, 255, 0.5);
+            box-shadow: 0 8px 32px rgba(100, 108, 255, 0.1);
         }
 
         .logo {
             font-size: 32px;
             font-weight: 800;
-            background: linear-gradient(135deg, #1db954, #1ed760, #0fa04b);
+            background: linear-gradient(135deg, #a855f7, #6366f1, #3b82f6);
             -webkit-background-clip: text;
             background-clip: text;
             color: transparent;
@@ -51,11 +50,11 @@
         }
 
         .badge {
-            background: rgba(29, 185, 84, 0.2);
+            background: rgba(100, 108, 255, 0.2);
             padding: 6px 14px;
             border-radius: 40px;
             font-size: 12px;
-            border: 1px solid rgba(29, 185, 84, 0.4);
+            border: 1px solid rgba(100, 108, 255, 0.4);
         }
 
         .grid-2 {
@@ -65,7 +64,7 @@
             margin-bottom: 24px;
         }
 
-        .now-playing-layout {
+        .now-playing {
             display: flex;
             gap: 28px;
             flex-wrap: wrap;
@@ -76,9 +75,12 @@
             width: 200px;
             height: 200px;
             border-radius: 24px;
+            background: linear-gradient(135deg, #6366f1, #a855f7);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 64px;
             box-shadow: 0 20px 35px -10px rgba(0,0,0,0.5);
-            object-fit: cover;
-            background: linear-gradient(45deg, #1a1a2e, #16213e);
         }
 
         .track-title {
@@ -90,12 +92,12 @@
 
         .artist-name {
             color: #a0aec0;
-            font-size: 18px;
+            font-size: 16px;
             margin-bottom: 24px;
         }
 
-        .btn-spotify {
-            background: #1db954;
+        .btn-primary {
+            background: linear-gradient(135deg, #6366f1, #a855f7);
             border: none;
             padding: 12px 28px;
             border-radius: 60px;
@@ -107,15 +109,10 @@
             margin-right: 12px;
         }
 
-        .btn-spotify:hover {
-            background: #1ed760;
-            transform: scale(1.02);
-        }
-
         .btn-outline {
-            background: rgba(29, 185, 84, 0.15);
-            border: 1px solid #1db954;
-            color: #1db954;
+            background: rgba(100, 108, 255, 0.15);
+            border: 1px solid #6366f1;
+            color: #a5b4fc;
             padding: 12px 24px;
             border-radius: 60px;
             cursor: pointer;
@@ -124,13 +121,13 @@
         }
 
         .btn-outline:hover {
-            background: rgba(29, 185, 84, 0.3);
+            background: rgba(100, 108, 255, 0.3);
         }
 
-        .track-item {
+        .song-item {
             background: rgba(255,255,255,0.04);
             border-radius: 16px;
-            padding: 12px 16px;
+            padding: 14px 18px;
             margin-bottom: 10px;
             display: flex;
             justify-content: space-between;
@@ -139,53 +136,79 @@
             transition: all 0.2s;
         }
 
-        .track-item:hover {
-            background: rgba(29,185,84,0.12);
+        .song-item:hover {
+            background: rgba(100, 108, 255, 0.15);
             transform: translateX(5px);
         }
 
-        .search-input {
-            width: 100%;
-            padding: 14px 20px;
-            background: rgba(255,255,255,0.08);
-            border: 1px solid #2d3348;
-            border-radius: 60px;
-            color: white;
-            font-size: 14px;
-            outline: none;
+        .song-item.active {
+            background: linear-gradient(135deg, rgba(99, 102, 241, 0.3), rgba(168, 85, 247, 0.3));
+            border-left: 3px solid #6366f1;
         }
 
-        .search-input:focus {
-            border-color: #1db954;
+        .upload-area {
+            border: 2px dashed rgba(100, 108, 255, 0.4);
+            border-radius: 24px;
+            padding: 40px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s;
         }
 
-        .progress-bar-container {
+        .upload-area:hover {
+            border-color: #6366f1;
+            background: rgba(99, 102, 241, 0.05);
+        }
+
+        .progress-bar {
             margin-top: 20px;
             background: rgba(255,255,255,0.1);
             border-radius: 20px;
-            height: 4px;
+            height: 6px;
             overflow: hidden;
+            cursor: pointer;
         }
 
         .progress-fill {
-            background: #1db954;
+            background: linear-gradient(90deg, #6366f1, #a855f7);
             height: 100%;
             width: 0%;
-            transition: width 0.3s;
+            transition: width 0.1s linear;
         }
 
-        .footer {
-            text-align: center;
-            padding: 32px;
+        .time-display {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 8px;
             font-size: 12px;
-            opacity: 0.6;
+            opacity: 0.7;
+        }
+
+        .volume-slider {
+            width: 100px;
+            margin-left: 16px;
+            vertical-align: middle;
+        }
+
+        .delete-btn {
+            background: rgba(239, 68, 68, 0.2);
+            border: none;
+            color: #f87171;
+            padding: 6px 12px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 11px;
+        }
+
+        .delete-btn:hover {
+            background: rgba(239, 68, 68, 0.4);
         }
 
         @media (max-width: 900px) {
             .grid-2 {
                 grid-template-columns: 1fr;
             }
-            .now-playing-layout {
+            .now-playing {
                 flex-direction: column;
                 text-align: center;
             }
@@ -197,266 +220,391 @@
     <!-- Header -->
     <div class="glass-card" style="margin-bottom: 24px;">
         <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px;">
-            <div class="logo">◉ WAVSTRIKE · SPOTIFY EDITION</div>
-            <div id="connectionStatus" class="badge">🔌 Not Connected</div>
+            <div class="logo">◉ WAVSTRIKE · YOUR LIBRARY</div>
+            <div class="badge">🎵 Offline Player · Upload MP3</div>
         </div>
     </div>
 
-    <!-- Unauthenticated View -->
-    <div id="loginScreen" style="text-align: center;">
-        <div class="glass-card" style="max-width: 550px; margin: 40px auto;">
-            <h2 style="margin-bottom: 16px; font-size: 32px;">🎧 Welcome to WavStrike Music</h2>
-            <p style="margin-bottom: 32px; color: #bcc3d4;">Connect your Spotify account to control playback,<br>see what's playing, and discover new tracks.</p>
-            <button id="loginButton" class="btn-spotify" style="font-size: 18px; padding: 14px 42px;">🔗 Connect with Spotify</button>
-            <p style="margin-top: 28px; font-size: 12px; opacity: 0.6;">⚠️ Spotify Premium required for playback controls.<br>Free accounts can view current track & recently played.</p>
-        </div>
-    </div>
-
-    <!-- Authenticated Dashboard -->
-    <div id="dashboard" style="display: none;">
-        <!-- Now Playing + Controls -->
-        <div class="grid-2">
-            <div class="glass-card">
-                <div style="color: #1db954; font-size: 12px; letter-spacing: 1px; margin-bottom: 20px;">🎵 NOW PLAYING</div>
-                <div class="now-playing-layout">
-                    <img id="albumArt" class="album-art" src="https://placehold.co/400x400/1a1e2e/white?text=🎵" alt="album">
-                    <div style="flex: 1;">
-                        <div id="trackName" class="track-title">—</div>
-                        <div id="artistName" class="artist-name">—</div>
-                        <div>
-                            <button id="playPauseBtn" class="btn-spotify">▶️ Play/Pause</button>
-                            <button id="nextBtn" class="btn-outline">⏭️ Next</button>
-                            <button id="prevBtn" class="btn-outline">⏮️ Previous</button>
-                        </div>
-                        <div class="progress-bar-container">
-                            <div id="progressFill" class="progress-fill"></div>
-                        </div>
-                        <div id="deviceInfo" style="font-size: 11px; margin-top: 12px; opacity: 0.6;"></div>
+    <div class="grid-2">
+        <!-- Now Playing Section -->
+        <div class="glass-card">
+            <div style="color: #a855f7; font-size: 12px; letter-spacing: 1px; margin-bottom: 20px;">🎧 NOW PLAYING</div>
+            <div class="now-playing">
+                <div class="album-art" id="albumArtDisplay">🎵</div>
+                <div style="flex: 1;">
+                    <div id="currentTrackName" class="track-title">No track selected</div>
+                    <div id="currentTrackArtist" class="artist-name">Upload songs to start</div>
+                    <div>
+                        <button id="playPauseBtn" class="btn-primary">▶️ Play</button>
+                        <button id="prevBtn" class="btn-outline">⏮️ Prev</button>
+                        <button id="nextBtn" class="btn-outline">⏭️ Next</button>
+                        <input type="range" id="volumeSlider" class="volume-slider" min="0" max="100" value="70">
+                    </div>
+                    <div class="progress-bar" id="progressBar">
+                        <div class="progress-fill" id="progressFill"></div>
+                    </div>
+                    <div class="time-display">
+                        <span id="currentTime">0:00</span>
+                        <span id="totalTime">0:00</span>
                     </div>
                 </div>
             </div>
-
-            <!-- Search -->
-            <div class="glass-card">
-                <div style="color: #1db954; font-size: 12px; letter-spacing: 1px; margin-bottom: 20px;">🔍 SEARCH & PLAY</div>
-                <input type="text" id="searchField" class="search-input" placeholder="Search song, artist... e.g., Blinding Lights, The Weeknd, Daft Punk">
-                <button id="searchBtn" style="margin-top: 14px; width: 100%;" class="btn-outline">Search Tracks</button>
-                <div id="searchResultsList" style="margin-top: 20px; max-height: 220px; overflow-y: auto;"></div>
-            </div>
         </div>
 
-        <!-- Recently Played & Top Mix -->
-        <div class="grid-2">
-            <div class="glass-card">
-                <div style="color: #1db954; font-size: 12px; letter-spacing: 1px; margin-bottom: 16px;">⏱️ RECENTLY PLAYED</div>
-                <div id="recentlyPlayedContainer"></div>
+        <!-- Upload Area -->
+        <div class="glass-card">
+            <div style="color: #a855f7; font-size: 12px; letter-spacing: 1px; margin-bottom: 16px;">📤 UPLOAD MUSIC</div>
+            <div class="upload-area" id="uploadArea">
+                <div style="font-size: 48px; margin-bottom: 12px;">🎵</div>
+                <div style="font-weight: 600; margin-bottom: 8px;">Drop MP3 files here or click to upload</div>
+                <div style="font-size: 12px; opacity: 0.6;">Supports: MP3, WAV, OGG (max 50MB per file)</div>
+                <input type="file" id="fileInput" multiple accept=".mp3,.wav,.ogg,.m4a" style="display: none;">
             </div>
-            <div class="glass-card">
-                <div style="color: #1db954; font-size: 12px; letter-spacing: 1px; margin-bottom: 16px;">✨ QUICK PICKS</div>
-                <div id="quickPicksContainer">
-                    <div class="track-item" data-track="spotify:track:4cOdK2wGLETKBW3PvgPWqT">🎸 Blinding Lights - The Weeknd</div>
-                    <div class="track-item" data-track="spotify:track:3n3Ppam7vgaVa1iaRUc9Lp">🎤 Shape of You - Ed Sheeran</div>
-                    <div class="track-item" data-track="spotify:track:0e7ipj03S05BNilyu5bRzt">🌊 As It Was - Harry Styles</div>
-                </div>
+            <div id="uploadStatus" style="margin-top: 12px; font-size: 12px; color: #a5b4fc;"></div>
+        </div>
+    </div>
+
+    <!-- Playlist Section -->
+    <div class="glass-card">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; flex-wrap: wrap;">
+            <div style="color: #a855f7; font-size: 12px; letter-spacing: 1px;">📋 YOUR PLAYLIST</div>
+            <div>
+                <button id="clearAllBtn" class="delete-btn" style="background: rgba(239,68,68,0.15);">🗑️ Clear All</button>
+                <span id="songCount" style="margin-left: 12px; font-size: 12px;">0 songs</span>
+            </div>
+        </div>
+        <div id="playlistContainer" style="max-height: 400px; overflow-y: auto;">
+            <div style="text-align: center; padding: 40px; opacity: 0.5;">
+                No songs yet. Upload your first MP3 file!
             </div>
         </div>
     </div>
-    <div class="footer">WavStrike · Powered by Spotify Web API</div>
 </div>
 
 <script>
-    // ============================================
-    // CONFIGURATION - USE YOUR ACTUAL CLIENT ID
-    // ============================================
-    const CLIENT_ID = 'ad849d4a20c84984af1d152e7deebead';  // YOUR CLIENT ID
-    const REDIRECT_URI = window.location.href.split('#')[0]; // Uses current page URL
+    // Music Library
+    let playlist = []; // Array of { name, artist, url, duration, file }
+    let currentIndex = 0;
+    let isPlaying = false;
     
-    // IMPORTANT: Add this REDIRECT_URI to your Spotify Dashboard!
-    // Currently you have https://wavstrike.com/ - if testing locally,
-    // also add http://localhost:8000 or http://127.0.0.1:8000
-    console.log('Current redirect URI:', REDIRECT_URI);
+    // Audio element
+    const audio = new Audio();
     
-    const SCOPES = [
-        'user-read-playback-state',
-        'user-modify-playback-state',
-        'user-read-currently-playing',
-        'user-read-recently-played'
-    ].join(' ');
+    // DOM elements
+    const playPauseBtn = document.getElementById('playPauseBtn');
+    const prevBtn = document.getElementById('prevBtn');
+    const nextBtn = document.getElementById('nextBtn');
+    const volumeSlider = document.getElementById('volumeSlider');
+    const progressBar = document.getElementById('progressBar');
+    const progressFill = document.getElementById('progressFill');
+    const currentTimeSpan = document.getElementById('currentTime');
+    const totalTimeSpan = document.getElementById('totalTime');
+    const currentTrackNameSpan = document.getElementById('currentTrackName');
+    const currentTrackArtistSpan = document.getElementById('currentTrackArtist');
+    const playlistContainer = document.getElementById('playlistContainer');
+    const uploadArea = document.getElementById('uploadArea');
+    const fileInput = document.getElementById('fileInput');
+    const uploadStatus = document.getElementById('uploadStatus');
+    const songCountSpan = document.getElementById('songCount');
+    const clearAllBtn = document.getElementById('clearAllBtn');
+    const albumArtDisplay = document.getElementById('albumArtDisplay');
     
-    let accessToken = null;
-    let currentDeviceId = null;
-    let intervalId = null;
-    
-    // Helper: Parse token from URL hash
-    function getTokenFromHash() {
-        const hash = window.location.hash.substring(1);
-        const params = new URLSearchParams(hash);
-        return params.get('access_token');
-    }
-    
-    // Save token and clean URL
-    const tokenFromUrl = getTokenFromHash();
-    if (tokenFromUrl) {
-        localStorage.setItem('spotify_token', tokenFromUrl);
-        accessToken = tokenFromUrl;
-        window.history.pushState({}, document.title, window.location.pathname);
-    } else {
-        accessToken = localStorage.getItem('spotify_token');
-    }
-    
-    // Update UI based on auth state
-    function updateAuthUI() {
-        if (accessToken) {
-            document.getElementById('loginScreen').style.display = 'none';
-            document.getElementById('dashboard').style.display = 'block';
-            document.getElementById('connectionStatus').innerHTML = '✅ Connected to Spotify';
-            startPolling();
-            loadCurrentlyPlaying();
-            loadRecentlyPlayed();
-        } else {
-            document.getElementById('loginScreen').style.display = 'block';
-            document.getElementById('dashboard').style.display = 'none';
-            document.getElementById('connectionStatus').innerHTML = '🔌 Not Connected';
-            if (intervalId) clearInterval(intervalId);
+    // Load saved playlist from localStorage
+    function loadPlaylistFromStorage() {
+        const saved = localStorage.getItem('wavstrike_playlist');
+        if (saved) {
+            try {
+                const songs = JSON.parse(saved);
+                // Recreate object URLs
+                songs.forEach(song => {
+                    if (song.dataUrl) {
+                        addSongToPlaylist(song.name, song.artist || 'Local file', song.dataUrl, song.duration);
+                    }
+                });
+            } catch(e) { console.log('Error loading playlist'); }
         }
     }
     
-    // Login redirect to Spotify
-    document.getElementById('loginButton').onclick = () => {
-        const authUrl = `https://accounts.spotify.com/authorize?client_id=${CLIENT_ID}&response_type=token&redirect_uri=${encodeURIComponent(REDIRECT_URI)}&scope=${encodeURIComponent(SCOPES)}`;
-        window.location = authUrl;
-    };
+    // Save playlist to localStorage (store data URLs)
+    function savePlaylistToStorage() {
+        const songsToSave = playlist.map(song => ({
+            name: song.name,
+            artist: song.artist,
+            dataUrl: song.url,
+            duration: song.duration
+        }));
+        localStorage.setItem('wavstrike_playlist', JSON.stringify(songsToSave));
+    }
     
-    // Spotify API calls
-    async function fetchSpotify(endpoint) {
-        if (!accessToken) return null;
-        const res = await fetch(`https://api.spotify.com/v1/${endpoint}`, {
-            headers: { 'Authorization': `Bearer ${accessToken}` }
+    // Add song to playlist
+    function addSongToPlaylist(name, artist, url, duration) {
+        playlist.push({
+            name: name,
+            artist: artist || 'Unknown Artist',
+            url: url,
+            duration: duration || 0
         });
-        if (res.status === 401) {
-            // Token expired
-            localStorage.removeItem('spotify_token');
-            accessToken = null;
-            updateAuthUI();
-            return null;
-        }
-        return res.json();
-    }
-    
-    async function loadCurrentlyPlaying() {
-        const data = await fetchSpotify('me/player');
-        if (!data) return;
+        renderPlaylist();
+        savePlaylistToStorage();
+        updateSongCount();
         
-        if (data.item) {
-            document.getElementById('trackName').innerText = data.item.name;
-            document.getElementById('artistName').innerText = data.item.artists.map(a => a.name).join(', ');
-            if (data.item.album.images[0]) {
-                document.getElementById('albumArt').src = data.item.album.images[0].url;
-            }
-            const isPlaying = data.is_playing;
-            document.getElementById('playPauseBtn').innerHTML = isPlaying ? '⏸️ Pause' : '▶️ Play';
-            
-            // Progress bar
-            if (data.progress_ms && data.item.duration_ms) {
-                const percent = (data.progress_ms / data.item.duration_ms) * 100;
-                document.getElementById('progressFill').style.width = `${percent}%`;
-            }
-            currentDeviceId = data.device?.id;
-            document.getElementById('deviceInfo').innerHTML = `🎧 Playing on: ${data.device?.name || 'Unknown device'}`;
+        // If this is the first song, load it
+        if (playlist.length === 1 && !audio.src) {
+            loadSong(0);
+        }
+    }
+    
+    // Format seconds to MM:SS
+    function formatTime(seconds) {
+        if (isNaN(seconds)) return '0:00';
+        const mins = Math.floor(seconds / 60);
+        const secs = Math.floor(seconds % 60);
+        return `${mins}:${secs.toString().padStart(2, '0')}`;
+    }
+    
+    // Load song by index
+    function loadSong(index) {
+        if (index < 0 || index >= playlist.length) return;
+        
+        currentIndex = index;
+        const song = playlist[currentIndex];
+        audio.src = song.url;
+        audio.load();
+        
+        currentTrackNameSpan.textContent = song.name;
+        currentTrackArtistSpan.textContent = song.artist;
+        albumArtDisplay.textContent = ['🎵', '🎶', '🎸', '🎹', '🎧'][Math.floor(Math.random() * 5)];
+        
+        // Update active state in playlist
+        renderPlaylist();
+        
+        if (isPlaying) {
+            audio.play().catch(e => console.log('Play error:', e));
+        }
+        
+        // Update duration when loaded
+        audio.addEventListener('loadedmetadata', () => {
+            const duration = audio.duration;
+            song.duration = duration;
+            totalTimeSpan.textContent = formatTime(duration);
+            savePlaylistToStorage();
+        });
+    }
+    
+    // Render playlist UI
+    function renderPlaylist() {
+        if (playlist.length === 0) {
+            playlistContainer.innerHTML = '<div style="text-align: center; padding: 40px; opacity: 0.5;">No songs yet. Upload your first MP3 file!</div>';
+            return;
+        }
+        
+        playlistContainer.innerHTML = playlist.map((song, idx) => `
+            <div class="song-item ${idx === currentIndex ? 'active' : ''}" onclick="playSongAtIndex(${idx})">
+                <div style="flex: 1;">
+                    <div style="font-weight: 600;">${escapeHtml(song.name)}</div>
+                    <div style="font-size: 12px; opacity: 0.7;">${escapeHtml(song.artist)}</div>
+                </div>
+                <div style="display: flex; gap: 12px; align-items: center;">
+                    <span style="font-size: 12px;">${formatTime(song.duration)}</span>
+                    <button class="delete-btn" onclick="event.stopPropagation(); deleteSong(${idx})">Remove</button>
+                </div>
+            </div>
+        `).join('');
+    }
+    
+    function escapeHtml(str) {
+        return str.replace(/[&<>]/g, function(m) {
+            if (m === '&') return '&amp;';
+            if (m === '<') return '&lt;';
+            if (m === '>') return '&gt;';
+            return m;
+        });
+    }
+    
+    window.playSongAtIndex = function(index) {
+        if (index === currentIndex && audio.src) {
+            togglePlayPause();
         } else {
-            document.getElementById('trackName').innerText = 'No track playing';
-            document.getElementById('artistName').innerText = 'Start playback from Spotify app';
+            isPlaying = true;
+            loadSong(index);
+            audio.play().catch(e => console.log(e));
+            playPauseBtn.textContent = '⏸️ Pause';
         }
-    }
-    
-    async function loadRecentlyPlayed() {
-        const data = await fetchSpotify('me/player/recently-played?limit=8');
-        if (data && data.items) {
-            const container = document.getElementById('recentlyPlayedContainer');
-            container.innerHTML = data.items.map(item => `
-                <div class="track-item" onclick="playTrack('${item.track.uri}')">
-                    <div>
-                        <strong>${item.track.name}</strong><br>
-                        <small style="opacity:0.7;">${item.track.artists.map(a=>a.name).join(', ')}</small>
-                    </div>
-                    <span style="font-size:12px;">⏵</span>
-                </div>
-            `).join('');
-        }
-    }
-    
-    async function searchTracks(query) {
-        if (!query.trim()) return;
-        const data = await fetchSpotify(`search?q=${encodeURIComponent(query)}&type=track&limit=8`);
-        if (data && data.tracks && data.tracks.items) {
-            const container = document.getElementById('searchResultsList');
-            container.innerHTML = data.tracks.items.map(track => `
-                <div class="track-item" onclick="playTrack('${track.uri}')">
-                    <div>
-                        <strong>${track.name}</strong><br>
-                        <small style="opacity:0.7;">${track.artists.map(a=>a.name).join(', ')}</small>
-                    </div>
-                    <span style="font-size:12px;">▶️ Play</span>
-                </div>
-            `).join('');
-        }
-    }
-    
-    window.playTrack = async function(uri) {
-        if (!accessToken) return;
-        await fetch('https://api.spotify.com/v1/me/player/play', {
-            method: 'PUT',
-            headers: { 'Authorization': `Bearer ${accessToken}`, 'Content-Type': 'application/json' },
-            body: JSON.stringify({ uris: [uri] })
-        }).catch(e => console.log('Playback error:', e));
-        setTimeout(() => loadCurrentlyPlaying(), 500);
     };
     
-    async function controlPlayback(action) {
-        if (!accessToken) return;
-        let endpoint = '';
-        if (action === 'playpause') endpoint = 'me/player/play';
-        else if (action === 'next') endpoint = 'me/player/next';
-        else if (action === 'prev') endpoint = 'me/player/previous';
-        
-        if (action === 'playpause') {
-            const state = await fetchSpotify('me/player');
-            const isPlaying = state?.is_playing;
-            if (isPlaying) {
-                await fetch('https://api.spotify.com/v1/me/player/pause', { method: 'PUT', headers: { 'Authorization': `Bearer ${accessToken}` } });
-            } else {
-                await fetch('https://api.spotify.com/v1/me/player/play', { method: 'PUT', headers: { 'Authorization': `Bearer ${accessToken}` } });
-            }
-        } else {
-            await fetch(`https://api.spotify.com/v1/${endpoint}`, { method: 'POST', headers: { 'Authorization': `Bearer ${accessToken}` } });
+    function deleteSong(index) {
+        // Revoke object URL to free memory
+        if (playlist[index] && playlist[index].url && playlist[index].url.startsWith('blob:')) {
+            URL.revokeObjectURL(playlist[index].url);
         }
-        setTimeout(() => loadCurrentlyPlaying(), 300);
+        playlist.splice(index, 1);
+        
+        if (playlist.length === 0) {
+            audio.pause();
+            audio.src = '';
+            currentTrackNameSpan.textContent = 'No track selected';
+            currentTrackArtistSpan.textContent = 'Upload songs to start';
+            albumArtDisplay.textContent = '🎵';
+            isPlaying = false;
+            playPauseBtn.textContent = '▶️ Play';
+            currentIndex = 0;
+        } else if (index <= currentIndex && currentIndex > 0) {
+            currentIndex--;
+            if (currentIndex >= 0) loadSong(currentIndex);
+            else if (playlist.length > 0) loadSong(0);
+        } else if (index === currentIndex && playlist.length > 0) {
+            loadSong(Math.min(currentIndex, playlist.length - 1));
+        }
+        
+        renderPlaylist();
+        savePlaylistToStorage();
+        updateSongCount();
     }
     
-    document.getElementById('playPauseBtn').onclick = () => controlPlayback('playpause');
-    document.getElementById('nextBtn').onclick = () => controlPlayback('next');
-    document.getElementById('prevBtn').onclick = () => controlPlayback('prev');
-    document.getElementById('searchBtn').onclick = () => searchTracks(document.getElementById('searchField').value);
-    document.getElementById('searchField').onkeypress = (e) => { if (e.key === 'Enter') searchTracks(e.target.value); };
-    
-    // Quick picks click handlers
-    document.querySelectorAll('#quickPicksContainer .track-item').forEach(el => {
-        el.onclick = () => playTrack(el.getAttribute('data-track'));
-    });
-    
-    function startPolling() {
-        if (intervalId) clearInterval(intervalId);
-        intervalId = setInterval(() => {
-            if (accessToken) loadCurrentlyPlaying();
-        }, 4000);
+    function togglePlayPause() {
+        if (!audio.src || playlist.length === 0) return;
+        
+        if (isPlaying) {
+            audio.pause();
+            playPauseBtn.textContent = '▶️ Play';
+        } else {
+            audio.play().catch(e => console.log('Play error:', e));
+            playPauseBtn.textContent = '⏸️ Pause';
+        }
+        isPlaying = !isPlaying;
     }
     
-    // Initialize
-    updateAuthUI();
-    if (accessToken) {
-        loadCurrentlyPlaying();
-        loadRecentlyPlayed();
+    function nextSong() {
+        if (playlist.length === 0) return;
+        const nextIndex = (currentIndex + 1) % playlist.length;
+        isPlaying = true;
+        loadSong(nextIndex);
+        audio.play();
+        playPauseBtn.textContent = '⏸️ Pause';
     }
+    
+    function prevSong() {
+        if (playlist.length === 0) return;
+        const prevIndex = (currentIndex - 1 + playlist.length) % playlist.length;
+        isPlaying = true;
+        loadSong(prevIndex);
+        audio.play();
+        playPauseBtn.textContent = '⏸️ Pause';
+    }
+    
+    function updateSongCount() {
+        songCountSpan.textContent = `${playlist.length} song${playlist.length !== 1 ? 's' : ''}`;
+    }
+    
+    function clearAllSongs() {
+        if (confirm('Remove all songs from playlist? This cannot be undone.')) {
+            // Revoke all blob URLs
+            playlist.forEach(song => {
+                if (song.url && song.url.startsWith('blob:')) URL.revokeObjectURL(song.url);
+            });
+            playlist = [];
+            audio.pause();
+            audio.src = '';
+            currentTrackNameSpan.textContent = 'No track selected';
+            currentTrackArtistSpan.textContent = 'Upload songs to start';
+            isPlaying = false;
+            playPauseBtn.textContent = '▶️ Play';
+            currentIndex = 0;
+            renderPlaylist();
+            savePlaylistToStorage();
+            updateSongCount();
+        }
+    }
+    
+    // Handle file upload
+    function handleFiles(files) {
+        const audioFiles = Array.from(files).filter(f => f.type.startsWith('audio/'));
+        
+        if (audioFiles.length === 0) {
+            uploadStatus.textContent = '⚠️ No valid audio files found';
+            return;
+        }
+        
+        uploadStatus.textContent = `📥 Uploading ${audioFiles.length} file(s)...`;
+        
+        audioFiles.forEach(file => {
+            const url = URL.createObjectURL(file);
+            let fileName = file.name.replace(/\.[^/.]+$/, ''); // Remove extension
+            // Try to parse "Artist - Title" format
+            let artist = 'Local file';
+            let title = fileName;
+            if (fileName.includes(' - ')) {
+                const parts = fileName.split(' - ');
+                artist = parts[0];
+                title = parts.slice(1).join(' - ');
+            }
+            
+            addSongToPlaylist(title, artist, url, 0);
+        });
+        
+        uploadStatus.textContent = `✅ Added ${audioFiles.length} song(s)!`;
+        setTimeout(() => { uploadStatus.textContent = ''; }, 3000);
+    }
+    
+    // Event listeners
+    playPauseBtn.onclick = togglePlayPause;
+    nextBtn.onclick = nextSong;
+    prevBtn.onclick = prevSong;
+    clearAllBtn.onclick = clearAllSongs;
+    
+    volumeSlider.oninput = (e) => {
+        audio.volume = e.target.value / 100;
+    };
+    audio.volume = 0.7;
+    
+    // Progress bar updates
+    audio.ontimeupdate = () => {
+        if (audio.duration) {
+            const percent = (audio.currentTime / audio.duration) * 100;
+            progressFill.style.width = `${percent}%`;
+            currentTimeSpan.textContent = formatTime(audio.currentTime);
+        }
+    };
+    
+    audio.onended = () => {
+        nextSong();
+    };
+    
+    // Click on progress bar to seek
+    progressBar.onclick = (e) => {
+        if (audio.duration) {
+            const rect = progressBar.getBoundingClientRect();
+            const percent = (e.clientX - rect.left) / rect.width;
+            audio.currentTime = percent * audio.duration;
+        }
+    };
+    
+    // Upload handlers
+    uploadArea.onclick = () => fileInput.click();
+    uploadArea.ondragover = (e) => {
+        e.preventDefault();
+        uploadArea.style.borderColor = '#a855f7';
+        uploadArea.style.background = 'rgba(99, 102, 241, 0.1)';
+    };
+    uploadArea.ondragleave = () => {
+        uploadArea.style.borderColor = 'rgba(100, 108, 255, 0.4)';
+        uploadArea.style.background = 'transparent';
+    };
+    uploadArea.ondrop = (e) => {
+        e.preventDefault();
+        uploadArea.style.borderColor = 'rgba(100, 108, 255, 0.4)';
+        uploadArea.style.background = 'transparent';
+        const files = e.dataTransfer.files;
+        handleFiles(files);
+    };
+    fileInput.onchange = (e) => handleFiles(e.target.files);
+    
+    // Load saved playlist on startup
+    loadPlaylistFromStorage();
+    updateSongCount();
+    
+    // Set initial album art
+    albumArtDisplay.textContent = '🎵';
 </script>
 </body>
 </html>
