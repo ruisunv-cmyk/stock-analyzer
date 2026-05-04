@@ -2,8 +2,8 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-    <title>AuditSphere Enterprise | Internal Audit Management Platform</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AuditSphere Pro | Enterprise Internal Audit Platform</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
@@ -16,29 +16,15 @@
 
         body {
             font-family: 'Inter', sans-serif;
-            background: linear-gradient(135deg, #f5f7fa 0%, #eef2f7 100%);
+            background: linear-gradient(135deg, #f0f4f8 0%, #e8edf3 100%);
             color: #1a1f36;
             overflow-x: hidden;
         }
 
-        /* Premium Scrollbar */
-        ::-webkit-scrollbar {
-            width: 6px;
-            height: 6px;
-        }
-        ::-webkit-scrollbar-track {
-            background: #e9ecef;
-            border-radius: 10px;
-        }
-        ::-webkit-scrollbar-thumb {
-            background: #cbd5e1;
-            border-radius: 10px;
-        }
-        ::-webkit-scrollbar-thumb:hover {
-            background: #94a3b8;
-        }
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        ::-webkit-scrollbar-track { background: #e9ecef; border-radius: 10px; }
+        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
 
-        /* Glassmorphism Header */
         .header {
             background: rgba(255, 255, 255, 0.98);
             backdrop-filter: blur(20px);
@@ -59,15 +45,9 @@
             height: 80px;
         }
 
-        .logo-area {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-
+        .logo-area { display: flex; align-items: center; gap: 12px; }
         .logo-icon {
-            width: 40px;
-            height: 40px;
+            width: 40px; height: 40px;
             background: linear-gradient(135deg, #1e3a5f, #2c5f8a);
             border-radius: 12px;
             display: flex;
@@ -75,29 +55,18 @@
             justify-content: center;
             box-shadow: 0 4px 12px rgba(30, 58, 95, 0.2);
         }
-
-        .logo-icon i {
-            font-size: 22px;
-            color: white;
-        }
-
+        .logo-icon i { font-size: 22px; color: white; }
         .logo-text {
-            font-size: 24px;
-            font-weight: 800;
+            font-size: 24px; font-weight: 800;
             background: linear-gradient(135deg, #1e3a5f, #2c5f8a);
             -webkit-background-clip: text;
             background-clip: text;
             color: transparent;
-            letter-spacing: -0.5px;
         }
-
         .logo-badge {
-            font-size: 11px;
-            font-weight: 500;
-            color: #64748b;
-            background: #f1f5f9;
-            padding: 4px 10px;
-            border-radius: 20px;
+            font-size: 11px; font-weight: 500;
+            color: #64748b; background: #f1f5f9;
+            padding: 4px 10px; border-radius: 20px;
             margin-left: 12px;
         }
 
@@ -109,7 +78,6 @@
             border-radius: 16px;
             border: 1px solid #e2e8f0;
         }
-
         .nav-tab {
             padding: 10px 24px;
             border: none;
@@ -117,32 +85,19 @@
             font-weight: 600;
             cursor: pointer;
             border-radius: 12px;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            transition: all 0.3s;
             font-size: 14px;
             color: #475569;
         }
-
-        .nav-tab i {
-            margin-right: 8px;
-            font-size: 14px;
-        }
-
+        .nav-tab i { margin-right: 8px; }
         .nav-tab.active {
             background: white;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
             color: #1e3a5f;
         }
-
-        .user-menu {
-            display: flex;
-            align-items: center;
-            gap: 20px;
-        }
-
         .avatar {
-            width: 44px;
-            height: 44px;
-            background: linear-gradient(135deg, #667eea, #764ba2);
+            width: 44px; height: 44px;
+            background: linear-gradient(135deg, #1e3a5f, #2c5f8a);
             border-radius: 50%;
             display: flex;
             align-items: center;
@@ -150,114 +105,54 @@
             color: white;
             font-weight: 600;
             cursor: pointer;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
         }
 
-        /* Main Container */
         .container {
             max-width: 1600px;
             margin: 0 auto;
             padding: 32px 40px;
         }
 
-        /* Premium Stats Cards */
         .stats-grid {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
             gap: 24px;
             margin-bottom: 32px;
         }
-
         .stat-card {
             background: white;
             border-radius: 24px;
             padding: 24px;
-            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04), 0 8px 24px rgba(0, 0, 0, 0.04);
-            transition: all 0.3s ease;
-            border: 1px solid rgba(0, 0, 0, 0.05);
-            position: relative;
-            overflow: hidden;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.04), 0 8px 24px rgba(0,0,0,0.04);
+            transition: all 0.3s;
+            border: 1px solid rgba(0,0,0,0.05);
+            cursor: pointer;
         }
-
-        .stat-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 3px;
-            background: linear-gradient(90deg, #1e3a5f, #2c5f8a);
-            opacity: 0;
-            transition: opacity 0.3s;
-        }
-
-        .stat-card:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.08);
-        }
-
-        .stat-card:hover::before {
-            opacity: 1;
-        }
-
-        .stat-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 16px;
-        }
-
-        .stat-title {
-            font-size: 13px;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            color: #64748b;
-        }
-
+        .stat-card:hover { transform: translateY(-2px); box-shadow: 0 20px 40px rgba(0,0,0,0.08); }
+        .stat-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
+        .stat-title { font-size: 13px; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; color: #64748b; }
         .stat-icon {
-            width: 48px;
-            height: 48px;
+            width: 48px; height: 48px;
             background: linear-gradient(135deg, #f0f9ff, #e6f2f8);
             border-radius: 16px;
             display: flex;
             align-items: center;
             justify-content: center;
         }
-
-        .stat-icon i {
-            font-size: 24px;
-            color: #1e3a5f;
-        }
-
-        .stat-value {
-            font-size: 42px;
-            font-weight: 800;
-            color: #1a1f36;
-            margin-bottom: 8px;
-        }
-
-        .stat-trend {
-            font-size: 13px;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-        }
-
+        .stat-icon i { font-size: 24px; color: #1e3a5f; }
+        .stat-value { font-size: 42px; font-weight: 800; color: #1a1f36; margin-bottom: 8px; }
+        .stat-trend { font-size: 13px; display: flex; align-items: center; gap: 6px; }
         .trend-up { color: #10b981; }
         .trend-down { color: #ef4444; }
 
-        /* Premium Cards */
         .card {
             background: white;
             border-radius: 28px;
             padding: 28px;
             margin-bottom: 28px;
-            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04), 0 8px 24px rgba(0, 0, 0, 0.04);
-            border: 1px solid rgba(0, 0, 0, 0.05);
-            transition: all 0.3s;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.04), 0 8px 24px rgba(0,0,0,0.04);
+            border: 1px solid rgba(0,0,0,0.05);
         }
-
         .card-header {
             display: flex;
             justify-content: space-between;
@@ -266,22 +161,9 @@
             flex-wrap: wrap;
             gap: 16px;
         }
+        .card-title { font-size: 20px; font-weight: 700; color: #1a1f36; display: flex; align-items: center; gap: 10px; }
+        .card-title i { color: #1e3a5f; }
 
-        .card-title {
-            font-size: 20px;
-            font-weight: 700;
-            color: #1a1f36;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .card-title i {
-            color: #1e3a5f;
-            font-size: 22px;
-        }
-
-        /* Buttons */
         .btn-primary {
             background: linear-gradient(135deg, #1e3a5f, #2c5f8a);
             color: white;
@@ -295,14 +177,8 @@
             display: inline-flex;
             align-items: center;
             gap: 8px;
-            box-shadow: 0 2px 8px rgba(30, 58, 95, 0.2);
         }
-
-        .btn-primary:hover {
-            transform: translateY(-1px);
-            box-shadow: 0 8px 20px rgba(30, 58, 95, 0.3);
-        }
-
+        .btn-primary:hover { transform: translateY(-1px); box-shadow: 0 8px 20px rgba(30,58,95,0.3); }
         .btn-secondary {
             background: #f8fafc;
             color: #334155;
@@ -312,14 +188,7 @@
             cursor: pointer;
             font-size: 13px;
             font-weight: 500;
-            transition: all 0.2s;
         }
-
-        .btn-secondary:hover {
-            background: #f1f5f9;
-            border-color: #cbd5e1;
-        }
-
         .btn-danger {
             background: #fef2f2;
             color: #dc2626;
@@ -329,143 +198,38 @@
             cursor: pointer;
             font-size: 12px;
             font-weight: 500;
-            transition: all 0.2s;
         }
 
-        .btn-danger:hover {
-            background: #fee2e2;
-            transform: scale(1.02);
-        }
-
-        .btn-success {
-            background: #10b981;
-            color: white;
-            border: none;
-            padding: 6px 14px;
-            border-radius: 10px;
-            cursor: pointer;
-            font-size: 12px;
-            font-weight: 500;
-        }
-
-        /* Premium Table */
-        .table-container {
-            overflow-x: auto;
-            border-radius: 16px;
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-
+        .table-container { overflow-x: auto; border-radius: 16px; }
+        table { width: 100%; border-collapse: collapse; }
         th {
             text-align: left;
-            padding: 16px 16px;
+            padding: 16px;
             background: #fafcff;
             font-weight: 600;
             font-size: 13px;
             color: #64748b;
             border-bottom: 1px solid #e2e8f0;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
         }
-
         td {
             padding: 18px 16px;
             border-bottom: 1px solid #f1f5f9;
             font-size: 14px;
-            font-weight: 500;
             color: #1a1f36;
         }
+        tr:hover { background: #fafcff; cursor: pointer; }
 
-        tr:hover {
-            background: #fafcff;
-            transition: background 0.2s;
-        }
+        .risk-high { background: linear-gradient(135deg, #fef2f2, #fee2e2); color: #dc2626; padding: 6px 14px; border-radius: 30px; font-size: 12px; font-weight: 600; display: inline-block; }
+        .risk-medium { background: linear-gradient(135deg, #fffbeb, #fef3c7); color: #d97706; padding: 6px 14px; border-radius: 30px; font-size: 12px; font-weight: 600; }
+        .risk-low { background: linear-gradient(135deg, #ecfdf5, #d1fae5); color: #059669; padding: 6px 14px; border-radius: 30px; font-size: 12px; font-weight: 600; }
+        .status-open { background: #fef2f2; color: #dc2626; padding: 5px 12px; border-radius: 30px; font-size: 12px; font-weight: 600; }
+        .status-progress { background: #fffbeb; color: #d97706; padding: 5px 12px; border-radius: 30px; font-size: 12px; font-weight: 600; }
+        .status-closed { background: #ecfdf5; color: #059669; padding: 5px 12px; border-radius: 30px; font-size: 12px; font-weight: 600; }
 
-        /* Risk Badges Premium */
-        .risk-high {
-            background: linear-gradient(135deg, #fef2f2, #fee2e2);
-            color: #dc2626;
-            padding: 6px 14px;
-            border-radius: 30px;
-            font-size: 12px;
-            font-weight: 600;
-            display: inline-block;
-        }
+        .chart-container { height: 280px; position: relative; }
+        .filter-bar { display: flex; gap: 12px; margin-bottom: 24px; flex-wrap: wrap; }
+        .filter-select { padding: 10px 20px; border: 1px solid #e2e8f0; border-radius: 12px; background: white; font-size: 13px; cursor: pointer; }
 
-        .risk-medium {
-            background: linear-gradient(135deg, #fffbeb, #fef3c7);
-            color: #d97706;
-            padding: 6px 14px;
-            border-radius: 30px;
-            font-size: 12px;
-            font-weight: 600;
-        }
-
-        .risk-low {
-            background: linear-gradient(135deg, #ecfdf5, #d1fae5);
-            color: #059669;
-            padding: 6px 14px;
-            border-radius: 30px;
-            font-size: 12px;
-            font-weight: 600;
-        }
-
-        .status-open {
-            background: #fef2f2;
-            color: #dc2626;
-            padding: 5px 12px;
-            border-radius: 30px;
-            font-size: 12px;
-            font-weight: 600;
-        }
-
-        .status-progress {
-            background: #fffbeb;
-            color: #d97706;
-            padding: 5px 12px;
-            border-radius: 30px;
-            font-size: 12px;
-            font-weight: 600;
-        }
-
-        .status-closed {
-            background: #ecfdf5;
-            color: #059669;
-            padding: 5px 12px;
-            border-radius: 30px;
-            font-size: 12px;
-            font-weight: 600;
-        }
-
-        /* Charts */
-        .chart-container {
-            height: 280px;
-            position: relative;
-        }
-
-        /* Filters */
-        .filter-bar {
-            display: flex;
-            gap: 12px;
-            margin-bottom: 24px;
-            flex-wrap: wrap;
-        }
-
-        .filter-select {
-            padding: 10px 20px;
-            border: 1px solid #e2e8f0;
-            border-radius: 12px;
-            background: white;
-            font-size: 13px;
-            font-weight: 500;
-            color: #334155;
-            cursor: pointer;
-        }
-
-        /* Modal Premium */
         .modal {
             display: none;
             position: fixed;
@@ -479,17 +243,8 @@
             justify-content: center;
             align-items: center;
         }
-
-        .modal.active {
-            display: flex;
-            animation: fadeIn 0.3s ease;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
-        }
-
+        .modal.active { display: flex; animation: fadeIn 0.3s ease; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
         .modal-content {
             background: white;
             border-radius: 32px;
@@ -498,23 +253,9 @@
             width: 90%;
             max-height: 85vh;
             overflow-y: auto;
-            box-shadow: 0 40px 80px rgba(0, 0, 0, 0.2);
         }
-
-        .form-group {
-            margin-bottom: 24px;
-        }
-
-        label {
-            display: block;
-            font-size: 13px;
-            font-weight: 600;
-            margin-bottom: 8px;
-            color: #334155;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-
+        .form-group { margin-bottom: 24px; }
+        label { display: block; font-size: 13px; font-weight: 600; margin-bottom: 8px; color: #334155; }
         input, select, textarea {
             width: 100%;
             padding: 12px 16px;
@@ -522,62 +263,18 @@
             border-radius: 14px;
             font-size: 14px;
             font-family: inherit;
-            transition: all 0.2s;
         }
+        input:focus, select:focus, textarea:focus { outline: none; border-color: #1e3a5f; }
+        .modal-actions { display: flex; gap: 12px; justify-content: flex-end; margin-top: 32px; }
 
-        input:focus, select:focus, textarea:focus {
-            outline: none;
-            border-color: #1e3a5f;
-            box-shadow: 0 0 0 3px rgba(30, 58, 95, 0.1);
-        }
+        .page { display: none; animation: pageFade 0.4s ease; }
+        .page.active { display: block; }
+        @keyframes pageFade { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 28px; }
+        .footer { text-align: center; padding: 32px; color: #94a3b8; font-size: 12px; border-top: 1px solid #e2e8f0; margin-top: 40px; }
 
-        .modal-actions {
-            display: flex;
-            gap: 12px;
-            justify-content: flex-end;
-            margin-top: 32px;
-        }
-
-        .page {
-            display: none;
-            animation: pageFade 0.4s ease;
-        }
-
-        .page.active {
-            display: block;
-        }
-
-        @keyframes pageFade {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        .grid-2 {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 28px;
-        }
-
-        @media (max-width: 1200px) {
-            .stats-grid { grid-template-columns: repeat(2, 1fr); }
-            .grid-2 { grid-template-columns: 1fr; }
-            .container { padding: 24px; }
-            .header-content { padding: 0 24px; }
-        }
-
-        @media (max-width: 768px) {
-            .stats-grid { grid-template-columns: 1fr; }
-            .nav-tabs { flex-wrap: wrap; }
-        }
-
-        .footer {
-            text-align: center;
-            padding: 32px;
-            color: #94a3b8;
-            font-size: 12px;
-            border-top: 1px solid #e2e8f0;
-            margin-top: 40px;
-        }
+        @media (max-width: 1200px) { .stats-grid { grid-template-columns: repeat(2, 1fr); } .grid-2 { grid-template-columns: 1fr; } .container { padding: 24px; } .header-content { padding: 0 24px; } }
+        @media (max-width: 768px) { .stats-grid { grid-template-columns: 1fr; } }
     </style>
 </head>
 <body>
@@ -585,10 +282,7 @@
     <div class="header-content">
         <div class="logo-area">
             <div class="logo-icon"><i class="fas fa-shield-alt"></i></div>
-            <div>
-                <span class="logo-text">AUDITSPHERE</span>
-                <span class="logo-badge">ENTERPRISE</span>
-            </div>
+            <div><span class="logo-text">AUDITSPHERE</span><span class="logo-badge">ENTERPRISE</span></div>
         </div>
         <div class="nav-tabs">
             <button class="nav-tab active" data-page="dashboard"><i class="fas fa-chart-line"></i> Dashboard</button>
@@ -596,9 +290,7 @@
             <button class="nav-tab" data-page="findings"><i class="fas fa-exclamation-triangle"></i> Findings</button>
             <button class="nav-tab" data-page="actions"><i class="fas fa-tasks"></i> Actions</button>
         </div>
-        <div class="user-menu">
-            <div class="avatar">JD</div>
-        </div>
+        <div class="avatar">JD</div>
     </div>
 </div>
 
@@ -606,36 +298,25 @@
     <!-- DASHBOARD -->
     <div id="dashboardPage" class="page active">
         <div class="stats-grid">
-            <div class="stat-card"><div class="stat-header"><div class="stat-title">Total Audits</div><div class="stat-icon"><i class="fas fa-calendar-check"></i></div></div><div class="stat-value" id="totalAudits">0</div><div class="stat-trend"><i class="fas fa-arrow-up trend-up"></i><span class="trend-up">+23% from last year</span></div></div>
-            <div class="stat-card"><div class="stat-header"><div class="stat-title">Open Findings</div><div class="stat-icon"><i class="fas fa-bug"></i></div></div><div class="stat-value" id="openFindings">0</div><div class="stat-trend"><i class="fas fa-flag-checkered"></i> Needs attention</div></div>
-            <div class="stat-card"><div class="stat-header"><div class="stat-title">High Risk</div><div class="stat-icon"><i class="fas fa-fire"></i></div></div><div class="stat-value" id="highRiskCount">0</div><div class="stat-trend trend-down"><i class="fas fa-arrow-down"></i> Critical priority</div></div>
-            <div class="stat-card"><div class="stat-header"><div class="stat-title">Completion Rate</div><div class="stat-icon"><i class="fas fa-chart-simple"></i></div></div><div class="stat-value" id="completionRate">0%</div><div class="stat-trend trend-up"><i class="fas fa-arrow-up"></i> +12% vs target</div></div>
+            <div class="stat-card" onclick="showPage('audits')"><div class="stat-header"><div class="stat-title">Total Audits</div><div class="stat-icon"><i class="fas fa-calendar-check"></i></div></div><div class="stat-value" id="totalAudits">0</div><div class="stat-trend"><i class="fas fa-arrow-up trend-up"></i><span class="trend-up">+23% from last year</span></div></div>
+            <div class="stat-card" onclick="showPage('findings')"><div class="stat-header"><div class="stat-title">Open Findings</div><div class="stat-icon"><i class="fas fa-bug"></i></div></div><div class="stat-value" id="openFindings">0</div><div class="stat-trend"><i class="fas fa-flag-checkered"></i> Needs attention</div></div>
+            <div class="stat-card" onclick="showPage('findings')"><div class="stat-header"><div class="stat-title">High Risk</div><div class="stat-icon"><i class="fas fa-fire"></i></div></div><div class="stat-value" id="highRiskCount">0</div><div class="stat-trend trend-down"><i class="fas fa-arrow-down"></i> Critical priority</div></div>
+            <div class="stat-card" onclick="showPage('findings')"><div class="stat-header"><div class="stat-title">Completion Rate</div><div class="stat-icon"><i class="fas fa-chart-simple"></i></div></div><div class="stat-value" id="completionRate">0%</div><div class="stat-trend trend-up"><i class="fas fa-arrow-up"></i> +12% vs target</div></div>
         </div>
-
         <div class="grid-2">
-            <div class="card">
-                <div class="card-header"><div class="card-title"><i class="fas fa-chart-pie"></i> Risk Distribution</div></div>
-                <div class="chart-container"><canvas id="riskChart"></canvas></div>
-            </div>
-            <div class="card">
-                <div class="card-header"><div class="card-title"><i class="fas fa-chart-line"></i> Finding Trends</div></div>
-                <div class="chart-container"><canvas id="trendChart"></canvas></div>
-            </div>
+            <div class="card"><div class="card-header"><div class="card-title"><i class="fas fa-chart-pie"></i> Risk Distribution</div></div><div class="chart-container"><canvas id="riskChart"></canvas></div></div>
+            <div class="card"><div class="card-header"><div class="card-title"><i class="fas fa-chart-line"></i> Finding Trends (Last 6 Months)</div></div><div class="chart-container"><canvas id="trendChart"></canvas></div></div>
         </div>
-
-        <div class="card">
-            <div class="card-header"><div class="card-title"><i class="fas fa-clock"></i> Recent High-Risk Findings</div><button class="btn-secondary" onclick="showPage('findings')">View All →</button></div>
-            <div class="table-container"><table id="recentFindingsTable"><thead><tr><th>Finding</th><th>Audit</th><th>Risk</th><th>Status</th><th>Due Date</th></tr></thead><tbody></tbody></table></div>
-        </div>
+        <div class="card"><div class="card-header"><div class="card-title"><i class="fas fa-clock"></i> Recent High-Risk Findings</div><button class="btn-secondary" onclick="showPage('findings')">View All →</button></div><div class="table-container"><table id="recentFindingsTable"><thead><tr><th>Finding</th><th>Audit</th><th>Risk</th><th>Status</th><th>Due Date</th></tr></thead><tbody></tbody></table></div></div>
     </div>
 
-    <!-- AUDITS PAGE -->
+    <!-- AUDITS -->
     <div id="auditsPage" class="page">
         <div class="card"><div class="card-header"><div class="card-title"><i class="fas fa-clipboard-list"></i> Audit Register</div><button class="btn-primary" onclick="openAuditModal()"><i class="fas fa-plus"></i> New Audit</button></div>
         <div class="table-container"><table id="auditsTable"><thead><tr><th>Audit Name</th><th>Department</th><th>Scope</th><th>Start Date</th><th>Lead Auditor</th><th>Status</th><th>Actions</th></tr></thead><tbody></tbody></table></div></div>
     </div>
 
-    <!-- FINDINGS PAGE -->
+    <!-- FINDINGS -->
     <div id="findingsPage" class="page">
         <div class="card"><div class="card-header"><div class="card-title"><i class="fas fa-exclamation-triangle"></i> Findings Register</div><button class="btn-primary" onclick="openFindingModal()"><i class="fas fa-plus"></i> New Finding</button></div>
         <div class="filter-bar"><select id="riskFilter" class="filter-select" onchange="renderFindings()"><option value="all">All Risks</option><option value="High">High Risk</option><option value="Medium">Medium Risk</option><option value="Low">Low Risk</option></select>
@@ -643,7 +324,7 @@
         <div class="table-container"><table id="findingsTable"><thead><tr><th>Finding</th><th>Audit</th><th>Risk</th><th>Status</th><th>Assigned To</th><th>Due Date</th><th>Actions</th></tr></thead><tbody></tbody></table></div></div>
     </div>
 
-    <!-- ACTIONS PAGE -->
+    <!-- ACTIONS -->
     <div id="actionsPage" class="page">
         <div class="card"><div class="card-header"><div class="card-title"><i class="fas fa-tasks"></i> Remediation Actions</div><button class="btn-primary" onclick="openActionModal()"><i class="fas fa-plus"></i> New Action</button></div>
         <div class="table-container"><table id="actionsTable"><thead><tr><th>Action Item</th><th>Related Finding</th><th>Owner</th><th>Priority</th><th>Deadline</th><th>Status</th><th>Actions</th></tr></thead><tbody></tbody></table></div></div>
@@ -652,7 +333,7 @@
 </div>
 
 <!-- MODALS -->
-<div id="auditModal" class="modal"><div class="modal-content"><h3 style="margin-bottom: 24px; font-size: 24px;">Create New Audit</h3>
+<div id="auditModal" class="modal"><div class="modal-content"><h3 style="margin-bottom: 24px;">📋 Create New Audit</h3>
 <div class="form-group"><label>Audit Name</label><input type="text" id="auditName" placeholder="e.g., Financial Controls Audit Q1"></div>
 <div class="form-group"><label>Department</label><input type="text" id="auditDept" placeholder="Finance / IT / Operations"></div>
 <div class="form-group"><label>Scope</label><textarea id="auditScope" placeholder="Describe audit scope and objectives..."></textarea></div>
@@ -661,7 +342,7 @@
 <div class="form-group"><label>Lead Auditor</label><input type="text" id="auditLead" placeholder="Auditor name"></div>
 <div class="modal-actions"><button class="btn-secondary" onclick="closeAuditModal()">Cancel</button><button class="btn-primary" onclick="saveAudit()">Create Audit</button></div></div></div>
 
-<div id="findingModal" class="modal"><div class="modal-content"><h3 style="margin-bottom: 24px; font-size: 24px;">Log New Finding</h3>
+<div id="findingModal" class="modal"><div class="modal-content"><h3 style="margin-bottom: 24px;">⚠️ Log New Finding</h3>
 <div class="form-group"><label>Finding Title</label><input type="text" id="findingTitle"></div>
 <div class="form-group"><label>Associated Audit</label><select id="findingAudit"></select></div>
 <div class="form-group"><label>Risk Level</label><select id="findingRisk"><option>High</option><option>Medium</option><option>Low</option></select></div>
@@ -670,7 +351,7 @@
 <div class="form-group"><label>Due Date</label><input type="date" id="findingDue"></div>
 <div class="modal-actions"><button class="btn-secondary" onclick="closeFindingModal()">Cancel</button><button class="btn-primary" onclick="saveFinding()">Save Finding</button></div></div></div>
 
-<div id="actionModal" class="modal"><div class="modal-content"><h3 style="margin-bottom: 24px; font-size: 24px;">Create Action Item</h3>
+<div id="actionModal" class="modal"><div class="modal-content"><h3 style="margin-bottom: 24px;">✅ Create Action Item</h3>
 <div class="form-group"><label>Action Description</label><textarea id="actionDesc"></textarea></div>
 <div class="form-group"><label>Related Finding</label><select id="actionFinding"></select></div>
 <div class="form-group"><label>Owner</label><input type="text" id="actionOwner"></div>
@@ -679,8 +360,9 @@
 <div class="modal-actions"><button class="btn-secondary" onclick="closeActionModal()">Cancel</button><button class="btn-primary" onclick="saveAction()">Create Action</button></div></div></div>
 
 <script>
+    // ========== DATA ==========
     let audits = [
-        { id: 1, name: "Financial Controls Audit Q1", department: "Finance", scope: "Review of financial reporting and internal controls", startDate: "2025-01-15", endDate: "2025-02-15", leadAuditor: "Sarah Chen", status: "Completed" },
+        { id: 1, name: "Financial Controls Audit Q1", department: "Finance", scope: "Review of financial reporting and internal controls over cash disbursements", startDate: "2025-01-15", endDate: "2025-02-15", leadAuditor: "Sarah Chen", status: "Completed" },
         { id: 2, name: "IT Security & Compliance", department: "IT", scope: "Cybersecurity framework and access controls assessment", startDate: "2025-02-01", endDate: "2025-03-01", leadAuditor: "Michael Okonkwo", status: "In Progress" },
         { id: 3, name: "Regulatory Compliance Review", department: "Legal", scope: "GDPR, CCPA, and industry regulations", startDate: "2025-03-10", endDate: "2025-03-30", leadAuditor: "Elena Rodriguez", status: "Planned" },
         { id: 4, name: "Operational Efficiency Audit", department: "Operations", scope: "Process optimization and resource allocation", startDate: "2025-04-05", endDate: "2025-04-25", leadAuditor: "David Kim", status: "Planned" }
@@ -702,18 +384,11 @@
     let nextAuditId = 5, nextFindingId = 5, nextActionId = 4;
     let riskChart, trendChart;
     
+    // ========== HELPERS ==========
     function getAuditName(id) { return audits.find(a => a.id === id)?.name || "Unknown"; }
+    function getFindingTitle(id) { return findings.find(f => f.id === id)?.title || "Unknown"; }
     
-    function updateCharts() {
-        const riskCounts = { High: findings.filter(f => f.risk === 'High' && f.status !== 'Closed').length, Medium: findings.filter(f => f.risk === 'Medium' && f.status !== 'Closed').length, Low: findings.filter(f => f.risk === 'Low' && f.status !== 'Closed').length };
-        if (riskChart) riskChart.destroy();
-        riskChart = new Chart(document.getElementById('riskChart'), { type: 'doughnut', data: { labels: ['High Risk', 'Medium Risk', 'Low Risk'], datasets: [{ data: [riskCounts.High, riskCounts.Medium, riskCounts.Low], backgroundColor: ['#ef4444', '#f59e0b', '#10b981'], borderWidth: 0 }] }, options: { responsive: true, maintainAspectRatio: true, plugins: { legend: { position: 'bottom' } } } });
-        
-        const monthly = [4, 7, 5, 8, 6, 9];
-        if (trendChart) trendChart.destroy();
-        trendChart = new Chart(document.getElementById('trendChart'), { type: 'line', data: { labels: ['Oct', 'Nov', 'Dec', 'Jan', 'Feb', 'Mar'], datasets: [{ label: 'Findings Identified', data: monthly, borderColor: '#1e3a5f', backgroundColor: 'rgba(30, 58, 95, 0.05)', tension: 0.4, fill: true }] }, options: { responsive: true, maintainAspectRatio: true, plugins: { legend: { position: 'top' } } } });
-    }
-    
+    // ========== UPDATE DASHBOARD ==========
     function updateDashboard() {
         document.getElementById('totalAudits').textContent = audits.length;
         const openFindings = findings.filter(f => f.status !== 'Closed').length;
@@ -724,16 +399,85 @@
         document.getElementById('completionRate').textContent = findings.length ? Math.round((closedFindings / findings.length) * 100) : 0;
         
         const recentHighRisk = findings.filter(f => f.risk === 'High').slice(0, 5);
-        document.querySelector('#recentFindingsTable tbody').innerHTML = recentHighRisk.map(f => `<tr><td>${f.title}</td><td>${getAuditName(f.auditId)}</td><td><span class="risk-high">${f.risk}</span></td><td><span class="status-${f.status === 'Open' ? 'open' : f.status === 'In Progress' ? 'progress' : 'closed'}">${f.status}</span></td><td>${f.dueDate}</td></tr>`).join('');
-        updateCharts();
+        document.querySelector('#recentFindingsTable tbody').innerHTML = recentHighRisk.map(f => `
+            <tr onclick="showPage('findings')">
+                <td><strong>${f.title}</strong></td>
+                <td>${getAuditName(f.auditId)}</td>
+                <td><span class="risk-high">${f.risk}</span></td>
+                <td><span class="status-${f.status === 'Open' ? 'open' : f.status === 'In Progress' ? 'progress' : 'closed'}">${f.status}</span></td>
+                <td>${f.dueDate}</td>
+            </tr>
+        `).join('');
+        
+        // Update charts
+        const riskCounts = { High: findings.filter(f => f.risk === 'High' && f.status !== 'Closed').length, Medium: findings.filter(f => f.risk === 'Medium' && f.status !== 'Closed').length, Low: findings.filter(f => f.risk === 'Low' && f.status !== 'Closed').length };
+        if (riskChart) riskChart.destroy();
+        riskChart = new Chart(document.getElementById('riskChart'), { type: 'doughnut', data: { labels: ['High Risk', 'Medium Risk', 'Low Risk'], datasets: [{ data: [riskCounts.High, riskCounts.Medium, riskCounts.Low], backgroundColor: ['#ef4444', '#f59e0b', '#10b981'], borderWidth: 0 }] }, options: { responsive: true, maintainAspectRatio: true, plugins: { legend: { position: 'bottom' } } } });
+        
+        if (trendChart) trendChart.destroy();
+        trendChart = new Chart(document.getElementById('trendChart'), { type: 'line', data: { labels: ['Oct', 'Nov', 'Dec', 'Jan', 'Feb', 'Mar'], datasets: [{ label: 'Findings Identified', data: [4, 7, 5, 8, 6, 9], borderColor: '#1e3a5f', backgroundColor: 'rgba(30, 58, 95, 0.05)', tension: 0.4, fill: true }] }, options: { responsive: true, maintainAspectRatio: true } });
     }
     
+    // ========== RENDER TABLES ==========
     function renderAudits() {
-        document.querySelector('#auditsTable tbody').innerHTML = audits.map(a => `<tr><td><strong>${a.name}</strong></td><td>${a.department}</td><td>${a.scope.substring(0, 60)}${a.scope.length > 60 ? '...' : ''}</td><td>${a.startDate}</td><td>${a.leadAuditor}</td><td><span class="status-${a.status === 'Completed' ? 'closed' : a.status === 'In Progress' ? 'progress' : 'open'}">${a.status}</span></td><td><button class="btn-danger" onclick="deleteAudit(${a.id})"><i class="fas fa-trash"></i></button></td></tr>`).join('');
+        const tbody = document.querySelector('#auditsTable tbody');
+        tbody.innerHTML = audits.map(a => `
+            <tr>
+                <td><strong>${a.name}</strong></td>
+                <td>${a.department}</td>
+                <td>${a.scope.substring(0, 60)}${a.scope.length > 60 ? '...' : ''}</td>
+                <td>${a.startDate}</td>
+                <td>${a.leadAuditor}</td>
+                <td><span class="status-${a.status === 'Completed' ? 'closed' : a.status === 'In Progress' ? 'progress' : 'open'}">${a.status}</span></td>
+                <td><button class="btn-danger" onclick="event.stopPropagation(); deleteAudit(${a.id})"><i class="fas fa-trash"></i> Delete</button></td>
+            </tr>
+        `).join('');
     }
     
     function renderFindings() {
         const riskFilter = document.getElementById('riskFilter').value;
         const statusFilter = document.getElementById('statusFilter').value;
         let filtered = findings.filter(f => (riskFilter === 'all' || f.risk === riskFilter) && (statusFilter === 'all' || f.status === statusFilter));
-        document.querySelector('#findingsTable tbody').innerHTML = filtered.map(f => `<tr><td><strong>${f.title}</strong><br><small style="color:#64748b">
+        const tbody = document.querySelector('#findingsTable tbody');
+        tbody.innerHTML = filtered.map(f => `
+            <tr>
+                <td><strong>${f.title}</strong><br><small style="color:#64748b">${f.description.substring(0, 50)}...</small></td>
+                <td>${getAuditName(f.auditId)}</td>
+                <td><span class="risk-${f.risk.toLowerCase()}">${f.risk}</span></td>
+                <td><span class="status-${f.status === 'Open' ? 'open' : f.status === 'In Progress' ? 'progress' : 'closed'}">${f.status}</span></td>
+                <td>${f.assignedTo}</td>
+                <td>${f.dueDate}</td>
+                <td>
+                    <button class="btn-secondary" style="padding:4px 12px; margin-right:6px;" onclick="event.stopPropagation(); updateFindingStatus(${f.id})"><i class="fas fa-sync-alt"></i> Status</button>
+                    <button class="btn-danger" onclick="event.stopPropagation(); deleteFinding(${f.id})"><i class="fas fa-trash"></i></button>
+                </td>
+            </tr>
+        `).join('');
+    }
+    
+    function renderActions() {
+        const tbody = document.querySelector('#actionsTable tbody');
+        tbody.innerHTML = actions.map(a => `
+            <tr>
+                <td><strong>${a.description}</strong></td>
+                <td>${getFindingTitle(a.findingId)}</td>
+                <td>${a.owner}</td>
+                <td><span class="risk-${a.priority.toLowerCase()}">${a.priority}</span></td>
+                <td>${a.deadline}</td>
+                <td><span class="status-${a.status === 'Completed' ? 'closed' : a.status === 'In Progress' ? 'progress' : 'open'}">${a.status}</span></td>
+                <td>
+                    <button class="btn-secondary" style="padding:4px 12px; margin-right:6px;" onclick="event.stopPropagation(); toggleActionStatus(${a.id})"><i class="fas fa-check"></i> Toggle</button>
+                    <button class="btn-danger" onclick="event.stopPropagation(); deleteAction(${a.id})"><i class="fas fa-trash"></i></button>
+                </td>
+            </tr>
+        `).join('');
+    }
+    
+    // ========== CRUD OPERATIONS ==========
+    function openAuditModal() { document.getElementById('auditModal').classList.add('active'); }
+    function closeAuditModal() { document.getElementById('auditModal').classList.remove('active'); clearAuditForm(); }
+    function clearAuditForm() { document.querySelectorAll('#auditModal input, #auditModal textarea').forEach(el => el.value = ''); }
+    function saveAudit() {
+        const name = document.getElementById('auditName').value;
+        if (!name) { alert('Please enter audit name'); return; }
+        audits.push({ id: nextAuditId++, name: name, department: document.getElementById('auditDept').value, scope: document.getElementById('auditScope').value, startDate: document.getElementById('auditStart').value, endDate: document.getElementById('auditEnd').value, leadAuditor: document.getElementById('auditLead').value,
