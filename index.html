@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Stock Analyzer | Institutional Data & Ratings</title>
+    <title>Pro Stock Analyzer | Finnhub Real Data</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,300..700;1,300..700&display=swap" rel="stylesheet">
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -107,14 +107,13 @@
             margin: 10px 0;
         }
         .progress-fill { height: 100%; border-radius: 2px; transition: width 0.5s; }
-        .institution-item, .news-item {
+        .news-item {
             padding: 12px 0;
             border-bottom: 1px solid #f0f2f5;
             cursor: pointer;
             transition: all 0.2s;
         }
-        .institution-item:hover, .news-item:hover { background: #f8fafc; padding-left: 8px; border-radius: 6px; }
-        .institution-name { font-weight: 600; color: #0f172a; margin-bottom: 4px; }
+        .news-item:hover { background: #f8fafc; padding-left: 8px; border-radius: 6px; }
         .loading { text-align: center; padding: 60px; }
         .spinner {
             border: 2px solid #e2e8f0;
@@ -156,7 +155,7 @@
 </head>
 <body>
 <div class="container">
-    <h1>📊 Professional Stock Analyzer</h1>
+    <h1>📊 Pro Stock Analyzer</h1>
     <div class="sub">Institutional Holdings • Analyst Ratings • News • Real Market Data</div>
     
     <div class="search-box">
@@ -165,103 +164,124 @@
     </div>
     
     <div id="results">
-        <div class="loading"><div class="spinner"></div><p>Loading real data from Yahoo Finance...</p></div>
+        <div class="loading"><div class="spinner"></div><p>Loading real data from Finnhub API...</p></div>
     </div>
-    <div class="note">Data via Yahoo Finance • Institutional holdings from latest SEC filings • Click news for full articles</div>
+    <div class="note">Powered by Finnhub.io • Real-time data for supported symbols • Free tier: 60 calls/minute</div>
 </div>
 
 <script>
-    // Using free CORS proxy to access Yahoo Finance
-    const corsProxy = 'https://cors-anywhere.herokuapp.com/';
+    // ============================================================
+    // 🔑 PASTE YOUR FINNHUB API KEY HERE:
+    // Get it from https://finnhub.io/dashboard after signing up
+    // ============================================================
+    const FINNHUB_API_KEY = 'YOUR_API_KEY_HERE';  // <-- REPLACE THIS
     
-    async function fetchYahooQuote(symbol) {
-        const url = `https://query1.finance.yahoo.com/v8/finance/chart/${symbol}`;
-        try {
-            const response = await fetch(url, {
-                headers: {
-                    'User-Agent': 'Mozilla/5.0',
-                    'Origin': 'https://stock-analyzer.com'
-                }
-            });
-            if (!response.ok) throw new Error('Rate limited');
-            return await response.json();
-        } catch (e) {
-            throw new Error('Yahoo Finance limit reached. Please wait 10 seconds and try again.');
+    // Base URL for Finnhub API
+    const FINNHUB_BASE = 'https://finnhub.io/api/v1';
+    
+    // Helper function for API calls
+    async function finnhubFetch(endpoint, params = {}) {
+        const url = new URL(`${FINNHUB_BASE}/${endpoint}`);
+        params.token = FINNHUB_API_KEY;
+        Object.keys(params).forEach(key => url.searchParams.append(key, params[key]));
+        
+        const response = await fetch(url.toString());
+        if (!response.ok) {
+            const errorText = await response.text();
+            throw new Error(`Finnhub API error: ${response.status} - ${errorText}`);
         }
+        return response.json();
     }
     
-    async function fetchHoldings(symbol) {
-        try {
-            const response = await fetch(`https://query1.finance.yahoo.com/v10/finance/quoteSummary/${symbol}?modules=institutionOwnership,insiderHolders,majorHolders`, {
-                headers: { 'User-Agent': 'Mozilla/5.0' }
-            });
-            const data = await response.json();
-            const result = data.quoteSummary?.result?.[0];
-            
-            let holders = [];
-            if (result?.institutionOwnership?.ownershipList) {
-                holders = result.institutionOwnership.ownershipList.slice(0, 8).map(h => ({
-                    name: h.organization,
-                    shares: h.position,
-                    percent: (h.pctHeld || 0).toFixed(2),
-                    change: h.changePct ? (h.changePct > 0 ? '+' : '') + h.changePct.toFixed(1) + '%' : 'N/A'
-                }));
-            }
-            return holders;
-        } catch (e) {
-            return [];
-        }
+    // Fetch stock quote (current price, change, etc.)
+    async function fetchQuote(symbol) {
+        return finnhubFetch('quote', { symbol });
     }
     
-    async function fetchAnalystRatings(symbol) {
+    // Fetch company profile (market cap, industry, etc.)
+    async function fetchCompanyProfile(symbol) {
         try {
-            const response = await fetch(`https://query1.finance.yahoo.com/v10/finance/quoteSummary/${symbol}?modules=recommendationTrend,priceTargetSummary`, {
-                headers: { 'User-Agent': 'Mozilla/5.0' }
-            });
-            const data = await response.json();
-            const result = data.quoteSummary?.result?.[0];
-            
-            if (result?.recommendationTrend?.trend) {
-                const latest = result.recommendationTrend.trend[result.recommendationTrend.trend.length - 1];
-                return {
-                    rating: latest.rating,
-                    strongBuy: latest.strongBuy,
-                    buy: latest.buy,
-                    hold: latest.hold,
-                    sell: latest.sell,
-                    strongSell: latest.strongSell,
-                    targetMean: result.priceTargetSummary?.priceTargetSummary?.targetMean || null
-                };
-            }
+            return await finnhubFetch('stock/profile2', { symbol });
         } catch (e) {
+            console.log('Profile fetch failed:', e);
             return null;
         }
-        return null;
     }
     
+    // Fetch analyst recommendations
+    async function fetchRecommendations(symbol) {
+        try {
+            const data = await finnhubFetch('stock/recommendation', { symbol });
+            if (data && data.length > 0) {
+                return data[0]; // Most recent month
+            }
+            return null;
+        } catch (e) {
+            console.log('Recommendations fetch failed:', e);
+            return null;
+        }
+    }
+    
+    // Fetch company news (last 7 days)
     async function fetchNews(symbol) {
         try {
-            const response = await fetch(`https://query1.finance.yahoo.com/v1/finance/search?q=${symbol}&newsCount=8`, {
-                headers: { 'User-Agent': 'Mozilla/5.0' }
-            });
-            const data = await response.json();
-            return data.news?.map(n => ({
-                title: n.title,
-                publisher: n.publisher,
-                link: n.link,
-                time: n.providerPublishTime
-            })) || [];
+            const today = new Date();
+            const weekAgo = new Date(today);
+            weekAgo.setDate(today.getDate() - 7);
+            
+            const from = weekAgo.toISOString().split('T')[0];
+            const to = today.toISOString().split('T')[0];
+            
+            return await finnhubFetch('company-news', { symbol, from, to });
         } catch (e) {
+            console.log('News fetch failed:', e);
             return [];
         }
     }
     
-    function getTechnicalRating(currentPrice, avg50, avg200) {
+    // Fetch basic financial metrics for technical rating
+    async function fetchMetrics(symbol) {
+        try {
+            return await finnhubFetch('stock/metric', { symbol, metric: 'all' });
+        } catch (e) {
+            console.log('Metrics fetch failed:', e);
+            return null;
+        }
+    }
+    
+    // Calculate technical rating from metrics and price data
+    function getTechnicalRating(currentPrice, metrics, quote) {
         let score = 50;
-        if (currentPrice > avg50) score += 20;
-        if (currentPrice > avg200) score += 20;
-        if (currentPrice < avg50) score -= 20;
-        if (currentPrice < avg200) score -= 20;
+        let details = [];
+        
+        // Use 52-week high/low if available
+        if (metrics && metrics.metric) {
+            const high52 = metrics.metric['52WeekHigh'];
+            const low52 = metrics.metric['52WeekLow'];
+            if (high52 && low52 && currentPrice) {
+                const percentFromLow = ((currentPrice - low52) / (high52 - low52)) * 100;
+                if (percentFromLow > 80) {
+                    score += 15;
+                    details.push('Near 52-week high');
+                } else if (percentFromLow < 20) {
+                    score -= 15;
+                    details.push('Near 52-week low');
+                }
+            }
+        }
+        
+        // Based on daily change
+        if (quote && quote.dp) {
+            if (quote.dp > 2) {
+                score += 10;
+                details.push(`Up ${quote.dp.toFixed(1)}% today`);
+            } else if (quote.dp < -2) {
+                score -= 10;
+                details.push(`Down ${Math.abs(quote.dp).toFixed(1)}% today`);
+            }
+        }
+        
+        score = Math.min(100, Math.max(0, score));
         
         let rating = '';
         let color = '';
@@ -271,129 +291,149 @@
         else if (score >= 30) { rating = 'Bearish'; color = '#f97316'; }
         else { rating = 'Strong Bearish'; color = '#ef4444'; }
         
-        return { rating, color, score: Math.min(100, Math.max(0, score)) };
+        return { rating, color, score, details: details.join(', ') };
     }
     
     async function analyzeStock() {
         const symbol = document.getElementById('stockInput').value.toUpperCase().trim();
-        if (!symbol) { alert('Enter a stock symbol (AAPL, TSLA, NVDA, NIO, etc.)'); return; }
+        if (!symbol) {
+            alert('Enter a stock symbol (AAPL, TSLA, NVDA, NIO, etc.)');
+            return;
+        }
         
-        document.getElementById('results').innerHTML = '<div class="loading"><div class="spinner"></div><p>Loading real data for ' + symbol + '...</p></div>';
+        if (FINNHUB_API_KEY === 'YOUR_API_KEY_HERE') {
+            document.getElementById('results').innerHTML = `
+                <div class="error">
+                    ⚠️ API Key Not Configured
+                    <br><br>
+                    Please get a free API key from <a href="https://finnhub.io/register" target="_blank" style="color: #3b82f6;">finnhub.io/register</a>
+                    <br>Then paste it in the code where it says "YOUR_API_KEY_HERE"
+                </div>
+            `;
+            return;
+        }
+        
+        document.getElementById('results').innerHTML = '<div class="loading"><div class="spinner"></div><p>Loading real data for ' + symbol + ' from Finnhub...</p></div>';
         
         try {
             // Fetch all data in parallel
-            const [quoteData, holdings, analystRatings, news] = await Promise.all([
-                fetchYahooQuote(symbol),
-                fetchHoldings(symbol),
-                fetchAnalystRatings(symbol),
-                fetchNews(symbol)
+            const [quote, profile, recommendations, news, metrics] = await Promise.all([
+                fetchQuote(symbol),
+                fetchCompanyProfile(symbol),
+                fetchRecommendations(symbol),
+                fetchNews(symbol),
+                fetchMetrics(symbol)
             ]);
             
-            // Extract price data
-            const chart = quoteData.chart.result[0];
-            const meta = chart.meta;
-            const currentPrice = meta.regularMarketPrice;
-            const previousClose = meta.previousClose;
-            const change = currentPrice - previousClose;
-            const changePercent = (change / previousClose) * 100;
+            // Check if quote data is valid
+            if (!quote || quote.c === undefined || quote.c === 0) {
+                throw new Error(`No data found for symbol "${symbol}". Please check the ticker symbol.`);
+            }
             
-            // Get moving averages from indicators
-            const quotes = chart.indicators.quote[0];
-            const closePrices = quotes.close.filter(c => c !== null);
-            const avg50 = closePrices.slice(-50).reduce((a,b) => a+b, 0) / 50;
-            const avg200 = closePrices.slice(-200).reduce((a,b) => a+b, 0) / 200;
+            const currentPrice = quote.c;
+            const change = quote.d || 0;
+            const changePercent = quote.dp || 0;
+            const high = quote.h || currentPrice;
+            const low = quote.l || currentPrice;
+            const previousClose = quote.pc || currentPrice;
             
-            const technical = getTechnicalRating(currentPrice, avg50, avg200);
-            const marketCap = meta.regularMarketMarketCap || 0;
+            const marketCap = profile?.marketCapitalization || null;
+            const industry = profile?.finnhubIndustry || 'N/A';
+            const name = profile?.name || symbol;
             
-            // Process analyst data
-            let analystHTML = '<p>Analyst data temporarily unavailable</p>';
+            const technical = getTechnicalRating(currentPrice, metrics, quote);
+            
+            // Process analyst recommendations
+            let analystHTML = '<p>No analyst data available</p>';
             let analystColor = '#64748b';
-            if (analystRatings) {
-                const ratingMap = { 'strong_buy': 'Strong Buy', 'buy': 'Buy', 'hold': 'Hold', 'sell': 'Sell', 'strong_sell': 'Strong Sell' };
-                const ratingDisplay = ratingMap[analystRatings.rating] || analystRatings.rating.toUpperCase();
-                if (analystRatings.rating === 'strong_buy') analystColor = '#10b981';
-                else if (analystRatings.rating === 'buy') analystColor = '#34d399';
-                else if (analystRatings.rating === 'hold') analystColor = '#f59e0b';
+            let totalRatings = 0;
+            
+            if (recommendations) {
+                const ratings = [
+                    { name: 'Strong Buy', value: recommendations.strongBuy || 0 },
+                    { name: 'Buy', value: recommendations.buy || 0 },
+                    { name: 'Hold', value: recommendations.hold || 0 },
+                    { name: 'Sell', value: recommendations.sell || 0 },
+                    { name: 'Strong Sell', value: recommendations.strongSell || 0 }
+                ];
+                totalRatings = ratings.reduce((sum, r) => sum + r.value, 0);
+                
+                // Determine overall rating
+                const buySum = (recommendations.strongBuy || 0) + (recommendations.buy || 0);
+                const sellSum = (recommendations.sell || 0) + (recommendations.strongSell || 0);
+                let overallRating = '';
+                if (buySum > sellSum * 1.5) overallRating = 'Strong Buy';
+                else if (buySum > sellSum) overallRating = 'Buy';
+                else if (sellSum > buySum * 1.5) overallRating = 'Strong Sell';
+                else if (sellSum > buySum) overallRating = 'Sell';
+                else overallRating = 'Hold';
+                
+                if (overallRating === 'Strong Buy') analystColor = '#10b981';
+                else if (overallRating === 'Buy') analystColor = '#34d399';
+                else if (overallRating === 'Hold') analystColor = '#f59e0b';
                 else analystColor = '#ef4444';
                 
                 analystHTML = `
-                    <div class="metric-big" style="color: ${analystColor}">${ratingDisplay}</div>
+                    <div class="metric-big" style="color: ${analystColor}">${overallRating}</div>
                     <div style="margin-top: 10px;">
-                        <div class="rating"><span>Strong Buy</span><span>${analystRatings.strongBuy || 0}</span></div>
-                        <div class="rating"><span>Buy</span><span>${analystRatings.buy || 0}</span></div>
-                        <div class="rating"><span>Hold</span><span>${analystRatings.hold || 0}</span></div>
-                        <div class="rating"><span>Sell</span><span>${analystRatings.sell || 0}</span></div>
-                        <div class="rating"><span>Strong Sell</span><span>${analystRatings.strongSell || 0}</span></div>
+                        <div class="rating"><span>Strong Buy</span><span>${recommendations.strongBuy || 0}</span></div>
+                        <div class="rating"><span>Buy</span><span>${recommendations.buy || 0}</span></div>
+                        <div class="rating"><span>Hold</span><span>${recommendations.hold || 0}</span></div>
+                        <div class="rating"><span>Sell</span><span>${recommendations.sell || 0}</span></div>
+                        <div class="rating"><span>Strong Sell</span><span>${recommendations.strongSell || 0}</span></div>
                     </div>
-                    ${analystRatings.targetMean ? `<div style="margin-top: 12px; text-align: center;"><strong>Avg Target: $${analystRatings.targetMean.toFixed(2)}</strong></div>` : ''}
+                    <div style="margin-top: 8px; font-size: 0.7rem; color: #64748b; text-align: center;">Based on ${totalRatings} analyst ratings</div>
                 `;
             }
             
-            // Build holdings HTML
-            let holdingsHTML = '<p>No institutional holding data available</p>';
-            if (holdings.length > 0) {
-                holdingsHTML = holdings.map(h => `
-                    <div class="institution-item">
-                        <div class="institution-name">${h.name}</div>
-                        <div style="font-size: 0.85rem; color: #64748b;">Shares: ${(h.shares / 1000000).toFixed(2)}M (${h.percent}% of portfolio)</div>
-                        <div style="font-size: 0.8rem; margin-top: 4px;">Chg: ${h.change}</div>
-                    </div>
-                `).join('');
-            }
-            
-            // Build news HTML
+            // Process news
             let newsHTML = '<p>No recent news found</p>';
-            if (news.length > 0) {
-                newsHTML = news.map(article => `
-                    <div class="news-item" onclick="window.open('${article.link}', '_blank')">
-                        <strong style="font-size: 0.9rem;">${article.title}</strong><br>
-                        <span style="font-size: 0.7rem; color: #94a3b8;">${article.publisher} • ${new Date(article.time * 1000).toLocaleDateString()}</span>
+            if (news && news.length > 0) {
+                newsHTML = news.slice(0, 8).map(article => `
+                    <div class="news-item" onclick="window.open('${article.url}', '_blank')">
+                        <strong style="font-size: 0.9rem;">${article.headline || 'News article'}</strong><br>
+                        <span style="font-size: 0.7rem; color: #94a3b8;">${article.source || 'Finnhub'} • ${new Date(article.datetime * 1000).toLocaleDateString()}</span>
                     </div>
                 `).join('');
             }
             
-            // Overall sentiment score
+            // Sentiment score
             let sentimentScore = 50;
             if (changePercent > 2) sentimentScore += 15;
-            if (changePercent > 5) sentimentScore += 10;
             if (changePercent < -2) sentimentScore -= 15;
-            if (changePercent < -5) sentimentScore -= 10;
-            if (analystRatings?.rating === 'strong_buy') sentimentScore += 15;
-            if (analystRatings?.rating === 'buy') sentimentScore += 8;
-            if (analystRatings?.rating === 'sell') sentimentScore -= 8;
-            if (analystRatings?.rating === 'strong_sell') sentimentScore -= 15;
+            if (recommendations) {
+                const buyWeight = (recommendations.strongBuy || 0) * 2 + (recommendations.buy || 0);
+                const sellWeight = (recommendations.strongSell || 0) * 2 + (recommendations.sell || 0);
+                if (buyWeight > sellWeight * 1.5) sentimentScore += 15;
+                else if (sellWeight > buyWeight * 1.5) sentimentScore -= 15;
+            }
             sentimentScore = Math.min(100, Math.max(0, sentimentScore));
             
-            let sentimentText = '';
-            if (sentimentScore >= 70) sentimentText = 'BULLISH';
-            else if (sentimentScore <= 30) sentimentText = 'BEARISH';
-            else sentimentText = 'NEUTRAL';
+            let sentimentText = sentimentScore >= 70 ? 'BULLISH' : (sentimentScore <= 30 ? 'BEARISH' : 'NEUTRAL');
             let sentimentColor = sentimentScore >= 70 ? '#10b981' : (sentimentScore <= 30 ? '#ef4444' : '#f59e0b');
             
             document.getElementById('results').innerHTML = `
                 <div class="grid-2">
                     <div>
                         <div class="card">
-                            <h3>📈 ${symbol} • CURRENT PRICE</h3>
+                            <h3>📈 ${name} (${symbol})</h3>
                             <div class="price-section">
                                 <span class="price">$${currentPrice.toFixed(2)}</span>
                                 <span class="change ${change >= 0 ? 'positive' : 'negative'}">${change >= 0 ? '+' : ''}$${change.toFixed(2)} (${changePercent.toFixed(2)}%)</span>
                             </div>
-                            <div style="font-size: 0.75rem; color: #64748b; text-align: center;">Market Cap: $${(marketCap / 1e9).toFixed(2)}B</div>
+                            <div style="display: flex; justify-content: space-between; margin-top: 12px;">
+                                <span style="font-size: 0.75rem;">Day High: $${high.toFixed(2)}</span>
+                                <span style="font-size: 0.75rem;">Day Low: $${low.toFixed(2)}</span>
+                                <span style="font-size: 0.75rem;">Prev Close: $${previousClose.toFixed(2)}</span>
+                            </div>
+                            ${marketCap ? `<div style="font-size: 0.75rem; color: #64748b; text-align: center; margin-top: 12px;">Market Cap: $${(marketCap / 1000).toFixed(2)}B | Industry: ${industry}</div>` : ''}
                         </div>
                         
                         <div class="card">
                             <h3>⚡ TECHNICAL RATING</h3>
                             <div class="metric-big" style="color: ${technical.color}">${technical.rating}</div>
-                            <div style="text-align: center; color: #64748b; font-size: 0.85rem;">50-Day: $${avg50.toFixed(2)} | 200-Day: $${avg200.toFixed(2)}</div>
+                            ${technical.details ? `<div style="text-align: center; color: #64748b; font-size: 0.85rem;">${technical.details}</div>` : ''}
                             <div class="progress-bar"><div class="progress-fill" style="width: ${technical.score}%; background: linear-gradient(90deg, #ef4444, #f59e0b, #10b981)"></div></div>
-                        </div>
-                        
-                        <div class="card">
-                            <h3>🏛️ MAJOR INSTITUTIONAL HOLDERS</h3>
-                            ${holdingsHTML}
-                            <div style="margin-top: 8px; font-size: 0.7rem; color: #94a3b8;">* Data from latest SEC 13F filings</div>
                         </div>
                     </div>
                     
@@ -402,9 +442,24 @@
                             <h3>🎯 ANALYST RECOMMENDATIONS</h3>
                             ${analystHTML}
                         </div>
-                        
+                    </div>
+                </div>
+                
+                <div class="grid-2">
+                    <div>
                         <div class="card">
-                            <h3>📰 LATEST NEWS & HEADLINES</h3>
+                            <h3>🏛️ INSTITUTIONAL HOLDINGS NOTE</h3>
+                            <div style="padding: 12px 0;">
+                                <p style="color: #64748b; font-size: 0.85rem;">Full institutional holdings data requires Finnhub's premium tier.</p>
+                                <p style="margin-top: 12px; color: #475569; font-size: 0.8rem;">Free tier provides: Analyst ratings, real-time quotes, news, and company metrics.</p>
+                                <p style="margin-top: 12px; color: #0f172a; font-size: 0.8rem;">💡 For 13F institutional holdings data, check <a href="https://www.sec.gov/edgar" target="_blank" style="color: #3b82f6;">SEC EDGAR</a> directly (free).</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div>
+                        <div class="card">
+                            <h3>📰 LATEST NEWS</h3>
                             ${newsHTML}
                         </div>
                     </div>
@@ -419,14 +474,16 @@
             `;
             
         } catch (error) {
+            console.error('Error:', error);
             document.getElementById('results').innerHTML = `
                 <div class="error">
                     ⚠️ Error: ${error.message}
                     <br><br>
-                    Yahoo Finance has rate limits. Please:
-                    <br>1. Wait 10-15 seconds and try again
-                    <br>2. Try a different symbol (AAPL, TSLA, NVDA, NIO, MSFT)
-                    <br>3. Refresh the page
+                    <strong>Possible fixes:</strong>
+                    <br>1. Make sure you've replaced YOUR_API_KEY_HERE with your actual Finnhub key
+                    <br>2. Check that the stock symbol is valid (try AAPL, TSLA, NVDA)
+                    <br>3. Free tier has 60 calls/minute limit - wait a moment and try again
+                    <br>4. Get a free key at <a href="https://finnhub.io/register" target="_blank" style="color: #3b82f6;">finnhub.io/register</a>
                 </div>
             `;
         }
