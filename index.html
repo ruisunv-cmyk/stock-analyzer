@@ -3,8 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AuditStrike · Internal Audit Management</title>
+    <title>AuditStrike | Executive Audit Platform</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
     <style>
         * {
             margin: 0;
@@ -13,21 +14,21 @@
         }
 
         body {
-            background: #f0f2f5;
+            background: #f6f4eb;
             font-family: 'Inter', sans-serif;
-            color: #1a1a2e;
+            color: #2b2a28;
             line-height: 1.5;
         }
 
-        /* Header */
+        /* Premium Header - Massimo Dutti Style */
         .header {
-            background: white;
-            border-bottom: 1px solid #e2e8f0;
-            padding: 20px 32px;
+            background: #fefcf8;
+            border-bottom: 1px solid #e8e4db;
+            padding: 20px 40px;
             position: sticky;
             top: 0;
             z-index: 100;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+            backdrop-filter: blur(10px);
         }
 
         .header-content {
@@ -41,166 +42,200 @@
         }
 
         .logo {
-            font-size: 28px;
-            font-weight: 800;
-            background: linear-gradient(135deg, #1e3a5f, #2c5f8a);
-            -webkit-background-clip: text;
-            background-clip: text;
-            color: transparent;
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 32px;
+            font-weight: 500;
+            letter-spacing: 2px;
+            color: #3d3a34;
         }
 
         .logo span {
-            font-size: 14px;
+            font-family: 'Inter', sans-serif;
+            font-size: 11px;
             font-weight: 400;
-            color: #64748b;
-            margin-left: 12px;
+            letter-spacing: 2px;
+            color: #9e9b92;
+            margin-left: 16px;
         }
 
         .nav-tabs {
             display: flex;
-            gap: 8px;
-            background: #f1f5f9;
-            padding: 6px;
-            border-radius: 12px;
+            gap: 4px;
+            background: transparent;
+            padding: 4px;
+            border-radius: 0;
         }
 
         .nav-tab {
-            padding: 8px 20px;
+            padding: 10px 24px;
             border: none;
             background: transparent;
             font-weight: 500;
             cursor: pointer;
-            border-radius: 8px;
-            transition: all 0.2s;
-            font-size: 14px;
+            transition: all 0.25s ease;
+            font-size: 13px;
+            letter-spacing: 0.5px;
+            color: #6b6a64;
+            text-transform: uppercase;
         }
 
         .nav-tab.active {
-            background: white;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-            color: #1e3a5f;
+            background: #f0ede6;
+            color: #3d3a34;
+            border-radius: 0;
+        }
+
+        .nav-tab:hover {
+            color: #3d3a34;
         }
 
         /* Main container */
         .container {
             max-width: 1600px;
             margin: 0 auto;
-            padding: 28px 32px;
+            padding: 32px 40px;
         }
 
-        /* Stats cards */
+        /* Premium Stats Cards - Minimal & Elegant */
         .stats-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-            gap: 20px;
-            margin-bottom: 28px;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 24px;
+            margin-bottom: 32px;
         }
 
         .stat-card {
-            background: white;
-            border-radius: 20px;
-            padding: 20px;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
-            border: 1px solid #e2e8f0;
+            background: #fefcf8;
+            border-radius: 0;
+            padding: 28px 24px;
+            border: none;
+            border-bottom: 2px solid #e8e4db;
+            transition: all 0.3s ease;
+        }
+
+        .stat-card:hover {
+            border-bottom-color: #c9b896;
+            transform: translateY(-3px);
         }
 
         .stat-title {
-            font-size: 13px;
+            font-size: 11px;
             font-weight: 500;
-            color: #64748b;
+            color: #9e9b92;
             text-transform: uppercase;
-            letter-spacing: 0.5px;
-            margin-bottom: 8px;
+            letter-spacing: 2px;
+            margin-bottom: 12px;
         }
 
         .stat-value {
-            font-size: 32px;
-            font-weight: 700;
-            color: #1e293b;
+            font-size: 44px;
+            font-weight: 400;
+            color: #2b2a28;
+            margin-bottom: 8px;
+            font-family: 'Cormorant Garamond', serif;
         }
 
         .stat-trend {
             font-size: 12px;
-            margin-top: 8px;
+            color: #9e9b92;
+            letter-spacing: 0.3px;
         }
 
-        .trend-up { color: #10b981; }
-        .trend-down { color: #ef4444; }
+        .trend-up { color: #8b9a7b; }
+        .trend-down { color: #c9a88b; }
 
-        /* Card styles */
+        /* Premium Cards */
         .card {
-            background: white;
-            border-radius: 20px;
-            padding: 24px;
-            margin-bottom: 28px;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
-            border: 1px solid #e2e8f0;
+            background: #fefcf8;
+            border-radius: 0;
+            padding: 32px;
+            margin-bottom: 32px;
+            border: none;
+            border-bottom: 1px solid #e8e4db;
+            transition: all 0.2s ease;
         }
 
         .card-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 20px;
+            margin-bottom: 28px;
             flex-wrap: wrap;
             gap: 16px;
         }
 
         .card-title {
-            font-size: 18px;
-            font-weight: 600;
-            color: #1e293b;
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 22px;
+            font-weight: 500;
+            color: #3d3a34;
+            letter-spacing: 1px;
         }
 
-        /* Buttons */
+        /* Premium Buttons */
         .btn-primary {
-            background: #1e3a5f;
-            color: white;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 10px;
+            background: transparent;
+            color: #3d3a34;
+            border: 1px solid #d4cfc4;
+            padding: 10px 26px;
             font-weight: 500;
             cursor: pointer;
-            font-size: 14px;
-            transition: all 0.2s;
+            font-size: 12px;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            transition: all 0.25s;
         }
 
         .btn-primary:hover {
-            background: #2c5f8a;
-            transform: translateY(-1px);
+            background: #3d3a34;
+            color: #fefcf8;
+            border-color: #3d3a34;
         }
 
         .btn-secondary {
-            background: #f1f5f9;
-            color: #334155;
-            border: 1px solid #cbd5e1;
-            padding: 8px 16px;
-            border-radius: 10px;
+            background: transparent;
+            color: #9e9b92;
+            border: 1px solid #e0dcd2;
+            padding: 8px 20px;
             cursor: pointer;
-            font-size: 13px;
+            font-size: 11px;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            transition: all 0.2s;
+        }
+
+        .btn-secondary:hover {
+            border-color: #c9b896;
+            color: #3d3a34;
         }
 
         .btn-danger {
-            background: #fee2e2;
-            color: #dc2626;
-            border: none;
-            padding: 6px 12px;
-            border-radius: 8px;
+            background: transparent;
+            color: #c9a88b;
+            border: 1px solid #e8ddd2;
+            padding: 6px 14px;
             cursor: pointer;
-            font-size: 12px;
+            font-size: 11px;
+            letter-spacing: 0.5px;
+            transition: all 0.2s;
+        }
+
+        .btn-danger:hover {
+            background: #c9a88b;
+            color: white;
+            border-color: #c9a88b;
         }
 
         .btn-success {
-            background: #10b981;
-            color: white;
-            border: none;
-            padding: 4px 12px;
-            border-radius: 6px;
+            background: transparent;
+            color: #8b9a7b;
+            border: 1px solid #d4decb;
+            padding: 5px 14px;
             cursor: pointer;
-            font-size: 12px;
+            font-size: 11px;
         }
 
-        /* Table styles */
+        /* Premium Table */
         .table-container {
             overflow-x: auto;
         }
@@ -212,78 +247,80 @@
 
         th {
             text-align: left;
-            padding: 12px 12px;
-            background: #f8fafc;
-            font-weight: 600;
-            font-size: 13px;
-            color: #475569;
-            border-bottom: 1px solid #e2e8f0;
+            padding: 16px 12px;
+            background: transparent;
+            font-weight: 500;
+            font-size: 11px;
+            color: #9e9b92;
+            border-bottom: 1px solid #e8e4db;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
         }
 
         td {
-            padding: 14px 12px;
-            border-bottom: 1px solid #f1f5f9;
-            font-size: 14px;
+            padding: 16px 12px;
+            border-bottom: 1px solid #f0ede6;
+            font-size: 13px;
+            color: #4a4945;
         }
 
         tr:hover {
-            background: #faf9fe;
+            background: #faf8f3;
         }
 
-        /* Risk badges */
+        /* Premium Risk Badges - Subdued & Elegant */
         .risk-high {
-            background: #fee2e2;
-            color: #dc2626;
-            padding: 4px 10px;
-            border-radius: 20px;
-            font-size: 12px;
+            background: #f5ede8;
+            color: #c9a88b;
+            padding: 5px 14px;
+            font-size: 11px;
             font-weight: 500;
+            letter-spacing: 0.5px;
             display: inline-block;
         }
 
         .risk-medium {
-            background: #fed7aa;
-            color: #ea580c;
-            padding: 4px 10px;
-            border-radius: 20px;
-            font-size: 12px;
+            background: #efe8df;
+            color: #b89a6e;
+            padding: 5px 14px;
+            font-size: 11px;
             font-weight: 500;
+            letter-spacing: 0.5px;
+            display: inline-block;
         }
 
         .risk-low {
-            background: #d1fae5;
-            color: #059669;
-            padding: 4px 10px;
-            border-radius: 20px;
-            font-size: 12px;
+            background: #e2e8e0;
+            color: #8b9a7b;
+            padding: 5px 14px;
+            font-size: 11px;
             font-weight: 500;
+            letter-spacing: 0.5px;
+            display: inline-block;
         }
 
         .status-open {
-            background: #fee2e2;
-            color: #dc2626;
-            padding: 4px 10px;
-            border-radius: 20px;
-            font-size: 12px;
+            background: #f5ede8;
+            color: #c9a88b;
+            padding: 4px 12px;
+            font-size: 11px;
         }
 
         .status-in-progress {
-            background: #fef3c7;
-            color: #d97706;
-            padding: 4px 10px;
-            border-radius: 20px;
-            font-size: 12px;
+            background: #efe8df;
+            color: #b89a6e;
+            padding: 4px 12px;
+            font-size: 11px;
         }
 
         .status-closed {
-            background: #d1fae5;
-            color: #059669;
-            padding: 4px 10px;
-            border-radius: 20px;
-            font-size: 12px;
+            background: #e2e8e0;
+            color: #8b9a7b;
+            padding: 4px 12px;
+            font-size: 11px;
         }
 
-        /* Modal */
+        /* Premium Modal */
         .modal {
             display: none;
             position: fixed;
@@ -291,7 +328,8 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0,0,0,0.5);
+            background: rgba(43, 42, 40, 0.85);
+            backdrop-filter: blur(4px);
             z-index: 1000;
             justify-content: center;
             align-items: center;
@@ -302,34 +340,43 @@
         }
 
         .modal-content {
-            background: white;
-            border-radius: 24px;
-            padding: 32px;
+            background: #fefcf8;
+            padding: 40px;
             max-width: 600px;
             width: 90%;
             max-height: 85vh;
             overflow-y: auto;
+            border: none;
         }
 
         .form-group {
-            margin-bottom: 20px;
+            margin-bottom: 24px;
         }
 
         label {
             display: block;
-            font-size: 13px;
+            font-size: 11px;
             font-weight: 500;
-            margin-bottom: 6px;
-            color: #334155;
+            letter-spacing: 1px;
+            margin-bottom: 8px;
+            color: #9e9b92;
+            text-transform: uppercase;
         }
 
         input, select, textarea {
             width: 100%;
-            padding: 10px 12px;
-            border: 1px solid #cbd5e1;
-            border-radius: 10px;
-            font-size: 14px;
-            font-family: inherit;
+            padding: 12px 16px;
+            border: 1px solid #e0dcd2;
+            background: transparent;
+            font-size: 13px;
+            font-family: 'Inter', sans-serif;
+            color: #2b2a28;
+            transition: all 0.2s;
+        }
+
+        input:focus, select:focus, textarea:focus {
+            outline: none;
+            border-color: #c9b896;
         }
 
         textarea {
@@ -339,9 +386,9 @@
 
         .modal-actions {
             display: flex;
-            gap: 12px;
+            gap: 16px;
             justify-content: flex-end;
-            margin-top: 24px;
+            margin-top: 32px;
         }
 
         .page {
@@ -350,20 +397,35 @@
 
         .page.active {
             display: block;
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(8px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
         .filter-bar {
             display: flex;
-            gap: 12px;
-            margin-bottom: 20px;
+            gap: 16px;
+            margin-bottom: 28px;
             flex-wrap: wrap;
         }
 
         .filter-select {
-            padding: 8px 16px;
-            border: 1px solid #cbd5e1;
-            border-radius: 10px;
-            font-size: 13px;
+            padding: 10px 20px;
+            border: 1px solid #e0dcd2;
+            background: transparent;
+            font-size: 12px;
+            letter-spacing: 0.5px;
+            color: #6b6a64;
+            cursor: pointer;
+        }
+
+        hr {
+            border: none;
+            border-top: 1px solid #e8e4db;
+            margin: 8px 0;
         }
 
         @media (max-width: 768px) {
@@ -371,7 +433,14 @@
                 padding: 20px;
             }
             .stats-grid {
-                grid-template-columns: 1fr 1fr;
+                grid-template-columns: 1fr;
+                gap: 16px;
+            }
+            .header {
+                padding: 16px 20px;
+            }
+            .card {
+                padding: 24px;
             }
         }
     </style>
@@ -380,13 +449,13 @@
 <div class="header">
     <div class="header-content">
         <div class="logo">
-            🔍 AUDITSTRIKE <span>Internal Audit Management</span>
+            AUDITSTRIKE <span>INTERNAL AUDIT MANAGEMENT</span>
         </div>
         <div class="nav-tabs">
-            <button class="nav-tab active" data-page="dashboard">📊 Dashboard</button>
-            <button class="nav-tab" data-page="audits">📋 Audits</button>
-            <button class="nav-tab" data-page="findings">⚠️ Findings</button>
-            <button class="nav-tab" data-page="actions">✅ Action Items</button>
+            <button class="nav-tab active" data-page="dashboard">Dashboard</button>
+            <button class="nav-tab" data-page="audits">Audits</button>
+            <button class="nav-tab" data-page="findings">Findings</button>
+            <button class="nav-tab" data-page="actions">Actions</button>
         </div>
     </div>
 </div>
@@ -398,28 +467,28 @@
             <div class="stat-card">
                 <div class="stat-title">Total Audits</div>
                 <div class="stat-value" id="totalAudits">0</div>
-                <div class="stat-trend">This year</div>
+                <div class="stat-trend">Fiscal Year 2025</div>
             </div>
             <div class="stat-card">
                 <div class="stat-title">Open Findings</div>
                 <div class="stat-value" id="openFindings">0</div>
-                <div class="stat-trend trend-up">⚠️ Needs attention</div>
+                <div class="stat-trend trend-up">Requires attention</div>
             </div>
             <div class="stat-card">
-                <div class="stat-title">High Risk Issues</div>
+                <div class="stat-title">High Risk</div>
                 <div class="stat-value" id="highRiskCount">0</div>
                 <div class="stat-trend trend-down">Critical priority</div>
             </div>
             <div class="stat-card">
                 <div class="stat-title">Completion Rate</div>
                 <div class="stat-value" id="completionRate">0%</div>
-                <div class="stat-trend trend-up">↑ 12% from last quarter</div>
+                <div class="stat-trend trend-up">Above target</div>
             </div>
         </div>
 
         <div class="card">
             <div class="card-header">
-                <div class="card-title">📈 Recent Audit Findings</div>
+                <div class="card-title">Recent Audit Findings</div>
                 <button class="btn-secondary" onclick="showPage('findings')">View All →</button>
             </div>
             <div class="table-container">
@@ -434,7 +503,8 @@
 
         <div class="card">
             <div class="card-header">
-                <div class="card-title">🎯 Upcoming Audits</div>
+                <div class="card-title">Upcoming Audits</div>
+                <hr>
             </div>
             <div class="table-container">
                 <table id="upcomingAuditsTable">
@@ -449,7 +519,7 @@
     <div id="auditsPage" class="page">
         <div class="card">
             <div class="card-header">
-                <div class="card-title">📋 Audit Schedule</div>
+                <div class="card-title">Audit Schedule</div>
                 <button class="btn-primary" onclick="openAuditModal()">+ New Audit</button>
             </div>
             <div class="table-container">
@@ -467,15 +537,15 @@
     <div id="findingsPage" class="page">
         <div class="card">
             <div class="card-header">
-                <div class="card-title">⚠️ Audit Findings</div>
+                <div class="card-title">Audit Findings Register</div>
                 <button class="btn-primary" onclick="openFindingModal()">+ New Finding</button>
             </div>
             <div class="filter-bar">
                 <select id="riskFilter" class="filter-select" onchange="renderFindings()">
                     <option value="all">All Risks</option>
-                    <option value="High">High Risk</option>
-                    <option value="Medium">Medium Risk</option>
-                    <option value="Low">Low Risk</option>
+                    <option value="High">High</option>
+                    <option value="Medium">Medium</option>
+                    <option value="Low">Low</option>
                 </select>
                 <select id="statusFilter" class="filter-select" onchange="renderFindings()">
                     <option value="all">All Status</option>
@@ -499,7 +569,7 @@
     <div id="actionsPage" class="page">
         <div class="card">
             <div class="card-header">
-                <div class="card-title">✅ Remediation Actions</div>
+                <div class="card-title">Remediation Actions</div>
                 <button class="btn-primary" onclick="openActionModal()">+ New Action</button>
             </div>
             <div class="table-container">
@@ -517,7 +587,7 @@
 <!-- MODALS -->
 <div id="auditModal" class="modal">
     <div class="modal-content">
-        <h3 style="margin-bottom: 20px;">New Audit</h3>
+        <h3 style="margin-bottom: 24px; font-family: 'Cormorant Garamond', serif; font-size: 28px; font-weight: 400;">Create Audit</h3>
         <div class="form-group"><label>Audit Name</label><input type="text" id="auditName" placeholder="e.g., Financial Controls Audit"></div>
         <div class="form-group"><label>Department</label><input type="text" id="auditDept" placeholder="Finance, IT, Operations..."></div>
         <div class="form-group"><label>Scope</label><textarea id="auditScope" placeholder="Describe audit scope..."></textarea></div>
@@ -530,7 +600,7 @@
 
 <div id="findingModal" class="modal">
     <div class="modal-content">
-        <h3 style="margin-bottom: 20px;">New Finding</h3>
+        <h3 style="margin-bottom: 24px; font-family: 'Cormorant Garamond', serif; font-size: 28px; font-weight: 400;">Log Finding</h3>
         <div class="form-group"><label>Finding Title</label><input type="text" id="findingTitle"></div>
         <div class="form-group"><label>Audit</label><select id="findingAudit"></select></div>
         <div class="form-group"><label>Risk Level</label><select id="findingRisk"><option>High</option><option>Medium</option><option>Low</option></select></div>
@@ -543,7 +613,7 @@
 
 <div id="actionModal" class="modal">
     <div class="modal-content">
-        <h3 style="margin-bottom: 20px;">New Action Item</h3>
+        <h3 style="margin-bottom: 24px; font-family: 'Cormorant Garamond', serif; font-size: 28px; font-weight: 400;">Create Action</h3>
         <div class="form-group"><label>Action Description</label><textarea id="actionDesc"></textarea></div>
         <div class="form-group"><label>Related Finding</label><select id="actionFinding"></select></div>
         <div class="form-group"><label>Owner</label><input type="text" id="actionOwner"></div>
@@ -556,26 +626,26 @@
 <script>
     // Data Models
     let audits = [
-        { id: 1, name: "Financial Controls Q1", department: "Finance", scope: "Review of financial reporting controls", startDate: "2025-01-15", endDate: "2025-02-15", leadAuditor: "Sarah Chen", status: "Completed" },
-        { id: 2, name: "IT Security Audit", department: "IT", scope: "Cybersecurity framework assessment", startDate: "2025-02-01", endDate: "2025-03-01", leadAuditor: "Michael Okonkwo", status: "In Progress" },
-        { id: 3, name: "Compliance Review", department: "Legal", scope: "Regulatory compliance check", startDate: "2025-03-10", endDate: "2025-03-30", leadAuditor: "Elena Rodriguez", status: "Planned" }
+        { id: 1, name: "Financial Controls Q1", department: "Finance", scope: "Review of financial reporting and internal controls", startDate: "2025-01-15", endDate: "2025-02-15", leadAuditor: "Sarah Chen", status: "Completed" },
+        { id: 2, name: "IT Security & Compliance", department: "IT", scope: "Cybersecurity framework assessment", startDate: "2025-02-01", endDate: "2025-03-01", leadAuditor: "Michael Okonkwo", status: "In Progress" },
+        { id: 3, name: "Regulatory Compliance Review", department: "Legal", scope: "GDPR, CCPA and industry regulations", startDate: "2025-03-10", endDate: "2025-03-30", leadAuditor: "Elena Rodriguez", status: "Planned" }
     ];
     
     let findings = [
-        { id: 1, title: "Segregation of duties violation", auditId: 1, risk: "High", description: "Same person has access to create and approve payments", assignedTo: "John Smith", dueDate: "2025-03-15", status: "Open" },
+        { id: 1, title: "Segregation of duties violation", auditId: 1, risk: "High", description: "Same employee has access to create and approve payments", assignedTo: "John Smith", dueDate: "2025-03-15", status: "Open" },
         { id: 2, title: "Outdated firewall configuration", auditId: 2, risk: "High", description: "Firewall rules not reviewed since 2023", assignedTo: "Lisa Wong", dueDate: "2025-03-20", status: "In Progress" },
-        { id: 3, title: "Missing policy documentation", auditId: 3, risk: "Medium", description: "Data retention policy not documented", assignedTo: "David Kim", dueDate: "2025-04-10", status: "Open" }
+        { id: 3, title: "Missing data retention policy", auditId: 3, risk: "Medium", description: "Data retention policy not documented", assignedTo: "David Kim", dueDate: "2025-04-10", status: "Open" }
     ];
     
     let actions = [
         { id: 1, description: "Implement dual approval workflow", findingId: 1, owner: "Finance Team", priority: "High", deadline: "2025-03-15", status: "In Progress" },
-        { id: 2, description: "Schedule firewall rule review", findingId: 2, owner: "IT Security", priority: "High", deadline: "2025-03-20", status: "Not Started" }
+        { id: 2, description: "Schedule quarterly firewall review", findingId: 2, owner: "IT Security", priority: "High", deadline: "2025-03-20", status: "Not Started" }
     ];
     
     let nextAuditId = 4, nextFindingId = 4, nextActionId = 3;
     
-    // Helper functions
     function getAuditName(id) { return audits.find(a => a.id === id)?.name || "Unknown"; }
+    function getFindingTitle(id) { return findings.find(f => f.id === id)?.title || "Unknown"; }
     
     function updateDashboard() {
         document.getElementById('totalAudits').textContent = audits.length;
@@ -587,30 +657,37 @@
         const completionRate = findings.length ? Math.round((closedFindings / findings.length) * 100) : 0;
         document.getElementById('completionRate').textContent = completionRate + '%';
         
-        // Recent findings (last 3)
         const recentFindings = [...findings].slice(-3).reverse();
-        const recentTbody = document.querySelector('#recentFindingsTable tbody');
-        recentTbody.innerHTML = recentFindings.map(f => `
-            <tr><td>${f.title}</td><td>${getAuditName(f.auditId)}</td>
-            <td><span class="risk-${f.risk.toLowerCase()}">${f.risk}</span></td>
-            <td><span class="status-${f.status.toLowerCase().replace(' ', '-')}">${f.status}</span></td>
-            <td>${f.dueDate}</td></tr>
+        document.querySelector('#recentFindingsTable tbody').innerHTML = recentFindings.map(f => `
+            <tr>
+                <td>${f.title}</td>
+                <td>${getAuditName(f.auditId)}</td>
+                <td><span class="risk-${f.risk.toLowerCase()}">${f.risk}</span></td>
+                <td><span class="status-${f.status.toLowerCase().replace(' ', '-')}">${f.status}</span></td>
+                <td>${f.dueDate}</td>
+            </tr>
         `).join('');
         
-        // Upcoming audits
         const upcoming = audits.filter(a => a.status !== 'Completed').slice(0, 3);
-        const upcomingTbody = document.querySelector('#upcomingAuditsTable tbody');
-        upcomingTbody.innerHTML = upcoming.map(a => `
-            <tr><td>${a.name}</td><td>${a.department}</td><td>${a.startDate}</td><td>${a.leadAuditor}</td></tr>
+        document.querySelector('#upcomingAuditsTable tbody').innerHTML = upcoming.map(a => `
+            <tr>
+                <td>${a.name}</td>
+                <td>${a.department}</td>
+                <td>${a.startDate}</td>
+                <td>${a.leadAuditor}</td>
+            </tr>
         `).join('');
     }
     
     function renderAudits() {
-        const tbody = document.querySelector('#auditsTable tbody');
-        tbody.innerHTML = audits.map(a => `
+        document.querySelector('#auditsTable tbody').innerHTML = audits.map(a => `
             <tr>
-                <td>${a.name}</td><td>${a.department}</td><td>${a.scope.substring(0, 50)}...</td>
-                <td>${a.startDate}</td><td>${a.endDate}</td><td>${a.leadAuditor}</td>
+                <td>${a.name}</td>
+                <td>${a.department}</td>
+                <td>${a.scope.substring(0, 50)}...</td>
+                <td>${a.startDate}</td>
+                <td>${a.endDate}</td>
+                <td>${a.leadAuditor}</td>
                 <td><span class="status-${a.status.toLowerCase().replace(' ', '-')}">${a.status}</span></td>
                 <td><button class="btn-danger" onclick="deleteAudit(${a.id})">Delete</button></td>
             </tr>
@@ -620,38 +697,41 @@
     function renderFindings() {
         const riskFilter = document.getElementById('riskFilter').value;
         const statusFilter = document.getElementById('statusFilter').value;
-        let filtered = findings;
-        if (riskFilter !== 'all') filtered = filtered.filter(f => f.risk === riskFilter);
-        if (statusFilter !== 'all') filtered = filtered.filter(f => f.status === statusFilter);
+        let filtered = findings.filter(f => (riskFilter === 'all' || f.risk === riskFilter) && (statusFilter === 'all' || f.status === statusFilter));
         
-        const tbody = document.querySelector('#findingsTable tbody');
-        tbody.innerHTML = filtered.map(f => `
+        document.querySelector('#findingsTable tbody').innerHTML = filtered.map(f => `
             <tr>
-                <td>${f.title}</td><td>${getAuditName(f.auditId)}</td>
+                <td>${f.title}</td>
+                <td>${getAuditName(f.auditId)}</td>
                 <td><span class="risk-${f.risk.toLowerCase()}">${f.risk}</span></td>
                 <td><span class="status-${f.status.toLowerCase().replace(' ', '-')}">${f.status}</span></td>
-                <td>${f.assignedTo}</td><td>${f.dueDate}</td>
-                <td><button class="btn-secondary" onclick="updateFindingStatus(${f.id})">Update</button>
-                <button class="btn-danger" onclick="deleteFinding(${f.id})">Delete</button></td>
+                <td>${f.assignedTo}</td>
+                <td>${f.dueDate}</td>
+                <td>
+                    <button class="btn-secondary" style="padding:4px 12px;" onclick="updateFindingStatus(${f.id})">Update</button>
+                    <button class="btn-danger" onclick="deleteFinding(${f.id})">Delete</button>
+                 </td>
             </tr>
         `).join('');
     }
     
     function renderActions() {
-        const tbody = document.querySelector('#actionsTable tbody');
-        tbody.innerHTML = actions.map(a => `
+        document.querySelector('#actionsTable tbody').innerHTML = actions.map(a => `
             <tr>
-                <td>${a.description}</td><td>${getAuditName(findings.find(f => f.id === a.findingId)?.auditId)} / ${a.findingId}</td>
-                <td>${a.owner}</td><td><span class="risk-${a.priority.toLowerCase()}">${a.priority}</span></td>
+                <td>${a.description}</td>
+                <td>${getFindingTitle(a.findingId)}</td>
+                <td>${a.owner}</td>
+                <td><span class="risk-${a.priority.toLowerCase()}">${a.priority}</span></td>
                 <td>${a.deadline}</td>
                 <td><span class="status-${a.status.toLowerCase().replace(' ', '-')}">${a.status}</span></td>
-                <td><button class="btn-success" onclick="toggleActionStatus(${a.id})">Toggle</button>
-                <button class="btn-danger" onclick="deleteAction(${a.id})">Delete</button></td>
+                <td>
+                    <button class="btn-success" onclick="toggleActionStatus(${a.id})">Toggle</button>
+                    <button class="btn-danger" onclick="deleteAction(${a.id})">Delete</button>
+                 </td>
             </tr>
         `).join('');
     }
     
-    // CRUD Operations
     function openAuditModal() { document.getElementById('auditModal').classList.add('active'); }
     function closeAuditModal() { document.getElementById('auditModal').classList.remove('active'); }
     function saveAudit() {
@@ -659,7 +739,6 @@
         closeAuditModal(); renderAudits(); updateDashboard();
         document.querySelectorAll('#auditModal input, #auditModal textarea').forEach(el => el.value = '');
     }
-    
     function deleteAudit(id) { audits = audits.filter(a => a.id !== id); renderAudits(); updateDashboard(); }
     
     function openFindingModal() {
@@ -671,8 +750,8 @@
     function saveFinding() {
         findings.push({ id: nextFindingId++, title: document.getElementById('findingTitle').value, auditId: parseInt(document.getElementById('findingAudit').value), risk: document.getElementById('findingRisk').value, description: document.getElementById('findingDesc').value, assignedTo: document.getElementById('findingAssignee').value, dueDate: document.getElementById('findingDue').value, status: "Open" });
         closeFindingModal(); renderFindings(); updateDashboard();
+        document.querySelectorAll('#findingModal input, #findingModal textarea, #findingModal select').forEach(el => el.value = '');
     }
-    
     function updateFindingStatus(id) {
         const finding = findings.find(f => f.id === id);
         const statuses = ["Open", "In Progress", "Closed"];
@@ -691,6 +770,7 @@
     function saveAction() {
         actions.push({ id: nextActionId++, description: document.getElementById('actionDesc').value, findingId: parseInt(document.getElementById('actionFinding').value), owner: document.getElementById('actionOwner').value, priority: document.getElementById('actionPriority').value, deadline: document.getElementById('actionDeadline').value, status: "Not Started" });
         closeActionModal(); renderActions();
+        document.querySelectorAll('#actionModal input, #actionModal textarea, #actionModal select').forEach(el => el.value = '');
     }
     function toggleActionStatus(id) {
         const action = actions.find(a => a.id === id);
@@ -699,7 +779,6 @@
     }
     function deleteAction(id) { actions = actions.filter(a => a.id !== id); renderActions(); }
     
-    // Navigation
     function showPage(pageName) {
         document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
         document.getElementById(pageName + 'Page').classList.add('active');
