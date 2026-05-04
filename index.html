@@ -8,23 +8,16 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
+        * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
             font-family: 'Inter', sans-serif;
             background: linear-gradient(135deg, #f0f4f8 0%, #e8edf3 100%);
             color: #1a1f36;
             overflow-x: hidden;
         }
-
         ::-webkit-scrollbar { width: 6px; height: 6px; }
         ::-webkit-scrollbar-track { background: #e9ecef; border-radius: 10px; }
         ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
-
         .header {
             background: rgba(255, 255, 255, 0.98);
             backdrop-filter: blur(20px);
@@ -34,7 +27,6 @@
             z-index: 100;
             box-shadow: 0 4px 20px rgba(0, 0, 0, 0.02);
         }
-
         .header-content {
             max-width: 1600px;
             margin: 0 auto;
@@ -44,7 +36,6 @@
             align-items: center;
             height: 80px;
         }
-
         .logo-area { display: flex; align-items: center; gap: 12px; }
         .logo-icon {
             width: 40px; height: 40px;
@@ -69,7 +60,6 @@
             padding: 4px 10px; border-radius: 20px;
             margin-left: 12px;
         }
-
         .nav-tabs {
             display: flex;
             gap: 8px;
@@ -106,13 +96,11 @@
             font-weight: 600;
             cursor: pointer;
         }
-
         .container {
             max-width: 1600px;
             margin: 0 auto;
             padding: 32px 40px;
         }
-
         .stats-grid {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
@@ -144,7 +132,6 @@
         .stat-trend { font-size: 13px; display: flex; align-items: center; gap: 6px; }
         .trend-up { color: #10b981; }
         .trend-down { color: #ef4444; }
-
         .card {
             background: white;
             border-radius: 28px;
@@ -163,7 +150,6 @@
         }
         .card-title { font-size: 20px; font-weight: 700; color: #1a1f36; display: flex; align-items: center; gap: 10px; }
         .card-title i { color: #1e3a5f; }
-
         .btn-primary {
             background: linear-gradient(135deg, #1e3a5f, #2c5f8a);
             color: white;
@@ -199,7 +185,6 @@
             font-size: 12px;
             font-weight: 500;
         }
-
         .table-container { overflow-x: auto; border-radius: 16px; }
         table { width: 100%; border-collapse: collapse; }
         th {
@@ -217,19 +202,16 @@
             font-size: 14px;
             color: #1a1f36;
         }
-        tr:hover { background: #fafcff; cursor: pointer; }
-
+        tr:hover { background: #fafcff; }
         .risk-high { background: linear-gradient(135deg, #fef2f2, #fee2e2); color: #dc2626; padding: 6px 14px; border-radius: 30px; font-size: 12px; font-weight: 600; display: inline-block; }
         .risk-medium { background: linear-gradient(135deg, #fffbeb, #fef3c7); color: #d97706; padding: 6px 14px; border-radius: 30px; font-size: 12px; font-weight: 600; }
         .risk-low { background: linear-gradient(135deg, #ecfdf5, #d1fae5); color: #059669; padding: 6px 14px; border-radius: 30px; font-size: 12px; font-weight: 600; }
-        .status-open { background: #fef2f2; color: #dc2626; padding: 5px 12px; border-radius: 30px; font-size: 12px; font-weight: 600; }
+        .status-open { background: #fef2f2; color: #dc2626; padding: 5px 12px; border-radius: 30px; font-size: 12px; font-weight: 600; display: inline-block; }
         .status-progress { background: #fffbeb; color: #d97706; padding: 5px 12px; border-radius: 30px; font-size: 12px; font-weight: 600; }
         .status-closed { background: #ecfdf5; color: #059669; padding: 5px 12px; border-radius: 30px; font-size: 12px; font-weight: 600; }
-
         .chart-container { height: 280px; position: relative; }
         .filter-bar { display: flex; gap: 12px; margin-bottom: 24px; flex-wrap: wrap; }
         .filter-select { padding: 10px 20px; border: 1px solid #e2e8f0; border-radius: 12px; background: white; font-size: 13px; cursor: pointer; }
-
         .modal {
             display: none;
             position: fixed;
@@ -266,13 +248,11 @@
         }
         input:focus, select:focus, textarea:focus { outline: none; border-color: #1e3a5f; }
         .modal-actions { display: flex; gap: 12px; justify-content: flex-end; margin-top: 32px; }
-
         .page { display: none; animation: pageFade 0.4s ease; }
         .page.active { display: block; }
         @keyframes pageFade { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
         .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 28px; }
         .footer { text-align: center; padding: 32px; color: #94a3b8; font-size: 12px; border-top: 1px solid #e2e8f0; margin-top: 40px; }
-
         @media (max-width: 1200px) { .stats-grid { grid-template-columns: repeat(2, 1fr); } .grid-2 { grid-template-columns: 1fr; } .container { padding: 24px; } .header-content { padding: 0 24px; } }
         @media (max-width: 768px) { .stats-grid { grid-template-columns: 1fr; } }
     </style>
@@ -298,35 +278,35 @@
     <!-- DASHBOARD -->
     <div id="dashboardPage" class="page active">
         <div class="stats-grid">
-            <div class="stat-card" onclick="showPage('audits')"><div class="stat-header"><div class="stat-title">Total Audits</div><div class="stat-icon"><i class="fas fa-calendar-check"></i></div></div><div class="stat-value" id="totalAudits">0</div><div class="stat-trend"><i class="fas fa-arrow-up trend-up"></i><span class="trend-up">+23% from last year</span></div></div>
-            <div class="stat-card" onclick="showPage('findings')"><div class="stat-header"><div class="stat-title">Open Findings</div><div class="stat-icon"><i class="fas fa-bug"></i></div></div><div class="stat-value" id="openFindings">0</div><div class="stat-trend"><i class="fas fa-flag-checkered"></i> Needs attention</div></div>
-            <div class="stat-card" onclick="showPage('findings')"><div class="stat-header"><div class="stat-title">High Risk</div><div class="stat-icon"><i class="fas fa-fire"></i></div></div><div class="stat-value" id="highRiskCount">0</div><div class="stat-trend trend-down"><i class="fas fa-arrow-down"></i> Critical priority</div></div>
-            <div class="stat-card" onclick="showPage('findings')"><div class="stat-header"><div class="stat-title">Completion Rate</div><div class="stat-icon"><i class="fas fa-chart-simple"></i></div></div><div class="stat-value" id="completionRate">0%</div><div class="stat-trend trend-up"><i class="fas fa-arrow-up"></i> +12% vs target</div></div>
+            <div class="stat-card" data-nav="audits"><div class="stat-header"><div class="stat-title">Total Audits</div><div class="stat-icon"><i class="fas fa-calendar-check"></i></div></div><div class="stat-value" id="totalAudits">0</div><div class="stat-trend"><i class="fas fa-arrow-up trend-up"></i><span class="trend-up">+23% from last year</span></div></div>
+            <div class="stat-card" data-nav="findings"><div class="stat-header"><div class="stat-title">Open Findings</div><div class="stat-icon"><i class="fas fa-bug"></i></div></div><div class="stat-value" id="openFindings">0</div><div class="stat-trend"><i class="fas fa-flag-checkered"></i> Needs attention</div></div>
+            <div class="stat-card" data-nav="findings"><div class="stat-header"><div class="stat-title">High Risk</div><div class="stat-icon"><i class="fas fa-fire"></i></div></div><div class="stat-value" id="highRiskCount">0</div><div class="stat-trend trend-down"><i class="fas fa-arrow-down"></i> Critical priority</div></div>
+            <div class="stat-card" data-nav="findings"><div class="stat-header"><div class="stat-title">Completion Rate</div><div class="stat-icon"><i class="fas fa-chart-simple"></i></div></div><div class="stat-value" id="completionRate">0%</div><div class="stat-trend trend-up"><i class="fas fa-arrow-up"></i> +12% vs target</div></div>
         </div>
         <div class="grid-2">
             <div class="card"><div class="card-header"><div class="card-title"><i class="fas fa-chart-pie"></i> Risk Distribution</div></div><div class="chart-container"><canvas id="riskChart"></canvas></div></div>
             <div class="card"><div class="card-header"><div class="card-title"><i class="fas fa-chart-line"></i> Finding Trends (Last 6 Months)</div></div><div class="chart-container"><canvas id="trendChart"></canvas></div></div>
         </div>
-        <div class="card"><div class="card-header"><div class="card-title"><i class="fas fa-clock"></i> Recent High-Risk Findings</div><button class="btn-secondary" onclick="showPage('findings')">View All →</button></div><div class="table-container"><table id="recentFindingsTable"><thead><tr><th>Finding</th><th>Audit</th><th>Risk</th><th>Status</th><th>Due Date</th></tr></thead><tbody></tbody></table></div></div>
+        <div class="card"><div class="card-header"><div class="card-title"><i class="fas fa-clock"></i> Recent High-Risk Findings</div><button class="btn-secondary" data-nav="findings">View All →</button></div><div class="table-container"><table id="recentFindingsTable"><thead><tr><th>Finding</th><th>Audit</th><th>Risk</th><th>Status</th><th>Due Date</th></tr></thead><tbody></tbody></table></div></div>
     </div>
 
     <!-- AUDITS -->
     <div id="auditsPage" class="page">
-        <div class="card"><div class="card-header"><div class="card-title"><i class="fas fa-clipboard-list"></i> Audit Register</div><button class="btn-primary" onclick="openAuditModal()"><i class="fas fa-plus"></i> New Audit</button></div>
+        <div class="card"><div class="card-header"><div class="card-title"><i class="fas fa-clipboard-list"></i> Audit Register</div><button class="btn-primary" id="newAuditBtn"><i class="fas fa-plus"></i> New Audit</button></div>
         <div class="table-container"><table id="auditsTable"><thead><tr><th>Audit Name</th><th>Department</th><th>Scope</th><th>Start Date</th><th>Lead Auditor</th><th>Status</th><th>Actions</th></tr></thead><tbody></tbody></table></div></div>
     </div>
 
     <!-- FINDINGS -->
     <div id="findingsPage" class="page">
-        <div class="card"><div class="card-header"><div class="card-title"><i class="fas fa-exclamation-triangle"></i> Findings Register</div><button class="btn-primary" onclick="openFindingModal()"><i class="fas fa-plus"></i> New Finding</button></div>
-        <div class="filter-bar"><select id="riskFilter" class="filter-select" onchange="renderFindings()"><option value="all">All Risks</option><option value="High">High Risk</option><option value="Medium">Medium Risk</option><option value="Low">Low Risk</option></select>
-        <select id="statusFilter" class="filter-select" onchange="renderFindings()"><option value="all">All Status</option><option value="Open">Open</option><option value="In Progress">In Progress</option><option value="Closed">Closed</option></select></div>
+        <div class="card"><div class="card-header"><div class="card-title"><i class="fas fa-exclamation-triangle"></i> Findings Register</div><button class="btn-primary" id="newFindingBtn"><i class="fas fa-plus"></i> New Finding</button></div>
+        <div class="filter-bar"><select id="riskFilter" class="filter-select"><option value="all">All Risks</option><option value="High">High Risk</option><option value="Medium">Medium Risk</option><option value="Low">Low Risk</option></select>
+        <select id="statusFilter" class="filter-select"><option value="all">All Status</option><option value="Open">Open</option><option value="In Progress">In Progress</option><option value="Closed">Closed</option></select></div>
         <div class="table-container"><table id="findingsTable"><thead><tr><th>Finding</th><th>Audit</th><th>Risk</th><th>Status</th><th>Assigned To</th><th>Due Date</th><th>Actions</th></tr></thead><tbody></tbody></table></div></div>
     </div>
 
     <!-- ACTIONS -->
     <div id="actionsPage" class="page">
-        <div class="card"><div class="card-header"><div class="card-title"><i class="fas fa-tasks"></i> Remediation Actions</div><button class="btn-primary" onclick="openActionModal()"><i class="fas fa-plus"></i> New Action</button></div>
+        <div class="card"><div class="card-header"><div class="card-title"><i class="fas fa-tasks"></i> Remediation Actions</div><button class="btn-primary" id="newActionBtn"><i class="fas fa-plus"></i> New Action</button></div>
         <div class="table-container"><table id="actionsTable"><thead><tr><th>Action Item</th><th>Related Finding</th><th>Owner</th><th>Priority</th><th>Deadline</th><th>Status</th><th>Actions</th></tr></thead><tbody></tbody></table></div></div>
     </div>
     <div class="footer">© 2025 AuditSphere Enterprise — SOC 2 Type II Certified | ISO 27001 Compliant</div>
@@ -340,7 +320,7 @@
 <div class="form-group"><label>Start Date</label><input type="date" id="auditStart"></div>
 <div class="form-group"><label>End Date</label><input type="date" id="auditEnd"></div>
 <div class="form-group"><label>Lead Auditor</label><input type="text" id="auditLead" placeholder="Auditor name"></div>
-<div class="modal-actions"><button class="btn-secondary" onclick="closeAuditModal()">Cancel</button><button class="btn-primary" onclick="saveAudit()">Create Audit</button></div></div></div>
+<div class="modal-actions"><button class="btn-secondary" id="closeAuditModalBtn">Cancel</button><button class="btn-primary" id="saveAuditBtn">Create Audit</button></div></div></div>
 
 <div id="findingModal" class="modal"><div class="modal-content"><h3 style="margin-bottom: 24px;">⚠️ Log New Finding</h3>
 <div class="form-group"><label>Finding Title</label><input type="text" id="findingTitle"></div>
@@ -349,7 +329,7 @@
 <div class="form-group"><label>Description</label><textarea id="findingDesc"></textarea></div>
 <div class="form-group"><label>Assigned To</label><input type="text" id="findingAssignee"></div>
 <div class="form-group"><label>Due Date</label><input type="date" id="findingDue"></div>
-<div class="modal-actions"><button class="btn-secondary" onclick="closeFindingModal()">Cancel</button><button class="btn-primary" onclick="saveFinding()">Save Finding</button></div></div></div>
+<div class="modal-actions"><button class="btn-secondary" id="closeFindingModalBtn">Cancel</button><button class="btn-primary" id="saveFindingBtn">Save Finding</button></div></div></div>
 
 <div id="actionModal" class="modal"><div class="modal-content"><h3 style="margin-bottom: 24px;">✅ Create Action Item</h3>
 <div class="form-group"><label>Action Description</label><textarea id="actionDesc"></textarea></div>
@@ -357,7 +337,7 @@
 <div class="form-group"><label>Owner</label><input type="text" id="actionOwner"></div>
 <div class="form-group"><label>Priority</label><select id="actionPriority"><option>High</option><option>Medium</option><option>Low</option></select></div>
 <div class="form-group"><label>Deadline</label><input type="date" id="actionDeadline"></div>
-<div class="modal-actions"><button class="btn-secondary" onclick="closeActionModal()">Cancel</button><button class="btn-primary" onclick="saveAction()">Create Action</button></div></div></div>
+<div class="modal-actions"><button class="btn-secondary" id="closeActionModalBtn">Cancel</button><button class="btn-primary" id="saveActionBtn">Create Action</button></div></div></div>
 
 <script>
     // ========== DATA ==========
@@ -388,6 +368,31 @@
     function getAuditName(id) { return audits.find(a => a.id === id)?.name || "Unknown"; }
     function getFindingTitle(id) { return findings.find(f => f.id === id)?.title || "Unknown"; }
     
+    // ========== NAVIGATION - FIXED ==========
+    function showPage(pageId) {
+        // Hide all pages
+        document.querySelectorAll('.page').forEach(page => {
+            page.classList.remove('active');
+        });
+        // Show selected page
+        const targetPage = document.getElementById(pageId + 'Page');
+        if (targetPage) targetPage.classList.add('active');
+        
+        // Update active tab styling
+        document.querySelectorAll('.nav-tab').forEach(tab => {
+            tab.classList.remove('active');
+            if (tab.getAttribute('data-page') === pageId) {
+                tab.classList.add('active');
+            }
+        });
+        
+        // Refresh data for the shown page
+        if (pageId === 'dashboard') updateDashboard();
+        if (pageId === 'audits') renderAudits();
+        if (pageId === 'findings') renderFindings();
+        if (pageId === 'actions') renderActions();
+    }
+    
     // ========== UPDATE DASHBOARD ==========
     function updateDashboard() {
         document.getElementById('totalAudits').textContent = audits.length;
@@ -400,7 +405,7 @@
         
         const recentHighRisk = findings.filter(f => f.risk === 'High').slice(0, 5);
         document.querySelector('#recentFindingsTable tbody').innerHTML = recentHighRisk.map(f => `
-            <tr onclick="showPage('findings')">
+            <tr style="cursor:pointer">
                 <td><strong>${f.title}</strong></td>
                 <td>${getAuditName(f.auditId)}</td>
                 <td><span class="risk-high">${f.risk}</span></td>
@@ -409,7 +414,6 @@
             </tr>
         `).join('');
         
-        // Update charts
         const riskCounts = { High: findings.filter(f => f.risk === 'High' && f.status !== 'Closed').length, Medium: findings.filter(f => f.risk === 'Medium' && f.status !== 'Closed').length, Low: findings.filter(f => f.risk === 'Low' && f.status !== 'Closed').length };
         if (riskChart) riskChart.destroy();
         riskChart = new Chart(document.getElementById('riskChart'), { type: 'doughnut', data: { labels: ['High Risk', 'Medium Risk', 'Low Risk'], datasets: [{ data: [riskCounts.High, riskCounts.Medium, riskCounts.Low], backgroundColor: ['#ef4444', '#f59e0b', '#10b981'], borderWidth: 0 }] }, options: { responsive: true, maintainAspectRatio: true, plugins: { legend: { position: 'bottom' } } } });
@@ -418,7 +422,7 @@
         trendChart = new Chart(document.getElementById('trendChart'), { type: 'line', data: { labels: ['Oct', 'Nov', 'Dec', 'Jan', 'Feb', 'Mar'], datasets: [{ label: 'Findings Identified', data: [4, 7, 5, 8, 6, 9], borderColor: '#1e3a5f', backgroundColor: 'rgba(30, 58, 95, 0.05)', tension: 0.4, fill: true }] }, options: { responsive: true, maintainAspectRatio: true } });
     }
     
-    // ========== RENDER TABLES ==========
+    // ========== RENDER FUNCTIONS ==========
     function renderAudits() {
         const tbody = document.querySelector('#auditsTable tbody');
         tbody.innerHTML = audits.map(a => `
@@ -429,7 +433,7 @@
                 <td>${a.startDate}</td>
                 <td>${a.leadAuditor}</td>
                 <td><span class="status-${a.status === 'Completed' ? 'closed' : a.status === 'In Progress' ? 'progress' : 'open'}">${a.status}</span></td>
-                <td><button class="btn-danger" onclick="event.stopPropagation(); deleteAudit(${a.id})"><i class="fas fa-trash"></i> Delete</button></td>
+                <td><button class="btn-danger" onclick="deleteAudit(${a.id})"><i class="fas fa-trash"></i> Delete</button></td>
             </tr>
         `).join('');
     }
@@ -448,8 +452,8 @@
                 <td>${f.assignedTo}</td>
                 <td>${f.dueDate}</td>
                 <td>
-                    <button class="btn-secondary" style="padding:4px 12px; margin-right:6px;" onclick="event.stopPropagation(); updateFindingStatus(${f.id})"><i class="fas fa-sync-alt"></i> Status</button>
-                    <button class="btn-danger" onclick="event.stopPropagation(); deleteFinding(${f.id})"><i class="fas fa-trash"></i></button>
+                    <button class="btn-secondary" style="padding:4px 12px; margin-right:6px;" onclick="updateFindingStatus(${f.id})"><i class="fas fa-sync-alt"></i> Status</button>
+                    <button class="btn-danger" onclick="deleteFinding(${f.id})"><i class="fas fa-trash"></i></button>
                 </td>
             </tr>
         `).join('');
@@ -466,8 +470,8 @@
                 <td>${a.deadline}</td>
                 <td><span class="status-${a.status === 'Completed' ? 'closed' : a.status === 'In Progress' ? 'progress' : 'open'}">${a.status}</span></td>
                 <td>
-                    <button class="btn-secondary" style="padding:4px 12px; margin-right:6px;" onclick="event.stopPropagation(); toggleActionStatus(${a.id})"><i class="fas fa-check"></i> Toggle</button>
-                    <button class="btn-danger" onclick="event.stopPropagation(); deleteAction(${a.id})"><i class="fas fa-trash"></i></button>
+                    <button class="btn-secondary" style="padding:4px 12px; margin-right:6px;" onclick="toggleActionStatus(${a.id})"><i class="fas fa-check"></i> Toggle</button>
+                    <button class="btn-danger" onclick="deleteAction(${a.id})"><i class="fas fa-trash"></i></button>
                 </td>
             </tr>
         `).join('');
@@ -475,9 +479,6 @@
     
     // ========== CRUD OPERATIONS ==========
     function openAuditModal() { document.getElementById('auditModal').classList.add('active'); }
-    function closeAuditModal() { document.getElementById('auditModal').classList.remove('active'); clearAuditForm(); }
-    function clearAuditForm() { document.querySelectorAll('#auditModal input, #auditModal textarea').forEach(el => el.value = ''); }
+    function closeAuditModal() { document.getElementById('auditModal').classList.remove('active'); }
     function saveAudit() {
         const name = document.getElementById('auditName').value;
-        if (!name) { alert('Please enter audit name'); return; }
-        audits.push({ id: nextAuditId++, name: name, department: document.getElementById('auditDept').value, scope: document.getElementById('auditScope').value, startDate: document.getElementById('auditStart').value, endDate: document.getElementById('auditEnd').value, leadAuditor: document.getElementById('auditLead').value,
