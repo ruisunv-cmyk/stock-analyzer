@@ -3,19 +3,24 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AuditStrike | Tecan Enterprise Audit Platform</title>
+    <title>AuditStrike | Executive Audit Platform</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
         body {
             background: #f6f4eb;
             font-family: 'Inter', sans-serif;
             color: #2b2a28;
             line-height: 1.5;
         }
+
         .header {
             background: #fefcf8;
             border-bottom: 1px solid #e8e4db;
@@ -23,7 +28,9 @@
             position: sticky;
             top: 0;
             z-index: 100;
+            backdrop-filter: blur(10px);
         }
+
         .header-content {
             max-width: 1600px;
             margin: 0 auto;
@@ -33,6 +40,7 @@
             flex-wrap: wrap;
             gap: 20px;
         }
+
         .logo {
             font-family: 'Cormorant Garamond', serif;
             font-size: 32px;
@@ -40,70 +48,241 @@
             letter-spacing: 2px;
             color: #3d3a34;
         }
+
         .logo span {
             font-family: 'Inter', sans-serif;
             font-size: 11px;
+            font-weight: 400;
+            letter-spacing: 2px;
             color: #9e9b92;
             margin-left: 16px;
         }
+
         .nav-tabs {
             display: flex;
             gap: 4px;
+            background: transparent;
+            padding: 4px;
+            border-radius: 0;
             flex-wrap: wrap;
         }
+
         .nav-tab {
             padding: 10px 24px;
             border: none;
             background: transparent;
             font-weight: 500;
             cursor: pointer;
+            transition: all 0.25s ease;
             font-size: 13px;
             letter-spacing: 0.5px;
             color: #6b6a64;
             text-transform: uppercase;
         }
+
         .nav-tab.active {
             background: #f0ede6;
             color: #3d3a34;
+            border-radius: 0;
         }
+
+        .nav-tab:hover {
+            color: #3d3a34;
+        }
+
         .container {
             max-width: 1600px;
             margin: 0 auto;
             padding: 32px 40px;
         }
+
+        /* Calendar Styles */
+        .calendar-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 32px;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .calendar-nav {
+            display: flex;
+            gap: 16px;
+            align-items: center;
+        }
+
+        .calendar-nav-btn {
+            background: transparent;
+            border: 1px solid #e0dcd2;
+            padding: 10px 20px;
+            cursor: pointer;
+            font-size: 13px;
+            transition: all 0.2s;
+        }
+
+        .calendar-nav-btn:hover {
+            border-color: #c9b896;
+        }
+
+        .current-month {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 28px;
+            font-weight: 500;
+            color: #3d3a34;
+        }
+
+        .calendar-grid {
+            background: #fefcf8;
+            border: 1px solid #e8e4db;
+            overflow-x: auto;
+        }
+
+        .calendar-weekdays {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            background: #faf8f3;
+            border-bottom: 1px solid #e8e4db;
+        }
+
+        .calendar-weekday {
+            padding: 16px;
+            text-align: center;
+            font-size: 11px;
+            font-weight: 500;
+            letter-spacing: 1px;
+            color: #9e9b92;
+            text-transform: uppercase;
+        }
+
+        .calendar-days {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            min-height: 600px;
+        }
+
+        .calendar-day {
+            border-right: 1px solid #e8e4db;
+            border-bottom: 1px solid #e8e4db;
+            padding: 12px;
+            min-height: 120px;
+            background: #fefcf8;
+            transition: all 0.2s;
+            position: relative;
+        }
+
+        .calendar-day:hover {
+            background: #faf8f3;
+        }
+
+        .calendar-day.other-month {
+            background: #f9f7f2;
+            color: #c4c1b8;
+        }
+
+        .day-number {
+            font-size: 13px;
+            font-weight: 500;
+            color: #6b6a64;
+            margin-bottom: 8px;
+        }
+
+        .calendar-day.other-month .day-number {
+            color: #c4c1b8;
+        }
+
+        .event-item {
+            background: #e8e4db;
+            padding: 4px 8px;
+            margin-bottom: 4px;
+            border-radius: 0;
+            font-size: 10px;
+            cursor: pointer;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            transition: all 0.2s;
+        }
+
+        .event-item.audit-event {
+            background: #e2e8e0;
+            border-left: 2px solid #8b9a7b;
+        }
+
+        .event-item.todo-event {
+            background: #f5ede8;
+            border-left: 2px solid #c9a88b;
+        }
+
+        .event-item:hover {
+            transform: translateX(2px);
+        }
+
+        .add-todo-btn {
+            position: absolute;
+            bottom: 8px;
+            right: 8px;
+            width: 24px;
+            height: 24px;
+            background: transparent;
+            border: 1px solid #e0dcd2;
+            cursor: pointer;
+            font-size: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            transition: opacity 0.2s;
+        }
+
+        .calendar-day:hover .add-todo-btn {
+            opacity: 1;
+        }
+
+        /* Stats Cards */
         .stats-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
             gap: 24px;
             margin-bottom: 32px;
         }
+
         .stat-card {
             background: #fefcf8;
             padding: 28px 24px;
             border-bottom: 2px solid #e8e4db;
+            transition: all 0.3s ease;
             cursor: pointer;
-            transition: all 0.3s;
         }
-        .stat-card:hover { border-bottom-color: #c9b896; transform: translateY(-3px); }
+
+        .stat-card:hover {
+            border-bottom-color: #c9b896;
+            transform: translateY(-3px);
+        }
+
         .stat-title {
             font-size: 11px;
             font-weight: 500;
             color: #9e9b92;
             text-transform: uppercase;
             letter-spacing: 2px;
+            margin-bottom: 12px;
         }
+
         .stat-value {
             font-size: 44px;
             font-weight: 400;
-            font-family: 'Cormorant Garamond', serif;
             color: #2b2a28;
+            font-family: 'Cormorant Garamond', serif;
         }
+
         .card {
             background: #fefcf8;
             padding: 32px;
             margin-bottom: 32px;
             border-bottom: 1px solid #e8e4db;
         }
+
         .card-header {
             display: flex;
             justify-content: space-between;
@@ -112,12 +291,14 @@
             flex-wrap: wrap;
             gap: 16px;
         }
+
         .card-title {
             font-family: 'Cormorant Garamond', serif;
             font-size: 22px;
             font-weight: 500;
             color: #3d3a34;
         }
+
         .btn-primary {
             background: transparent;
             color: #3d3a34;
@@ -128,9 +309,15 @@
             font-size: 12px;
             letter-spacing: 1.5px;
             text-transform: uppercase;
-            transition: 0.25s;
+            transition: all 0.25s;
         }
-        .btn-primary:hover { background: #3d3a34; color: #fefcf8; }
+
+        .btn-primary:hover {
+            background: #3d3a34;
+            color: #fefcf8;
+            border-color: #3d3a34;
+        }
+
         .btn-secondary {
             background: transparent;
             color: #9e9b92;
@@ -139,7 +326,9 @@
             cursor: pointer;
             font-size: 11px;
             letter-spacing: 1px;
+            text-transform: uppercase;
         }
+
         .btn-danger {
             background: transparent;
             color: #c9a88b;
@@ -148,46 +337,8 @@
             cursor: pointer;
             font-size: 11px;
         }
-        .btn-success {
-            background: transparent;
-            color: #8b9a7b;
-            border: 1px solid #d4decb;
-            padding: 6px 14px;
-            cursor: pointer;
-            font-size: 11px;
-        }
-        .table-container { overflow-x: auto; }
-        table { width: 100%; border-collapse: collapse; }
-        th {
-            text-align: left;
-            padding: 16px 12px;
-            font-weight: 500;
-            font-size: 11px;
-            color: #9e9b92;
-            border-bottom: 1px solid #e8e4db;
-            text-transform: uppercase;
-        }
-        td {
-            padding: 16px 12px;
-            border-bottom: 1px solid #f0ede6;
-            font-size: 13px;
-        }
-        tr:hover { background: #faf8f3; }
-        .risk-high, .risk-medium, .risk-low {
-            padding: 4px 12px;
-            font-size: 11px;
-            display: inline-block;
-        }
-        .risk-high { background: #f5ede8; color: #c9a88b; }
-        .risk-medium { background: #efe8df; color: #b89a6e; }
-        .risk-low { background: #e2e8e0; color: #8b9a7b; }
-        .status-open, .status-in-progress, .status-closed {
-            padding: 4px 12px;
-            font-size: 11px;
-        }
-        .status-open { background: #f5ede8; color: #c9a88b; }
-        .status-in-progress { background: #efe8df; color: #b89a6e; }
-        .status-closed { background: #e2e8e0; color: #8b9a7b; }
+
+        /* Modal */
         .modal {
             display: none;
             position: fixed;
@@ -201,16 +352,22 @@
             justify-content: center;
             align-items: center;
         }
-        .modal.active { display: flex; }
+
+        .modal.active {
+            display: flex;
+        }
+
         .modal-content {
             background: #fefcf8;
             padding: 40px;
-            max-width: 600px;
+            max-width: 500px;
             width: 90%;
-            max-height: 85vh;
-            overflow-y: auto;
         }
-        .form-group { margin-bottom: 24px; }
+
+        .form-group {
+            margin-bottom: 24px;
+        }
+
         label {
             display: block;
             font-size: 11px;
@@ -220,6 +377,7 @@
             color: #9e9b92;
             text-transform: uppercase;
         }
+
         input, select, textarea {
             width: 100%;
             padding: 12px 16px;
@@ -227,13 +385,42 @@
             background: transparent;
             font-size: 13px;
             font-family: 'Inter', sans-serif;
+            color: #2b2a28;
         }
-        input:focus, select:focus, textarea:focus { outline: none; border-color: #c9b896; }
-        .modal-actions { display: flex; gap: 16px; justify-content: flex-end; margin-top: 32px; }
-        .page { display: none; }
-        .page.active { display: block; animation: fadeIn 0.3s; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
-        .filter-bar { display: flex; gap: 16px; margin-bottom: 28px; flex-wrap: wrap; }
+
+        input:focus, select:focus, textarea:focus {
+            outline: none;
+            border-color: #c9b896;
+        }
+
+        .modal-actions {
+            display: flex;
+            gap: 16px;
+            justify-content: flex-end;
+            margin-top: 32px;
+        }
+
+        .page {
+            display: none;
+        }
+
+        .page.active {
+            display: block;
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(8px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .filter-bar {
+            display: flex;
+            gap: 16px;
+            margin-bottom: 28px;
+            flex-wrap: wrap;
+        }
+
         .filter-select {
             padding: 10px 20px;
             border: 1px solid #e0dcd2;
@@ -241,56 +428,67 @@
             font-size: 12px;
             cursor: pointer;
         }
-        .editable-field {
-            cursor: pointer;
-            padding: 4px 8px;
-            border-radius: 4px;
-            transition: background 0.2s;
-        }
-        .editable-field:hover {
-            background: #f0ede6;
-        }
-        .inline-edit-input {
+
+        table {
             width: 100%;
-            padding: 6px 10px;
-            border: 1px solid #c9b896;
-            background: white;
+            border-collapse: collapse;
+        }
+
+        th {
+            text-align: left;
+            padding: 16px 12px;
+            font-weight: 500;
+            font-size: 11px;
+            color: #9e9b92;
+            border-bottom: 1px solid #e8e4db;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+        }
+
+        td {
+            padding: 16px 12px;
+            border-bottom: 1px solid #f0ede6;
             font-size: 13px;
         }
-        .export-bar {
-            display: flex;
-            gap: 12px;
-            margin-bottom: 20px;
-            justify-content: flex-end;
-        }
-        .btn-export {
-            background: transparent;
-            color: #8b9a7b;
-            border: 1px solid #d4decb;
-            padding: 8px 20px;
-            cursor: pointer;
+
+        .risk-high, .risk-medium, .risk-low,
+        .status-open, .status-in-progress, .status-closed {
+            padding: 4px 12px;
             font-size: 11px;
-            letter-spacing: 1px;
+            display: inline-block;
         }
-        .btn-export:hover { background: #e2e8e0; }
-        @media (max-width: 768px) { .container { padding: 20px; } .card { padding: 24px; } }
+        .risk-high { background: #f5ede8; color: #c9a88b; }
+        .risk-medium { background: #efe8df; color: #b89a6e; }
+        .risk-low { background: #e2e8e0; color: #8b9a7b; }
+        .status-open { background: #f5ede8; color: #c9a88b; }
+        .status-in-progress { background: #efe8df; color: #b89a6e; }
+        .status-closed { background: #e2e8e0; color: #8b9a7b; }
+
+        @media (max-width: 768px) {
+            .container { padding: 20px; }
+            .calendar-day { min-height: 80px; font-size: 11px; padding: 6px; }
+            .event-item { font-size: 8px; white-space: normal; }
+        }
     </style>
 </head>
 <body>
 <div class="header">
     <div class="header-content">
-        <div class="logo">AUDITSTRIKE <span>TECAN INTERNAL AUDIT</span></div>
+        <div class="logo">
+            AUDITSTRIKE <span>INTERNAL AUDIT MANAGEMENT</span>
+        </div>
         <div class="nav-tabs">
             <button class="nav-tab active" data-page="dashboard">Dashboard</button>
             <button class="nav-tab" data-page="audits">Audits</button>
             <button class="nav-tab" data-page="findings">Findings</button>
             <button class="nav-tab" data-page="actions">Actions</button>
-            <button class="nav-tab" data-page="entities">Entities</button>
+            <button class="nav-tab" data-page="calendar">📅 Calendar</button>
         </div>
     </div>
 </div>
 
 <div class="container">
+    <!-- DASHBOARD PAGE -->
     <div id="dashboardPage" class="page active">
         <div class="stats-grid">
             <div class="stat-card" onclick="showPage('audits')"><div class="stat-title">Total Audits</div><div class="stat-value" id="totalAudits">0</div></div>
@@ -298,202 +496,336 @@
             <div class="stat-card" onclick="showPage('findings')"><div class="stat-title">High Risk</div><div class="stat-value" id="highRiskCount">0</div></div>
             <div class="stat-card" onclick="showPage('findings')"><div class="stat-title">Completion Rate</div><div class="stat-value" id="completionRate">0%</div></div>
         </div>
-        <div class="card">
-            <div class="card-header"><div class="card-title">Recent Findings</div><button class="btn-secondary" onclick="showPage('findings')">View All →</button></div>
-            <div class="table-container"><table id="recentFindingsTable"><thead><tr><th>Finding</th><th>Audit</th><th>Risk</th><th>Status</th><th>Due Date</th></tr></thead><tbody></tbody></table></div>
-        </div>
-        <div class="card">
-            <div class="card-header"><div class="card-title">2026 Audit Plan Summary</div></div>
-            <div class="table-container"><table id="auditSummaryTable"><thead><tr><th>Audit ID</th><th>Entity</th><th>Start Date</th><th>End Date</th><th>Status</th></tr></thead><tbody></tbody></table></div>
-        </div>
+        <div class="card"><div class="card-header"><div class="card-title">Recent Audit Findings</div><button class="btn-secondary" onclick="showPage('findings')">View All →</button></div>
+        <div class="table-container"><table id="recentFindingsTable"><thead><tr><th>Finding</th><th>Audit</th><th>Risk</th><th>Status</th><th>Due Date</th></tr></thead><tbody></tbody></table></div></div>
     </div>
 
+    <!-- AUDITS PAGE -->
     <div id="auditsPage" class="page">
-        <div class="card">
-            <div class="card-header">
-                <div class="card-title">2026 Audit Plan - All Entities</div>
-                <div><button class="btn-primary" onclick="openAuditModal()">+ New Audit</button><button class="btn-export" onclick="exportToExcel('audits')"><i class="fas fa-file-excel"></i> Export Excel</button></div>
-            </div>
-            <div class="table-container"><table id="auditsTable"><thead><tr><th>Audit ID</th><th>Entity</th><th>Type</th><th>State</th><th>Start Date</th><th>End Date</th><th>Lead Auditor</th><th>Status</th><th>Actions</th></tr></thead><tbody></tbody></table></div>
-        </div>
+        <div class="card"><div class="card-header"><div class="card-title">Audit Schedule</div><button class="btn-primary" onclick="openAuditModal()">+ New Audit</button></div>
+        <div class="table-container"><table id="auditsTable"><thead><tr><th>Audit Name</th><th>Department</th><th>Scope</th><th>Start Date</th><th>End Date</th><th>Lead Auditor</th><th>Status</th><th>Actions</th></tr></thead><tbody></tbody></table></div></div>
     </div>
 
+    <!-- FINDINGS PAGE -->
     <div id="findingsPage" class="page">
-        <div class="card">
-            <div class="card-header">
-                <div class="card-title">Audit Findings (Click any field to edit)</div>
-                <div><button class="btn-primary" onclick="openFindingModal()">+ New Finding</button><button class="btn-export" onclick="exportToExcel('findings')"><i class="fas fa-file-excel"></i> Export Excel</button></div>
-            </div>
-            <div class="filter-bar">
-                <select id="riskFilter" class="filter-select" onchange="renderFindings()"><option value="all">All Risks</option><option value="High">High</option><option value="Medium">Medium</option><option value="Low">Low</option></select>
-                <select id="statusFilter" class="filter-select" onchange="renderFindings()"><option value="all">All Status</option><option value="Open">Open</option><option value="In Progress">In Progress</option><option value="Closed">Closed</option></select>
-            </div>
-            <div class="table-container"><table id="findingsTable"><thead><tr><th>Finding Title</th><th>Audit Entity</th><th>Risk</th><th>Status</th><th>Assigned To</th><th>Due Date</th><th>Actions</th></tr></thead><tbody></tbody></table></div>
-        </div>
+        <div class="card"><div class="card-header"><div class="card-title">Audit Findings</div><button class="btn-primary" onclick="openFindingModal()">+ New Finding</button></div>
+        <div class="filter-bar"><select id="riskFilter" onchange="renderFindings()" class="filter-select"><option value="all">All Risks</option><option value="High">High</option><option value="Medium">Medium</option><option value="Low">Low</option></select>
+        <select id="statusFilter" onchange="renderFindings()" class="filter-select"><option value="all">All Status</option><option value="Open">Open</option><option value="In Progress">In Progress</option><option value="Closed">Closed</option></select></div>
+        <div class="table-container"><table id="findingsTable"><thead><tr><th>Finding</th><th>Audit</th><th>Risk</th><th>Status</th><th>Assigned To</th><th>Due Date</th><th>Actions</th></tr></thead><tbody></tbody></table></div></div>
     </div>
 
+    <!-- ACTIONS PAGE -->
     <div id="actionsPage" class="page">
-        <div class="card">
-            <div class="card-header"><div class="card-title">Remediation Actions</div><div><button class="btn-primary" onclick="openActionModal()">+ New Action</button><button class="btn-export" onclick="exportToExcel('actions')"><i class="fas fa-file-excel"></i> Export Excel</button></div></div>
-            <div class="table-container"><table id="actionsTable"><thead><tr><th>Action Item</th><th>Related Finding</th><th>Owner</th><th>Priority</th><th>Deadline</th><th>Status</th><th>Actions</th></tr></thead><tbody></tbody></table></div>
-        </div>
+        <div class="card"><div class="card-header"><div class="card-title">Remediation Actions</div><button class="btn-primary" onclick="openActionModal()">+ New Action</button></div>
+        <div class="table-container"><table id="actionsTable"><thead><tr><th>Action Item</th><th>Related Finding</th><th>Owner</th><th>Priority</th><th>Deadline</th><th>Status</th><th>Actions</th></tr></thead><tbody></tbody></table></div></div>
     </div>
 
-    <div id="entitiesPage" class="page">
+    <!-- CALENDAR PAGE -->
+    <div id="calendarPage" class="page">
         <div class="card">
-            <div class="card-header"><div class="card-title">Tecan Group Entities - Global Register</div><div><button class="btn-export" onclick="exportToExcel('entities')"><i class="fas fa-file-excel"></i> Export Excel</button></div></div>
-            <div class="table-container"><table id="entitiesTable"><thead><tr><th>Code</th><th>Entity Name</th><th>Country</th></tr></thead><tbody></tbody></table></div>
+            <div class="calendar-header">
+                <div class="calendar-nav">
+                    <button class="calendar-nav-btn" id="prevMonthBtn"><i class="fas fa-chevron-left"></i></button>
+                    <span class="current-month" id="currentMonthDisplay">March 2025</span>
+                    <button class="calendar-nav-btn" id="nextMonthBtn"><i class="fas fa-chevron-right"></i></button>
+                </div>
+                <button class="btn-primary" id="addGlobalTodoBtn"><i class="fas fa-plus"></i> Add Todo</button>
+            </div>
+            <div class="calendar-grid">
+                <div class="calendar-weekdays">
+                    <div class="calendar-weekday">Mon</div><div class="calendar-weekday">Tue</div><div class="calendar-weekday">Wed</div>
+                    <div class="calendar-weekday">Thu</div><div class="calendar-weekday">Fri</div><div class="calendar-weekday">Sat</div>
+                    <div class="calendar-weekday">Sun</div>
+                </div>
+                <div id="calendarDays" class="calendar-days"></div>
+            </div>
         </div>
     </div>
 </div>
 
 <!-- MODALS -->
-<div id="auditModal" class="modal"><div class="modal-content"><h3 style="margin-bottom:24px;font-family:'Cormorant Garamond',serif;">Add Audit</h3>
-<div class="form-group"><label>Audit ID</label><input type="text" id="auditId" placeholder="e.g., 2026-015"></div>
-<div class="form-group"><label>Entity</label><select id="auditEntity"></select></div>
+<div id="auditModal" class="modal"><div class="modal-content"><h3 style="margin-bottom:24px;font-family:'Cormorant Garamond',serif;font-size:28px;">Create Audit</h3>
+<div class="form-group"><label>Audit Name</label><input type="text" id="auditName"></div>
+<div class="form-group"><label>Department</label><input type="text" id="auditDept"></div>
+<div class="form-group"><label>Scope</label><textarea id="auditScope"></textarea></div>
 <div class="form-group"><label>Start Date</label><input type="date" id="auditStart"></div>
 <div class="form-group"><label>End Date</label><input type="date" id="auditEnd"></div>
 <div class="form-group"><label>Lead Auditor</label><input type="text" id="auditLead"></div>
 <div class="modal-actions"><button class="btn-secondary" onclick="closeAuditModal()">Cancel</button><button class="btn-primary" onclick="saveAudit()">Save</button></div></div></div>
 
-<div id="findingModal" class="modal"><div class="modal-content"><h3 style="margin-bottom:24px;font-family:'Cormorant Garamond',serif;">Add Finding</h3>
-<div class="form-group"><label>Title</label><input type="text" id="findingTitle"></div>
-<div class="form-group"><label>Audit Entity</label><select id="findingAudit"></select></div>
+<div id="findingModal" class="modal"><div class="modal-content"><h3 style="margin-bottom:24px;font-family:'Cormorant Garamond',serif;font-size:28px;">Log Finding</h3>
+<div class="form-group"><label>Finding Title</label><input type="text" id="findingTitle"></div>
+<div class="form-group"><label>Audit</label><select id="findingAudit"></select></div>
 <div class="form-group"><label>Risk Level</label><select id="findingRisk"><option>High</option><option>Medium</option><option>Low</option></select></div>
 <div class="form-group"><label>Description</label><textarea id="findingDesc"></textarea></div>
 <div class="form-group"><label>Assigned To</label><input type="text" id="findingAssignee"></div>
 <div class="form-group"><label>Due Date</label><input type="date" id="findingDue"></div>
 <div class="modal-actions"><button class="btn-secondary" onclick="closeFindingModal()">Cancel</button><button class="btn-primary" onclick="saveFinding()">Save</button></div></div></div>
 
-<div id="actionModal" class="modal"><div class="modal-content"><h3 style="margin-bottom:24px;font-family:'Cormorant Garamond',serif;">Add Action</h3>
-<div class="form-group"><label>Description</label><textarea id="actionDesc"></textarea></div>
+<div id="actionModal" class="modal"><div class="modal-content"><h3 style="margin-bottom:24px;font-family:'Cormorant Garamond',serif;font-size:28px;">Create Action</h3>
+<div class="form-group"><label>Action Description</label><textarea id="actionDesc"></textarea></div>
 <div class="form-group"><label>Related Finding</label><select id="actionFinding"></select></div>
 <div class="form-group"><label>Owner</label><input type="text" id="actionOwner"></div>
 <div class="form-group"><label>Priority</label><select id="actionPriority"><option>High</option><option>Medium</option><option>Low</option></select></div>
 <div class="form-group"><label>Deadline</label><input type="date" id="actionDeadline"></div>
 <div class="modal-actions"><button class="btn-secondary" onclick="closeActionModal()">Cancel</button><button class="btn-primary" onclick="saveAction()">Save</button></div></div></div>
 
-<div id="editFindingModal" class="modal"><div class="modal-content"><h3 style="margin-bottom:24px;font-family:'Cormorant Garamond',serif;">Edit Finding</h3>
-<input type="hidden" id="editFindingId">
-<div class="form-group"><label>Title</label><input type="text" id="editFindingTitle"></div>
-<div class="form-group"><label>Description</label><textarea id="editFindingDesc" rows="3"></textarea></div>
-<div class="form-group"><label>Risk Level</label><select id="editFindingRisk"><option>High</option><option>Medium</option><option>Low</option></select></div>
-<div class="form-group"><label>Status</label><select id="editFindingStatus"><option>Open</option><option>In Progress</option><option>Closed</option></select></div>
-<div class="form-group"><label>Assigned To</label><input type="text" id="editFindingAssignee"></div>
-<div class="form-group"><label>Due Date</label><input type="date" id="editFindingDue"></div>
-<div class="modal-actions"><button class="btn-secondary" onclick="closeEditFindingModal()">Cancel</button><button class="btn-primary" onclick="saveEditFinding()">Save Changes</button></div></div></div>
+<div id="todoModal" class="modal"><div class="modal-content"><h3 style="margin-bottom:24px;font-family:'Cormorant Garamond',serif;font-size:28px;">Add Todo</h3>
+<div class="form-group"><label>Title</label><input type="text" id="todoTitle" placeholder="e.g., Prepare audit report"></div>
+<div class="form-group"><label>Date</label><input type="date" id="todoDate"></div>
+<div class="form-group"><label>Description (optional)</label><textarea id="todoDesc" rows="3"></textarea></div>
+<div class="modal-actions"><button class="btn-secondary" onclick="closeTodoModal()">Cancel</button><button class="btn-primary" onclick="saveTodo()">Save Todo</button></div></div></div>
 
 <script>
-    // ========== TECAN ENTITIES (Full list from your data) ==========
-    const entities = [
-        { code: "105 T-CH", name: "Tecan Schweiz AG", country: "Switzerland" },
-        { code: "110 T-AT", name: "Tecan Austria GmbH", country: "Austria" },
-        { code: "140 T-US", name: "Tecan US, Inc.", country: "USA" },
-        { code: "150 T-DE", name: "Tecan Deutschland GmbH", country: "Germany" },
-        { code: "160 T-JP", name: "Tecan Japan Ltd.", country: "Japan" },
-        { code: "170 T-UK", name: "Tecan UK Ltd.", country: "United Kingdom" },
-        { code: "180 T-FR", name: "Tecan France S.A.S.", country: "France" },
-        { code: "190 T-IT", name: "Tecan Italia S.r.l.", country: "Italy" },
-        { code: "200 T-SG", name: "Tecan Asia (Pte.) Ltd.", country: "Singapore" },
-        { code: "240 T-BE", name: "Tecan Benelux B.V.B.A.", country: "Belgium" },
-        { code: "280 T-TR", name: "Tecan Trading AG", country: "Switzerland" },
-        { code: "300 T-SAS", name: "Tecan Sales Switzerland AG", country: "Switzerland" },
-        { code: "310 T-SAA", name: "Tecan Sales Austria GmbH", country: "Austria" },
-        { code: "320 T-SCC", name: "Tecan Software Competence Center GmbH", country: "Germany" },
-        { code: "330 T-NO", name: "Tecan Nordic AB", country: "Sweden" },
-        { code: "340 T-SAI", name: "Tecan Sales International GmbH", country: "Germany" },
-        { code: "350 T-ES", name: "Tecan Iberica Instrumentacion S.L.", country: "Spain" },
-        { code: "360 T-CN", name: "Tecan (Shanghai) Laboratory Equipment Co., Ltd.", country: "China" },
-        { code: "370 T-AUS", name: "Tecan Australia Pty Ltd", country: "Australia" },
-        { code: "380 T-KR", name: "Tecan Korea Ltd.", country: "South Korea" },
-        { code: "660 T-IBL", name: "IBL International GmbH", country: "Germany" },
-        { code: "700 T-SP", name: "Tecan SP, Inc.", country: "USA" },
-        { code: "720 T-GN", name: "Tecan Genomics, Inc.", country: "USA" },
-        { code: "730 T-PMM", name: "Tecan Precision Machining MH, Inc.", country: "USA" },
-        { code: "740 T-PMV", name: "Tecan Precision Machining VN Company Limited", country: "Vietnam" },
-        { code: "755 T-CDMM", name: "Tecan CDMO Solutions MH, Corp.", country: "USA" },
-        { code: "760 T-CDMP", name: "Tecan CDMO Solutions PN Sdn. Bhd.", country: "Malaysia" },
-        { code: "785 T-EM", name: "Emphysys Inc.", country: "USA" },
-        { code: "910 T-TR-PB", name: "T-TR Partnering Business", country: "Switzerland" },
-        { code: "920 T-CH-PB", name: "T-CH Partnering Business", country: "Switzerland" }
-    ];
-
-    // ========== 2026 AUDIT PLAN (Full list from your data) ==========
+    // Data
     let audits = [
-        { id: "2026-001", entityCode: "240 T-BE", entityName: "Tecan Benelux B.V.B.A.", type: "01 Planned Audit", state: "05 Reporting", startDate: "2026-02-11", endDate: "2026-02-13", leadAuditor: "Sarah Chen", status: "Planning" },
-        { id: "2026-002", entityCode: "180 T-FR", entityName: "Tecan France S.A.S.", type: "01 Planned Audit", state: "01 Planning", startDate: "2026-03-11", endDate: "2026-03-13", leadAuditor: "Michael Okonkwo", status: "Planning" },
-        { id: "2026-003", entityCode: "150 T-DE", entityName: "Tecan Deutschland GmbH", type: "01 Planned Audit", state: "01 Planning", startDate: "2026-03-16", endDate: "2026-03-18", leadAuditor: "Elena Rodriguez", status: "Planning" },
-        { id: "2026-004", entityCode: "105 T-CH", entityName: "Tecan Schweiz AG", type: "01 Planned Audit", state: "01 Planning", startDate: "2026-04-13", endDate: "2026-04-30", leadAuditor: "David Kim", status: "Planning" },
-        { id: "2026-005", entityCode: "280 T-TR", entityName: "Tecan Trading AG", type: "01 Planned Audit", state: "01 Planning", startDate: "2026-04-13", endDate: "2026-04-30", leadAuditor: "Lisa Wong", status: "Planning" },
-        { id: "2026-006", entityCode: "360 T-CN", entityName: "Tecan (Shanghai) Laboratory Equipment Co., Ltd.", type: "01 Planned Audit", state: "01 Planning", startDate: "2026-04-21", endDate: "2026-05-21", leadAuditor: "Wei Zhang", status: "Planning" },
-        { id: "2026-007", entityCode: "370 T-AUS", entityName: "Tecan Australia Pty Ltd", type: "01 Planned Audit", state: "01 Planning", startDate: "2026-05-11", endDate: "2026-05-22", leadAuditor: "James Wilson", status: "Planning" },
-        { id: "2026-008", entityCode: "330 T-NO", entityName: "Tecan Nordic AB", type: "01 Planned Audit", state: "01 Planning", startDate: "2026-06-08", endDate: "2026-06-19", leadAuditor: "Anna Larsson", status: "Planning" },
-        { id: "2026-009", entityCode: "140 T-US", entityName: "Tecan US, Inc.", type: "01 Planned Audit", state: "01 Planning", startDate: "2026-07-13", endDate: "2026-07-24", leadAuditor: "John Smith", status: "Planning" },
-        { id: "2026-010", entityCode: "730 T-PMM", entityName: "Tecan Precision Machining MH, Inc.", type: "01 Planned Audit", state: "01 Planning", startDate: "2026-07-20", endDate: "2026-07-24", leadAuditor: "Robert Taylor", status: "Planning" },
-        { id: "2026-011", entityCode: "160 T-JP", entityName: "Tecan Japan Ltd.", type: "01 Planned Audit", state: "01 Planning", startDate: "2026-08-10", endDate: "2026-08-21", leadAuditor: "Yuki Tanaka", status: "Planning" },
-        { id: "2026-012", entityCode: "755 T-CDMM", entityName: "Tecan CDMO Solutions MH, Corp.", type: "01 Planned Audit", state: "01 Planning", startDate: "2026-10-12", endDate: "2026-10-23", leadAuditor: "Maria Garcia", status: "Planning" },
-        { id: "2026-013", entityCode: "760 T-CDMP", entityName: "Tecan CDMO Solutions PN Sdn. Bhd.", type: "01 Planned Audit", state: "01 Planning", startDate: "2026-11-09", endDate: "2026-11-20", leadAuditor: "Ahmad Ibrahim", status: "Planning" },
-        { id: "2026-014", entityCode: "740 T-PMV", entityName: "Tecan Precision Machining VN Company Limited", type: "01 Planned Audit", state: "01 Planning", startDate: "2026-05-25", endDate: "2026-05-29", leadAuditor: "Minh Nguyen", status: "Planning" }
+        { id: 1, name: "Financial Controls Q1", department: "Finance", scope: "Review of financial reporting", startDate: "2025-01-15", endDate: "2025-02-15", leadAuditor: "Sarah Chen", status: "Completed" },
+        { id: 2, name: "IT Security Audit", department: "IT", scope: "Cybersecurity assessment", startDate: "2025-02-01", endDate: "2025-03-01", leadAuditor: "Michael Okonkwo", status: "In Progress" },
+        { id: 3, name: "Compliance Review", department: "Legal", scope: "Regulatory compliance", startDate: "2025-03-10", endDate: "2025-03-30", leadAuditor: "Elena Rodriguez", status: "Planned" },
+        { id: 4, name: "Operational Audit", department: "Operations", scope: "Process efficiency", startDate: "2025-04-05", endDate: "2025-04-25", leadAuditor: "David Kim", status: "Planned" }
     ];
-
+    
     let findings = [
-        { id: 1, title: "Segregation of duties violation", auditId: "2026-001", entityCode: "240 T-BE", risk: "High", description: "Same employee has ability to create and approve payments", assignedTo: "John Smith", dueDate: "2026-03-15", status: "Open" },
-        { id: 2, title: "Outdated firewall configuration", auditId: "2026-003", entityCode: "150 T-DE", risk: "High", description: "Firewall rules not reviewed since 2024", assignedTo: "Lisa Wong", dueDate: "2026-04-20", status: "In Progress" },
-        { id: 3, title: "Missing data retention policy", auditId: "2026-004", entityCode: "105 T-CH", risk: "Medium", description: "No formal policy for customer data retention", assignedTo: "David Kim", dueDate: "2026-05-10", status: "Open" }
+        { id: 1, title: "Segregation of duties violation", auditId: 1, risk: "High", description: "Same person creates and approves payments", assignedTo: "John Smith", dueDate: "2025-03-15", status: "Open" },
+        { id: 2, title: "Outdated firewall configuration", auditId: 2, risk: "High", description: "Firewall rules outdated", assignedTo: "Lisa Wong", dueDate: "2025-03-20", status: "In Progress" },
+        { id: 3, title: "Missing policy documentation", auditId: 3, risk: "Medium", description: "Data retention policy missing", assignedTo: "David Kim", dueDate: "2025-04-10", status: "Open" }
     ];
-
+    
     let actions = [
-        { id: 1, description: "Implement dual approval workflow", findingId: 1, owner: "Finance Team", priority: "High", deadline: "2026-03-15", status: "In Progress" },
-        { id: 2, description: "Schedule quarterly firewall rule review", findingId: 2, owner: "IT Security", priority: "High", deadline: "2026-04-20", status: "Not Started" }
+        { id: 1, description: "Implement dual approval workflow", findingId: 1, owner: "Finance Team", priority: "High", deadline: "2025-03-15", status: "In Progress" },
+        { id: 2, description: "Schedule firewall rule review", findingId: 2, owner: "IT Security", priority: "High", deadline: "2025-03-20", status: "Not Started" }
     ];
-
-    let nextFindingId = 4, nextActionId = 3;
-
-    // Helper functions
-    function getEntityName(code) { return entities.find(e => e.code === code)?.name || code; }
+    
+    let todos = [
+        { id: 1, title: "Prepare Q1 audit summary", date: "2025-03-10", description: "Compile findings from completed audits" },
+        { id: 2, title: "Review IT security findings", date: "2025-03-18", description: "Meeting with IT team" }
+    ];
+    
+    let nextAuditId = 5, nextFindingId = 4, nextActionId = 3, nextTodoId = 3;
+    let currentDate = new Date(2025, 2, 1);
+    
+    function getAuditName(id) { return audits.find(a => a.id === id)?.name || "Unknown"; }
     function getFindingTitle(id) { return findings.find(f => f.id === id)?.title || "Unknown"; }
-
-    // Dashboard
+    
+    // Calendar Functions
+    function renderCalendar() {
+        const year = currentDate.getFullYear();
+        const month = currentDate.getMonth();
+        const firstDayOfMonth = new Date(year, month, 1);
+        const startDay = firstDayOfMonth.getDay() - 1;
+        const daysInMonth = new Date(year, month + 1, 0).getDate();
+        const daysInPrevMonth = new Date(year, month, 0).getDate();
+        
+        document.getElementById('currentMonthDisplay').innerText = 
+            currentDate.toLocaleString('default', { month: 'long', year: 'numeric' });
+        
+        let calendarHTML = '';
+        let dayCounter = 1;
+        let nextMonthCounter = 1;
+        
+        for (let i = 0; i < 42; i++) {
+            let dayNumber, isCurrentMonth = true;
+            let cellDate;
+            
+            if (i < (startDay === -1 ? 6 : startDay)) {
+                let prevMonthDays = daysInPrevMonth - ((startDay === -1 ? 6 : startDay) - i) + 1;
+                dayNumber = prevMonthDays;
+                isCurrentMonth = false;
+                cellDate = new Date(year, month - 1, dayNumber);
+            } else if (dayCounter <= daysInMonth) {
+                dayNumber = dayCounter++;
+                isCurrentMonth = true;
+                cellDate = new Date(year, month, dayNumber);
+            } else {
+                dayNumber = nextMonthCounter++;
+                isCurrentMonth = false;
+                cellDate = new Date(year, month + 1, dayNumber);
+            }
+            
+            const dateStr = `${cellDate.getFullYear()}-${String(cellDate.getMonth() + 1).padStart(2, '0')}-${String(dayNumber).padStart(2, '0')}`;
+            
+            let events = [];
+            audits.forEach(a => {
+                if (a.startDate <= dateStr && a.endDate >= dateStr) {
+                    events.push({ type: 'audit', name: a.name, id: a.id });
+                }
+            });
+            todos.forEach(t => {
+                if (t.date === dateStr) {
+                    events.push({ type: 'todo', name: t.title, id: t.id });
+                }
+            });
+            
+            let eventsHTML = events.map(e => `<div class="event-item ${e.type === 'audit' ? 'audit-event' : 'todo-event'}" onclick="event.stopPropagation(); ${e.type === 'audit' ? 'showAuditDetail' : 'editTodo'}(${e.id})">${e.name.substring(0, 25)}</div>`).join('');
+            
+            calendarHTML += `
+                <div class="calendar-day ${!isCurrentMonth ? 'other-month' : ''}" data-date="${dateStr}" onclick="openTodoForDate('${dateStr}')">
+                    <div class="day-number">${dayNumber}</div>
+                    ${eventsHTML}
+                    <div class="add-todo-btn" onclick="event.stopPropagation(); openTodoForDate('${dateStr}')">+</div>
+                </div>
+            `;
+        }
+        document.getElementById('calendarDays').innerHTML = calendarHTML;
+    }
+    
+    function openTodoForDate(date) {
+        document.getElementById('todoTitle').value = '';
+        document.getElementById('todoDate').value = date;
+        document.getElementById('todoDesc').value = '';
+        document.getElementById('todoModal').classList.add('active');
+    }
+    
+    function saveTodo() {
+        const title = document.getElementById('todoTitle').value;
+        const date = document.getElementById('todoDate').value;
+        const desc = document.getElementById('todoDesc').value;
+        if (!title || !date) { alert('Please fill title and date'); return; }
+        todos.push({ id: nextTodoId++, title, date, description: desc });
+        closeTodoModal();
+        renderCalendar();
+        saveToLocalStorage();
+    }
+    
+    function editTodo(id) {
+        const todo = todos.find(t => t.id === id);
+        if (todo) {
+            document.getElementById('todoTitle').value = todo.title;
+            document.getElementById('todoDate').value = todo.date;
+            document.getElementById('todoDesc').value = todo.description || '';
+            document.getElementById('todoModal').classList.add('active');
+            deleteTodo(id);
+        }
+    }
+    
+    function deleteTodo(id) { todos = todos.filter(t => t.id !== id); renderCalendar(); saveToLocalStorage(); }
+    function closeTodoModal() { document.getElementById('todoModal').classList.remove('active'); }
+    function showAuditDetail(id) { showPage('audits'); }
+    
+    document.getElementById('prevMonthBtn').onclick = () => { currentDate.setMonth(currentDate.getMonth() - 1); renderCalendar(); };
+    document.getElementById('nextMonthBtn').onclick = () => { currentDate.setMonth(currentDate.getMonth() + 1); renderCalendar(); };
+    document.getElementById('addGlobalTodoBtn').onclick = () => { openTodoForDate(currentDate.toISOString().split('T')[0]); };
+    
+    // Dashboard Functions
     function updateDashboard() {
         document.getElementById('totalAudits').textContent = audits.length;
         document.getElementById('openFindings').textContent = findings.filter(f => f.status !== 'Closed').length;
         document.getElementById('highRiskCount').textContent = findings.filter(f => f.risk === 'High' && f.status !== 'Closed').length;
         document.getElementById('completionRate').textContent = findings.length ? Math.round((findings.filter(f => f.status === 'Closed').length / findings.length) * 100) : 0;
         
-        document.querySelector('#recentFindingsTable tbody').innerHTML = findings.slice(-4).reverse().map(f => `
-            <tr><td>${f.title}</td><td>${getEntityName(f.entityCode)}</td><td><span class="risk-${f.risk.toLowerCase()}">${f.risk}</span></td><td><span class="status-${f.status.toLowerCase().replace(' ', '-')}">${f.status}</span></td><td>${f.dueDate}</td></tr>
-        `).join('');
-        
-        document.querySelector('#auditSummaryTable tbody').innerHTML = audits.slice(0, 8).map(a => `
-            <tr><td>${a.id}</td><td>${a.entityName}</td><td>${a.startDate}</td><td>${a.endDate}</td><td><span class="status-open">${a.status}</span></td></tr>
+        document.querySelector('#recentFindingsTable tbody').innerHTML = findings.slice(-3).reverse().map(f => `
+            <tr><td>${f.title}</td><td>${getAuditName(f.auditId)}</td><td><span class="risk-${f.risk.toLowerCase()}">${f.risk}</span></td><td><span class="status-${f.status.toLowerCase().replace(' ', '-')}">${f.status}</span></td><td>${f.dueDate}</td></tr>
         `).join('');
     }
-
-    // Audits
+    
     function renderAudits() {
         document.querySelector('#auditsTable tbody').innerHTML = audits.map(a => `
-            <tr><td>${a.id}</td><td>${a.entityName}</td><td>${a.type}</td><td>${a.state}</td><td>${a.startDate}</td><td>${a.endDate}</td><td>${a.leadAuditor}</td><td><span class="status-open">${a.status}</span></td><td><button class="btn-danger" onclick="deleteAudit('${a.id}')">Delete</button></td></tr>
+            <tr><td>${a.name}</td><td>${a.department}</td><td>${a.scope.substring(0, 40)}...</td><td>${a.startDate}</td><td>${a.endDate}</td><td>${a.leadAuditor}</td><td><span class="status-${a.status.toLowerCase().replace(' ', '-')}">${a.status}</span></td><td><button class="btn-danger" onclick="deleteAudit(${a.id})">Delete</button></td></tr>
         `).join('');
     }
-
-    // Findings with inline editing
+    
     function renderFindings() {
         const risk = document.getElementById('riskFilter').value;
         const status = document.getElementById('statusFilter').value;
         let filtered = findings.filter(f => (risk === 'all' || f.risk === risk) && (status === 'all' || f.status === status));
-        
         document.querySelector('#findingsTable tbody').innerHTML = filtered.map(f => `
-            <tr>
-                <td><span class="editable-field" onclick="openEditFinding(${f.id})">${f.title}</span></td>
-                <td>${getEntityName(f.entityCode)}</td>
-                <td><span class="risk-${f.risk.toLowerCase()}">${f.risk}</span></td>
-                <td><span class="status-${f.status.toLowerCase().replace(' ', '-')}">${f.status}</span></td>
-                <td><span class="editable-field" onclick="openEditFinding(${f.id})">${f.assignedTo}</span></td>
-                <td><span class="editable-field" onclick="openEditFinding(${f.id})">${f.dueDate}</span></td>
-                <td><button class="btn-secondary" onclick="updateFindingStatus(${f.id})">Status→</button> <button class="btn-danger" onclick="deleteFinding(${f.id})">Delete</button></td>
-            </tr>
+            <tr><td>${f.title}</td><td>${getAuditName(f.auditId)}</td><td><span class="risk-${f.risk.toLowerCase()}">${f.risk}</span></td><td><span class="status-${f.status.toLowerCase().replace(' ', '-')}">${f.status}</span></td><td>${f.assignedTo}</td><td>${f.dueDate}</td><td><button class="btn-secondary" onclick="updateFindingStatus(${f.id})">Update</button> <button class="btn-danger" onclick="deleteFinding(${f.id})">Delete</button></td></tr>
         `).join('');
     }
-
-    function openEditFinding(id) {
-        const f = findings
+    
+    function renderActions() {
+        document.querySelector('#actionsTable tbody').innerHTML = actions.map(a => `
+            <tr><td>${a.description}</td><td>${getFindingTitle(a.findingId)}</td><td>${a.owner}</td><td><span class="risk-${a.priority.toLowerCase()}">${a.priority}</span></td><td>${a.deadline}</td><td><span class="status-${a.status.toLowerCase().replace(' ', '-')}">${a.status}</span></td><td><button class="btn-secondary" onclick="toggleActionStatus(${a.id})">Toggle</button> <button class="btn-danger" onclick="deleteAction(${a.id})">Delete</button></td></tr>
+        `).join('');
+    }
+    
+    // CRUD
+    function openAuditModal() { document.getElementById('auditModal').classList.add('active'); }
+    function closeAuditModal() { document.getElementById('auditModal').classList.remove('active'); }
+    function saveAudit() {
+        audits.push({ id: nextAuditId++, name: document.getElementById('auditName').value, department: document.getElementById('auditDept').value, scope: document.getElementById('auditScope').value, startDate: document.getElementById('auditStart').value, endDate: document.getElementById('auditEnd').value, leadAuditor: document.getElementById('auditLead').value, status: "Planned" });
+        closeAuditModal(); renderAudits(); updateDashboard(); renderCalendar(); saveToLocalStorage();
+        document.querySelectorAll('#auditModal input, #auditModal textarea').forEach(el => el.value = '');
+    }
+    function deleteAudit(id) { audits = audits.filter(a => a.id !== id); renderAudits(); updateDashboard(); renderCalendar(); saveToLocalStorage(); }
+    
+    function openFindingModal() {
+        document.getElementById('findingAudit').innerHTML = audits.map(a => `<option value="${a.id}">${a.name}</option>`).join('');
+        document.getElementById('findingModal').classList.add('active');
+    }
+    function closeFindingModal() { document.getElementById('findingModal').classList.remove('active'); }
+    function saveFinding() {
+        findings.push({ id: nextFindingId++, title: document.getElementById('findingTitle').value, auditId: parseInt(document.getElementById('findingAudit').value), risk: document.getElementById('findingRisk').value, description: document.getElementById('findingDesc').value, assignedTo: document.getElementById('findingAssignee').value, dueDate: document.getElementById('findingDue').value, status: "Open" });
+        closeFindingModal(); renderFindings(); updateDashboard(); renderCalendar(); saveToLocalStorage();
+    }
+    function updateFindingStatus(id) {
+        const f = findings.find(f => f.id === id);
+        const statuses = ["Open", "In Progress", "Closed"];
+        f.status = statuses[(statuses.indexOf(f.status) + 1) % statuses.length];
+        renderFindings(); updateDashboard(); renderCalendar(); saveToLocalStorage();
+    }
+    function deleteFinding(id) { findings = findings.filter(f => f.id !== id); renderFindings(); updateDashboard(); renderCalendar(); saveToLocalStorage(); }
+    
+    function openActionModal() {
+        document.getElementById('actionFinding').innerHTML = findings.map(f => `<option value="${f.id}">${f.title}</option>`).join('');
+        document.getElementById('actionModal').classList.add('active');
+    }
+    function closeActionModal() { document.getElementById('actionModal').classList.remove('active'); }
+    function saveAction() {
+        actions.push({ id: nextActionId++, description: document.getElementById('actionDesc').value, findingId: parseInt(document.getElementById('actionFinding').value), owner: document.getElementById('actionOwner').value, priority: document.getElementById('actionPriority').value, deadline: document.getElementById('actionDeadline').value, status: "Not Started" });
+        closeActionModal(); renderActions(); saveToLocalStorage();
+    }
+    function toggleActionStatus(id) {
+        const a = actions.find(a => a.id === id);
+        a.status = a.status === "Completed" ? "Not Started" : "Completed";
+        renderActions(); saveToLocalStorage();
+    }
+    function deleteAction(id) { actions = actions.filter(a => a.id !== id); renderActions(); saveToLocalStorage(); }
+    
+    function saveToLocalStorage() {
+        localStorage.setItem('auditstrike_audits', JSON.stringify(audits));
+        localStorage.setItem('auditstrike_findings', JSON.stringify(findings));
+        localStorage.setItem('auditstrike_actions', JSON.stringify(actions));
+        localStorage.setItem('auditstrike_todos', JSON.stringify(todos));
+    }
+    
+    function loadFromLocalStorage() {
+        const savedAudits = localStorage.getItem('auditstrike_audits');
+        const savedFindings = localStorage.getItem('auditstrike_findings');
+        const savedActions = localStorage.getItem('auditstrike_actions');
+        const savedTodos = localStorage.getItem('auditstrike_todos');
+        if (savedAudits) audits = JSON.parse(savedAudits);
+        if (savedFindings) findings = JSON.parse(savedFindings);
+        if (savedActions) actions = JSON.parse(savedActions);
+        if (savedTodos) todos = JSON.parse(savedTodos);
+        nextAuditId = Math.max(...audits.map(a => a.id), 0) + 1;
+        nextFindingId = Math.max(...findings.map(f => f.id), 0) + 1;
+        nextActionId = Math.max(...actions.map(a => a.id), 0) + 1;
+        nextTodoId = Math.max(...todos.map(t => t.id), 0) + 1;
+    }
+    
+    function showPage(pageName) {
+        document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+        document.getElementById(pageName + 'Page').classList.add('active');
+        document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+        event.target.classList.add('active');
+        if (pageName === 'dashboard') updateDashboard();
+        if (pageName === 'audits') renderAudits();
+        if (pageName === 'findings') renderFindings();
+        if (pageName === 'actions') renderActions();
+        if (pageName === 'calendar') renderCalendar();
+    }
+    
+    document.querySelectorAll('.nav-tab').forEach(btn => {
+        btn.onclick = () => showPage(btn.getAttribute('data-page'));
+    });
+    
+    loadFromLocalStorage();
+    updateDashboard();
+    renderAudits();
+    renderFindings();
+    renderActions();
+    renderCalendar();
+</script>
+</body>
+</html>
