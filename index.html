@@ -6,6 +6,7 @@
     <title>AuditStrike | Executive Audit Platform</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         * {
             margin: 0;
@@ -20,7 +21,6 @@
             line-height: 1.5;
         }
 
-        /* Premium Header - Massimo Dutti Style */
         .header {
             background: #fefcf8;
             border-bottom: 1px solid #e8e4db;
@@ -64,6 +64,7 @@
             background: transparent;
             padding: 4px;
             border-radius: 0;
+            flex-wrap: wrap;
         }
 
         .nav-tab {
@@ -89,14 +90,156 @@
             color: #3d3a34;
         }
 
-        /* Main container */
         .container {
             max-width: 1600px;
             margin: 0 auto;
             padding: 32px 40px;
         }
 
-        /* Premium Stats Cards - Minimal & Elegant */
+        /* Calendar Styles */
+        .calendar-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 32px;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .calendar-nav {
+            display: flex;
+            gap: 16px;
+            align-items: center;
+        }
+
+        .calendar-nav-btn {
+            background: transparent;
+            border: 1px solid #e0dcd2;
+            padding: 10px 20px;
+            cursor: pointer;
+            font-size: 13px;
+            transition: all 0.2s;
+        }
+
+        .calendar-nav-btn:hover {
+            border-color: #c9b896;
+        }
+
+        .current-month {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 28px;
+            font-weight: 500;
+            color: #3d3a34;
+        }
+
+        .calendar-grid {
+            background: #fefcf8;
+            border: 1px solid #e8e4db;
+            overflow-x: auto;
+        }
+
+        .calendar-weekdays {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            background: #faf8f3;
+            border-bottom: 1px solid #e8e4db;
+        }
+
+        .calendar-weekday {
+            padding: 16px;
+            text-align: center;
+            font-size: 11px;
+            font-weight: 500;
+            letter-spacing: 1px;
+            color: #9e9b92;
+            text-transform: uppercase;
+        }
+
+        .calendar-days {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            min-height: 600px;
+        }
+
+        .calendar-day {
+            border-right: 1px solid #e8e4db;
+            border-bottom: 1px solid #e8e4db;
+            padding: 12px;
+            min-height: 120px;
+            background: #fefcf8;
+            transition: all 0.2s;
+            position: relative;
+        }
+
+        .calendar-day:hover {
+            background: #faf8f3;
+        }
+
+        .calendar-day.other-month {
+            background: #f9f7f2;
+            color: #c4c1b8;
+        }
+
+        .day-number {
+            font-size: 13px;
+            font-weight: 500;
+            color: #6b6a64;
+            margin-bottom: 8px;
+        }
+
+        .calendar-day.other-month .day-number {
+            color: #c4c1b8;
+        }
+
+        .event-item {
+            background: #e8e4db;
+            padding: 4px 8px;
+            margin-bottom: 4px;
+            border-radius: 0;
+            font-size: 10px;
+            cursor: pointer;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            transition: all 0.2s;
+        }
+
+        .event-item.audit-event {
+            background: #e2e8e0;
+            border-left: 2px solid #8b9a7b;
+        }
+
+        .event-item.todo-event {
+            background: #f5ede8;
+            border-left: 2px solid #c9a88b;
+        }
+
+        .event-item:hover {
+            transform: translateX(2px);
+        }
+
+        .add-todo-btn {
+            position: absolute;
+            bottom: 8px;
+            right: 8px;
+            width: 24px;
+            height: 24px;
+            background: transparent;
+            border: 1px solid #e0dcd2;
+            cursor: pointer;
+            font-size: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            transition: opacity 0.2s;
+        }
+
+        .calendar-day:hover .add-todo-btn {
+            opacity: 1;
+        }
+
+        /* Stats Cards */
         .stats-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
@@ -106,11 +249,10 @@
 
         .stat-card {
             background: #fefcf8;
-            border-radius: 0;
             padding: 28px 24px;
-            border: none;
             border-bottom: 2px solid #e8e4db;
             transition: all 0.3s ease;
+            cursor: pointer;
         }
 
         .stat-card:hover {
@@ -131,28 +273,14 @@
             font-size: 44px;
             font-weight: 400;
             color: #2b2a28;
-            margin-bottom: 8px;
             font-family: 'Cormorant Garamond', serif;
         }
 
-        .stat-trend {
-            font-size: 12px;
-            color: #9e9b92;
-            letter-spacing: 0.3px;
-        }
-
-        .trend-up { color: #8b9a7b; }
-        .trend-down { color: #c9a88b; }
-
-        /* Premium Cards */
         .card {
             background: #fefcf8;
-            border-radius: 0;
             padding: 32px;
             margin-bottom: 32px;
-            border: none;
             border-bottom: 1px solid #e8e4db;
-            transition: all 0.2s ease;
         }
 
         .card-header {
@@ -169,10 +297,8 @@
             font-size: 22px;
             font-weight: 500;
             color: #3d3a34;
-            letter-spacing: 1px;
         }
 
-        /* Premium Buttons */
         .btn-primary {
             background: transparent;
             color: #3d3a34;
@@ -201,12 +327,6 @@
             font-size: 11px;
             letter-spacing: 1px;
             text-transform: uppercase;
-            transition: all 0.2s;
-        }
-
-        .btn-secondary:hover {
-            border-color: #c9b896;
-            color: #3d3a34;
         }
 
         .btn-danger {
@@ -216,111 +336,9 @@
             padding: 6px 14px;
             cursor: pointer;
             font-size: 11px;
-            letter-spacing: 0.5px;
-            transition: all 0.2s;
         }
 
-        .btn-danger:hover {
-            background: #c9a88b;
-            color: white;
-            border-color: #c9a88b;
-        }
-
-        .btn-success {
-            background: transparent;
-            color: #8b9a7b;
-            border: 1px solid #d4decb;
-            padding: 5px 14px;
-            cursor: pointer;
-            font-size: 11px;
-        }
-
-        /* Premium Table */
-        .table-container {
-            overflow-x: auto;
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-
-        th {
-            text-align: left;
-            padding: 16px 12px;
-            background: transparent;
-            font-weight: 500;
-            font-size: 11px;
-            color: #9e9b92;
-            border-bottom: 1px solid #e8e4db;
-            text-transform: uppercase;
-            letter-spacing: 1.5px;
-        }
-
-        td {
-            padding: 16px 12px;
-            border-bottom: 1px solid #f0ede6;
-            font-size: 13px;
-            color: #4a4945;
-        }
-
-        tr:hover {
-            background: #faf8f3;
-        }
-
-        /* Premium Risk Badges - Subdued & Elegant */
-        .risk-high {
-            background: #f5ede8;
-            color: #c9a88b;
-            padding: 5px 14px;
-            font-size: 11px;
-            font-weight: 500;
-            letter-spacing: 0.5px;
-            display: inline-block;
-        }
-
-        .risk-medium {
-            background: #efe8df;
-            color: #b89a6e;
-            padding: 5px 14px;
-            font-size: 11px;
-            font-weight: 500;
-            letter-spacing: 0.5px;
-            display: inline-block;
-        }
-
-        .risk-low {
-            background: #e2e8e0;
-            color: #8b9a7b;
-            padding: 5px 14px;
-            font-size: 11px;
-            font-weight: 500;
-            letter-spacing: 0.5px;
-            display: inline-block;
-        }
-
-        .status-open {
-            background: #f5ede8;
-            color: #c9a88b;
-            padding: 4px 12px;
-            font-size: 11px;
-        }
-
-        .status-in-progress {
-            background: #efe8df;
-            color: #b89a6e;
-            padding: 4px 12px;
-            font-size: 11px;
-        }
-
-        .status-closed {
-            background: #e2e8e0;
-            color: #8b9a7b;
-            padding: 4px 12px;
-            font-size: 11px;
-        }
-
-        /* Premium Modal */
+        /* Modal */
         .modal {
             display: none;
             position: fixed;
@@ -342,11 +360,8 @@
         .modal-content {
             background: #fefcf8;
             padding: 40px;
-            max-width: 600px;
+            max-width: 500px;
             width: 90%;
-            max-height: 85vh;
-            overflow-y: auto;
-            border: none;
         }
 
         .form-group {
@@ -371,17 +386,11 @@
             font-size: 13px;
             font-family: 'Inter', sans-serif;
             color: #2b2a28;
-            transition: all 0.2s;
         }
 
         input:focus, select:focus, textarea:focus {
             outline: none;
             border-color: #c9b896;
-        }
-
-        textarea {
-            resize: vertical;
-            min-height: 80px;
         }
 
         .modal-actions {
@@ -417,31 +426,48 @@
             border: 1px solid #e0dcd2;
             background: transparent;
             font-size: 12px;
-            letter-spacing: 0.5px;
-            color: #6b6a64;
             cursor: pointer;
         }
 
-        hr {
-            border: none;
-            border-top: 1px solid #e8e4db;
-            margin: 8px 0;
+        table {
+            width: 100%;
+            border-collapse: collapse;
         }
 
+        th {
+            text-align: left;
+            padding: 16px 12px;
+            font-weight: 500;
+            font-size: 11px;
+            color: #9e9b92;
+            border-bottom: 1px solid #e8e4db;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+        }
+
+        td {
+            padding: 16px 12px;
+            border-bottom: 1px solid #f0ede6;
+            font-size: 13px;
+        }
+
+        .risk-high, .risk-medium, .risk-low,
+        .status-open, .status-in-progress, .status-closed {
+            padding: 4px 12px;
+            font-size: 11px;
+            display: inline-block;
+        }
+        .risk-high { background: #f5ede8; color: #c9a88b; }
+        .risk-medium { background: #efe8df; color: #b89a6e; }
+        .risk-low { background: #e2e8e0; color: #8b9a7b; }
+        .status-open { background: #f5ede8; color: #c9a88b; }
+        .status-in-progress { background: #efe8df; color: #b89a6e; }
+        .status-closed { background: #e2e8e0; color: #8b9a7b; }
+
         @media (max-width: 768px) {
-            .container {
-                padding: 20px;
-            }
-            .stats-grid {
-                grid-template-columns: 1fr;
-                gap: 16px;
-            }
-            .header {
-                padding: 16px 20px;
-            }
-            .card {
-                padding: 24px;
-            }
+            .container { padding: 20px; }
+            .calendar-day { min-height: 80px; font-size: 11px; padding: 6px; }
+            .event-item { font-size: 8px; white-space: normal; }
         }
     </style>
 </head>
@@ -456,6 +482,7 @@
             <button class="nav-tab" data-page="audits">Audits</button>
             <button class="nav-tab" data-page="findings">Findings</button>
             <button class="nav-tab" data-page="actions">Actions</button>
+            <button class="nav-tab" data-page="calendar">📅 Calendar</button>
         </div>
     </div>
 </div>
@@ -464,320 +491,318 @@
     <!-- DASHBOARD PAGE -->
     <div id="dashboardPage" class="page active">
         <div class="stats-grid">
-            <div class="stat-card">
-                <div class="stat-title">Total Audits</div>
-                <div class="stat-value" id="totalAudits">0</div>
-                <div class="stat-trend">Fiscal Year 2025</div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-title">Open Findings</div>
-                <div class="stat-value" id="openFindings">0</div>
-                <div class="stat-trend trend-up">Requires attention</div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-title">High Risk</div>
-                <div class="stat-value" id="highRiskCount">0</div>
-                <div class="stat-trend trend-down">Critical priority</div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-title">Completion Rate</div>
-                <div class="stat-value" id="completionRate">0%</div>
-                <div class="stat-trend trend-up">Above target</div>
-            </div>
+            <div class="stat-card" onclick="showPage('audits')"><div class="stat-title">Total Audits</div><div class="stat-value" id="totalAudits">0</div></div>
+            <div class="stat-card" onclick="showPage('findings')"><div class="stat-title">Open Findings</div><div class="stat-value" id="openFindings">0</div></div>
+            <div class="stat-card" onclick="showPage('findings')"><div class="stat-title">High Risk</div><div class="stat-value" id="highRiskCount">0</div></div>
+            <div class="stat-card" onclick="showPage('findings')"><div class="stat-title">Completion Rate</div><div class="stat-value" id="completionRate">0%</div></div>
         </div>
-
-        <div class="card">
-            <div class="card-header">
-                <div class="card-title">Recent Audit Findings</div>
-                <button class="btn-secondary" onclick="showPage('findings')">View All →</button>
-            </div>
-            <div class="table-container">
-                <table id="recentFindingsTable">
-                    <thead>
-                        <tr><th>Finding</th><th>Audit</th><th>Risk</th><th>Status</th><th>Due Date</th></tr>
-                    </thead>
-                    <tbody></tbody>
-                </table>
-            </div>
-        </div>
-
-        <div class="card">
-            <div class="card-header">
-                <div class="card-title">Upcoming Audits</div>
-                <hr>
-            </div>
-            <div class="table-container">
-                <table id="upcomingAuditsTable">
-                    <thead><tr><th>Audit Name</th><th>Department</th><th>Start Date</th><th>Lead Auditor</th></tr></thead>
-                    <tbody></tbody>
-                </table>
-            </div>
-        </div>
+        <div class="card"><div class="card-header"><div class="card-title">Recent Audit Findings</div><button class="btn-secondary" onclick="showPage('findings')">View All →</button></div>
+        <div class="table-container"><table id="recentFindingsTable"><thead><tr><th>Finding</th><th>Audit</th><th>Risk</th><th>Status</th><th>Due Date</th></tr></thead><tbody></tbody></table></div></div>
     </div>
 
     <!-- AUDITS PAGE -->
     <div id="auditsPage" class="page">
-        <div class="card">
-            <div class="card-header">
-                <div class="card-title">Audit Schedule</div>
-                <button class="btn-primary" onclick="openAuditModal()">+ New Audit</button>
-            </div>
-            <div class="table-container">
-                <table id="auditsTable">
-                    <thead>
-                        <tr><th>Audit Name</th><th>Department</th><th>Scope</th><th>Start Date</th><th>End Date</th><th>Lead Auditor</th><th>Status</th><th>Actions</th></tr>
-                    </thead>
-                    <tbody></tbody>
-                </table>
-            </div>
-        </div>
+        <div class="card"><div class="card-header"><div class="card-title">Audit Schedule</div><button class="btn-primary" onclick="openAuditModal()">+ New Audit</button></div>
+        <div class="table-container"><table id="auditsTable"><thead><tr><th>Audit Name</th><th>Department</th><th>Scope</th><th>Start Date</th><th>End Date</th><th>Lead Auditor</th><th>Status</th><th>Actions</th></tr></thead><tbody></tbody></table></div></div>
     </div>
 
     <!-- FINDINGS PAGE -->
     <div id="findingsPage" class="page">
-        <div class="card">
-            <div class="card-header">
-                <div class="card-title">Audit Findings Register</div>
-                <button class="btn-primary" onclick="openFindingModal()">+ New Finding</button>
-            </div>
-            <div class="filter-bar">
-                <select id="riskFilter" class="filter-select" onchange="renderFindings()">
-                    <option value="all">All Risks</option>
-                    <option value="High">High</option>
-                    <option value="Medium">Medium</option>
-                    <option value="Low">Low</option>
-                </select>
-                <select id="statusFilter" class="filter-select" onchange="renderFindings()">
-                    <option value="all">All Status</option>
-                    <option value="Open">Open</option>
-                    <option value="In Progress">In Progress</option>
-                    <option value="Closed">Closed</option>
-                </select>
-            </div>
-            <div class="table-container">
-                <table id="findingsTable">
-                    <thead>
-                        <tr><th>Finding</th><th>Audit</th><th>Risk</th><th>Status</th><th>Assigned To</th><th>Due Date</th><th>Actions</th></tr>
-                    </thead>
-                    <tbody></tbody>
-                </table>
-            </div>
-        </div>
+        <div class="card"><div class="card-header"><div class="card-title">Audit Findings</div><button class="btn-primary" onclick="openFindingModal()">+ New Finding</button></div>
+        <div class="filter-bar"><select id="riskFilter" onchange="renderFindings()" class="filter-select"><option value="all">All Risks</option><option value="High">High</option><option value="Medium">Medium</option><option value="Low">Low</option></select>
+        <select id="statusFilter" onchange="renderFindings()" class="filter-select"><option value="all">All Status</option><option value="Open">Open</option><option value="In Progress">In Progress</option><option value="Closed">Closed</option></select></div>
+        <div class="table-container"><table id="findingsTable"><thead><tr><th>Finding</th><th>Audit</th><th>Risk</th><th>Status</th><th>Assigned To</th><th>Due Date</th><th>Actions</th></tr></thead><tbody></tbody></table></div></div>
     </div>
 
-    <!-- ACTION ITEMS PAGE -->
+    <!-- ACTIONS PAGE -->
     <div id="actionsPage" class="page">
+        <div class="card"><div class="card-header"><div class="card-title">Remediation Actions</div><button class="btn-primary" onclick="openActionModal()">+ New Action</button></div>
+        <div class="table-container"><table id="actionsTable"><thead><tr><th>Action Item</th><th>Related Finding</th><th>Owner</th><th>Priority</th><th>Deadline</th><th>Status</th><th>Actions</th></tr></thead><tbody></tbody></table></div></div>
+    </div>
+
+    <!-- CALENDAR PAGE -->
+    <div id="calendarPage" class="page">
         <div class="card">
-            <div class="card-header">
-                <div class="card-title">Remediation Actions</div>
-                <button class="btn-primary" onclick="openActionModal()">+ New Action</button>
+            <div class="calendar-header">
+                <div class="calendar-nav">
+                    <button class="calendar-nav-btn" id="prevMonthBtn"><i class="fas fa-chevron-left"></i></button>
+                    <span class="current-month" id="currentMonthDisplay">March 2025</span>
+                    <button class="calendar-nav-btn" id="nextMonthBtn"><i class="fas fa-chevron-right"></i></button>
+                </div>
+                <button class="btn-primary" id="addGlobalTodoBtn"><i class="fas fa-plus"></i> Add Todo</button>
             </div>
-            <div class="table-container">
-                <table id="actionsTable">
-                    <thead>
-                        <tr><th>Action Item</th><th>Related Finding</th><th>Owner</th><th>Priority</th><th>Deadline</th><th>Status</th><th>Actions</th></tr>
-                    </thead>
-                    <tbody></tbody>
-                </table>
+            <div class="calendar-grid">
+                <div class="calendar-weekdays">
+                    <div class="calendar-weekday">Mon</div><div class="calendar-weekday">Tue</div><div class="calendar-weekday">Wed</div>
+                    <div class="calendar-weekday">Thu</div><div class="calendar-weekday">Fri</div><div class="calendar-weekday">Sat</div>
+                    <div class="calendar-weekday">Sun</div>
+                </div>
+                <div id="calendarDays" class="calendar-days"></div>
             </div>
         </div>
     </div>
 </div>
 
 <!-- MODALS -->
-<div id="auditModal" class="modal">
-    <div class="modal-content">
-        <h3 style="margin-bottom: 24px; font-family: 'Cormorant Garamond', serif; font-size: 28px; font-weight: 400;">Create Audit</h3>
-        <div class="form-group"><label>Audit Name</label><input type="text" id="auditName" placeholder="e.g., Financial Controls Audit"></div>
-        <div class="form-group"><label>Department</label><input type="text" id="auditDept" placeholder="Finance, IT, Operations..."></div>
-        <div class="form-group"><label>Scope</label><textarea id="auditScope" placeholder="Describe audit scope..."></textarea></div>
-        <div class="form-group"><label>Start Date</label><input type="date" id="auditStart"></div>
-        <div class="form-group"><label>End Date</label><input type="date" id="auditEnd"></div>
-        <div class="form-group"><label>Lead Auditor</label><input type="text" id="auditLead" placeholder="Auditor name"></div>
-        <div class="modal-actions"><button class="btn-secondary" onclick="closeAuditModal()">Cancel</button><button class="btn-primary" onclick="saveAudit()">Save</button></div>
-    </div>
-</div>
+<div id="auditModal" class="modal"><div class="modal-content"><h3 style="margin-bottom:24px;font-family:'Cormorant Garamond',serif;font-size:28px;">Create Audit</h3>
+<div class="form-group"><label>Audit Name</label><input type="text" id="auditName"></div>
+<div class="form-group"><label>Department</label><input type="text" id="auditDept"></div>
+<div class="form-group"><label>Scope</label><textarea id="auditScope"></textarea></div>
+<div class="form-group"><label>Start Date</label><input type="date" id="auditStart"></div>
+<div class="form-group"><label>End Date</label><input type="date" id="auditEnd"></div>
+<div class="form-group"><label>Lead Auditor</label><input type="text" id="auditLead"></div>
+<div class="modal-actions"><button class="btn-secondary" onclick="closeAuditModal()">Cancel</button><button class="btn-primary" onclick="saveAudit()">Save</button></div></div></div>
 
-<div id="findingModal" class="modal">
-    <div class="modal-content">
-        <h3 style="margin-bottom: 24px; font-family: 'Cormorant Garamond', serif; font-size: 28px; font-weight: 400;">Log Finding</h3>
-        <div class="form-group"><label>Finding Title</label><input type="text" id="findingTitle"></div>
-        <div class="form-group"><label>Audit</label><select id="findingAudit"></select></div>
-        <div class="form-group"><label>Risk Level</label><select id="findingRisk"><option>High</option><option>Medium</option><option>Low</option></select></div>
-        <div class="form-group"><label>Description</label><textarea id="findingDesc"></textarea></div>
-        <div class="form-group"><label>Assigned To</label><input type="text" id="findingAssignee" placeholder="Assignee name"></div>
-        <div class="form-group"><label>Due Date</label><input type="date" id="findingDue"></div>
-        <div class="modal-actions"><button class="btn-secondary" onclick="closeFindingModal()">Cancel</button><button class="btn-primary" onclick="saveFinding()">Save</button></div>
-    </div>
-</div>
+<div id="findingModal" class="modal"><div class="modal-content"><h3 style="margin-bottom:24px;font-family:'Cormorant Garamond',serif;font-size:28px;">Log Finding</h3>
+<div class="form-group"><label>Finding Title</label><input type="text" id="findingTitle"></div>
+<div class="form-group"><label>Audit</label><select id="findingAudit"></select></div>
+<div class="form-group"><label>Risk Level</label><select id="findingRisk"><option>High</option><option>Medium</option><option>Low</option></select></div>
+<div class="form-group"><label>Description</label><textarea id="findingDesc"></textarea></div>
+<div class="form-group"><label>Assigned To</label><input type="text" id="findingAssignee"></div>
+<div class="form-group"><label>Due Date</label><input type="date" id="findingDue"></div>
+<div class="modal-actions"><button class="btn-secondary" onclick="closeFindingModal()">Cancel</button><button class="btn-primary" onclick="saveFinding()">Save</button></div></div></div>
 
-<div id="actionModal" class="modal">
-    <div class="modal-content">
-        <h3 style="margin-bottom: 24px; font-family: 'Cormorant Garamond', serif; font-size: 28px; font-weight: 400;">Create Action</h3>
-        <div class="form-group"><label>Action Description</label><textarea id="actionDesc"></textarea></div>
-        <div class="form-group"><label>Related Finding</label><select id="actionFinding"></select></div>
-        <div class="form-group"><label>Owner</label><input type="text" id="actionOwner"></div>
-        <div class="form-group"><label>Priority</label><select id="actionPriority"><option>High</option><option>Medium</option><option>Low</option></select></div>
-        <div class="form-group"><label>Deadline</label><input type="date" id="actionDeadline"></div>
-        <div class="modal-actions"><button class="btn-secondary" onclick="closeActionModal()">Cancel</button><button class="btn-primary" onclick="saveAction()">Save</button></div>
-    </div>
-</div>
+<div id="actionModal" class="modal"><div class="modal-content"><h3 style="margin-bottom:24px;font-family:'Cormorant Garamond',serif;font-size:28px;">Create Action</h3>
+<div class="form-group"><label>Action Description</label><textarea id="actionDesc"></textarea></div>
+<div class="form-group"><label>Related Finding</label><select id="actionFinding"></select></div>
+<div class="form-group"><label>Owner</label><input type="text" id="actionOwner"></div>
+<div class="form-group"><label>Priority</label><select id="actionPriority"><option>High</option><option>Medium</option><option>Low</option></select></div>
+<div class="form-group"><label>Deadline</label><input type="date" id="actionDeadline"></div>
+<div class="modal-actions"><button class="btn-secondary" onclick="closeActionModal()">Cancel</button><button class="btn-primary" onclick="saveAction()">Save</button></div></div></div>
+
+<div id="todoModal" class="modal"><div class="modal-content"><h3 style="margin-bottom:24px;font-family:'Cormorant Garamond',serif;font-size:28px;">Add Todo</h3>
+<div class="form-group"><label>Title</label><input type="text" id="todoTitle" placeholder="e.g., Prepare audit report"></div>
+<div class="form-group"><label>Date</label><input type="date" id="todoDate"></div>
+<div class="form-group"><label>Description (optional)</label><textarea id="todoDesc" rows="3"></textarea></div>
+<div class="modal-actions"><button class="btn-secondary" onclick="closeTodoModal()">Cancel</button><button class="btn-primary" onclick="saveTodo()">Save Todo</button></div></div></div>
 
 <script>
-    // Data Models
+    // Data
     let audits = [
-        { id: 1, name: "Financial Controls Q1", department: "Finance", scope: "Review of financial reporting and internal controls", startDate: "2025-01-15", endDate: "2025-02-15", leadAuditor: "Sarah Chen", status: "Completed" },
-        { id: 2, name: "IT Security & Compliance", department: "IT", scope: "Cybersecurity framework assessment", startDate: "2025-02-01", endDate: "2025-03-01", leadAuditor: "Michael Okonkwo", status: "In Progress" },
-        { id: 3, name: "Regulatory Compliance Review", department: "Legal", scope: "GDPR, CCPA and industry regulations", startDate: "2025-03-10", endDate: "2025-03-30", leadAuditor: "Elena Rodriguez", status: "Planned" }
+        { id: 1, name: "Financial Controls Q1", department: "Finance", scope: "Review of financial reporting", startDate: "2025-01-15", endDate: "2025-02-15", leadAuditor: "Sarah Chen", status: "Completed" },
+        { id: 2, name: "IT Security Audit", department: "IT", scope: "Cybersecurity assessment", startDate: "2025-02-01", endDate: "2025-03-01", leadAuditor: "Michael Okonkwo", status: "In Progress" },
+        { id: 3, name: "Compliance Review", department: "Legal", scope: "Regulatory compliance", startDate: "2025-03-10", endDate: "2025-03-30", leadAuditor: "Elena Rodriguez", status: "Planned" },
+        { id: 4, name: "Operational Audit", department: "Operations", scope: "Process efficiency", startDate: "2025-04-05", endDate: "2025-04-25", leadAuditor: "David Kim", status: "Planned" }
     ];
     
     let findings = [
-        { id: 1, title: "Segregation of duties violation", auditId: 1, risk: "High", description: "Same employee has access to create and approve payments", assignedTo: "John Smith", dueDate: "2025-03-15", status: "Open" },
-        { id: 2, title: "Outdated firewall configuration", auditId: 2, risk: "High", description: "Firewall rules not reviewed since 2023", assignedTo: "Lisa Wong", dueDate: "2025-03-20", status: "In Progress" },
-        { id: 3, title: "Missing data retention policy", auditId: 3, risk: "Medium", description: "Data retention policy not documented", assignedTo: "David Kim", dueDate: "2025-04-10", status: "Open" }
+        { id: 1, title: "Segregation of duties violation", auditId: 1, risk: "High", description: "Same person creates and approves payments", assignedTo: "John Smith", dueDate: "2025-03-15", status: "Open" },
+        { id: 2, title: "Outdated firewall configuration", auditId: 2, risk: "High", description: "Firewall rules outdated", assignedTo: "Lisa Wong", dueDate: "2025-03-20", status: "In Progress" },
+        { id: 3, title: "Missing policy documentation", auditId: 3, risk: "Medium", description: "Data retention policy missing", assignedTo: "David Kim", dueDate: "2025-04-10", status: "Open" }
     ];
     
     let actions = [
         { id: 1, description: "Implement dual approval workflow", findingId: 1, owner: "Finance Team", priority: "High", deadline: "2025-03-15", status: "In Progress" },
-        { id: 2, description: "Schedule quarterly firewall review", findingId: 2, owner: "IT Security", priority: "High", deadline: "2025-03-20", status: "Not Started" }
+        { id: 2, description: "Schedule firewall rule review", findingId: 2, owner: "IT Security", priority: "High", deadline: "2025-03-20", status: "Not Started" }
     ];
     
-    let nextAuditId = 4, nextFindingId = 4, nextActionId = 3;
+    let todos = [
+        { id: 1, title: "Prepare Q1 audit summary", date: "2025-03-10", description: "Compile findings from completed audits" },
+        { id: 2, title: "Review IT security findings", date: "2025-03-18", description: "Meeting with IT team" }
+    ];
+    
+    let nextAuditId = 5, nextFindingId = 4, nextActionId = 3, nextTodoId = 3;
+    let currentDate = new Date(2025, 2, 1);
     
     function getAuditName(id) { return audits.find(a => a.id === id)?.name || "Unknown"; }
     function getFindingTitle(id) { return findings.find(f => f.id === id)?.title || "Unknown"; }
     
+    // Calendar Functions
+    function renderCalendar() {
+        const year = currentDate.getFullYear();
+        const month = currentDate.getMonth();
+        const firstDayOfMonth = new Date(year, month, 1);
+        const startDay = firstDayOfMonth.getDay() - 1;
+        const daysInMonth = new Date(year, month + 1, 0).getDate();
+        const daysInPrevMonth = new Date(year, month, 0).getDate();
+        
+        document.getElementById('currentMonthDisplay').innerText = 
+            currentDate.toLocaleString('default', { month: 'long', year: 'numeric' });
+        
+        let calendarHTML = '';
+        let dayCounter = 1;
+        let nextMonthCounter = 1;
+        
+        for (let i = 0; i < 42; i++) {
+            let dayNumber, isCurrentMonth = true;
+            let cellDate;
+            
+            if (i < (startDay === -1 ? 6 : startDay)) {
+                let prevMonthDays = daysInPrevMonth - ((startDay === -1 ? 6 : startDay) - i) + 1;
+                dayNumber = prevMonthDays;
+                isCurrentMonth = false;
+                cellDate = new Date(year, month - 1, dayNumber);
+            } else if (dayCounter <= daysInMonth) {
+                dayNumber = dayCounter++;
+                isCurrentMonth = true;
+                cellDate = new Date(year, month, dayNumber);
+            } else {
+                dayNumber = nextMonthCounter++;
+                isCurrentMonth = false;
+                cellDate = new Date(year, month + 1, dayNumber);
+            }
+            
+            const dateStr = `${cellDate.getFullYear()}-${String(cellDate.getMonth() + 1).padStart(2, '0')}-${String(dayNumber).padStart(2, '0')}`;
+            
+            let events = [];
+            audits.forEach(a => {
+                if (a.startDate <= dateStr && a.endDate >= dateStr) {
+                    events.push({ type: 'audit', name: a.name, id: a.id });
+                }
+            });
+            todos.forEach(t => {
+                if (t.date === dateStr) {
+                    events.push({ type: 'todo', name: t.title, id: t.id });
+                }
+            });
+            
+            let eventsHTML = events.map(e => `<div class="event-item ${e.type === 'audit' ? 'audit-event' : 'todo-event'}" onclick="event.stopPropagation(); ${e.type === 'audit' ? 'showAuditDetail' : 'editTodo'}(${e.id})">${e.name.substring(0, 25)}</div>`).join('');
+            
+            calendarHTML += `
+                <div class="calendar-day ${!isCurrentMonth ? 'other-month' : ''}" data-date="${dateStr}" onclick="openTodoForDate('${dateStr}')">
+                    <div class="day-number">${dayNumber}</div>
+                    ${eventsHTML}
+                    <div class="add-todo-btn" onclick="event.stopPropagation(); openTodoForDate('${dateStr}')">+</div>
+                </div>
+            `;
+        }
+        document.getElementById('calendarDays').innerHTML = calendarHTML;
+    }
+    
+    function openTodoForDate(date) {
+        document.getElementById('todoTitle').value = '';
+        document.getElementById('todoDate').value = date;
+        document.getElementById('todoDesc').value = '';
+        document.getElementById('todoModal').classList.add('active');
+    }
+    
+    function saveTodo() {
+        const title = document.getElementById('todoTitle').value;
+        const date = document.getElementById('todoDate').value;
+        const desc = document.getElementById('todoDesc').value;
+        if (!title || !date) { alert('Please fill title and date'); return; }
+        todos.push({ id: nextTodoId++, title, date, description: desc });
+        closeTodoModal();
+        renderCalendar();
+        saveToLocalStorage();
+    }
+    
+    function editTodo(id) {
+        const todo = todos.find(t => t.id === id);
+        if (todo) {
+            document.getElementById('todoTitle').value = todo.title;
+            document.getElementById('todoDate').value = todo.date;
+            document.getElementById('todoDesc').value = todo.description || '';
+            document.getElementById('todoModal').classList.add('active');
+            deleteTodo(id);
+        }
+    }
+    
+    function deleteTodo(id) { todos = todos.filter(t => t.id !== id); renderCalendar(); saveToLocalStorage(); }
+    function closeTodoModal() { document.getElementById('todoModal').classList.remove('active'); }
+    function showAuditDetail(id) { showPage('audits'); }
+    
+    document.getElementById('prevMonthBtn').onclick = () => { currentDate.setMonth(currentDate.getMonth() - 1); renderCalendar(); };
+    document.getElementById('nextMonthBtn').onclick = () => { currentDate.setMonth(currentDate.getMonth() + 1); renderCalendar(); };
+    document.getElementById('addGlobalTodoBtn').onclick = () => { openTodoForDate(currentDate.toISOString().split('T')[0]); };
+    
+    // Dashboard Functions
     function updateDashboard() {
         document.getElementById('totalAudits').textContent = audits.length;
-        const openFindings = findings.filter(f => f.status !== 'Closed').length;
-        document.getElementById('openFindings').textContent = openFindings;
-        const highRisk = findings.filter(f => f.risk === 'High' && f.status !== 'Closed').length;
-        document.getElementById('highRiskCount').textContent = highRisk;
-        const closedFindings = findings.filter(f => f.status === 'Closed').length;
-        const completionRate = findings.length ? Math.round((closedFindings / findings.length) * 100) : 0;
-        document.getElementById('completionRate').textContent = completionRate + '%';
+        document.getElementById('openFindings').textContent = findings.filter(f => f.status !== 'Closed').length;
+        document.getElementById('highRiskCount').textContent = findings.filter(f => f.risk === 'High' && f.status !== 'Closed').length;
+        document.getElementById('completionRate').textContent = findings.length ? Math.round((findings.filter(f => f.status === 'Closed').length / findings.length) * 100) : 0;
         
-        const recentFindings = [...findings].slice(-3).reverse();
-        document.querySelector('#recentFindingsTable tbody').innerHTML = recentFindings.map(f => `
-            <tr>
-                <td>${f.title}</td>
-                <td>${getAuditName(f.auditId)}</td>
-                <td><span class="risk-${f.risk.toLowerCase()}">${f.risk}</span></td>
-                <td><span class="status-${f.status.toLowerCase().replace(' ', '-')}">${f.status}</span></td>
-                <td>${f.dueDate}</td>
-            </tr>
-        `).join('');
-        
-        const upcoming = audits.filter(a => a.status !== 'Completed').slice(0, 3);
-        document.querySelector('#upcomingAuditsTable tbody').innerHTML = upcoming.map(a => `
-            <tr>
-                <td>${a.name}</td>
-                <td>${a.department}</td>
-                <td>${a.startDate}</td>
-                <td>${a.leadAuditor}</td>
-            </tr>
+        document.querySelector('#recentFindingsTable tbody').innerHTML = findings.slice(-3).reverse().map(f => `
+            <tr><td>${f.title}</td><td>${getAuditName(f.auditId)}</td><td><span class="risk-${f.risk.toLowerCase()}">${f.risk}</span></td><td><span class="status-${f.status.toLowerCase().replace(' ', '-')}">${f.status}</span></td><td>${f.dueDate}</td></tr>
         `).join('');
     }
     
     function renderAudits() {
         document.querySelector('#auditsTable tbody').innerHTML = audits.map(a => `
-            <tr>
-                <td>${a.name}</td>
-                <td>${a.department}</td>
-                <td>${a.scope.substring(0, 50)}...</td>
-                <td>${a.startDate}</td>
-                <td>${a.endDate}</td>
-                <td>${a.leadAuditor}</td>
-                <td><span class="status-${a.status.toLowerCase().replace(' ', '-')}">${a.status}</span></td>
-                <td><button class="btn-danger" onclick="deleteAudit(${a.id})">Delete</button></td>
-            </tr>
+            <tr><td>${a.name}</td><td>${a.department}</td><td>${a.scope.substring(0, 40)}...</td><td>${a.startDate}</td><td>${a.endDate}</td><td>${a.leadAuditor}</td><td><span class="status-${a.status.toLowerCase().replace(' ', '-')}">${a.status}</span></td><td><button class="btn-danger" onclick="deleteAudit(${a.id})">Delete</button></td></tr>
         `).join('');
     }
     
     function renderFindings() {
-        const riskFilter = document.getElementById('riskFilter').value;
-        const statusFilter = document.getElementById('statusFilter').value;
-        let filtered = findings.filter(f => (riskFilter === 'all' || f.risk === riskFilter) && (statusFilter === 'all' || f.status === statusFilter));
-        
+        const risk = document.getElementById('riskFilter').value;
+        const status = document.getElementById('statusFilter').value;
+        let filtered = findings.filter(f => (risk === 'all' || f.risk === risk) && (status === 'all' || f.status === status));
         document.querySelector('#findingsTable tbody').innerHTML = filtered.map(f => `
-            <tr>
-                <td>${f.title}</td>
-                <td>${getAuditName(f.auditId)}</td>
-                <td><span class="risk-${f.risk.toLowerCase()}">${f.risk}</span></td>
-                <td><span class="status-${f.status.toLowerCase().replace(' ', '-')}">${f.status}</span></td>
-                <td>${f.assignedTo}</td>
-                <td>${f.dueDate}</td>
-                <td>
-                    <button class="btn-secondary" style="padding:4px 12px;" onclick="updateFindingStatus(${f.id})">Update</button>
-                    <button class="btn-danger" onclick="deleteFinding(${f.id})">Delete</button>
-                 </td>
-            </tr>
+            <tr><td>${f.title}</td><td>${getAuditName(f.auditId)}</td><td><span class="risk-${f.risk.toLowerCase()}">${f.risk}</span></td><td><span class="status-${f.status.toLowerCase().replace(' ', '-')}">${f.status}</span></td><td>${f.assignedTo}</td><td>${f.dueDate}</td><td><button class="btn-secondary" onclick="updateFindingStatus(${f.id})">Update</button> <button class="btn-danger" onclick="deleteFinding(${f.id})">Delete</button></td></tr>
         `).join('');
     }
     
     function renderActions() {
         document.querySelector('#actionsTable tbody').innerHTML = actions.map(a => `
-            <tr>
-                <td>${a.description}</td>
-                <td>${getFindingTitle(a.findingId)}</td>
-                <td>${a.owner}</td>
-                <td><span class="risk-${a.priority.toLowerCase()}">${a.priority}</span></td>
-                <td>${a.deadline}</td>
-                <td><span class="status-${a.status.toLowerCase().replace(' ', '-')}">${a.status}</span></td>
-                <td>
-                    <button class="btn-success" onclick="toggleActionStatus(${a.id})">Toggle</button>
-                    <button class="btn-danger" onclick="deleteAction(${a.id})">Delete</button>
-                 </td>
-            </tr>
+            <tr><td>${a.description}</td><td>${getFindingTitle(a.findingId)}</td><td>${a.owner}</td><td><span class="risk-${a.priority.toLowerCase()}">${a.priority}</span></td><td>${a.deadline}</td><td><span class="status-${a.status.toLowerCase().replace(' ', '-')}">${a.status}</span></td><td><button class="btn-secondary" onclick="toggleActionStatus(${a.id})">Toggle</button> <button class="btn-danger" onclick="deleteAction(${a.id})">Delete</button></td></tr>
         `).join('');
     }
     
+    // CRUD
     function openAuditModal() { document.getElementById('auditModal').classList.add('active'); }
     function closeAuditModal() { document.getElementById('auditModal').classList.remove('active'); }
     function saveAudit() {
         audits.push({ id: nextAuditId++, name: document.getElementById('auditName').value, department: document.getElementById('auditDept').value, scope: document.getElementById('auditScope').value, startDate: document.getElementById('auditStart').value, endDate: document.getElementById('auditEnd').value, leadAuditor: document.getElementById('auditLead').value, status: "Planned" });
-        closeAuditModal(); renderAudits(); updateDashboard();
+        closeAuditModal(); renderAudits(); updateDashboard(); renderCalendar(); saveToLocalStorage();
         document.querySelectorAll('#auditModal input, #auditModal textarea').forEach(el => el.value = '');
     }
-    function deleteAudit(id) { audits = audits.filter(a => a.id !== id); renderAudits(); updateDashboard(); }
+    function deleteAudit(id) { audits = audits.filter(a => a.id !== id); renderAudits(); updateDashboard(); renderCalendar(); saveToLocalStorage(); }
     
     function openFindingModal() {
-        const select = document.getElementById('findingAudit');
-        select.innerHTML = audits.map(a => `<option value="${a.id}">${a.name}</option>`).join('');
+        document.getElementById('findingAudit').innerHTML = audits.map(a => `<option value="${a.id}">${a.name}</option>`).join('');
         document.getElementById('findingModal').classList.add('active');
     }
     function closeFindingModal() { document.getElementById('findingModal').classList.remove('active'); }
     function saveFinding() {
         findings.push({ id: nextFindingId++, title: document.getElementById('findingTitle').value, auditId: parseInt(document.getElementById('findingAudit').value), risk: document.getElementById('findingRisk').value, description: document.getElementById('findingDesc').value, assignedTo: document.getElementById('findingAssignee').value, dueDate: document.getElementById('findingDue').value, status: "Open" });
-        closeFindingModal(); renderFindings(); updateDashboard();
-        document.querySelectorAll('#findingModal input, #findingModal textarea, #findingModal select').forEach(el => el.value = '');
+        closeFindingModal(); renderFindings(); updateDashboard(); renderCalendar(); saveToLocalStorage();
     }
     function updateFindingStatus(id) {
-        const finding = findings.find(f => f.id === id);
+        const f = findings.find(f => f.id === id);
         const statuses = ["Open", "In Progress", "Closed"];
-        let next = (statuses.indexOf(finding.status) + 1) % statuses.length;
-        finding.status = statuses[next];
-        renderFindings(); updateDashboard();
+        f.status = statuses[(statuses.indexOf(f.status) + 1) % statuses.length];
+        renderFindings(); updateDashboard(); renderCalendar(); saveToLocalStorage();
     }
-    function deleteFinding(id) { findings = findings.filter(f => f.id !== id); renderFindings(); updateDashboard(); }
+    function deleteFinding(id) { findings = findings.filter(f => f.id !== id); renderFindings(); updateDashboard(); renderCalendar(); saveToLocalStorage(); }
     
     function openActionModal() {
-        const select = document.getElementById('actionFinding');
-        select.innerHTML = findings.map(f => `<option value="${f.id}">${f.title}</option>`).join('');
+        document.getElementById('actionFinding').innerHTML = findings.map(f => `<option value="${f.id}">${f.title}</option>`).join('');
         document.getElementById('actionModal').classList.add('active');
     }
     function closeActionModal() { document.getElementById('actionModal').classList.remove('active'); }
     function saveAction() {
         actions.push({ id: nextActionId++, description: document.getElementById('actionDesc').value, findingId: parseInt(document.getElementById('actionFinding').value), owner: document.getElementById('actionOwner').value, priority: document.getElementById('actionPriority').value, deadline: document.getElementById('actionDeadline').value, status: "Not Started" });
-        closeActionModal(); renderActions();
-        document.querySelectorAll('#actionModal input, #actionModal textarea, #actionModal select').forEach(el => el.value = '');
+        closeActionModal(); renderActions(); saveToLocalStorage();
     }
     function toggleActionStatus(id) {
-        const action = actions.find(a => a.id === id);
-        action.status = action.status === "Completed" ? "Not Started" : "Completed";
-        renderActions();
+        const a = actions.find(a => a.id === id);
+        a.status = a.status === "Completed" ? "Not Started" : "Completed";
+        renderActions(); saveToLocalStorage();
     }
-    function deleteAction(id) { actions = actions.filter(a => a.id !== id); renderActions(); }
+    function deleteAction(id) { actions = actions.filter(a => a.id !== id); renderActions(); saveToLocalStorage(); }
+    
+    function saveToLocalStorage() {
+        localStorage.setItem('auditstrike_audits', JSON.stringify(audits));
+        localStorage.setItem('auditstrike_findings', JSON.stringify(findings));
+        localStorage.setItem('auditstrike_actions', JSON.stringify(actions));
+        localStorage.setItem('auditstrike_todos', JSON.stringify(todos));
+    }
+    
+    function loadFromLocalStorage() {
+        const savedAudits = localStorage.getItem('auditstrike_audits');
+        const savedFindings = localStorage.getItem('auditstrike_findings');
+        const savedActions = localStorage.getItem('auditstrike_actions');
+        const savedTodos = localStorage.getItem('auditstrike_todos');
+        if (savedAudits) audits = JSON.parse(savedAudits);
+        if (savedFindings) findings = JSON.parse(savedFindings);
+        if (savedActions) actions = JSON.parse(savedActions);
+        if (savedTodos) todos = JSON.parse(savedTodos);
+        nextAuditId = Math.max(...audits.map(a => a.id), 0) + 1;
+        nextFindingId = Math.max(...findings.map(f => f.id), 0) + 1;
+        nextActionId = Math.max(...actions.map(a => a.id), 0) + 1;
+        nextTodoId = Math.max(...todos.map(t => t.id), 0) + 1;
+    }
     
     function showPage(pageName) {
         document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
@@ -788,17 +813,19 @@
         if (pageName === 'audits') renderAudits();
         if (pageName === 'findings') renderFindings();
         if (pageName === 'actions') renderActions();
+        if (pageName === 'calendar') renderCalendar();
     }
     
     document.querySelectorAll('.nav-tab').forEach(btn => {
         btn.onclick = () => showPage(btn.getAttribute('data-page'));
     });
     
-    // Initial render
+    loadFromLocalStorage();
     updateDashboard();
     renderAudits();
     renderFindings();
     renderActions();
+    renderCalendar();
 </script>
 </body>
 </html>
