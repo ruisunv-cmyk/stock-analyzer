@@ -22,7 +22,7 @@
             background: rgba(254, 252, 248, 0.95);
             backdrop-filter: blur(10px);
             border-bottom: 1px solid #e8e4db;
-            padding: 20px 40px;
+            padding: 16px 40px;
             position: sticky;
             top: 0;
             z-index: 100;
@@ -42,21 +42,8 @@
             font-weight: 500;
             letter-spacing: 2px;
             color: #8b5e3c;
-            text-align: center;
         }
         .logo i { margin-right: 8px; color: #c9a88b; }
-        .logo-main {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-        .logo-sub {
-            font-family: 'Inter', sans-serif;
-            font-size: 10px;
-            letter-spacing: 2px;
-            color: #9e9b92;
-            margin-top: 2px;
-        }
         .nav-tabs {
             display: flex;
             gap: 4px;
@@ -200,6 +187,16 @@
             border-radius: 40px;
         }
         .btn-danger:hover { background: #c9a88b; color: white; }
+        .btn-export {
+            background: transparent;
+            color: #4a9b6e;
+            border: 1px solid #c8e0d0;
+            padding: 6px 16px;
+            cursor: pointer;
+            font-size: 11px;
+            border-radius: 40px;
+        }
+        .btn-export:hover { background: #4a9b6e; color: white; }
         .destination-item {
             display: flex;
             justify-content: space-between;
@@ -294,15 +291,25 @@
         @media (max-width: 768px) { .container { padding: 16px; } .search-overlay { min-width: 220px; } }
         .memory-text { font-size: 12px; color: #6b6a64; margin-top: 4px; }
         hr { margin: 15px 0; border: none; border-top: 1px solid #e8e4db; }
+        .data-buttons {
+            display: flex;
+            gap: 12px;
+            justify-content: flex-end;
+            margin-top: 20px;
+        }
+        .import-input {
+            position: fixed;
+            opacity: 0;
+            pointer-events: none;
+            width: 0;
+            height: 0;
+        }
     </style>
 </head>
 <body>
 <div class="header">
     <div class="header-content">
-        <div class="logo">
-            <div class="logo-main"><i class="fas fa-heart"></i> OUR JOURNEY MAP</div>
-            <div class="logo-sub">Together & Apart</div>
-        </div>
+        <div class="logo"><i class="fas fa-heart"></i> OUR JOURNEY MAP</div>
         <div class="nav-tabs">
             <button class="nav-tab active" data-page="map">🗺️ MAP</button>
             <button class="nav-tab" data-page="destinations">📍 DESTINATIONS</button>
@@ -359,6 +366,12 @@
             <div class="card-header"><div class="card-title"><i class="fas fa-chart-line"></i> TRAVEL STATISTICS</div></div>
             <canvas id="travelChart" style="max-height: 260px; margin-bottom: 24px;"></canvas>
             <div id="statDetails"></div>
+            <div class="data-buttons">
+                <button class="btn-export" onclick="exportData()"><i class="fas fa-download"></i> Export Data</button>
+                <button class="btn-export" onclick="document.getElementById('importFile').click()"><i class="fas fa-upload"></i> Import Data</button>
+                <input type="file" id="importFile" class="import-input" accept=".json" onchange="importData(this)">
+            </div>
+            <p style="font-size: 10px; color: #9e9b92; text-align: center; margin-top: 16px;">💡 Export your data from one device, then Import on another device to sync your travels!</p>
         </div>
     </div>
 </div>
@@ -398,6 +411,55 @@
     let map, markers = [], nextId = 6;
     let chart;
     let currentFilter = 'all';
+
+    // ========== EXPORT / IMPORT FUNCTIONS ==========
+    function exportData() {
+        const dataToExport = {
+            destinations: destinations,
+            version: "1.0",
+            exportedAt: new Date().toISOString()
+        };
+        const dataStr = JSON.stringify(dataToExport, null, 2);
+        const blob = new Blob([dataStr], { type: "application/json" });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `our-journey-map-${new Date().toISOString().split('T')[0]}.json`;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+        alert("✅ Data exported successfully! Save this file to transfer to another device.");
+    }
+
+    function importData(input) {
+        const file = input.files[0];
+        if (!file) return;
+        
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            try {
+                const imported = JSON.parse(e.target.result);
+                if (imported.destinations && Array.isArray(imported.destinations)) {
+                    // Validate and import
+                    destinations = imported.destinations;
+                    // Update nextId
+                    nextId = Math.max(...destinations.map(d => d.id), 0) + 1;
+                    // Save to local storage
+                    saveToLocalStorage();
+                    // Refresh everything
+                    refreshAll();
+                    alert(`✅ Successfully imported ${destinations.length} destinations!`);
+                } else {
+                    alert("❌ Invalid file format. Please export a valid data file.");
+                }
+            } catch (error) {
+                alert("❌ Error reading file. Please make sure it's a valid JSON file.");
+            }
+            input.value = '';
+        };
+        reader.readAsText(file);
+    }
 
     // ========== INIT MAP ==========
     function initMap() {
@@ -457,8 +519,10 @@
     }
 
     function updateMarkers() {
-        markers.forEach(m => map.removeLayer(m));
-        markers = [];
+        if (markers.length > 0) {
+            markers.forEach(marker => { if (map && marker) map.removeLayer(marker); });
+            markers = [];
+        }
         
         destinations.forEach(d => {
             if (d.lat && d.lng && d.type !== 'dream') {
@@ -609,106 +673,4 @@
 
     function saveDestination() {
         const name = document.getElementById('destName').value.trim();
-        const type = document.getElementById('destType').value;
-        const memory = document.getElementById('destMemory').value;
-        const photo = document.getElementById('destPhoto').value;
-        
-        if (!name) { alert("Please enter a destination name"); return; }
-        
-        let lat = window.pendingLat;
-        let lng = window.pendingLng;
-        if (!lat && type !== 'dream') {
-            lat = (Math.random() * 170 - 85);
-            lng = (Math.random() * 360 - 180);
-        }
-        
-        if (window.editId) {
-            const index = destinations.findIndex(x => x.id === window.editId);
-            if (index !== -1) {
-                destinations[index] = { ...destinations[index], name, type, memory, photo, lat, lng };
-            }
-        } else {
-            destinations.push({ id: nextId++, name, type, memory, photo, lat, lng });
-        }
-        
-        closeModal();
-        refreshAll();
-        saveToLocalStorage();
-    }
-
-    function deleteCurrentDestination() {
-        if (window.editId && confirm("Delete this destination?")) {
-            destinations = destinations.filter(d => d.id !== window.editId);
-            closeModal();
-            refreshAll();
-            saveToLocalStorage();
-        }
-    }
-
-    function closeModal() { document.getElementById('destinationModal').classList.remove('active'); }
-
-    function refreshAll() {
-        updateStats();
-        updateMarkers();
-        renderFeatured();
-        renderAllDestinations(currentFilter);
-        renderBucketList();
-        updateChart();
-    }
-
-    function saveToLocalStorage() {
-        localStorage.setItem('coupleTravelMap', JSON.stringify(destinations));
-    }
-
-    function loadFromLocalStorage() {
-        const saved = localStorage.getItem('coupleTravelMap');
-        if (saved) {
-            destinations = JSON.parse(saved);
-            nextId = Math.max(...destinations.map(d => d.id), 0) + 1;
-        }
-    }
-
-    // ========== PAGE NAVIGATION ==========
-    function showPage(pageName) {
-        document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-        document.getElementById(pageName + 'Page').classList.add('active');
-        document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
-        const clickedTab = Array.from(document.querySelectorAll('.nav-tab')).find(t => t.getAttribute('data-page') === pageName);
-        if (clickedTab) clickedTab.classList.add('active');
-        
-        if (pageName === 'map') setTimeout(() => map?.invalidateSize(), 100);
-        if (pageName === 'stats') updateChart();
-        if (pageName === 'destinations') renderAllDestinations(currentFilter);
-        if (pageName === 'bucketlist') renderBucketList();
-    }
-
-    // ========== SETUP EVENT LISTENERS ==========
-    document.querySelectorAll('.nav-tab').forEach(btn => {
-        btn.onclick = () => showPage(btn.getAttribute('data-page'));
-    });
-    
-    document.querySelectorAll('#destinationFilters .filter-btn').forEach(btn => {
-        btn.onclick = () => {
-            document.querySelectorAll('#destinationFilters .filter-btn').forEach(b => b.classList.remove('active'));
-            btn.classList.add('active');
-            currentFilter = btn.getAttribute('data-filter');
-            renderAllDestinations(currentFilter);
-        };
-    });
-
-    window.openAddModal = openAddModal;
-    window.openAddModalWithType = openAddModalWithType;
-    window.openEditModal = openEditModal;
-    window.closeModal = closeModal;
-    window.saveDestination = saveDestination;
-    window.deleteCurrentDestination = deleteCurrentDestination;
-    window.filterByType = filterByType;
-    window.searchCity = searchCity;
-    window.showPage = showPage;
-
-    // ========== INITIALIZE ==========
-    loadFromLocalStorage();
-    setTimeout(() => { initMap(); refreshAll(); }, 100);
-</script>
-</body>
-</html>
+        const type = document.getElementById('destType').value
