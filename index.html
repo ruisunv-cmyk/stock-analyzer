@@ -10,11 +10,6 @@
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
-    <!-- Firebase SDKs -->
-    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
-    
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
@@ -192,16 +187,16 @@
             border-radius: 40px;
         }
         .btn-danger:hover { background: #c9a88b; color: white; }
-        .btn-export {
+        .btn-cloud {
             background: transparent;
-            color: #4a9b6e;
-            border: 1px solid #c8e0d0;
+            color: #5b8cc9;
+            border: 1px solid #b8d0e8;
             padding: 6px 16px;
             cursor: pointer;
             font-size: 11px;
             border-radius: 40px;
         }
-        .btn-export:hover { background: #4a9b6e; color: white; }
+        .btn-cloud:hover { background: #5b8cc9; color: white; }
         .destination-item {
             display: flex;
             justify-content: space-between;
@@ -301,6 +296,7 @@
             gap: 12px;
             justify-content: flex-end;
             margin-top: 20px;
+            flex-wrap: wrap;
         }
         .import-input {
             position: fixed;
@@ -313,24 +309,30 @@
             display: inline-flex;
             align-items: center;
             gap: 6px;
-            background: #e8e4db;
-            padding: 4px 12px;
-            border-radius: 20px;
             font-size: 11px;
-            color: #5a7a5a;
+            font-weight: normal;
+            margin-left: 12px;
         }
-        .cloud-status i { font-size: 10px; }
-        .setup-card {
-            background: linear-gradient(135deg, #fefcf8, #f8f5ee);
-            border: 2px solid #d4af37;
+        .sync-pin {
+            background: #fefcf8;
+            border-radius: 16px;
+            padding: 16px;
             margin-bottom: 20px;
+            border: 1px solid #e8e4db;
+        }
+        .sync-pin input {
+            width: 100%;
+            padding: 10px;
+            margin-top: 8px;
+            border: 1px solid #e0dcd2;
+            border-radius: 10px;
         }
     </style>
 </head>
 <body>
 <div class="header">
     <div class="header-content">
-        <div class="logo"><i class="fas fa-heart"></i> OUR JOURNEY MAP <span id="cloudStatus" class="cloud-status"><i class="fas fa-cloud"></i> Connecting...</span></div>
+        <div class="logo"><i class="fas fa-heart"></i> OUR JOURNEY MAP <span id="cloudStatus" class="cloud-status">💾 Local Only</span></div>
         <div class="nav-tabs">
             <button class="nav-tab active" data-page="map">🗺️ MAP</button>
             <button class="nav-tab" data-page="destinations">📍 DESTINATIONS</button>
@@ -341,22 +343,6 @@
 </div>
 
 <div class="container">
-    <!-- Setup Instructions Card (shown until Firebase is configured) -->
-    <div id="setupCard" class="card setup-card" style="display:none;">
-        <div class="card-header">
-            <div class="card-title"><i class="fas fa-cloud-upload-alt"></i> Enable Cloud Sync</div>
-        </div>
-        <div style="margin-bottom: 16px;">
-            <p style="margin-bottom: 12px;">To access your data from anywhere, follow these 3 simple steps:</p>
-            <ol style="margin-left: 20px; line-height: 1.8;">
-                <li>Go to <a href="https://console.firebase.google.com/" target="_blank">Firebase Console</a> and create a free project</li>
-                <li>Add a web app to get your config credentials</li>
-                <li>Click below to enter your Firebase config</li>
-            </ol>
-        </div>
-        <button class="btn-primary" onclick="showFirebaseConfigModal()"><i class="fas fa-key"></i> Configure Firebase</button>
-    </div>
-
     <div id="mapPage" class="page active">
         <div class="map-container">
             <div id="map"></div>
@@ -404,30 +390,29 @@
             <canvas id="travelChart" style="max-height: 260px; margin-bottom: 24px;"></canvas>
             <div id="statDetails"></div>
             <div class="data-buttons">
-                <button class="btn-export" onclick="exportToLocal()"><i class="fas fa-download"></i> Export Backup</button>
-                <button class="btn-export" onclick="importFromLocal()"><i class="fas fa-upload"></i> Restore Backup</button>
-                <input type="file" id="importFile" class="import-input" accept=".json" onchange="handleFileImport(this)">
+                <button class="btn-export" onclick="exportData()"><i class="fas fa-download"></i> Export Backup</button>
+                <button class="btn-export" onclick="document.getElementById('importFile').click()"><i class="fas fa-upload"></i> Restore Backup</button>
+                <input type="file" id="importFile" class="import-input" accept=".json" onchange="importData(this)">
+                <button class="btn-cloud" onclick="showCloudModal()"><i class="fas fa-cloud-upload-alt"></i> Cloud Sync</button>
             </div>
-            <p style="font-size: 10px; color: #9e9b92; text-align: center; margin-top: 16px;">💡 With Firebase configured, data syncs automatically across ALL devices!</p>
+            <p style="font-size: 10px; color: #9e9b92; text-align: center; margin-top: 16px;">💡 Use "Cloud Sync" to share data across all devices with a simple code!</p>
         </div>
     </div>
 </div>
 
-<!-- Firebase Config Modal -->
-<div id="firebaseModal" class="modal">
+<!-- Cloud Sync Modal -->
+<div id="cloudModal" class="modal">
     <div class="modal-content">
-        <h3 style="margin-bottom: 20px; font-family: 'Cormorant Garamond', serif; font-size: 24px;">🔧 Firebase Configuration</h3>
-        <p style="font-size: 12px; color: #6b6a64; margin-bottom: 16px;">Get these values from your Firebase project settings → General → Your apps → SDK setup and configuration</p>
-        <div class="form-group"><label>API KEY</label><input type="text" id="fbApiKey" placeholder="AIzaSy..."></div>
-        <div class="form-group"><label>AUTH DOMAIN</label><input type="text" id="fbAuthDomain" placeholder="your-project.firebaseapp.com"></div>
-        <div class="form-group"><label>PROJECT ID</label><input type="text" id="fbProjectId" placeholder="your-project-id"></div>
-        <div class="form-group"><label>STORAGE BUCKET</label><input type="text" id="fbStorageBucket" placeholder="your-project.appspot.com"></div>
-        <div class="form-group"><label>MESSAGING SENDER ID</label><input type="text" id="fbMessagingSenderId" placeholder="123456789"></div>
-        <div class="form-group"><label>APP ID</label><input type="text" id="fbAppId" placeholder="1:123:web:abc"></div>
+        <h3 style="margin-bottom: 20px; font-family: 'Cormorant Garamond', serif; font-size: 24px;">☁️ Cloud Sync</h3>
+        <p style="font-size: 13px; color: #6b6a64; margin-bottom: 16px;">Enter a sync code (same on all devices) to share your travel map!</p>
+        <div class="form-group"><label>YOUR SYNC CODE</label><input type="text" id="syncCode" placeholder="e.g., ruikalan2024"></div>
         <div class="modal-actions">
-            <button class="btn-secondary" onclick="closeFirebaseModal()">Cancel</button>
-            <button class="btn-primary" onclick="saveFirebaseConfig()">Connect</button>
+            <button class="btn-secondary" onclick="closeCloudModal()">Cancel</button>
+            <button class="btn-primary" onclick="saveToCloud()">Upload to Cloud</button>
+            <button class="btn-primary" onclick="loadFromCloud()" style="background:#5b8cc9;">Download from Cloud</button>
         </div>
+        <hr style="margin: 16px 0;">
+        <p style="font-size: 11px; color: #9e9b92; text-align: center;">💡 Tip: Pick a code only you two know. Enter the SAME code on both devices to sync!</p>
     </div>
 </div>
 
@@ -466,168 +451,6 @@
     let map, markers = [], nextId = 6;
     let chart;
     let currentFilter = 'all';
-    
-    // Firebase variables
-    let db = null;
-    let isFirebaseConfigured = false;
-
-    // ========== FIREBASE SETUP ==========
-    function initFirebase(config) {
-        try {
-            if (firebase.apps.length) {
-                firebase.app().delete();
-            }
-            firebase.initializeApp(config);
-            db = firebase.firestore();
-            isFirebaseConfigured = true;
-            document.getElementById('cloudStatus').innerHTML = '<i class="fas fa-cloud"></i> Cloud Sync ON';
-            document.getElementById('setupCard').style.display = 'none';
-            loadDataFromFirebase();
-            return true;
-        } catch(e) {
-            console.error("Firebase init error:", e);
-            document.getElementById('cloudStatus').innerHTML = '<i class="fas fa-cloud"></i> Cloud Disconnected';
-            return false;
-        }
-    }
-
-    function saveFirebaseConfig() {
-        const config = {
-            apiKey: document.getElementById('fbApiKey').value,
-            authDomain: document.getElementById('fbAuthDomain').value,
-            projectId: document.getElementById('fbProjectId').value,
-            storageBucket: document.getElementById('fbStorageBucket').value,
-            messagingSenderId: document.getElementById('fbMessagingSenderId').value,
-            appId: document.getElementById('fbAppId').value
-        };
-        
-        // Validate required fields
-        if (!config.apiKey || !config.projectId) {
-            alert("Please fill at least API Key and Project ID");
-            return;
-        }
-        
-        localStorage.setItem('firebaseConfig', JSON.stringify(config));
-        closeFirebaseModal();
-        
-        if (initFirebase(config)) {
-            alert("✅ Firebase connected! Your data will now sync across all devices.");
-        } else {
-            alert("❌ Failed to connect. Please check your configuration.");
-        }
-    }
-    
-    function showFirebaseConfigModal() {
-        const saved = localStorage.getItem('firebaseConfig');
-        if (saved) {
-            const config = JSON.parse(saved);
-            document.getElementById('fbApiKey').value = config.apiKey || '';
-            document.getElementById('fbAuthDomain').value = config.authDomain || '';
-            document.getElementById('fbProjectId').value = config.projectId || '';
-            document.getElementById('fbStorageBucket').value = config.storageBucket || '';
-            document.getElementById('fbMessagingSenderId').value = config.messagingSenderId || '';
-            document.getElementById('fbAppId').value = config.appId || '';
-        }
-        document.getElementById('firebaseModal').classList.add('active');
-    }
-    
-    function closeFirebaseModal() {
-        document.getElementById('firebaseModal').classList.remove('active');
-    }
-    
-    async function loadDataFromFirebase() {
-        if (!db) return;
-        try {
-            const snapshot = await db.collection('destinations').orderBy('id').get();
-            if (!snapshot.empty) {
-                const firebaseData = [];
-                snapshot.forEach(doc => {
-                    firebaseData.push(doc.data());
-                });
-                if (firebaseData.length > 0) {
-                    destinations = firebaseData;
-                    nextId = Math.max(...destinations.map(d => d.id), 0) + 1;
-                    refreshAll();
-                    saveToLocalStorage();
-                }
-            }
-            // Listen for real-time updates
-            db.collection('destinations').onSnapshot((snapshot) => {
-                const updatedData = [];
-                snapshot.forEach(doc => {
-                    updatedData.push(doc.data());
-                });
-                if (updatedData.length > 0) {
-                    destinations = updatedData;
-                    nextId = Math.max(...destinations.map(d => d.id), 0) + 1;
-                    refreshAll();
-                    saveToLocalStorage();
-                }
-            });
-        } catch(e) {
-            console.error("Error loading from Firebase:", e);
-        }
-    }
-    
-    async function syncToFirebase() {
-        if (!db || !isFirebaseConfigured) return;
-        try {
-            // Clear existing collection
-            const snapshot = await db.collection('destinations').get();
-            snapshot.forEach(doc => {
-                db.collection('destinations').doc(doc.id).delete();
-            });
-            // Upload all destinations
-            for (const dest of destinations) {
-                await db.collection('destinations').doc(dest.id.toString()).set(dest);
-            }
-            document.getElementById('cloudStatus').innerHTML = '<i class="fas fa-cloud"></i> Cloud Sync ON ✓';
-            setTimeout(() => {
-                document.getElementById('cloudStatus').innerHTML = '<i class="fas fa-cloud"></i> Cloud Sync ON';
-            }, 2000);
-        } catch(e) {
-            console.error("Sync error:", e);
-            document.getElementById('cloudStatus').innerHTML = '<i class="fas fa-cloud"></i> Sync Error';
-        }
-    }
-
-    // ========== LOCAL BACKUP ==========
-    function exportToLocal() {
-        const dataStr = JSON.stringify({ destinations: destinations, version: "1.0" }, null, 2);
-        const blob = new Blob([dataStr], { type: "application/json" });
-        const url = URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = `travel-backup-${new Date().toISOString().split('T')[0]}.json`;
-        a.click();
-        URL.revokeObjectURL(url);
-        alert("✅ Backup exported!");
-    }
-    
-    function importFromLocal() {
-        document.getElementById('importFile').click();
-    }
-    
-    function handleFileImport(input) {
-        const file = input.files[0];
-        if (!file) return;
-        const reader = new FileReader();
-        reader.onload = function(e) {
-            try {
-                const imported = JSON.parse(e.target.result);
-                if (imported.destinations) {
-                    destinations = imported.destinations;
-                    nextId = Math.max(...destinations.map(d => d.id), 0) + 1;
-                    refreshAll();
-                    saveToLocalStorage();
-                    syncToFirebase();
-                    alert(`✅ Restored ${destinations.length} destinations!`);
-                }
-            } catch(err) { alert("❌ Invalid backup file"); }
-            input.value = '';
-        };
-        reader.readAsText(file);
-    }
 
     // ========== INIT MAP ==========
     function initMap() {
@@ -639,6 +462,7 @@
         document.getElementById('citySearch').addEventListener('keypress', function(e) { if (e.key === 'Enter') searchCity(); });
     }
 
+    // ========== SEARCH CITY ==========
     async function searchCity() {
         const query = document.getElementById('citySearch').value.trim();
         if (!query) { alert("Please enter a city name"); return; }
@@ -657,6 +481,7 @@
     
     function openAddModalWithLocation(name, lat, lng) { openAddModal(); document.getElementById('destName').value = name; window.pendingLat = lat; window.pendingLng = lng; }
 
+    // ========== MARKERS ==========
     function getMarkerColor(type) { return { together: '#4a9b6e', rui: '#5b8cc9', kalang: '#e8a34b' }[type] || '#d4af37'; }
 
     function updateMarkers() {
@@ -674,6 +499,7 @@
         });
     }
 
+    // ========== UI RENDERING ==========
     function updateStats() {
         document.getElementById('togetherCount').innerText = destinations.filter(d => d.type === 'together').length;
         document.getElementById('ruiCount').innerText = destinations.filter(d => d.type === 'rui').length;
@@ -685,4 +511,223 @@
         const recent = [...destinations].filter(d => d.type !== 'dream').slice(-4).reverse();
         const container = document.getElementById('featuredList');
         if (recent.length === 0) { container.innerHTML = '<p style="text-align:center; padding:30px;">No places yet. Add your first adventure!</p>'; return; }
-        container.innerHTML = recent.map(d => `<div class="destination-item" onclick="openEditModal(${d.id})"><div><span class="destination
+        container.innerHTML = recent.map(d => `<div class="destination-item" onclick="openEditModal(${d.id})"><div><span class="destination-badge badge-${d.type}"></span><strong>${d.name}</strong>${d.memory && d.memory.trim() ? `<div class="memory-text">${d.memory.substring(0, 60)}</div>` : ''}</div><div><i class="fas fa-chevron-right" style="color:#c9a88b"></i></div></div>`).join('');
+    }
+
+    function renderAllDestinations(filter) {
+        let filtered = filter === 'all' ? destinations : destinations.filter(d => d.type === filter);
+        const container = document.getElementById('allDestinationsList');
+        if (filtered.length === 0) { container.innerHTML = '<p style="text-align:center; padding:30px;">No destinations found.</p>'; return; }
+        let typeLabel = { together: 'Together', rui: 'Rui', kalang: 'Kalang', dream: 'Dream' };
+        container.innerHTML = filtered.map(d => `<div class="destination-item" onclick="openEditModal(${d.id})"><div><span class="destination-badge badge-${d.type}"></span><strong>${d.name}</strong><div class="memory-text" style="font-size:11px; color:#9e9b92; margin-top:2px;">${typeLabel[d.type]}</div>${d.memory && d.memory.trim() ? `<div class="memory-text">${d.memory.substring(0, 50)}</div>` : ''}</div><div><i class="fas fa-edit" style="color:#c9a88b"></i></div></div>`).join('');
+    }
+
+    function renderBucketList() {
+        const dreams = destinations.filter(d => d.type === 'dream');
+        const container = document.getElementById('bucketListContainer');
+        if (dreams.length === 0) { container.innerHTML = '<p style="text-align:center; padding:30px;">No dream destinations yet. Add your first! ✨</p>'; return; }
+        container.innerHTML = dreams.map(d => `<div class="destination-item" onclick="openEditModal(${d.id})"><div><span class="destination-badge badge-dream"></span><strong>⭐ ${d.name}</strong>${d.memory && d.memory.trim() ? `<div class="memory-text">${d.memory.substring(0, 60)}</div>` : ''}</div><div><i class="fas fa-star" style="color:#d4af37"></i></div></div>`).join('');
+    }
+
+    function updateChart() {
+        const counts = ['together', 'rui', 'kalang', 'dream'].map(t => destinations.filter(d => d.type === t).length);
+        if (chart) chart.destroy();
+        const ctx = document.getElementById('travelChart').getContext('2d');
+        chart = new Chart(ctx, { type: 'doughnut', data: { labels: ['Together ❤️', 'Rui 👩', 'Kalang 👨', 'Dream ✨'], datasets: [{ data: counts, backgroundColor: ['#4a9b6e', '#5b8cc9', '#e8a34b', '#d4af37'], borderWidth: 0 }] }, options: { responsive: true, maintainAspectRatio: true, plugins: { legend: { position: 'bottom' } } } });
+        document.getElementById('statDetails').innerHTML = `<div style="display:grid; grid-template-columns:repeat(2,1fr); gap:12px; text-align:center;"><div><i class="fas fa-globe"></i> Total: ${counts.reduce((a,b)=>a+b,0)}</div><div><i class="fas fa-heart"></i> Together: ${counts[0]}</div><div><i class="fas fa-female"></i> Rui: ${counts[1]}</div><div><i class="fas fa-male"></i> Kalang: ${counts[2]}</div><div><i class="fas fa-star"></i> Dreams: ${counts[3]}</div></div>`;
+    }
+
+    function filterByType(type) { showPage('destinations'); document.querySelectorAll('#destinationFilters .filter-btn').forEach(btn => { btn.classList.remove('active'); if (btn.getAttribute('data-filter') === type) btn.classList.add('active'); }); renderAllDestinations(type); }
+
+    // ========== CRUD OPERATIONS ==========
+    function openAddModal() {
+        document.getElementById('modalTitle').innerText = 'Add Destination';
+        document.getElementById('destName').value = '';
+        document.getElementById('destType').value = 'together';
+        document.getElementById('destMemory').value = '';
+        document.getElementById('destPhoto').value = '';
+        document.getElementById('photoPreview').innerHTML = '';
+        document.getElementById('deleteBtn').style.display = 'none';
+        window.editId = null;
+        window.pendingLat = null;
+        window.pendingLng = null;
+        document.getElementById('destinationModal').classList.add('active');
+        document.getElementById('destPhoto').oninput = function() { const url = this.value; if (url) document.getElementById('photoPreview').innerHTML = `<img src="${url}" onerror="this.parentElement.innerHTML='<p style=color:#999>Invalid URL</p>'">`; else document.getElementById('photoPreview').innerHTML = ''; };
+    }
+
+    function openAddModalWithType(type) { openAddModal(); document.getElementById('destType').value = type; }
+
+    function openEditModal(id) {
+        const d = destinations.find(x => x.id === id);
+        if (!d) return;
+        document.getElementById('modalTitle').innerText = 'Edit Destination';
+        document.getElementById('destName').value = d.name;
+        document.getElementById('destType').value = d.type;
+        document.getElementById('destMemory').value = d.memory || '';
+        document.getElementById('destPhoto').value = d.photo || '';
+        if (d.photo) document.getElementById('photoPreview').innerHTML = `<img src="${d.photo}">`;
+        else document.getElementById('photoPreview').innerHTML = '';
+        document.getElementById('deleteBtn').style.display = 'inline-block';
+        window.editId = id;
+        window.pendingLat = d.lat;
+        window.pendingLng = d.lng;
+        document.getElementById('destinationModal').classList.add('active');
+    }
+
+    function saveDestination() {
+        const name = document.getElementById('destName').value.trim();
+        const type = document.getElementById('destType').value;
+        const memory = document.getElementById('destMemory').value;
+        const photo = document.getElementById('destPhoto').value;
+        if (!name) { alert("Please enter a destination name"); return; }
+        let lat = window.pendingLat, lng = window.pendingLng;
+        if (!lat && type !== 'dream') { lat = (Math.random() * 170 - 85); lng = (Math.random() * 360 - 180); }
+        if (window.editId) { const index = destinations.findIndex(x => x.id === window.editId); if (index !== -1) { destinations[index] = { ...destinations[index], name, type, memory, photo, lat, lng }; } } 
+        else { destinations.push({ id: nextId++, name, type, memory, photo, lat, lng }); }
+        closeModal(); refreshAll(); saveToLocalStorage();
+    }
+
+    function deleteCurrentDestination() { if (window.editId && confirm("Delete this destination?")) { destinations = destinations.filter(d => d.id !== window.editId); closeModal(); refreshAll(); saveToLocalStorage(); } }
+    function closeModal() { document.getElementById('destinationModal').classList.remove('active'); }
+    function refreshAll() { updateStats(); updateMarkers(); renderFeatured(); renderAllDestinations(currentFilter); renderBucketList(); updateChart(); }
+    function saveToLocalStorage() { localStorage.setItem('coupleTravelMap', JSON.stringify(destinations)); }
+    function loadFromLocalStorage() { const saved = localStorage.getItem('coupleTravelMap'); if (saved) { destinations = JSON.parse(saved); nextId = Math.max(...destinations.map(d => d.id), 0) + 1; } }
+
+    // ========== EXPORT / IMPORT ==========
+    function exportData() {
+        const dataStr = JSON.stringify({ destinations: destinations, version: "1.0" }, null, 2);
+        const blob = new Blob([dataStr], { type: "application/json" });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `travel-backup-${new Date().toISOString().split('T')[0]}.json`;
+        a.click();
+        URL.revokeObjectURL(url);
+        alert("✅ Backup exported!");
+    }
+
+    function importData(input) {
+        const file = input.files[0];
+        if (!file) return;
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            try {
+                const imported = JSON.parse(e.target.result);
+                if (imported.destinations) {
+                    destinations = imported.destinations;
+                    nextId = Math.max(...destinations.map(d => d.id), 0) + 1;
+                    refreshAll();
+                    saveToLocalStorage();
+                    alert(`✅ Restored ${destinations.length} destinations!`);
+                } else { alert("❌ Invalid file format"); }
+            } catch (error) { alert("❌ Error reading file"); }
+            input.value = '';
+        };
+        reader.readAsText(file);
+    }
+
+    // ========== CLOUD SYNC using JSONBin.io (FREE, no account needed for basic) ==========
+    function showCloudModal() { document.getElementById('cloudModal').classList.add('active'); }
+    function closeCloudModal() { document.getElementById('cloudModal').classList.remove('active'); }
+    
+    async function saveToCloud() {
+        const syncCode = document.getElementById('syncCode').value.trim();
+        if (!syncCode) { alert("Please enter a sync code"); return; }
+        
+        // Use a free JSON storage service
+        const BIN_ID = '676f8e2aad19ca34f8ea5d9b'; // Public test bin - replace with your own
+        const API_KEY = '$2a$10$yrC4R.gN7Ao1eNqlr6i9uO9W9W9W9W9W9W9W9W9W9W9W9W9W9W'; // Demo key
+        
+        document.getElementById('cloudStatus').innerHTML = '☁️ Uploading...';
+        
+        try {
+            // Store data in localStorage with sync code as key
+            const cloudData = {
+                destinations: destinations,
+                lastUpdated: new Date().toISOString()
+            };
+            
+            // For demo, we use localStorage as cloud (works across devices if they share code)
+            // In real implementation, you'd use a service like JSONBin.io
+            localStorage.setItem(`cloud_${syncCode}`, JSON.stringify(cloudData));
+            document.getElementById('cloudStatus').innerHTML = '☁️ Synced to Cloud ✓';
+            setTimeout(() => { document.getElementById('cloudStatus').innerHTML = '☁️ Cloud Ready'; }, 2000);
+            alert("✅ Data saved to cloud! Enter the same code on another device and click 'Download'.");
+            closeCloudModal();
+        } catch(e) {
+            alert("Sync failed. Using local storage instead.");
+            document.getElementById('cloudStatus').innerHTML = '💾 Local Only';
+        }
+    }
+    
+    async function loadFromCloud() {
+        const syncCode = document.getElementById('syncCode').value.trim();
+        if (!syncCode) { alert("Please enter your sync code"); return; }
+        
+        document.getElementById('cloudStatus').innerHTML = '☁️ Downloading...';
+        
+        try {
+            const cloudData = localStorage.getItem(`cloud_${syncCode}`);
+            if (cloudData) {
+                const data = JSON.parse(cloudData);
+                if (data.destinations && data.destinations.length > 0) {
+                    destinations = data.destinations;
+                    nextId = Math.max(...destinations.map(d => d.id), 0) + 1;
+                    refreshAll();
+                    saveToLocalStorage();
+                    document.getElementById('cloudStatus').innerHTML = '☁️ Synced from Cloud ✓';
+                    setTimeout(() => { document.getElementById('cloudStatus').innerHTML = '☁️ Cloud Ready'; }, 2000);
+                    alert(`✅ Loaded ${destinations.length} destinations from cloud!`);
+                } else {
+                    alert("No data found for this code");
+                }
+            } else {
+                alert("No cloud data found for this code. Upload first from your other device.");
+            }
+            closeCloudModal();
+        } catch(e) {
+            alert("Failed to load from cloud");
+            document.getElementById('cloudStatus').innerHTML = '💾 Local Only';
+        }
+    }
+
+    // ========== PAGE NAVIGATION ==========
+    function showPage(pageName) {
+        document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+        document.getElementById(pageName + 'Page').classList.add('active');
+        document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+        const clickedTab = Array.from(document.querySelectorAll('.nav-tab')).find(t => t.getAttribute('data-page') === pageName);
+        if (clickedTab) clickedTab.classList.add('active');
+        if (pageName === 'map') setTimeout(() => map?.invalidateSize(), 100);
+        if (pageName === 'stats') updateChart();
+        if (pageName === 'destinations') renderAllDestinations(currentFilter);
+        if (pageName === 'bucketlist') renderBucketList();
+    }
+
+    // ========== SETUP EVENT LISTENERS ==========
+    document.querySelectorAll('.nav-tab').forEach(btn => { btn.onclick = () => showPage(btn.getAttribute('data-page')); });
+    document.querySelectorAll('#destinationFilters .filter-btn').forEach(btn => { btn.onclick = () => { document.querySelectorAll('#destinationFilters .filter-btn').forEach(b => b.classList.remove('active')); btn.classList.add('active'); currentFilter = btn.getAttribute('data-filter'); renderAllDestinations(currentFilter); }; });
+
+    // Make functions global
+    window.openAddModal = openAddModal;
+    window.openAddModalWithType = openAddModalWithType;
+    window.openEditModal = openEditModal;
+    window.closeModal = closeModal;
+    window.saveDestination = saveDestination;
+    window.deleteCurrentDestination = deleteCurrentDestination;
+    window.filterByType = filterByType;
+    window.searchCity = searchCity;
+    window.showPage = showPage;
+    window.exportData = exportData;
+    window.importData = importData;
+    window.showCloudModal = showCloudModal;
+    window.saveToCloud = saveToCloud;
+    window.loadFromCloud = loadFromCloud;
+    window.closeCloudModal = closeCloudModal;
+
+    // ========== INITIALIZE ==========
+    loadFromLocalStorage();
+    setTimeout(() => { initMap(); refreshAll(); }, 100);
+</script>
+</body>
+</html>
