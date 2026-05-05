@@ -187,16 +187,16 @@
             border-radius: 40px;
         }
         .btn-danger:hover { background: #c9a88b; color: white; }
-        .btn-cloud {
+        .btn-export {
             background: transparent;
-            color: #5b8cc9;
-            border: 1px solid #b8d0e8;
+            color: #4a9b6e;
+            border: 1px solid #c8e0d0;
             padding: 6px 16px;
             cursor: pointer;
             font-size: 11px;
             border-radius: 40px;
         }
-        .btn-cloud:hover { background: #5b8cc9; color: white; }
+        .btn-export:hover { background: #4a9b6e; color: white; }
         .destination-item {
             display: flex;
             justify-content: space-between;
@@ -305,33 +305,12 @@
             width: 0;
             height: 0;
         }
-        .cloud-status {
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            font-size: 11px;
-            font-weight: normal;
-            margin-left: 12px;
-        }
-        .sync-instructions {
-            background: #f0ede6;
-            padding: 16px;
-            border-radius: 16px;
-            margin-top: 16px;
-            font-size: 12px;
-            line-height: 1.6;
-        }
-        .sync-instructions code {
-            background: #e0dcd2;
-            padding: 2px 6px;
-            border-radius: 6px;
-        }
     </style>
 </head>
 <body>
 <div class="header">
     <div class="header-content">
-        <div class="logo"><i class="fas fa-heart"></i> OUR JOURNEY MAP <span id="cloudStatus" class="cloud-status">💾 Local Only</span></div>
+        <div class="logo"><i class="fas fa-heart"></i> OUR JOURNEY MAP</div>
         <div class="nav-tabs">
             <button class="nav-tab active" data-page="map">🗺️ MAP</button>
             <button class="nav-tab" data-page="destinations">📍 DESTINATIONS</button>
@@ -392,27 +371,7 @@
                 <button class="btn-export" onclick="exportData()"><i class="fas fa-download"></i> Export Backup</button>
                 <button class="btn-export" onclick="document.getElementById('importFile').click()"><i class="fas fa-upload"></i> Restore Backup</button>
                 <input type="file" id="importFile" class="import-input" accept=".json" onchange="importData(this)">
-                <button class="btn-cloud" onclick="showCloudHelp()"><i class="fas fa-cloud-upload-alt"></i> Cloud Sync Guide</button>
             </div>
-            
-            <div class="sync-instructions" id="syncInstructions" style="display:none;">
-                <h4 style="margin-bottom: 10px;">☁️ How to Sync Across Devices:</h4>
-                <p><strong>Method 1: Export/Import (Easiest)</strong></p>
-                <ol style="margin-left: 20px; margin-bottom: 15px;">
-                    <li>On your laptop: Click <strong>Export Backup</strong> → save the JSON file</li>
-                    <li>Send the file to your phone (email/WeChat/AirDrop)</li>
-                    <li>On your phone: Click <strong>Restore Backup</strong> → select the file</li>
-                </ol>
-                <p><strong>Method 2: Google Drive (Free Cloud)</strong></p>
-                <ol style="margin-left: 20px;">
-                    <li>Save the exported JSON file to Google Drive</li>
-                    <li>Open on your phone from Google Drive</li>
-                    <li>Use "Restore Backup" to load it</li>
-                </ol>
-                <p style="margin-top: 12px; color: #8b5e3c;"><i class="fas fa-lightbulb"></i> Tip: Keep the file in a shared folder like iCloud/Google Drive for automatic access!</p>
-                <button class="btn-secondary" onclick="closeCloudHelp()" style="margin-top: 12px;">Close</button>
-            </div>
-            
             <p style="font-size: 10px; color: #9e9b92; text-align: center; margin-top: 16px;">💡 Export from laptop, then Restore on phone to sync your travels!</p>
         </div>
     </div>
@@ -458,7 +417,9 @@
     function initMap() {
         map = L.map('map').setView([20, 0], 2);
         L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
-            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OSM</a>'
+            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OSM</a>',
+            subdomains: 'abcd',
+            maxZoom: 19
         }).addTo(map);
         updateMarkers();
         document.getElementById('citySearch').addEventListener('keypress', function(e) { if (e.key === 'Enter') searchCity(); });
@@ -487,8 +448,7 @@
     function getMarkerColor(type) { return { together: '#4a9b6e', rui: '#5b8cc9', kalang: '#e8a34b' }[type] || '#d4af37'; }
 
     function updateMarkers() {
-        markers.forEach(m => { if (map && m) map.removeLayer(m); });
-        markers = [];
+        if (markers.length) { markers.forEach(m => { if (map && m) map.removeLayer(m); }); markers = []; }
         destinations.forEach(d => {
             if (d.lat && d.lng && d.type !== 'dream') {
                 const marker = L.marker([d.lat, d.lng], {
@@ -535,7 +495,7 @@
         const counts = ['together', 'rui', 'kalang', 'dream'].map(t => destinations.filter(d => d.type === t).length);
         if (chart) chart.destroy();
         const ctx = document.getElementById('travelChart').getContext('2d');
-        chart = new Chart(ctx, { type: 'doughnut', data: { labels: ['Together ❤️', 'Rui 👩', 'Kalang 👨', 'Dream ✨'], datasets: [{ data: counts, backgroundColor: ['#4a9b6e', '#5b8cc9', '#e8a34b', '#d4af37'], borderWidth: 0 }] }, options: { responsive: true, maintainAspectRatio: true, plugins: { legend: { position: 'bottom' } } } });
+        chart = new Chart(ctx, { type: 'doughnut', data: { labels: ['Together ❤️', 'Rui 👩', 'Kalang 👨', 'Dream ✨'], datasets: [{ data: counts, backgroundColor: ['#4a9b6e', '#5b8cc9', '#e8a34b', '#d4af37'], borderWidth: 0 }] }, options: { responsive: true, maintainAspectRatio: true, plugins: { legend: { position: 'bottom', labels: { font: { size: 11 } } } } } });
         document.getElementById('statDetails').innerHTML = `<div style="display:grid; grid-template-columns:repeat(2,1fr); gap:12px; text-align:center;"><div><i class="fas fa-globe"></i> Total: ${counts.reduce((a,b)=>a+b,0)}</div><div><i class="fas fa-heart"></i> Together: ${counts[0]}</div><div><i class="fas fa-female"></i> Rui: ${counts[1]}</div><div><i class="fas fa-male"></i> Kalang: ${counts[2]}</div><div><i class="fas fa-star"></i> Dreams: ${counts[3]}</div></div>`;
     }
 
@@ -583,29 +543,84 @@
         const photo = document.getElementById('destPhoto').value;
         if (!name) { alert("Please enter a destination name"); return; }
         let lat = window.pendingLat, lng = window.pendingLng;
-        if (!lat && type !== 'dream') { 
-            // Generate random coordinates as fallback
-            lat = (Math.random() * 170 - 85); 
-            lng = (Math.random() * 360 - 180); 
-        }
-        if (window.editId) { 
-            const index = destinations.findIndex(x => x.id === window.editId); 
-            if (index !== -1) { destinations[index] = { ...destinations[index], name, type, memory, photo, lat, lng }; } 
-        } else { 
-            destinations.push({ id: nextId++, name, type, memory, photo, lat, lng }); 
-        }
+        if (!lat && type !== 'dream') { lat = (Math.random() * 170 - 85); lng = (Math.random() * 360 - 180); }
+        if (window.editId) { const index = destinations.findIndex(x => x.id === window.editId); if (index !== -1) { destinations[index] = { ...destinations[index], name, type, memory, photo, lat, lng }; } } 
+        else { destinations.push({ id: nextId++, name, type, memory, photo, lat, lng }); }
         closeModal(); refreshAll(); saveToLocalStorage();
-        updateCloudStatus();
     }
 
-    function deleteCurrentDestination() { 
-        if (window.editId && confirm("Delete this destination?")) { 
-            destinations = destinations.filter(d => d.id !== window.editId); 
-            closeModal(); refreshAll(); saveToLocalStorage(); 
-            updateCloudStatus();
-        } 
-    }
-    
+    function deleteCurrentDestination() { if (window.editId && confirm("Delete this destination?")) { destinations = destinations.filter(d => d.id !== window.editId); closeModal(); refreshAll(); saveToLocalStorage(); } }
     function closeModal() { document.getElementById('destinationModal').classList.remove('active'); }
     function refreshAll() { updateStats(); updateMarkers(); renderFeatured(); renderAllDestinations(currentFilter); renderBucketList(); updateChart(); }
-    function saveToLocalStorage() { localStorage.setItem
+    function saveToLocalStorage() { localStorage.setItem('coupleTravelMap', JSON.stringify(destinations)); }
+    function loadFromLocalStorage() { const saved = localStorage.getItem('coupleTravelMap'); if (saved) { destinations = JSON.parse(saved); nextId = Math.max(...destinations.map(d => d.id), 0) + 1; } }
+
+    // ========== EXPORT / IMPORT ==========
+    function exportData() {
+        const dataStr = JSON.stringify({ destinations: destinations, version: "1.0", exportedAt: new Date().toISOString() }, null, 2);
+        const blob = new Blob([dataStr], { type: "application/json" });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `travel-backup-${new Date().toISOString().split('T')[0]}.json`;
+        a.click();
+        URL.revokeObjectURL(url);
+        alert("✅ Backup exported! Share this file with your phone.");
+    }
+
+    function importData(input) {
+        const file = input.files[0];
+        if (!file) return;
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            try {
+                const imported = JSON.parse(e.target.result);
+                if (imported.destinations) {
+                    destinations = imported.destinations;
+                    nextId = Math.max(...destinations.map(d => d.id), 0) + 1;
+                    refreshAll();
+                    saveToLocalStorage();
+                    alert(`✅ Restored ${destinations.length} destinations!`);
+                } else { alert("❌ Invalid file format"); }
+            } catch (error) { alert("❌ Error reading file"); }
+            input.value = '';
+        };
+        reader.readAsText(file);
+    }
+
+    // ========== PAGE NAVIGATION ==========
+    function showPage(pageName) {
+        document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+        document.getElementById(pageName + 'Page').classList.add('active');
+        document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+        const clickedTab = Array.from(document.querySelectorAll('.nav-tab')).find(t => t.getAttribute('data-page') === pageName);
+        if (clickedTab) clickedTab.classList.add('active');
+        if (pageName === 'map') setTimeout(() => map?.invalidateSize(), 100);
+        if (pageName === 'stats') updateChart();
+        if (pageName === 'destinations') renderAllDestinations(currentFilter);
+        if (pageName === 'bucketlist') renderBucketList();
+    }
+
+    // ========== SETUP EVENT LISTENERS ==========
+    document.querySelectorAll('.nav-tab').forEach(btn => { btn.onclick = () => showPage(btn.getAttribute('data-page')); });
+    document.querySelectorAll('#destinationFilters .filter-btn').forEach(btn => { btn.onclick = () => { document.querySelectorAll('#destinationFilters .filter-btn').forEach(b => b.classList.remove('active')); btn.classList.add('active'); currentFilter = btn.getAttribute('data-filter'); renderAllDestinations(currentFilter); }; });
+
+    // Make functions global
+    window.openAddModal = openAddModal;
+    window.openAddModalWithType = openAddModalWithType;
+    window.openEditModal = openEditModal;
+    window.closeModal = closeModal;
+    window.saveDestination = saveDestination;
+    window.deleteCurrentDestination = deleteCurrentDestination;
+    window.filterByType = filterByType;
+    window.searchCity = searchCity;
+    window.showPage = showPage;
+    window.exportData = exportData;
+    window.importData = importData;
+
+    // ========== INITIALIZE ==========
+    loadFromLocalStorage();
+    setTimeout(() => { initMap(); refreshAll(); }, 100);
+</script>
+</body>
+</html>
