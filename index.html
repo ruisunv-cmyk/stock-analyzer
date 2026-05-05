@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>OUR JOURNEY MAP | Together & Apart</title>
+    <title>我们的旅行地图 | 一起走过的路</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
@@ -70,23 +70,9 @@
             margin-bottom: 24px;
             box-shadow: 0 4px 12px rgba(0,0,0,0.08);
             border: 1px solid #e8e4db;
-            position: relative;
             min-height: 400px;
         }
-        #map {
-            height: 450px;
-            width: 100%;
-            background: #e8e4db;
-        }
-        .map-placeholder {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            height: 450px;
-            background: #e8e4db;
-            flex-direction: column;
-            gap: 16px;
-        }
+        #map { height: 450px; width: 100%; background: #e8e4db; }
         .stats-grid {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
@@ -121,11 +107,7 @@
             flex-wrap: wrap;
             gap: 10px;
         }
-        .card-title {
-            font-size: 18px;
-            font-weight: 500;
-            color: #3d3a34;
-        }
+        .card-title { font-size: 18px; font-weight: 500; color: #3d3a34; }
         .btn-primary {
             background: transparent;
             color: #8b5e3c;
@@ -295,14 +277,12 @@
 
 <div class="container">
     <div id="mapPage" class="page active">
-        <div class="map-container">
-            <div id="map"></div>
-        </div>
+        <div class="map-container"><div id="map"></div></div>
         <div class="stats-grid">
             <div class="stat-card" onclick="filterByType('together')"><div class="stat-icon">❤️</div><div class="stat-value" id="togetherCount">0</div><div class="stat-label">一起去过</div></div>
             <div class="stat-card" onclick="filterByType('rui')"><div class="stat-icon">👩</div><div class="stat-value" id="ruiCount">0</div><div class="stat-label">Rui去过</div></div>
             <div class="stat-card" onclick="filterByType('kalang')"><div class="stat-icon">👨</div><div class="stat-value" id="kalangCount">0</div><div class="stat-label">Kalang去过</div></div>
-            <div class="stat-card" onclick="filterByType('dream')"><div class="stat-icon">✨</div><div class="stat-value" id="dreamCount">0</div><div class="stat-label">想去的地方</div></div>
+            <div class="stat-card" onclick="filterByType('dream')"><div class="stat-icon">✨</div><div class="stat-value" id="dreamCount">0</div><div class="stat-label">想去</div></div>
         </div>
         <div class="card">
             <div class="card-header"><div class="card-title">📌 最近添加</div><button class="btn-primary" onclick="openAddModal()"><i class="fas fa-plus"></i> 添加地点</button></div>
@@ -341,7 +321,7 @@
                 <button class="btn-export" onclick="document.getElementById('importFile').click()"><i class="fas fa-upload"></i> 导入数据</button>
                 <input type="file" id="importFile" class="import-input" accept=".json" onchange="importData(this)">
             </div>
-            <p style="font-size: 10px; color: #9e9b92; text-align: center; margin-top: 12px;">💡 从电脑导出，然后在手机上导入即可同步数据</p>
+            <p style="font-size: 10px; color: #9e9b92; text-align: center; margin-top: 12px;">💡 从电脑导出，在手机上导入即可同步</p>
         </div>
     </div>
 </div>
@@ -349,17 +329,15 @@
 <div id="destinationModal" class="modal">
     <div class="modal-content">
         <h3 id="modalTitle" style="margin-bottom: 16px; font-size: 22px;">添加目的地</h3>
-        <div class="form-group"><label>📍 城市/地点</label><input type="text" id="destName" placeholder="例如: 北京, 上海, 巴黎" autocomplete="off">
-            <div id="citySuggestions" class="city-suggestions" style="display:none;"></div>
-        </div>
+        <div class="form-group"><label>📍 城市/地点</label><input type="text" id="destName" placeholder="例如: 北京, 上海, 巴黎" autocomplete="off"></div>
         <div class="form-group"><label>🏷️ 谁去过？</label><select id="destType">
             <option value="together">一起去过 ❤️</option>
             <option value="rui">Rui去过 👩</option>
             <option value="kalang">Kalang去过 👨</option>
             <option value="dream">梦想一起去 ✨</option>
         </select></div>
-        <div class="form-group"><label>💭 回忆 / 备注</label><textarea id="destMemory" rows="2" placeholder="这个地方有什么特别的？(选填)"></textarea></div>
-        <div class="form-group"><label>🖼️ 照片链接 (选填)</label><input type="text" id="destPhoto" placeholder="https://..."></div>
+        <div class="form-group"><label>💭 回忆 / 备注</label><textarea id="destMemory" rows="2" placeholder="选填"></textarea></div>
+        <div class="form-group"><label>🖼️ 照片链接</label><input type="text" id="destPhoto" placeholder="https://..."></div>
         <div id="photoPreview" class="photo-preview"></div>
         <hr>
         <div class="modal-actions">
@@ -370,235 +348,278 @@
     </div>
 </div>
 
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 <script>
-    // 中国城市坐标数据库 (常用城市)
-    const chinaCities = {
-        "北京": { lat: 39.9042, lng: 116.4074 },
-        "上海": { lat: 31.2304, lng: 121.4737 },
-        "广州": { lat: 23.1291, lng: 113.2644 },
-        "深圳": { lat: 22.5431, lng: 114.0579 },
-        "成都": { lat: 30.5728, lng: 104.0668 },
-        "杭州": { lat: 30.2741, lng: 120.1551 },
-        "西安": { lat: 34.3416, lng: 108.9402 },
-        "重庆": { lat: 29.4316, lng: 106.9123 },
-        "南京": { lat: 32.0603, lng: 118.7969 },
-        "武汉": { lat: 30.5928, lng: 114.3055 },
-        "厦门": { lat: 24.4798, lng: 118.0894 },
-        "青岛": { lat: 36.0671, lng: 120.3826 },
-        "大理": { lat: 25.6065, lng: 100.2676 },
-        "丽江": { lat: 26.8725, lng: 100.2330 },
-        "拉萨": { lat: 29.6469, lng: 91.1406 },
-        "乌鲁木齐": { lat: 43.8256, lng: 87.6168 },
-        "哈尔滨": { lat: 45.8038, lng: 126.5344 },
-        "三亚": { lat: 18.2528, lng: 109.5119 },
-        "桂林": { lat: 25.2736, lng: 110.2900 },
-        "张家界": { lat: 29.1170, lng: 110.4788 }
-    };
-    
-    // 国际城市坐标
-    const worldCities = {
-        "巴黎": { lat: 48.8566, lng: 2.3522 },
-        "东京": { lat: 35.6762, lng: 139.6503 },
-        "纽约": { lat: 40.7128, lng: -74.0060 },
-        "伦敦": { lat: 51.5074, lng: -0.1278 },
-        "罗马": { lat: 41.9028, lng: 12.4964 },
-        "悉尼": { lat: -33.8688, lng: 151.2093 },
-        "曼谷": { lat: 13.7367, lng: 100.5231 },
-        "新加坡": { lat: 1.3521, lng: 103.8198 },
-        "首尔": { lat: 37.5665, lng: 126.9780 }
-    };
-    
-    let allCities = { ...chinaCities, ...worldCities };
+// 城市坐标数据库
+const cityCoords = {
+    "北京": { lat: 39.9042, lng: 116.4074 }, "上海": { lat: 31.2304, lng: 121.4737 },
+    "广州": { lat: 23.1291, lng: 113.2644 }, "深圳": { lat: 22.5431, lng: 114.0579 },
+    "成都": { lat: 30.5728, lng: 104.0668 }, "杭州": { lat: 30.2741, lng: 120.1551 },
+    "西安": { lat: 34.3416, lng: 108.9402 }, "重庆": { lat: 29.4316, lng: 106.9123 },
+    "南京": { lat: 32.0603, lng: 118.7969 }, "武汉": { lat: 30.5928, lng: 114.3055 },
+    "厦门": { lat: 24.4798, lng: 118.0894 }, "青岛": { lat: 36.0671, lng: 120.3826 },
+    "大理": { lat: 25.6065, lng: 100.2676 }, "丽江": { lat: 26.8725, lng: 100.2330 },
+    "拉萨": { lat: 29.6469, lng: 91.1406 }, "三亚": { lat: 18.2528, lng: 109.5119 },
+    "桂林": { lat: 25.2736, lng: 110.2900 }, "张家界": { lat: 29.1170, lng: 110.4788 },
+    "巴黎": { lat: 48.8566, lng: 2.3522 }, "东京": { lat: 35.6762, lng: 139.6503 },
+    "纽约": { lat: 40.7128, lng: -74.0060 }, "伦敦": { lat: 51.5074, lng: -0.1278 },
+    "罗马": { lat: 41.9028, lng: 12.4964 }, "悉尼": { lat: -33.8688, lng: 151.2093 },
+    "曼谷": { lat: 13.7367, lng: 100.5231 }, "首尔": { lat: 37.5665, lng: 126.9780 }
+};
 
-    let destinations = [
-        { id: 1, name: "巴黎", lat: 48.8566, lng: 2.3522, type: "together", memory: "第一次一起出国！埃菲尔铁塔下的日落太美了。", photo: "" },
-        { id: 2, name: "东京", lat: 35.6762, lng: 139.6503, type: "rui", memory: "一个人的冒险 - 樱花和寿司之旅", photo: "" },
-        { id: 3, name: "巴塞罗那", lat: 41.3851, lng: 2.1734, type: "kalang", memory: "高迪的建筑和美味的tapas", photo: "" },
-        { id: 4, name: "圣托里尼", lat: 36.3932, lng: 25.4615, type: "dream", memory: "梦想中的蜜月目的地！白房子，蓝顶教堂", photo: "" },
-        { id: 5, name: "罗马", lat: 41.9028, lng: 12.4964, type: "together", memory: "吃了好多意面，在特雷维喷泉投了硬币", photo: "" }
-    ];
-    
-    let map, markers = [], nextId = 6;
-    let chart;
-    let currentFilter = 'all';
+let destinations = [
+    { id: 1, name: "巴黎", lat: 48.8566, lng: 2.3522, type: "together", memory: "第一次一起出国！埃菲尔铁塔下的日落太美了。", photo: "" },
+    { id: 2, name: "东京", lat: 35.6762, lng: 139.6503, type: "rui", memory: "一个人的冒险 - 樱花和寿司之旅", photo: "" },
+    { id: 3, name: "巴塞罗那", lat: 41.3851, lng: 2.1734, type: "kalang", memory: "高迪的建筑和美味的tapas", photo: "" },
+    { id: 4, name: "圣托里尼", lat: 36.3932, lng: 25.4615, type: "dream", memory: "梦想中的蜜月目的地", photo: "" },
+    { id: 5, name: "罗马", lat: 41.9028, lng: 12.4964, type: "together", memory: "吃了好多意面，在特雷维喷泉投了硬币", photo: "" }
+];
 
-    // ========== 地图初始化（使用OpenStreetMap，在中国相对可用） ==========
-    function initMap() {
-        map = L.map('map').setView([35, 105], 4);
-        L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
-            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OSM</a>',
-            subdomains: 'abcd',
-            maxZoom: 19
-        }).addTo(map);
-        updateMarkers();
-    }
+let map, markers = [], nextId = 6, chart, currentFilter = 'all';
 
-    // ========== 城市搜索建议 ==========
-    function setupCitySearch() {
-        const input = document.getElementById('destName');
-        const suggestionsDiv = document.getElementById('citySuggestions');
-        
-        input.addEventListener('input', function() {
-            const query = this.value.trim().toLowerCase();
-            if (query.length < 2) {
-                suggestionsDiv.style.display = 'none';
-                return;
-            }
-            
-            const matches = Object.keys(allCities).filter(city => city.toLowerCase().includes(query));
-            if (matches.length > 0) {
-                suggestionsDiv.innerHTML = matches.slice(0, 8).map(city => 
-                    `<div class="city-suggestion" onclick="selectCity('${city}')">${city}</div>`
-                ).join('');
-                suggestionsDiv.style.display = 'block';
-            } else {
-                suggestionsDiv.style.display = 'none';
-            }
-        });
-        
-        document.addEventListener('click', function(e) {
-            if (!suggestionsDiv.contains(e.target) && e.target !== input) {
-                suggestionsDiv.style.display = 'none';
-            }
-        });
-    }
-    
-    function selectCity(cityName) {
-        document.getElementById('destName').value = cityName;
-        document.getElementById('citySuggestions').style.display = 'none';
-        const coords = allCities[cityName];
-        if (coords) {
-            window.pendingLat = coords.lat;
-            window.pendingLng = coords.lng;
-            if (map) map.flyTo([coords.lat, coords.lng], 10);
+// 初始化地图
+function initMap() {
+    map = L.map('map').setView([35, 105], 4);
+    L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
+        attribution: 'Map data &copy; OpenStreetMap',
+        subdomains: 'abcd',
+        maxZoom: 19
+    }).addTo(map);
+    updateMarkers();
+}
+
+function getMarkerColor(type) {
+    return { together: '#4a9b6e', rui: '#5b8cc9', kalang: '#e8a34b' }[type] || '#d4af37';
+}
+
+function updateMarkers() {
+    if (markers.length) { markers.forEach(m => map.removeLayer(m)); markers = []; }
+    destinations.forEach(d => {
+        if (d.lat && d.lng && d.type !== 'dream') {
+            let marker = L.marker([d.lat, d.lng], {
+                icon: L.divIcon({ className: 'custom-marker', html: `<div style="background: ${getMarkerColor(d.type)}; width: 12px; height: 12px; border-radius: 50%; border: 2px solid white; box-shadow: 0 1px 4px rgba(0,0,0,0.3);"></div>`, iconSize: [12, 12] })
+            }).addTo(map);
+            let whoText = d.type === 'together' ? '❤️ 一起去过' : d.type === 'rui' ? '👩 Rui去过' : '👨 Kalang去过';
+            marker.bindPopup(`<b>${d.name}</b><br>${whoText}<br>${d.memory ? `<small>${d.memory.substring(0, 80)}</small><br>` : ''}<button onclick="openEditModal(${d.id})" style="margin-top:6px; padding:4px 12px; background:#8b5e3c; color:white; border:none; border-radius:20px; cursor:pointer;">✏️ 编辑</button>`);
+            markers.push(marker);
         }
-    }
+    });
+}
 
-    function getMarkerColor(type) {
-        return { together: '#4a9b6e', rui: '#5b8cc9', kalang: '#e8a34b' }[type] || '#d4af37';
-    }
+function updateStats() {
+    document.getElementById('togetherCount').innerText = destinations.filter(d => d.type === 'together').length;
+    document.getElementById('ruiCount').innerText = destinations.filter(d => d.type === 'rui').length;
+    document.getElementById('kalangCount').innerText = destinations.filter(d => d.type === 'kalang').length;
+    document.getElementById('dreamCount').innerText = destinations.filter(d => d.type === 'dream').length;
+}
 
-    function updateMarkers() {
-        if (markers.length) { markers.forEach(m => map.removeLayer(m)); markers = []; }
-        destinations.forEach(d => {
-            if (d.lat && d.lng && d.type !== 'dream') {
-                const marker = L.marker([d.lat, d.lng], {
-                    icon: L.divIcon({
-                        className: 'custom-marker',
-                        html: `<div style="background: ${getMarkerColor(d.type)}; width: 12px; height: 12px; border-radius: 50%; border: 2px solid white; box-shadow: 0 1px 4px rgba(0,0,0,0.3);"></div>`,
-                        iconSize: [12, 12]
-                    })
-                }).addTo(map);
-                let whoText = d.type === 'together' ? '❤️ 一起去过' : d.type === 'rui' ? '👩 Rui去过' : '👨 Kalang去过';
-                marker.bindPopup(`<b>${d.name}</b><br>${whoText}<br>${d.memory ? `<small>${d.memory.substring(0, 80)}</small><br>` : ''}<button onclick="openEditModal(${d.id})" style="margin-top:6px; padding:4px 12px; background:#8b5e3c; color:white; border:none; border-radius:20px; cursor:pointer;">✏️ 编辑</button>`);
-                markers.push(marker);
+function renderFeatured() {
+    let recent = [...destinations].filter(d => d.type !== 'dream').slice(-4).reverse();
+    let container = document.getElementById('featuredList');
+    if (recent.length === 0) { container.innerHTML = '<p style="text-align:center; padding:30px;">还没有地点</p>'; return; }
+    container.innerHTML = recent.map(d => `<div class="destination-item" onclick="openEditModal(${d.id})"><div><span class="destination-badge badge-${d.type}"></span><strong>${d.name}</strong>${d.memory && d.memory.trim() ? `<div class="memory-text">${d.memory.substring(0, 60)}</div>` : ''}</div><div><i class="fas fa-chevron-right"></i></div></div>`).join('');
+}
+
+function renderAllDestinations(filter) {
+    let filtered = filter === 'all' ? destinations : destinations.filter(d => d.type === filter);
+    let container = document.getElementById('allDestinationsList');
+    if (filtered.length === 0) { container.innerHTML = '<p style="text-align:center; padding:30px;">暂无</p>'; return; }
+    let typeLabel = { together: '一起去过', rui: 'Rui去过', kalang: 'Kalang去过', dream: '梦想' };
+    container.innerHTML = filtered.map(d => `<div class="destination-item" onclick="openEditModal(${d.id})"><div><span class="destination-badge badge-${d.type}"></span><strong>${d.name}</strong><div style="font-size:11px; color:#9e9b92;">${typeLabel[d.type]}</div>${d.memory && d.memory.trim() ? `<div class="memory-text">${d.memory.substring(0, 50)}</div>` : ''}</div><div><i class="fas fa-edit"></i></div></div>`).join('');
+}
+
+function renderBucketList() {
+    let dreams = destinations.filter(d => d.type === 'dream');
+    let container = document.getElementById('bucketListContainer');
+    if (dreams.length === 0) { container.innerHTML = '<p style="text-align:center; padding:30px;">还没有梦想目的地 ✨</p>'; return; }
+    container.innerHTML = dreams.map(d => `<div class="destination-item" onclick="openEditModal(${d.id})"><div><span class="destination-badge badge-dream"></span><strong>⭐ ${d.name}</strong>${d.memory && d.memory.trim() ? `<div class="memory-text">${d.memory.substring(0, 60)}</div>` : ''}</div><div><i class="fas fa-star"></i></div></div>`).join('');
+}
+
+function updateChart() {
+    let counts = ['together', 'rui', 'kalang', 'dream'].map(t => destinations.filter(d => d.type === t).length);
+    if (chart) chart.destroy();
+    let ctx = document.getElementById('travelChart').getContext('2d');
+    chart = new Chart(ctx, { type: 'doughnut', data: { labels: ['一起去过', 'Rui', 'Kalang', '梦想'], datasets: [{ data: counts, backgroundColor: ['#4a9b6e', '#5b8cc9', '#e8a34b', '#d4af37'], borderWidth: 0 }] }, options: { responsive: true, plugins: { legend: { position: 'bottom' } } } });
+    document.getElementById('statDetails').innerHTML = `<div style="display:grid; grid-template-columns:repeat(2,1fr); gap:12px; text-align:center;"><div>🌍 总共: ${counts.reduce((a,b)=>a+b,0)}</div><div>❤️ 一起去过: ${counts[0]}</div><div>👩 Rui: ${counts[1]}</div><div>👨 Kalang: ${counts[2]}</div><div>✨ 梦想: ${counts[3]}</div></div>`;
+}
+
+function filterByType(type) { 
+    showPage('destinations'); 
+    document.querySelectorAll('#destinationFilters .filter-btn').forEach(btn => { btn.classList.remove('active'); if (btn.getAttribute('data-filter') === type) btn.classList.add('active'); }); 
+    renderAllDestinations(type); 
+}
+
+function openAddModal() {
+    document.getElementById('modalTitle').innerText = '添加目的地';
+    document.getElementById('destName').value = '';
+    document.getElementById('destType').value = 'together';
+    document.getElementById('destMemory').value = '';
+    document.getElementById('destPhoto').value = '';
+    document.getElementById('photoPreview').innerHTML = '';
+    document.getElementById('deleteBtn').style.display = 'none';
+    window.editId = null;
+    window.pendingLat = null;
+    window.pendingLng = null;
+    document.getElementById('destinationModal').classList.add('active');
+    document.getElementById('destPhoto').oninput = function() { 
+        let url = this.value; 
+        if (url) document.getElementById('photoPreview').innerHTML = `<img src="${url}" onerror="this.innerHTML='<p>无效链接</p>'">`; 
+        else document.getElementById('photoPreview').innerHTML = ''; 
+    };
+}
+
+function openAddModalWithType(type) { openAddModal(); document.getElementById('destType').value = type; }
+
+function openEditModal(id) {
+    let d = destinations.find(x => x.id === id);
+    if (!d) return;
+    document.getElementById('modalTitle').innerText = '编辑目的地';
+    document.getElementById('destName').value = d.name;
+    document.getElementById('destType').value = d.type;
+    document.getElementById('destMemory').value = d.memory || '';
+    document.getElementById('destPhoto').value = d.photo || '';
+    if (d.photo) document.getElementById('photoPreview').innerHTML = `<img src="${d.photo}">`;
+    else document.getElementById('photoPreview').innerHTML = '';
+    document.getElementById('deleteBtn').style.display = 'inline-block';
+    window.editId = id;
+    window.pendingLat = d.lat;
+    window.pendingLng = d.lng;
+    document.getElementById('destinationModal').classList.add('active');
+}
+
+function saveDestination() {
+    let name = document.getElementById('destName').value.trim();
+    let type = document.getElementById('destType').value;
+    let memory = document.getElementById('destMemory').value;
+    let photo = document.getElementById('destPhoto').value;
+    if (!name) { alert("请输入目的地名称"); return; }
+    let lat = window.pendingLat, lng = window.pendingLng;
+    if (!lat && cityCoords[name]) { lat = cityCoords[name].lat; lng = cityCoords[name].lng; }
+    if (!lat && type !== 'dream') { lat = (Math.random() * 170 - 85); lng = (Math.random() * 360 - 180); }
+    if (window.editId) {
+        let index = destinations.findIndex(x => x.id === window.editId);
+        if (index !== -1) { destinations[index] = { ...destinations[index], name, type, memory, photo, lat, lng }; }
+    } else {
+        destinations.push({ id: nextId++, name, type, memory, photo, lat, lng });
+    }
+    closeModal(); refreshAll(); saveToLocalStorage();
+}
+
+function deleteCurrentDestination() { 
+    if (window.editId && confirm("删除这个目的地吗？")) { 
+        destinations = destinations.filter(d => d.id !== window.editId); 
+        closeModal(); refreshAll(); saveToLocalStorage(); 
+    } 
+}
+
+function closeModal() { document.getElementById('destinationModal').classList.remove('active'); }
+
+function refreshAll() { updateStats(); updateMarkers(); renderFeatured(); renderAllDestinations(currentFilter); renderBucketList(); updateChart(); }
+
+function saveToLocalStorage() { localStorage.setItem('coupleTravelMap', JSON.stringify(destinations)); }
+
+function loadFromLocalStorage() { 
+    let saved = localStorage.getItem('coupleTravelMap'); 
+    if (saved) { 
+        destinations = JSON.parse(saved); 
+        nextId = Math.max(...destinations.map(d => d.id), 0) + 1; 
+    } 
+}
+
+function exportData() {
+    let dataStr = JSON.stringify({ destinations: destinations }, null, 2);
+    let blob = new Blob([dataStr], { type: "application/json" });
+    let url = URL.createObjectURL(blob);
+    let a = document.createElement('a');
+    a.href = url;
+    a.download = `travel-map-${new Date().toISOString().split('T')[0]}.json`;
+    a.click();
+    URL.revokeObjectURL(url);
+    alert("✅ 导出成功！");
+}
+
+function importData(input) {
+    let file = input.files[0];
+    if (!file) return;
+    let reader = new FileReader();
+    reader.onload = function(e) {
+        try {
+            let imported = JSON.parse(e.target.result);
+            if (imported.destinations) {
+                destinations = imported.destinations;
+                nextId = Math.max(...destinations.map(d => d.id), 0) + 1;
+                refreshAll();
+                saveToLocalStorage();
+                alert(`✅ 导入成功！共 ${destinations.length} 个目的地`);
             }
-        });
-    }
+        } catch(err) { alert("❌ 文件格式错误"); }
+        input.value = '';
+    };
+    reader.readAsText(file);
+}
 
-    function updateStats() {
-        document.getElementById('togetherCount').innerText = destinations.filter(d => d.type === 'together').length;
-        document.getElementById('ruiCount').innerText = destinations.filter(d => d.type === 'rui').length;
-        document.getElementById('kalangCount').innerText = destinations.filter(d => d.type === 'kalang').length;
-        document.getElementById('dreamCount').innerText = destinations.filter(d => d.type === 'dream').length;
-    }
+function showPage(pageName) {
+    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+    document.getElementById(pageName + 'Page').classList.add('active');
+    document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+    let clicked = Array.from(document.querySelectorAll('.nav-tab')).find(t => t.getAttribute('data-page') === pageName);
+    if (clicked) clicked.classList.add('active');
+    if (pageName === 'map') setTimeout(() => map?.invalidateSize(), 100);
+    if (pageName === 'stats') updateChart();
+    if (pageName === 'destinations') renderAllDestinations(currentFilter);
+    if (pageName === 'bucketlist') renderBucketList();
+}
 
-    function renderFeatured() {
-        const recent = [...destinations].filter(d => d.type !== 'dream').slice(-4).reverse();
-        const container = document.getElementById('featuredList');
-        if (recent.length === 0) { container.innerHTML = '<p style="text-align:center; padding:30px;">还没有地点，添加第一个吧！</p>'; return; }
-        container.innerHTML = recent.map(d => `<div class="destination-item" onclick="openEditModal(${d.id})"><div><span class="destination-badge badge-${d.type}"></span><strong>${d.name}</strong>${d.memory && d.memory.trim() ? `<div class="memory-text">${d.memory.substring(0, 60)}</div>` : ''}</div><div><i class="fas fa-chevron-right" style="color:#c9a88b"></i></div></div>`).join('');
-    }
+// 城市搜索建议
+function setupCitySearch() {
+    let input = document.getElementById('destName');
+    input.addEventListener('input', function() {
+        let val = this.value.trim();
+        if (val.length < 2) return;
+        let matches = Object.keys(cityCoords).filter(c => c.includes(val));
+        if (matches.length) {
+            let suggestionDiv = document.createElement('div');
+            suggestionDiv.className = 'city-suggestions';
+            suggestionDiv.innerHTML = matches.slice(0,5).map(c => `<div class="city-suggestion" onclick="selectCity('${c}')">${c}</div>`).join('');
+            let old = document.querySelector('.city-suggestions');
+            if (old) old.remove();
+            input.parentNode.appendChild(suggestionDiv);
+        }
+    });
+}
 
-    function renderAllDestinations(filter) {
-        let filtered = filter === 'all' ? destinations : destinations.filter(d => d.type === filter);
-        const container = document.getElementById('allDestinationsList');
-        if (filtered.length === 0) { container.innerHTML = '<p style="text-align:center; padding:30px;">暂无目的地</p>'; return; }
-        let typeLabel = { together: '一起去过', rui: 'Rui去过', kalang: 'Kalang去过', dream: '梦想' };
-        container.innerHTML = filtered.map(d => `<div class="destination-item" onclick="openEditModal(${d.id})"><div><span class="destination-badge badge-${d.type}"></span><strong>${d.name}</strong><div class="memory-text" style="font-size:11px; color:#9e9b92; margin-top:2px;">${typeLabel[d.type]}</div>${d.memory && d.memory.trim() ? `<div class="memory-text">${d.memory.substring(0, 50)}</div>` : ''}</div><div><i class="fas fa-edit" style="color:#c9a88b"></i></div></div>`).join('');
-    }
+function selectCity(city) {
+    document.getElementById('destName').value = city;
+    let old = document.querySelector('.city-suggestions');
+    if (old) old.remove();
+    let coords = cityCoords[city];
+    if (coords) { window.pendingLat = coords.lat; window.pendingLng = coords.lng; }
+}
 
-    function renderBucketList() {
-        const dreams = destinations.filter(d => d.type === 'dream');
-        const container = document.getElementById('bucketListContainer');
-        if (dreams.length === 0) { container.innerHTML = '<p style="text-align:center; padding:30px;">还没有梦想目的地，添加第一个吧！✨</p>'; return; }
-        container.innerHTML = dreams.map(d => `<div class="destination-item" onclick="openEditModal(${d.id})"><div><span class="destination-badge badge-dream"></span><strong>⭐ ${d.name}</strong>${d.memory && d.memory.trim() ? `<div class="memory-text">${d.memory.substring(0, 60)}</div>` : ''}</div><div><i class="fas fa-star" style="color:#d4af37"></i></div></div>`).join('');
-    }
+document.querySelectorAll('.nav-tab').forEach(btn => { btn.onclick = () => showPage(btn.getAttribute('data-page')); });
+document.querySelectorAll('#destinationFilters .filter-btn').forEach(btn => { btn.onclick = () => { 
+    document.querySelectorAll('#destinationFilters .filter-btn').forEach(b => b.classList.remove('active')); 
+    btn.classList.add('active'); 
+    currentFilter = btn.getAttribute('data-filter'); 
+    renderAllDestinations(currentFilter); 
+}; });
 
-    function updateChart() {
-        const counts = ['together', 'rui', 'kalang', 'dream'].map(t => destinations.filter(d => d.type === t).length);
-        if (chart) chart.destroy();
-        const ctx = document.getElementById('travelChart').getContext('2d');
-        chart = new Chart(ctx, { type: 'doughnut', data: { labels: ['一起去过 ❤️', 'Rui 👩', 'Kalang 👨', '梦想 ✨'], datasets: [{ data: counts, backgroundColor: ['#4a9b6e', '#5b8cc9', '#e8a34b', '#d4af37'], borderWidth: 0 }] }, options: { responsive: true, maintainAspectRatio: true, plugins: { legend: { position: 'bottom' } } } });
-        document.getElementById('statDetails').innerHTML = `<div style="display:grid; grid-template-columns:repeat(2,1fr); gap:12px; text-align:center;"><div><i class="fas fa-globe"></i> 总共: ${counts.reduce((a,b)=>a+b,0)}</div><div><i class="fas fa-heart"></i> 一起去过: ${counts[0]}</div><div><i class="fas fa-female"></i> Rui: ${counts[1]}</div><div><i class="fas fa-male"></i> Kalang: ${counts[2]}</div><div><i class="fas fa-star"></i> 梦想: ${counts[3]}</div></div>`;
-    }
+window.openAddModal = openAddModal;
+window.openAddModalWithType = openAddModalWithType;
+window.openEditModal = openEditModal;
+window.closeModal = closeModal;
+window.saveDestination = saveDestination;
+window.deleteCurrentDestination = deleteCurrentDestination;
+window.filterByType = filterByType;
+window.showPage = showPage;
+window.exportData = exportData;
+window.importData = importData;
+window.selectCity = selectCity;
 
-    function filterByType(type) { showPage('destinations'); document.querySelectorAll('#destinationFilters .filter-btn').forEach(btn => { btn.classList.remove('active'); if (btn.getAttribute('data-filter') === type) btn.classList.add('active'); }); renderAllDestinations(type); }
-
-    function openAddModal() {
-        document.getElementById('modalTitle').innerText = '添加目的地';
-        document.getElementById('destName').value = '';
-        document.getElementById('destType').value = 'together';
-        document.getElementById('destMemory').value = '';
-        document.getElementById('destPhoto').value = '';
-        document.getElementById('photoPreview').innerHTML = '';
-        document.getElementById('deleteBtn').style.display = 'none';
-        window.editId = null;
-        window.pendingLat = null;
-        window.pendingLng = null;
-        document.getElementById('destinationModal').classList.add('active');
-        document.getElementById('destPhoto').oninput = function() { const url = this.value; if (url) document.getElementById('photoPreview').innerHTML = `<img src="${url}" onerror="this.parentElement.innerHTML='<p style=color:#999>链接无效</p>'">`; else document.getElementById('photoPreview').innerHTML = ''; };
-    }
-
-    function openAddModalWithType(type) { openAddModal(); document.getElementById('destType').value = type; }
-
-    function openEditModal(id) {
-        const d = destinations.find(x => x.id === id);
-        if (!d) return;
-        document.getElementById('modalTitle').innerText = '编辑目的地';
-        document.getElementById('destName').value = d.name;
-        document.getElementById('destType').value = d.type;
-        document.getElementById('destMemory').value = d.memory || '';
-        document.getElementById('destPhoto').value = d.photo || '';
-        if (d.photo) document.getElementById('photoPreview').innerHTML = `<img src="${d.photo}">`;
-        else document.getElementById('photoPreview').innerHTML = '';
-        document.getElementById('deleteBtn').style.display = 'inline-block';
-        window.editId = id;
-        window.pendingLat = d.lat;
-        window.pendingLng = d.lng;
-        document.getElementById('destinationModal').classList.add('active');
-    }
-
-    function saveDestination() {
-        const name = document.getElementById('destName').value.trim();
-        const type = document.getElementById('destType').value;
-        const memory = document.getElementById('destMemory').value;
-        const photo = document.getElementById('destPhoto').value;
-        if (!name) { alert("请输入目的地名称"); return; }
-        let lat = window.pendingLat, lng = window.pendingLng;
-        if (!lat && allCities[name]) { lat = allCities[name].lat; lng = allCities[name].lng; }
-        if (!lat && type !== 'dream') { lat = (Math.random() * 170 - 85); lng = (Math.random() * 360 - 180); }
-        if (window.editId) { const index = destinations.findIndex(x => x.id === window.editId); if (index !== -1) { destinations[index] = { ...destinations[index], name, type, memory, photo, lat, lng }; } } 
-        else { destinations.push({ id: nextId++, name, type, memory, photo, lat, lng }); }
-        closeModal(); refreshAll(); saveToLocalStorage();
-    }
-
-    function deleteCurrentDestination() { if (window.editId && confirm("删除这个目的地吗？")) { destinations = destinations.filter(d => d.id !== window.editId); closeModal(); refreshAll(); saveToLocalStorage(); } }
-    function closeModal() { document.getElementById('destinationModal').classList.remove('active'); }
-    function refreshAll() { updateStats(); updateMarkers(); renderFeatured(); renderAllDestinations(currentFilter); renderBucketList(); updateChart(); }
-    function saveToLocalStorage() { localStorage.setItem('coupleTravelMap', JSON.stringify(destinations)); }
-    function loadFromLocalStorage() { const saved = localStorage.getItem('coupleTravelMap'); if (saved) { destinations = JSON.parse(saved); nextId = Math.max(...destinations.map(d => d.id), 0) + 1; } }
-
-    function exportData() {
-        const dataToExport = { destinations: destinations, version: "1.0", exportedAt: new Date().toISOString() };
-        const dataStr = JSON.stringify(dataToExport, null, 2);
-        const blob = new Blob([dataStr], { type: "application/json" });
-        const url = URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = `our-journey-map-${new Date().toISOString().split('T')[0]}.json`;
-        document.body.appendChild(a);
-        a.click();
-        document.body.removeChild(a);
-        URL.revokeObject
+loadFromLocalStorage();
+setTimeout(() => { initMap(); refreshAll(); setupCitySearch(); }, 100);
+</script>
+</body>
+</html>
