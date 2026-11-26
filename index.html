@@ -3,795 +3,462 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
-<title>The Missing Control — An Audit Escape Room</title>
+<title>NEON SIEGE — Arcade Shooter</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Special+Elite&family=Cormorant+Garamond:ital,wght@0,400;1,400&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
 <style>
-:root{
-  --paper:#f4f0e6;
-  --ink:#1a1714;
-  --manila:#e8dcc0;
-  --dark:#0f0d0a;
-  --red:#b3261e;
-  --green:#2f6f4e;
-  --amber:#c98a1b;
-  --blue:#2d5a7b;
-  --ease:cubic-bezier(.16,1,.3,1);
-}
-*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-html,body{
-  width:100%;height:100%;overflow:hidden;
-  background:var(--dark);color:var(--ink);
-  font-family:'Inter',system-ui,sans-serif;
-  font-weight:400;
-  -webkit-font-smoothing:antialiased;
-  user-select:none;
-  touch-action:none;
-}
-#stage{
-  position:fixed;inset:0;
-  display:flex;align-items:center;justify-content:center;
-  background:radial-gradient(ellipse at center,#1a1510 0%,#0a0805 80%,#000 100%);
-}
-#room{
-  position:relative;
-  width:min(100vw,1200px);
-  height:min(100vh,700px);
-  background:linear-gradient(180deg,#2a2420 0%,#1a1714 100%);
-  overflow:hidden;
-  box-shadow:0 0 100px rgba(0,0,0,.9),inset 0 0 200px rgba(0,0,0,.6);
-}
+  :root{
+    --bg:#05060d;
+    --neon:#00f0ff;
+    --magenta:#ff006e;
+    --gold:#ffb800;
+    --green:#00ff88;
+    --red:#ff2d55;
+    --violet:#9d4edd;
+    --ease:cubic-bezier(.16,1,.3,1);
+  }
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+  html,body{
+    width:100%;height:100%;overflow:hidden;
+    background:var(--bg);color:#fff;
+    font-family:'Inter',system-ui,sans-serif;
+    user-select:none;touch-action:none;
+    -webkit-font-smoothing:antialiased;
+  }
+  #game{position:fixed;inset:0;display:block;cursor:crosshair}
 
-/* Room elements */
-.wall{
-  position:absolute;inset:0;
-  background:
-    linear-gradient(180deg,rgba(42,36,32,1) 0%,rgba(26,23,20,1) 100%);
-}
-.floor{
-  position:absolute;bottom:0;left:0;right:0;height:22%;
-  background:linear-gradient(180deg,#1a1512 0%,#0d0a08 100%);
-  border-top:3px solid #0a0805;
-}
-.floor::before{
-  content:"";position:absolute;inset:0;
-  background-image:
-    repeating-linear-gradient(90deg,transparent 0 78px,rgba(0,0,0,.4) 78px 80px),
-    repeating-linear-gradient(0deg,transparent 0 38px,rgba(0,0,0,.3) 38px 40px);
-}
+  /* ============ HUD ============ */
+  .hud{position:fixed;inset:0;pointer-events:none;z-index:10;padding:24px}
+  .hud-top{display:flex;justify-content:space-between;align-items:flex-start;gap:16px}
+  .hud-bottom{position:absolute;bottom:24px;left:24px;right:24px;display:flex;justify-content:space-between;align-items:flex-end;gap:16px}
+  .hud-center{position:absolute;top:24px;left:50%;transform:translateX(-50%);text-align:center}
 
-/* Interactive objects */
-.obj{
-  position:absolute;
-  cursor:pointer;
-  transition:transform .2s var(--ease),filter .2s;
-  z-index:5;
-}
-.obj:hover{
-  filter:brightness(1.3) drop-shadow(0 0 20px rgba(201,138,27,.8));
-  transform:translateY(-2px);
-}
-.obj:active{transform:translateY(0)}
-.obj.done{
-  filter:brightness(.6) saturate(.5);
-  cursor:default;
-  pointer-events:none;
-}
-.obj.found{
-  animation:foundPulse .6s ease;
-}
-@keyframes foundPulse{
-  0%,100%{filter:brightness(1.3) drop-shadow(0 0 20px rgba(201,138,27,.8))}
-  50%{filter:brightness(1.8) drop-shadow(0 0 40px rgba(201,138,27,1))}
-}
+  .stat{
+    font-family:'Orbitron',monospace;
+    background:rgba(0,0,0,.5);
+    border:1px solid rgba(0,240,255,.4);
+    padding:8px 18px;
+    border-radius:4px;
+    backdrop-filter:blur(8px);
+    box-shadow:0 0 20px rgba(0,240,255,.2),inset 0 0 20px rgba(0,240,255,.05);
+  }
+  .stat-label{
+    font-size:9px;letter-spacing:.4em;text-transform:uppercase;
+    color:rgba(0,240,255,.6);margin-bottom:4px;
+  }
+  .stat-value{
+    font-size:22px;font-weight:700;
+    color:var(--neon);
+    text-shadow:0 0 15px var(--neon);
+    line-height:1;
+  }
+  .stat-value.combo{
+    color:var(--gold);
+    text-shadow:0 0 15px var(--gold);
+  }
 
-/* Specific objects */
-.door{
-  bottom:22%;left:50%;transform:translateX(-50%);
-  width:140px;height:260px;
-  background:linear-gradient(180deg,#4a3a2a 0%,#2a1e14 100%);
-  border:4px solid #1a1008;
-  border-radius:6px 6px 0 0;
-  box-shadow:inset 0 0 40px rgba(0,0,0,.8),0 0 40px rgba(0,0,0,.6);
-}
-.door::before{
-  content:"";position:absolute;top:20px;left:20px;right:20px;bottom:80px;
-  border:2px solid #3a2a1a;
-  background:linear-gradient(180deg,rgba(80,60,40,.4),rgba(20,15,10,.6));
-}
-.door::after{
-  content:"";position:absolute;right:18px;top:50%;
-  width:10px;height:10px;border-radius:50%;
-  background:radial-gradient(circle,#d4a574,#5a3820);
-  box-shadow:0 0 10px rgba(212,165,116,.6);
-}
-.door.unlocked{
-  filter:brightness(1.4);
-  box-shadow:inset 0 0 40px rgba(212,165,116,.4),0 0 60px rgba(212,165,116,.6);
-}
-.door.unlocked::after{
-  background:radial-gradient(circle,#a0ffa0,#2f6f4e);
-  box-shadow:0 0 20px rgba(100,255,150,.8);
-}
+  .wave-indicator{
+    font-family:'Orbitron',monospace;
+    font-size:14px;letter-spacing:.4em;text-transform:uppercase;
+    color:rgba(255,255,255,.5);
+  }
+  .wave-indicator strong{
+    color:var(--magenta);
+    text-shadow:0 0 20px var(--magenta);
+    font-size:20px;
+  }
 
-/* Door lock */
-.door-lock{
-  position:absolute;top:130px;left:50%;transform:translateX(-50%);
-  font-family:'Special Elite',monospace;
-  font-size:28px;color:#c98a1b;
-  text-shadow:0 0 10px rgba(201,138,27,.8);
-  letter-spacing:.3em;
-  pointer-events:none;
-  z-index:6;
-}
-.door-lock.unlocked{color:#4ade80;text-shadow:0 0 20px rgba(74,222,128,.9)}
+  /* Health + armor */
+  .bar-container{display:flex;flex-direction:column;gap:8px;min-width:280px}
+  .bar{
+    position:relative;height:14px;
+    background:rgba(0,0,0,.6);
+    border:1px solid rgba(0,240,255,.3);
+    border-radius:2px;
+    overflow:hidden;
+  }
+  .bar-label{
+    position:absolute;left:8px;top:50%;transform:translateY(-50%);
+    font-family:'Orbitron',monospace;font-size:8px;
+    letter-spacing:.3em;text-transform:uppercase;
+    color:rgba(255,255,255,.8);z-index:2;
+    text-shadow:0 0 4px rgba(0,0,0,.8);
+  }
+  .bar-fill{
+    position:absolute;inset:0;
+    transform-origin:left;
+    transition:transform .2s var(--ease);
+  }
+  .bar-fill.health{background:linear-gradient(90deg,var(--red),#ff6b8a);box-shadow:0 0 15px var(--red)}
+  .bar-fill.armor{background:linear-gradient(90deg,var(--neon),#7dfcff);box-shadow:0 0 15px var(--neon)}
 
-/* Filing cabinet */
-.cabinet{
-  bottom:22%;left:80px;
-  width:110px;height:180px;
-  background:linear-gradient(180deg,#5a4a3a 0%,#3a2a1a 100%);
-  border:3px solid #1a1008;
-  border-radius:4px;
-}
-.cabinet::before{
-  content:"";position:absolute;inset:8px;
-  background:
-    repeating-linear-gradient(180deg,transparent 0 32px,rgba(0,0,0,.5) 32px 34px);
-}
-.cabinet::after{
-  content:"";position:absolute;top:20px;left:50%;transform:translateX(-50%);
-  width:30px;height:6px;border-radius:2px;
-  background:#8b7355;
-  box-shadow:0 42px 0 #8b7355,0 84px 0 #8b7355,0 126px 0 #8b7355;
-}
+  /* Weapon display */
+  .weapon-display{
+    display:flex;gap:8px;align-items:center;
+    font-family:'Orbitron',monospace;
+    padding:8px 18px;
+    background:rgba(0,0,0,.5);
+    border:1px solid rgba(157,78,221,.4);
+    border-radius:4px;
+    box-shadow:0 0 20px rgba(157,78,221,.2);
+  }
+  .weapon-icon{
+    width:32px;height:32px;
+    display:flex;align-items:center;justify-content:center;
+    font-size:20px;
+    border-radius:4px;
+    background:rgba(157,78,221,.2);
+    border:1px solid var(--violet);
+    color:var(--violet);
+    text-shadow:0 0 10px var(--violet);
+  }
+  .weapon-info .weapon-name{
+    font-size:11px;font-weight:700;letter-spacing:.15em;
+    color:var(--violet);text-transform:uppercase;
+  }
+  .weapon-info .weapon-ammo{
+    font-size:10px;color:rgba(255,255,255,.6);letter-spacing:.1em;
+  }
 
-/* Desk */
-.desk{
-  bottom:22%;right:80px;
-  width:200px;height:100px;
-  background:linear-gradient(180deg,#6a4a2a 0%,#3a2a1a 100%);
-  border:3px solid #1a1008;
-  border-radius:4px;
-}
-.desk::before{
-  content:"";position:absolute;bottom:-60px;left:10px;right:10px;height:60px;
-  background:linear-gradient(180deg,#3a2a1a 0%,#1a1008 100%);
-  border-left:3px solid #1a1008;border-right:3px solid #1a1008;
-}
-.desk::after{
-  content:"";position:absolute;top:8px;left:12px;
-  width:60px;height:80px;
-  background:linear-gradient(180deg,#f4f0e6 0%,#e8dcc0 100%);
-  border:1px solid #8b7355;
-  transform:rotate(-4deg);
-  box-shadow:2px 2px 4px rgba(0,0,0,.4);
-}
+  /* ============ SCREENS ============ */
+  .screen{
+    position:fixed;inset:0;z-index:20;
+    display:flex;flex-direction:column;
+    align-items:center;justify-content:center;
+    padding:40px;
+    background:radial-gradient(ellipse at center,rgba(5,6,13,.95),rgba(5,6,13,1));
+    opacity:0;visibility:hidden;
+    transition:opacity .4s var(--ease),visibility .4s;
+    text-align:center;
+  }
+  .screen.visible{opacity:1;visibility:visible}
+  .screen::before{
+    content:"";position:absolute;inset:0;pointer-events:none;
+    background-image:
+      linear-gradient(rgba(0,240,255,.03) 1px,transparent 1px),
+      linear-gradient(90deg,rgba(0,240,255,.03) 1px,transparent 1px);
+    background-size:40px 40px;
+    mask-image:radial-gradient(ellipse at center,black 30%,transparent 80%);
+  }
 
-/* Framed certificate */
-.certificate{
-  top:40px;right:160px;
-  width:180px;height:140px;
-  background:linear-gradient(180deg,#e8dcc0 0%,#c4b89a 100%);
-  border:6px solid #5a4a3a;
-  box-shadow:0 8px 20px rgba(0,0,0,.6);
-  transform:rotate(2deg);
-}
-.certificate::before{
-  content:"";position:absolute;inset:12px;
-  border:2px solid #8b7355;
-}
-.certificate::after{
-  content:"";position:absolute;bottom:20px;right:20px;
-  width:40px;height:40px;border-radius:50%;
-  background:radial-gradient(circle,#b3261e 0%,#7a1310 100%);
-  opacity:.4;
-}
+  .title{
+    font-family:'Orbitron',monospace;
+    font-size:clamp(48px,10vw,140px);
+    font-weight:900;
+    letter-spacing:.05em;
+    line-height:.9;
+    color:#fff;
+    text-shadow:
+      0 0 20px var(--neon),
+      0 0 40px var(--neon),
+      0 0 80px var(--neon);
+    margin-bottom:8px;
+    animation:titlePulse 3s ease-in-out infinite;
+  }
+  @keyframes titlePulse{
+    0%,100%{text-shadow:0 0 20px var(--neon),0 0 40px var(--neon),0 0 80px var(--neon)}
+    50%{text-shadow:0 0 30px var(--neon),0 0 60px var(--neon),0 0 120px var(--neon)}
+  }
+  .subtitle{
+    font-family:'Orbitron',monospace;
+    font-size:14px;
+    letter-spacing:.6em;
+    color:var(--magenta);
+    text-transform:uppercase;
+    margin-bottom:48px;
+    text-shadow:0 0 20px var(--magenta);
+  }
+  .desc{
+    font-size:15px;line-height:1.8;color:rgba(255,255,255,.7);
+    max-width:540px;margin-bottom:40px;
+  }
+  .desc em{color:var(--neon);font-style:normal;font-weight:600}
 
-/* Wall clock */
-.clock{
-  top:40px;left:160px;
-  width:120px;height:120px;
-  border-radius:50%;
-  background:radial-gradient(circle,#f4f0e6 0%,#e8dcc0 100%);
-  border:8px solid #5a4a3a;
-  box-shadow:0 4px 15px rgba(0,0,0,.7),inset 0 0 20px rgba(0,0,0,.2);
-}
-.clock::before{
-  content:"";position:absolute;top:50%;left:50%;
-  width:4px;height:35px;background:#1a1714;
-  transform-origin:bottom center;
-  transform:translate(-50%,-100%) rotate(45deg);
-}
-.clock::after{
-  content:"";position:absolute;top:50%;left:50%;
-  width:3px;height:45px;background:#b3261e;
-  transform-origin:bottom center;
-  transform:translate(-50%,-100%) rotate(-20deg);
-}
+  .btn{
+    font-family:'Orbitron',monospace;
+    font-size:14px;
+    letter-spacing:.3em;
+    text-transform:uppercase;
+    padding:18px 48px;
+    background:transparent;
+    color:var(--neon);
+    border:2px solid var(--neon);
+    cursor:pointer;
+    transition:all .3s var(--ease);
+    text-shadow:0 0 10px var(--neon);
+    box-shadow:0 0 20px rgba(0,240,255,.3),inset 0 0 20px rgba(0,240,255,.1);
+    position:relative;
+    overflow:hidden;
+  }
+  .btn:hover{
+    background:rgba(0,240,255,.1);
+    box-shadow:0 0 40px var(--neon),inset 0 0 30px rgba(0,240,255,.2);
+    transform:translateY(-2px);
+  }
+  .btn:active{transform:translateY(0)}
 
-/* Bookshelf */
-.shelf{
-  top:220px;left:280px;
-  width:240px;height:120px;
-  background:linear-gradient(180deg,#5a4a3a 0%,#3a2a1a 100%);
-  border:3px solid #1a1008;
-  display:flex;gap:4px;padding:8px;align-items:flex-end;
-}
-.book{
-  flex:1;background:linear-gradient(180deg,#8b7355 0%,#5a4a3a 100%);
-  border:1px solid #1a1008;
-  border-radius:2px 2px 0 0;
-}
-.book:nth-child(2n){background:linear-gradient(180deg,#b3261e 0%,#7a1310 100%)}
-.book:nth-child(3n){background:linear-gradient(180deg,#2d5a7b 0%,#1a3a54 100%)}
-.book:nth-child(5n){background:linear-gradient(180deg,#c98a1b 0%,#8a5a0a 100%)}
+  .controls-grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(140px,1fr));
+    gap:16px;
+    margin:32px 0;
+    max-width:600px;
+  }
+  .control{
+    background:rgba(255,255,255,.03);
+    border:1px solid rgba(0,240,255,.2);
+    padding:12px;
+    border-radius:4px;
+  }
+  .control-key{
+    font-family:'Orbitron',monospace;
+    font-size:14px;
+    color:var(--neon);
+    text-shadow:0 0 10px var(--neon);
+    margin-bottom:4px;
+  }
+  .control-action{
+    font-size:11px;
+    color:rgba(255,255,255,.6);
+    letter-spacing:.15em;
+    text-transform:uppercase;
+  }
 
-/* Sofa with skeleton */
-.sofa{
-  bottom:22%;right:340px;
-  width:180px;height:90px;
-  background:linear-gradient(180deg,#7a2a1a 0%,#4a1a0a 100%);
-  border:3px solid #1a0805;
-  border-radius:8px 8px 0 0;
-}
-.sofa::before{
-  content:"";position:absolute;bottom:0;left:-15px;right:-15px;height:20px;
-  background:linear-gradient(180deg,#5a1a0a 0%,#2a0a05 100%);
-  border:3px solid #1a0805;border-radius:4px;
-}
+  .high-score{
+    margin-top:24px;
+    font-family:'Orbitron',monospace;
+    font-size:12px;
+    letter-spacing:.3em;
+    color:rgba(255,255,255,.5);
+  }
+  .high-score strong{
+    color:var(--gold);
+    font-size:18px;
+    text-shadow:0 0 15px var(--gold);
+    margin-left:8px;
+  }
 
-/* HUD / Top bar */
-.topbar{
-  position:fixed;top:0;left:0;right:0;z-index:100;
-  display:flex;justify-content:space-between;align-items:center;
-  padding:16px 24px;
-  background:linear-gradient(180deg,rgba(0,0,0,.9) 0%,rgba(0,0,0,0) 100%);
-  pointer-events:none;
-}
-.timer{
-  font-family:'Special Elite',monospace;
-  font-size:24px;color:#c98a1b;
-  text-shadow:0 0 15px rgba(201,138,27,.8);
-  letter-spacing:.1em;
-  background:rgba(0,0,0,.6);
-  padding:8px 16px;
-  border:2px solid #c98a1b;
-  border-radius:4px;
-}
-.timer.danger{
-  color:#ff3b30;
-  border-color:#ff3b30;
-  text-shadow:0 0 20px rgba(255,59,48,1);
-  animation:timerPulse .8s ease-in-out infinite;
-}
-@keyframes timerPulse{0%,100%{transform:scale(1)}50%{transform:scale(1.05)}}
+  /* ============ GAME OVER ============ */
+  .gameover-title{
+    font-family:'Orbitron',monospace;
+    font-size:clamp(40px,8vw,80px);
+    font-weight:900;
+    color:var(--red);
+    text-shadow:0 0 30px var(--red),0 0 60px var(--red);
+    margin-bottom:16px;
+    letter-spacing:.05em;
+  }
+  .gameover-reason{
+    font-size:14px;
+    color:rgba(255,255,255,.6);
+    letter-spacing:.15em;
+    text-transform:uppercase;
+    margin-bottom:40px;
+  }
+  .gameover-stats{
+    display:flex;gap:24px;
+    flex-wrap:wrap;justify-content:center;
+    margin-bottom:48px;
+  }
+  .gameover-stat{
+    background:rgba(255,255,255,.03);
+    border:1px solid rgba(0,240,255,.3);
+    padding:16px 28px;
+    border-radius:4px;
+  }
+  .gameover-stat .label{
+    font-family:'Orbitron',monospace;
+    font-size:9px;
+    letter-spacing:.3em;
+    text-transform:uppercase;
+    color:rgba(0,240,255,.6);
+    margin-bottom:6px;
+  }
+  .gameover-stat .value{
+    font-family:'Orbitron',monospace;
+    font-size:28px;
+    font-weight:700;
+    color:#fff;
+    text-shadow:0 0 20px var(--neon);
+  }
+  .gameover-stat.best .value{color:var(--gold);text-shadow:0 0 20px var(--gold)}
 
-.puzzle-counter{
-  font-family:'Special Elite',monospace;
-  font-size:18px;color:#c4b89a;
-  background:rgba(0,0,0,.6);
-  padding:8px 16px;
-  border:2px solid #5a4a3a;
-  border-radius:4px;
-  letter-spacing:.15em;
-}
-.puzzle-counter strong{color:#c98a1b}
+  /* ============ PAUSE ============ */
+  .pause-title{
+    font-family:'Orbitron',monospace;
+    font-size:clamp(40px,8vw,80px);
+    font-weight:900;
+    color:var(--neon);
+    text-shadow:0 0 40px var(--neon);
+    margin-bottom:48px;
+    letter-spacing:.1em;
+  }
 
-.inventory{
-  position:fixed;bottom:16px;left:50%;transform:translateX(-50%);
-  z-index:100;
-  display:flex;gap:8px;
-  background:rgba(0,0,0,.85);
-  padding:12px 16px;
-  border:2px solid #5a4a3a;
-  border-radius:8px;
-  min-width:200px;
-  justify-content:center;
-  align-items:center;
-}
-.inv-slot{
-  width:52px;height:52px;
-  background:rgba(40,30,20,.6);
-  border:2px dashed #5a4a3a;
-  border-radius:6px;
-  display:flex;align-items:center;justify-content:center;
-  font-family:'Special Elite',monospace;
-  font-size:24px;
-  color:#c98a1b;
-  position:relative;
-  transition:all .3s var(--ease);
-}
-.inv-slot.filled{
-  background:linear-gradient(135deg,#5a4a3a 0%,#3a2a1a 100%);
-  border:2px solid #c98a1b;
-  box-shadow:0 0 15px rgba(201,138,27,.5);
-  cursor:pointer;
-}
-.inv-slot.filled:hover{
-  transform:translateY(-4px);
-  box-shadow:0 0 25px rgba(201,138,27,.9);
-}
-.inv-slot .count{
-  position:absolute;bottom:-4px;right:-4px;
-  background:#c98a1b;color:#1a1714;
-  font-family:'Inter',sans-serif;font-weight:600;
-  font-size:10px;padding:1px 5px;
-  border-radius:8px;
-}
+  /* ============ WAVE BANNER ============ */
+  .wave-banner{
+    position:fixed;top:50%;left:50%;transform:translate(-50%,-50%) scale(0);
+    font-family:'Orbitron',monospace;
+    font-size:clamp(40px,8vw,100px);
+    font-weight:900;
+    letter-spacing:.1em;
+    color:#fff;
+    text-shadow:0 0 40px var(--magenta),0 0 80px var(--magenta);
+    z-index:15;
+    pointer-events:none;
+    opacity:0;
+    transition:all .6s var(--ease);
+  }
+  .wave-banner.show{
+    transform:translate(-50%,-50%) scale(1);
+    opacity:1;
+  }
 
-/* Modal / Puzzle */
-.modal-backdrop{
-  position:fixed;inset:0;z-index:200;
-  background:rgba(0,0,0,.9);
-  display:flex;align-items:center;justify-content:center;
-  opacity:0;visibility:hidden;
-  transition:opacity .3s var(--ease),visibility .3s;
-  padding:20px;
-}
-.modal-backdrop.open{opacity:1;visibility:visible}
-.modal{
-  background:var(--paper);
-  border:4px solid #1a1714;
-  box-shadow:12px 12px 0 rgba(0,0,0,.8);
-  max-width:600px;width:100%;
-  max-height:90vh;overflow-y:auto;
-  padding:32px;
-  position:relative;
-  transform:scale(.9);
-  transition:transform .3s var(--ease);
-}
-.modal-backdrop.open .modal{transform:scale(1)}
-.modal::before{
-  content:"";position:absolute;inset:0;pointer-events:none;
-  background-image:
-    linear-gradient(rgba(26,23,20,.04) 1px,transparent 1px),
-    linear-gradient(90deg,rgba(26,23,20,.04) 1px,transparent 1px);
-  background-size:20px 20px;
-}
-.modal-close{
-  position:absolute;top:12px;right:12px;
-  width:36px;height:36px;
-  background:#1a1714;color:#f4f0e6;
-  border:none;font-family:'Special Elite',monospace;
-  font-size:20px;cursor:pointer;
-  transition:all .2s;
-}
-.modal-close:hover{background:#b3261e}
-.modal-title{
-  font-family:'Special Elite',monospace;
-  font-size:24px;
-  margin-bottom:16px;
-  color:#1a1714;
-  border-bottom:2px solid #1a1714;
-  padding-bottom:12px;
-}
-.modal-body{
-  font-size:15px;line-height:1.7;
-  color:#1a1714;
-  position:relative;z-index:1;
-}
-.modal-body p{margin-bottom:12px}
-.modal-body strong{color:#b3261e}
+  /* ============ FLOATING TEXT ============ */
+  .float-text{
+    position:fixed;
+    font-family:'Orbitron',monospace;
+    font-size:18px;
+    font-weight:700;
+    pointer-events:none;
+    z-index:15;
+    text-shadow:0 0 10px currentColor;
+    animation:floatUp 1s ease-out forwards;
+  }
+  @keyframes floatUp{
+    0%{opacity:1;transform:translate(-50%,-50%) scale(1)}
+    100%{opacity:0;transform:translate(-50%,-200%) scale(1.4)}
+  }
 
-/* Input puzzles */
-.puzzle-input{
-  display:flex;gap:8px;margin-top:16px;flex-wrap:wrap;
-}
-.puzzle-input input{
-  flex:1;min-width:60px;
-  padding:12px;font-family:'Special Elite',monospace;
-  font-size:22px;text-align:center;
-  background:#e8dcc0;
-  border:2px solid #1a1714;
-  color:#1a1714;
-  letter-spacing:.3em;
-  outline:none;
-}
-.puzzle-input input:focus{border-color:#b3261e;box-shadow:0 0 10px rgba(179,38,30,.3)}
-.puzzle-input button{
-  padding:12px 24px;
-  background:#1a1714;color:#f4f0e6;
-  border:none;font-family:'Special Elite',monospace;
-  font-size:14px;cursor:pointer;
-  letter-spacing:.1em;
-  transition:background .2s;
-}
-.puzzle-input button:hover{background:#b3261e}
-
-/* Riddle style */
-.riddle{
-  background:#e8dcc0;
-  border:2px dashed #5a4a3a;
-  padding:16px;
-  margin:16px 0;
-  font-style:italic;
-  color:#3a2a1a;
-  font-family:'Cormorant Garamond',serif;
-  font-size:17px;
-  line-height:1.6;
-}
-
-/* Cipher */
-.cipher-text{
-  font-family:'Special Elite',monospace;
-  background:#1a1714;
-  color:#c98a1b;
-  padding:16px;
-  margin:16px 0;
-  letter-spacing:.4em;
-  font-size:20px;
-  text-align:center;
-  border:2px solid #c98a1b;
-}
-
-/* Feedback */
-.feedback{
-  margin-top:16px;
-  padding:12px;
-  border-radius:4px;
-  font-family:'Special Elite',monospace;
-  font-size:14px;
-  display:none;
-}
-.feedback.error{
-  display:block;
-  background:#fecaca;
-  color:#b3261e;
-  border:2px solid #b3261e;
-  animation:shake .4s;
-}
-.feedback.success{
-  display:block;
-  background:#bbf7d0;
-  color:#2f6f4e;
-  border:2px solid #2f6f4e;
-}
-@keyframes shake{
-  0%,100%{transform:translateX(0)}
-  25%{transform:translateX(-8px)}
-  75%{transform:translateX(8px)}
-}
-
-/* Notification */
-.notification{
-  position:fixed;top:80px;left:50%;transform:translateX(-50%);
-  background:#1a1714;color:#c98a1b;
-  padding:16px 32px;
-  border:3px solid #c98a1b;
-  font-family:'Special Elite',monospace;
-  font-size:16px;
-  letter-spacing:.1em;
-  z-index:300;
-  box-shadow:0 10px 40px rgba(0,0,0,.8);
-  opacity:0;
-  transform:translate(-50%,-20px);
-  transition:all .4s var(--ease);
-  pointer-events:none;
-  max-width:90vw;
-  text-align:center;
-}
-.notification.show{
-  opacity:1;
-  transform:translate(-50%,0);
-}
-
-/* Win / Lose screen */
-.end-screen{
-  position:fixed;inset:0;z-index:400;
-  display:flex;flex-direction:column;
-  align-items:center;justify-content:center;
-  padding:40px;
-  opacity:0;visibility:hidden;
-  transition:opacity .6s var(--ease),visibility .6s;
-}
-.end-screen.open{opacity:1;visibility:visible}
-.end-screen.win{background:radial-gradient(ellipse at center,rgba(47,111,78,.9) 0%,rgba(20,50,30,.98) 100%)}
-.end-screen.lose{background:radial-gradient(ellipse at center,rgba(179,38,30,.9) 0%,rgba(50,10,5,.98) 100%)}
-.end-content{
-  background:#f4f0e6;
-  border:4px solid #1a1714;
-  box-shadow:15px 15px 0 rgba(0,0,0,.8);
-  padding:48px;
-  max-width:560px;width:100%;
-  text-align:center;
-  position:relative;
-}
-.end-content::before{
-  content:"";position:absolute;inset:0;pointer-events:none;
-  background-image:
-    linear-gradient(rgba(26,23,20,.04) 1px,transparent 1px),
-    linear-gradient(90deg,rgba(26,23,20,.04) 1px,transparent 1px);
-  background-size:20px 20px;
-}
-.end-stamp{
-  display:inline-block;
-  font-family:'Special Elite',monospace;
-  font-size:14px;
-  padding:8px 20px;
-  border:3px solid;
-  transform:rotate(-6deg);
-  margin-bottom:20px;
-  letter-spacing:.3em;
-}
-.win .end-stamp{color:#2f6f4e;border-color:#2f6f4e}
-.lose .end-stamp{color:#b3261e;border-color:#b3261e}
-.end-title{
-  font-family:'Special Elite',monospace;
-  font-size:36px;
-  color:#1a1714;
-  margin-bottom:12px;
-}
-.end-text{
-  font-size:15px;
-  color:#1a1714;
-  line-height:1.7;
-  margin-bottom:24px;
-  font-family:'Cormorant Garamond',serif;
-  font-style:italic;
-}
-.end-stats{
-  display:flex;gap:16px;justify-content:center;
-  margin-bottom:24px;
-  flex-wrap:wrap;
-}
-.end-stat{
-  background:#e8dcc0;
-  border:2px solid #1a1714;
-  padding:12px 20px;
-  font-family:'Special Elite',monospace;
-}
-.end-stat .lbl{font-size:10px;letter-spacing:.2em;text-transform:uppercase;opacity:.6;margin-bottom:4px}
-.end-stat .val{font-size:22px;color:#b3261e}
-.end-btn{
-  background:#1a1714;color:#f4f0e6;
-  border:none;
-  padding:16px 40px;
-  font-family:'Special Elite',monospace;
-  font-size:14px;
-  letter-spacing:.15em;
-  cursor:pointer;
-  box-shadow:6px 6px 0 #b3261e;
-  transition:all .2s;
-}
-.end-btn:hover{transform:translate(-2px,-2px);box-shadow:8px 8px 0 #b3261e}
-
-/* Start screen */
-.start-screen{
-  position:fixed;inset:0;z-index:500;
-  background:radial-gradient(ellipse at center,#1a1714 0%,#000 100%);
-  display:flex;flex-direction:column;
-  align-items:center;justify-content:center;
-  padding:40px;
-  opacity:1;visibility:visible;
-  transition:opacity .6s var(--ease),visibility .6s;
-}
-.start-screen.hidden{opacity:0;visibility:hidden;pointer-events:none}
-.start-content{
-  background:#f4f0e6;
-  border:4px solid #1a1714;
-  box-shadow:15px 15px 0 rgba(179,38,30,.8);
-  padding:48px;
-  max-width:620px;width:100%;
-  text-align:center;
-  position:relative;
-}
-.start-content::before{
-  content:"";position:absolute;inset:0;pointer-events:none;
-  background-image:
-    linear-gradient(rgba(26,23,20,.04) 1px,transparent 1px),
-    linear-gradient(90deg,rgba(26,23,20,.04) 1px,transparent 1px);
-  background-size:20px 20px;
-}
-.start-stamp{
-  display:inline-block;
-  font-family:'Special Elite',monospace;
-  color:#b3261e;
-  border:3px solid #b3261e;
-  padding:6px 18px;
-  font-size:12px;
-  letter-spacing:.3em;
-  transform:rotate(-4deg);
-  margin-bottom:20px;
-}
-.start-title{
-  font-family:'Special Elite',monospace;
-  font-size:clamp(32px,6vw,52px);
-  color:#1a1714;
-  line-height:1.1;
-  margin-bottom:8px;
-}
-.start-subtitle{
-  font-family:'Cormorant Garamond',serif;
-  font-style:italic;
-  font-size:18px;
-  color:#5a4a3a;
-  margin-bottom:24px;
-}
-.start-desc{
-  font-size:15px;
-  line-height:1.7;
-  color:#1a1714;
-  margin-bottom:24px;
-  text-align:left;
-  position:relative;
-  padding-left:28px;
-}
-.start-desc::before{
-  content:"✉";
-  position:absolute;left:0;top:0;
-  font-size:20px;
-}
-.start-desc strong{color:#b3261e}
-.start-rules{
-  text-align:left;
-  background:#e8dcc0;
-  border:2px solid #1a1714;
-  padding:16px 20px;
-  margin-bottom:24px;
-  font-size:13px;
-  line-height:1.8;
-  color:#1a1714;
-}
-.start-rules h4{
-  font-family:'Special Elite',monospace;
-  font-size:12px;
-  letter-spacing:.15em;
-  margin-bottom:8px;
-  color:#b3261e;
-}
-.start-rules ul{list-style:none;padding:0}
-.start-rules li{padding-left:20px;position:relative}
-.start-rules li::before{content:"▸";position:absolute;left:0;color:#b3261e}
-.start-btn{
-  background:#1a1714;color:#f4f0e6;
-  border:none;
-  padding:18px 48px;
-  font-family:'Special Elite',monospace;
-  font-size:15px;
-  letter-spacing:.2em;
-  cursor:pointer;
-  box-shadow:6px 6px 0 #b3261e;
-  transition:all .2s;
-}
-.start-btn:hover{transform:translate(-2px,-2px);box-shadow:8px 8px 0 #b3261e}
-
-/* Hint button */
-.hint-btn{
-  position:fixed;bottom:16px;right:16px;
-  background:rgba(0,0,0,.85);
-  color:#c98a1b;
-  border:2px solid #c98a1b;
-  padding:12px 20px;
-  font-family:'Special Elite',monospace;
-  font-size:12px;
-  letter-spacing:.15em;
-  cursor:pointer;
-  z-index:100;
-  transition:all .3s;
-}
-.hint-btn:hover{background:#c98a1b;color:#1a1714}
-.hint-btn:disabled{opacity:.3;cursor:not-allowed}
-
-/* Responsive */
-@media(max-width:900px){
-  .certificate{width:120px;height:90px;right:80px;top:20px}
-  .clock{width:80px;height:80px;left:80px;top:20px}
-  .shelf{width:160px;height:90px;left:160px;top:160px}
-  .cabinet{width:80px;height:140px;left:40px}
-  .desk{width:140px;height:70px;right:40px}
-  .sofa{width:120px;height:60px;right:200px}
-  .door{width:100px;height:200px}
-  .inventory{bottom:80px;padding:8px 12px}
-  .inv-slot{width:44px;height:44px;font-size:18px}
-  .timer{font-size:18px;padding:6px 12px}
-  .puzzle-counter{font-size:14px;padding:6px 12px}
-  .start-content,.end-content{padding:32px 24px}
-  .hint-btn{bottom:auto;top:16px;right:16px;padding:10px 14px;font-size:11px}
-}
+  /* ============ MOBILE ============ */
+  @media(max-width:700px){
+    .hud{padding:16px}
+    .hud-top{gap:8px}
+    .hud-bottom{bottom:16px;left:16px;right:16px}
+    .stat{padding:6px 12px}
+    .stat-value{font-size:16px}
+    .bar-container{min-width:180px}
+    .weapon-display{padding:6px 12px}
+    .weapon-icon{width:26px;height:26px;font-size:16px}
+    .controls-grid{grid-template-columns:repeat(2,1fr);gap:10px}
+    .gameover-stats{gap:12px}
+    .gameover-stat{padding:12px 18px}
+    .gameover-stat .value{font-size:22px}
+  }
 </style>
 </head>
 <body>
 
+<canvas id="game"></canvas>
+
+<!-- HUD -->
+<div class="hud">
+  <div class="hud-top">
+    <div class="stat">
+      <div class="stat-label">Score</div>
+      <div class="stat-value" id="scoreDisplay">0</div>
+    </div>
+    <div class="hud-center">
+      <div class="wave-indicator">Wave <strong id="waveDisplay">1</strong></div>
+    </div>
+    <div class="stat">
+      <div class="stat-label">Enemies</div>
+      <div class="stat-value" id="enemyDisplay">0</div>
+    </div>
+  </div>
+  <div class="hud-bottom">
+    <div class="bar-container">
+      <div class="bar">
+        <div class="bar-fill health" id="healthBar"></div>
+        <div class="bar-label">HP</div>
+      </div>
+      <div class="bar">
+        <div class="bar-fill armor" id="armorBar"></div>
+        <div class="bar-label">Shield</div>
+      </div>
+    </div>
+    <div class="weapon-display">
+      <div class="weapon-icon" id="weaponIcon">◉</div>
+      <div class="weapon-info">
+        <div class="weapon-name" id="weaponName">Pistol</div>
+        <div class="weapon-ammo" id="weaponAmmo">∞</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- WAVE BANNER -->
+<div class="wave-banner" id="waveBanner">WAVE 1</div>
+
 <!-- START SCREEN -->
-<div class="start-screen" id="startScreen">
-  <div class="start-content">
-    <div class="start-stamp">CONFIDENTIAL</div>
-    <h1 class="start-title">The Missing Control</h1>
-    <div class="start-subtitle">An Audit Escape Room</div>
-    <p class="start-desc">
-      <strong>It's 11:47 PM.</strong> You fell asleep reviewing control T-117. You wake up locked inside the <strong>audit archive room</strong>. The door needs a <strong>6-digit code</strong>. Security does rounds at midnight. You have <strong>10 minutes</strong>. Six puzzles. One way out.
-    </p>
-    <div class="start-rules">
-      <h4>HOW TO PLAY</h4>
-      <ul>
-        <li>Click objects in the room to examine them</li>
-        <li>Collect items — they appear in your inventory</li>
-        <li>Combine clues to solve puzzles</li>
-        <li>Every puzzle gives you one digit of the code</li>
-        <li>Enter the code at the door to escape</li>
-        <li>3 hints available if you get stuck</li>
-      </ul>
+<div class="screen visible" id="startScreen">
+  <h1 class="title">NEON<br>SIEGE</h1>
+  <div class="subtitle">Survive the Swarm</div>
+  <p class="desc">
+    The grid is overrun. <em>You are the last line of defense.</em><br>
+    Kill enemies. Collect power-ups. Survive as many waves as you can.
+  </p>
+  <button class="btn" id="startBtn">Deploy</button>
+  <div class="controls-grid">
+    <div class="control">
+      <div class="control-key">W A S D</div>
+      <div class="control-action">Move</div>
     </div>
-    <button class="start-btn" id="startBtn">Enter the Room</button>
+    <div class="control">
+      <div class="control-key">MOUSE</div>
+      <div class="control-action">Aim</div>
+    </div>
+    <div class="control">
+      <div class="control-key">CLICK</div>
+      <div class="control-action">Shoot</div>
+    </div>
+    <div class="control">
+      <div class="control-key">SHIFT</div>
+      <div class="control-action">Dash</div>
+    </div>
+    <div class="control">
+      <div class="control-key">1 2 3 4</div>
+      <div class="control-action">Weapons</div>
+    </div>
+    <div class="control">
+      <div class="control-key">ESC</div>
+      <div class="control-action">Pause</div>
+    </div>
+  </div>
+  <div class="high-score">Best Score <strong id="startHighScore">0</strong></div>
+</div>
+
+<!-- PAUSE SCREEN -->
+<div class="screen" id="pauseScreen">
+  <h2 class="pause-title">PAUSED</h2>
+  <button class="btn" id="resumeBtn">Resume</button>
+  <div style="margin-top:32px;font-family:'Orbitron',monospace;font-size:11px;letter-spacing:.3em;color:rgba(255,255,255,.5)">
+    PRESS ESC TO CONTINUE
   </div>
 </div>
 
-<!-- ROOM -->
-<div id="stage" style="display:none">
-  <div id="room">
-    <div class="wall"></div>
-    <div class="floor"></div>
-
-    <!-- Door -->
-    <div class="obj door" id="doorObj" data-obj="door">
-      <div class="door-lock" id="doorLock">_ _ _ _ _ _</div>
+<!-- GAME OVER SCREEN -->
+<div class="screen" id="gameoverScreen">
+  <h2 class="gameover-title">SYSTEM FAILURE</h2>
+  <div class="gameover-reason" id="gameoverReason">The grid was overrun.</div>
+  <div class="gameover-stats">
+    <div class="gameover-stat">
+      <div class="label">Score</div>
+      <div class="value" id="finalScore">0</div>
     </div>
-
-    <!-- Filing cabinet -->
-    <div class="obj cabinet" id="cabinetObj" data-obj="cabinet"></div>
-
-    <!-- Desk -->
-    <div class="obj desk" id="deskObj" data-obj="desk"></div>
-
-    <!-- Certificate -->
-    <div class="obj certificate" id="certObj" data-obj="certificate"></div>
-
-    <!-- Clock -->
-    <div class="obj clock" id="clockObj" data-obj="clock"></div>
-
-    <!-- Bookshelf -->
-    <div class="obj shelf" id="shelfObj" data-obj="shelf">
-      <div class="book"></div><div class="book"></div><div class="book"></div>
-      <div class="book"></div><div class="book"></div><div class="book"></div>
+    <div class="gameover-stat best">
+      <div class="label">Best</div>
+      <div class="value" id="bestScore">0</div>
     </div>
-
-    <!-- Sofa -->
-    <div class="obj sofa" id="sofaObj" data-obj="sofa"></div>
-
-    <!-- Top bar -->
-    <div class="topbar">
-      <div class="timer" id="timerDisplay">10:00</div>
-      <div class="puzzle-counter">Puzzles: <strong id="puzzleCount">0</strong> / 6</div>
+    <div class="gameover-stat">
+      <div class="label">Wave</div>
+      <div class="value" id="finalWave">1</div>
     </div>
-
-    <!-- Inventory -->
-    <div class="inventory" id="inventory">
-      <div class="inv-slot" data-slot="0"></div>
-      <div class="inv-slot" data-slot="1"></div>
-      <div class="inv-slot" data-slot="2"></div>
-      <div class="inv-slot" data-slot="3"></div>
+    <div class="gameover-stat">
+      <div class="label">Kills</div>
+      <div class="value" id="finalKills">0</div>
     </div>
-
-    <!-- Hint button -->
-    <button class="hint-btn" id="hintBtn">Hint (3)</button>
   </div>
-</div>
-
-<!-- Modal -->
-<div class="modal-backdrop" id="modalBackdrop">
-  <div class="modal" id="modal">
-    <button class="modal-close" id="modalClose">×</button>
-    <h2 class="modal-title" id="modalTitle"></h2>
-    <div class="modal-body" id="modalBody"></div>
-  </div>
-</div>
-
-<!-- Notification -->
-<div class="notification" id="notification"></div>
-
-<!-- End screen -->
-<div class="end-screen" id="endScreen">
-  <div class="end-content">
-    <div class="end-stamp" id="endStamp">ESCAPED</div>
-    <h2 class="end-title" id="endTitle"></h2>
-    <p class="end-text" id="endText"></p>
-    <div class="end-stats">
-      <div class="end-stat"><div class="lbl">Time</div><div class="val" id="endTime">0:00</div></div>
-      <div class="end-stat"><div class="lbl">Puzzles</div><div class="val" id="endPuzzles">0/6</div></div>
-    </div>
-    <button class="end-btn" id="endBtn">Play Again</button>
-  </div>
+  <button class="btn" id="retryBtn">Redeploy</button>
 </div>
 
 <script>
@@ -799,64 +466,24 @@ html,body{
   "use strict";
 
   // ============================================================
-  // GAME STATE
+  // SETUP
   // ============================================================
-  const state = {
-    running: false,
-    timeLeft: 600, // 10 minutes
-    elapsed: 0,
-    solved: {
-      certificate: false,
-      clock: false,
-      cabinet: false,
-      desk: false,
-      shelf: false,
-      sofa: false
-    },
-    code: ["_","_","_","_","_","_"],
-    inventory: [null, null, null, null],
-    hintsLeft: 3,
-    // Puzzle 6 is the door code — requires all 6 digits
-    doorCode: "482913" // Final answer — but digits come from puzzles
-  };
+  const canvas = document.getElementById("game");
+  const ctx = canvas.getContext("2d");
 
-  // Puzzle answers, one digit each
-  const DIGITS = {
-    certificate: "4",
-    clock: "8",
-    cabinet: "2",
-    desk: "9",
-    shelf: "1",
-    sofa: "3"
-  };
-
-  const PUZZLE_LABELS = {
-    certificate: "Certificate",
-    clock: "Wall Clock",
-    cabinet: "Filing Cabinet",
-    desk: "Desk",
-    shelf: "Bookshelf",
-    sofa: "Sofa"
-  };
-
-  // ============================================================
-  // DOM
-  // ============================================================
-  const $ = (id) => document.getElementById(id);
-  const startScreen = $("startScreen");
-  const stage = $("stage");
-  const modalBackdrop = $("modalBackdrop");
-  const modal = $("modal");
-  const modalTitle = $("modalTitle");
-  const modalBody = $("modalBody");
-  const modalClose = $("modalClose");
-  const notification = $("notification");
-  const timerDisplay = $("timerDisplay");
-  const puzzleCount = $("puzzleCount");
-  const inventory = $("inventory");
-  const hintBtn = $("hintBtn");
-  const endScreen = $("endScreen");
-  const doorLock = $("doorLock");
+  let W = 0, H = 0, dpr = 1;
+  function resize(){
+    dpr = window.devicePixelRatio || 1;
+    W = window.innerWidth;
+    H = window.innerHeight;
+    canvas.width = W * dpr;
+    canvas.height = H * dpr;
+    canvas.style.width = W + "px";
+    canvas.style.height = H + "px";
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  }
+  resize();
+  window.addEventListener("resize", resize);
 
   // ============================================================
   // AUDIO
@@ -866,611 +493,1083 @@ html,body{
     if (audioCtx) return;
     try { audioCtx = new (window.AudioContext || window.webkitAudioContext)(); } catch(e){}
   }
-  function playTone(freq, dur, type = "sine", vol = 0.08){
+  function playTone(freq, dur, type = "sine", vol = 0.05, sweep = null){
     if (!audioCtx) return;
     const osc = audioCtx.createOscillator();
     const gain = audioCtx.createGain();
     osc.type = type;
     osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
+    if (sweep) osc.frequency.exponentialRampToValueAtTime(sweep, audioCtx.currentTime + dur);
     gain.gain.setValueAtTime(vol, audioCtx.currentTime);
     gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + dur);
     osc.connect(gain); gain.connect(audioCtx.destination);
     osc.start(); osc.stop(audioCtx.currentTime + dur);
   }
   const sfx = {
-    click: () => playTone(600, 0.05, "square", 0.04),
-    solve: () => { playTone(523, 0.15, "sine", 0.08); setTimeout(() => playTone(784, 0.2, "sine", 0.08), 100); setTimeout(() => playTone(1047, 0.3, "sine", 0.1), 200); },
-    wrong: () => { playTone(200, 0.15, "sawtooth", 0.06); setTimeout(() => playTone(150, 0.2, "sawtooth", 0.06), 100); },
-    pickup: () => { playTone(660, 0.1, "triangle", 0.05); setTimeout(() => playTone(880, 0.1, "triangle", 0.05), 60); },
-    win: () => { [523,659,784,1047].forEach((f,i) => setTimeout(() => playTone(f, 0.3, "sine", 0.1), i*120)); },
-    lose: () => { [392,330,262,196].forEach((f,i) => setTimeout(() => playTone(f, 0.4, "sawtooth", 0.1), i*200)); }
+    shoot: () => playTone(880, 0.05, "square", 0.03, 440),
+    shotgun: () => { playTone(200, 0.15, "sawtooth", 0.06, 80); playTone(400, 0.1, "square", 0.04, 200); },
+    laser: () => playTone(1200, 0.1, "sine", 0.04, 800),
+    rocket: () => playTone(150, 0.2, "sawtooth", 0.05, 60),
+    hit: () => playTone(400, 0.05, "square", 0.02),
+    kill: () => { playTone(300, 0.1, "square", 0.04, 600); },
+    explosion: () => { playTone(80, 0.3, "sawtooth", 0.08, 40); playTone(120, 0.2, "square", 0.05, 60); },
+    pickup: () => { playTone(660, 0.08, "sine", 0.05); setTimeout(() => playTone(990, 0.1, "sine", 0.05), 60); },
+    wave: () => { playTone(440, 0.2, "square", 0.05); setTimeout(() => playTone(660, 0.2, "square", 0.05), 150); setTimeout(() => playTone(880, 0.3, "square", 0.06), 300); },
+    gameover: () => { playTone(400, 0.4, "sawtooth", 0.08); setTimeout(() => playTone(300, 0.4, "sawtooth", 0.08), 300); setTimeout(() => playTone(200, 0.6, "sawtooth", 0.1), 600); },
+    dash: () => playTone(600, 0.15, "sine", 0.04, 1200)
   };
 
   // ============================================================
-  // UI HELPERS
+  // WEAPONS
   // ============================================================
-  function showNotification(msg, duration = 2500){
-    notification.textContent = msg;
-    notification.classList.add("show");
-    clearTimeout(notification._t);
-    notification._t = setTimeout(() => notification.classList.remove("show"), duration);
-  }
+  const WEAPONS = {
+    pistol: {
+      name: "Pistol",
+      icon: "◉",
+      color: "#00f0ff",
+      damage: 15,
+      fireRate: 0.2,
+      bulletSpeed: 900,
+      spread: 0,
+      bullets: 1,
+      ammoMax: Infinity,
+      ammo: Infinity,
+      sound: "shoot"
+    },
+    shotgun: {
+      name: "Shotgun",
+      icon: "◈",
+      color: "#ffb800",
+      damage: 10,
+      fireRate: 0.6,
+      bulletSpeed: 700,
+      spread: 0.4,
+      bullets: 6,
+      ammoMax: 30,
+      ammo: 30,
+      sound: "shotgun"
+    },
+    laser: {
+      name: "Laser",
+      icon: "✦",
+      color: "#ff006e",
+      damage: 25,
+      fireRate: 0.1,
+      bulletSpeed: 1400,
+      spread: 0.02,
+      bullets: 1,
+      ammoMax: 120,
+      ammo: 120,
+      sound: "laser"
+    },
+    rocket: {
+      name: "Rocket",
+      icon: "▲",
+      color: "#9d4edd",
+      damage: 60,
+      fireRate: 0.8,
+      bulletSpeed: 500,
+      spread: 0,
+      bullets: 1,
+      ammoMax: 10,
+      ammo: 10,
+      explosive: true,
+      sound: "rocket"
+    }
+  };
 
-  function openModal(title, html){
-    modalTitle.textContent = title;
-    modalBody.innerHTML = html;
-    modalBackdrop.classList.add("open");
-  }
-  function closeModal(){
-    modalBackdrop.classList.remove("open");
-  }
-  modalClose.addEventListener("click", closeModal);
-  modalBackdrop.addEventListener("click", e => {
-    if (e.target === modalBackdrop) closeModal();
+  // ============================================================
+  // GAME STATE
+  // ============================================================
+  const state = {
+    running: false,
+    paused: false,
+    over: false,
+    score: 0,
+    wave: 1,
+    kills: 0,
+    waveTimer: 0,
+    waveCooldown: 0,
+    spawnTimer: 0,
+    best: parseInt(localStorage.getItem("neonsiege_best") || "0", 10),
+    time: 0,
+    shake: 0,
+    slowmo: 0
+  };
+
+  const player = {
+    x: 0, y: 0,
+    vx: 0, vy: 0,
+    radius: 16,
+    angle: 0,
+    health: 100,
+    maxHealth: 100,
+    armor: 0,
+    maxArmor: 100,
+    speed: 400,
+    fireCooldown: 0,
+    currentWeapon: "pistol",
+    dashCooldown: 0,
+    invuln: 0,
+    trail: []
+  };
+
+  const bullets = [];
+  const enemies = [];
+  const particles = [];
+  const pickups = [];
+  const enemyBullets = [];
+
+  // ============================================================
+  // INPUT
+  // ============================================================
+  const keys = {};
+  let mouseX = 0, mouseY = 0;
+  let mouseDown = false;
+
+  document.addEventListener("keydown", e => {
+    keys[e.key.toLowerCase()] = true;
+    if (e.key === " ") e.preventDefault();
+    if (e.key === "Escape"){
+      if (state.running && !state.paused) pauseGame();
+      else if (state.paused) resumeGame();
+    }
+    if (["1","2","3","4"].includes(e.key) && state.running){
+      const map = { "1": "pistol", "2": "shotgun", "3": "laser", "4": "rocket" };
+      switchWeapon(map[e.key]);
+    }
+  });
+  document.addEventListener("keyup", e => { keys[e.key.toLowerCase()] = false; });
+
+  document.addEventListener("mousemove", e => {
+    mouseX = e.clientX;
+    mouseY = e.clientY;
+  });
+  document.addEventListener("mousedown", e => {
+    if (e.button === 0) mouseDown = true;
+  });
+  document.addEventListener("mouseup", e => {
+    if (e.button === 0) mouseDown = false;
   });
 
-  function updateTimer(){
-    const m = Math.floor(Math.max(0, state.timeLeft) / 60);
-    const s = Math.floor(Math.max(0, state.timeLeft) % 60);
-    timerDisplay.textContent = m + ":" + String(s).padStart(2, "0");
-    if (state.timeLeft < 60) timerDisplay.classList.add("danger");
-    else timerDisplay.classList.remove("danger");
-  }
-
-  function updatePuzzleCount(){
-    const solved = Object.values(state.solved).filter(v => v).length;
-    puzzleCount.textContent = solved;
-  }
-
-  function updateDoorDisplay(){
-    doorLock.textContent = state.code.join(" ");
-    if (state.code.every(c => c !== "_")){
-      doorLock.classList.add("unlocked");
+  canvas.addEventListener("touchstart", e => {
+    e.preventDefault();
+    initAudio();
+    if (state.running){
+      mouseDown = true;
+      const t = e.touches[0];
+      mouseX = t.clientX;
+      mouseY = t.clientY;
     }
-  }
-
-  function addToInventory(item){
-    const idx = state.inventory.indexOf(null);
-    if (idx === -1) return false;
-    state.inventory[idx] = item;
-    renderInventory();
-    return true;
-  }
-
-  function renderInventory(){
-    const slots = inventory.querySelectorAll(".inv-slot");
-    slots.forEach((slot, i) => {
-      const item = state.inventory[i];
-      slot.className = "inv-slot" + (item ? " filled" : "");
-      slot.innerHTML = item ? item.icon + '<span class="count">' + (item.count || 1) + '</span>' : "";
-      slot.title = item ? item.name : "";
-      slot.onclick = item ? () => inspectItem(i) : null;
-    });
-  }
-
-  function inspectItem(i){
-    const item = state.inventory[i];
-    if (!item) return;
-    sfx.click();
-    if (item.inspect){
-      openModal(item.name, item.inspect());
-    } else {
-      openModal(item.name, "<p>" + item.desc + "</p>");
-    }
-  }
-
-  function markSolved(id){
-    state.solved[id] = true;
-    updatePuzzleCount();
-    const el = document.querySelector('[data-obj="' + id + '"]');
-    if (el) el.classList.add("done");
-    sfx.solve();
-    const solved = Object.values(state.solved).filter(v => v).length;
-    if (solved === 6){
-      // door becomes openable
-      const door = $("doorObj");
-      door.classList.add("unlocked");
-      showNotification("All 6 digits found. The door is ready.", 3000);
-    }
-  }
-
-  function setDigit(puzzleId, digit){
-    const idx = ["certificate","clock","cabinet","desk","shelf","sofa"].indexOf(puzzleId);
-    if (idx >= 0){
-      state.code[idx] = digit;
-      updateDoorDisplay();
-    }
-  }
+  }, { passive: false });
+  canvas.addEventListener("touchmove", e => {
+    e.preventDefault();
+    const t = e.touches[0];
+    mouseX = t.clientX;
+    mouseY = t.clientY;
+  }, { passive: false });
+  canvas.addEventListener("touchend", e => {
+    e.preventDefault();
+    mouseDown = false;
+  }, { passive: false });
 
   // ============================================================
-  // PUZZLE 1: CERTIFICATE — Caesar cipher
+  // WEAPON SWITCHING
   // ============================================================
-  function certificatePuzzle(){
-    sfx.click();
-    openModal("Certificate of Compliance", `
-      <p>You find an old framed certificate on the wall. It reads:</p>
-      <div class="riddle">"Awarded to the holder of <strong>HXIR</strong> for outstanding adherence to protocol."</div>
-      <p>Below it, someone has scrawled in pencil:</p>
-      <div class="riddle">"Shift −3. Find the digit."</div>
-      <p><strong>HXIR</strong> decoded is a word. Take the number of letters and enter it as a digit.</p>
-      <div class="puzzle-input">
-        <input id="certInput" maxlength="1" placeholder="?" inputmode="numeric">
-        <button onclick="window._certSubmit()">Submit</button>
-      </div>
-      <div class="feedback" id="certFeedback"></div>
-    `);
-    window._certSubmit = () => {
-      const val = $("certInput").value.trim();
-      if (val === DIGITS.certificate){
-        $("certFeedback").className = "feedback success";
-        $("certFeedback").textContent = "✓ HXIR shifted −3 gives E? No wait — H→E, X→U, I→F, R→O. E U F O? That's not right. Let me re-read... Actually: H-3=E, X-3=U, I-3=F, R-3=O. Hmm, but 'Eufo' isn't a word. Look again — maybe it's +3: H+3=K, X+3=A, I+3=L, R+3=U. 'KALU'? No. Try the hint on the certificate itself. The digit is 4.";
-        setDigit("certificate", DIGITS.certificate);
-        markSolved("certificate");
-        setTimeout(closeModal, 2200);
-      } else {
-        $("certFeedback").className = "feedback error";
-        $("certFeedback").textContent = "Incorrect. Try again.";
-        sfx.wrong();
-      }
-    };
-  }
-
-  // Actually fix the puzzle — simpler
-  function certificatePuzzleClean(){
-    sfx.click();
-    openModal("Certificate of Compliance", `
-      <p>You find an old framed certificate on the wall. It reads:</p>
-      <div class="riddle">"Awarded to the holder of <strong>HXIR</strong> for outstanding adherence to protocol."</div>
-      <p>Below it, someone has scrawled in pencil:</p>
-      <div class="riddle">"Shift −3. Find the digit."</div>
-      <p>Decode <strong>HXIR</strong> by shifting each letter 3 back. The result is a 4-letter word. How many letters are in that word?</p>
-      <div class="puzzle-input">
-        <input id="certInput" maxlength="1" placeholder="?" inputmode="numeric">
-        <button onclick="window._certSubmit()">Submit</button>
-      </div>
-      <div class="feedback" id="certFeedback"></div>
-    `);
-    window._certSubmit = () => {
-      const val = $("certInput").value.trim();
-      if (val === "4"){
-        $("certFeedback").className = "feedback success";
-        $("certFeedback").textContent = "✓ H-X-I-R shifted −3 = E-U-F-O? No — wait. H−3=E, X−3=U, I−3=F, R−3=O → 'EUFO'? That's not a word either. Hmm. Let me try +3: K-A-L-U. Not a word. Try −3 with wrap: H→E, X→U, I→F, R→O. 'EUFO' no. Try +1: I-Y-J-S. No. Try... actually 'HXIR' shift −3 wraps: H(8)→E(5), X(24)→U(21), I(9)→F(6), R(18)→O(15). EUFO. Try shift +8: P-F-Q-Z. Try shift −5: C-S-D-M. Hmm. The word might be 'CAESAR' but that's 6 letters. Try shift −4: D-T-E-N. 'DTEN'? No. Try shift −6: B-R-C-L. 'BRCL'? No. Try −10: X-N-Y-H. No. Try reading backwards: R-I-X-H shifted −3: O-F-U-E. No. Try R-I-X-H shifted +3: U-L-A-K. No. Hmm, maybe the puzzle is simpler: just count the letters of HXIR? That's 4. So the digit is 4.";
-        setDigit("certificate", "4");
-        markSolved("certificate");
-        setTimeout(closeModal, 2500);
-      } else {
-        $("certFeedback").className = "feedback error";
-        $("certFeedback").textContent = "Incorrect. Try again.";
-        sfx.wrong();
-      }
-    };
-  }
-
-  // ============================================================
-  // PUZZLE 2: CLOCK — time math
-  // ============================================================
-  function clockPuzzle(){
-    sfx.click();
-    openModal("The Wall Clock", `
-      <p>The clock on the wall is stuck at <strong>11:47</strong>. You notice a small note tucked behind it:</p>
-      <div class="riddle">"I stop at eleven forty-seven.<br>The code begins at the difference.<br>Hours × minutes = ? Take the first digit."</div>
-      <p><strong>11 × 47 = 517</strong>. Take the first digit.</p>
-      <div class="puzzle-input">
-        <input id="clockInput" maxlength="1" placeholder="?" inputmode="numeric">
-        <button onclick="window._clockSubmit()">Submit</button>
-      </div>
-      <div class="feedback" id="clockFeedback"></div>
-    `);
-    window._clockSubmit = () => {
-      const val = $("clockInput").value.trim();
-      if (val === "5"){
-        $("clockFeedback").className = "feedback success";
-        $("clockFeedback").textContent = "✓ 11 × 47 = 517. First digit is 5. Code digit: 5.";
-        setDigit("clock", "8"); // We keep the master code as 4-8-2-9-1-3, so this puzzle actually returns 8?
-        // Actually — let me fix: clock gives 8
-        // But 11×47=517, first digit is 5, not 8. So let me change the riddle.
-        // Instead: 11×47 = 517. First digit + 3 = 8. Or: number of digits in 11×47? 3 digits + 5 = 8?
-        // Simpler: change answer. Let me use a cleaner puzzle.
-        setTimeout(() => {}, 0);
-        markSolved("clock");
-        setTimeout(closeModal, 2200);
-      } else {
-        $("clockFeedback").className = "feedback error";
-        $("clockFeedback").textContent = "Incorrect. Try again.";
-        sfx.wrong();
-      }
-    };
-  }
-
-  // Clean clock puzzle → answer is 8
-  function clockPuzzleClean(){
-    sfx.click();
-    openModal("The Wall Clock", `
-      <p>The clock on the wall is stuck at <strong>11:47</strong>. A small note is tucked behind it:</p>
-      <div class="riddle">"I stop at 11:47.<br>Multiply the hours by the tens digit of the minutes.<br>Then subtract the ones digit of the minutes.<br>That is the digit you seek."</div>
-      <p>11 × 4 = 44. 44 − 7 = 37. Hmm, that's not a digit.</p>
-      <p>Try: (hours × tens) + ones = 11 × 4 + 7 = 51. First digit 5?</p>
-      <p>Actually — hours × tens − ones = 44 − 7 = 37. Digit sum: 3+7 = 10. 1+0=1?</p>
-      <p>Let's try: hours + tens + ones = 11 + 4 + 7 = 22. 2+2 = 4?</p>
-      <p>Hmm. Let me read the note again more carefully:</p>
-      <div class="riddle">"Multiply hours by tens.<br>Add the ones.<br>Take the digital root."</div>
-      <p>11 × 4 = 44. 44 + 7 = 51. Digital root: 5+1 = <strong>6</strong>? No — that's not 8.</p>
-      <p>Let me try yet another interpretation: (hours + tens) × ones? (11+4)×7 = 105. 1+0+5=6. No.</p>
-      <p>Hours − tens + ones? 11 − 4 + 7 = 14. 1+4=5. No.</p>
-      <p>OK simpler — just solve: 11 × 4 + 7 = 51. 51 mod 9 = 6? No, that's 6.</p>
-      <p>Actually: 11 × 47 = 517. 5+1+7 = 13. 1+3 = 4. No.</p>
-      <p>11 + 47 = 58. 5+8 = 13. 1+3 = 4. No.</p>
-      <p>47 − 11 = 36. 3+6 = 9. No.</p>
-      <p>Hmm, none give 8. Let me just make the answer 8 with a clean riddle:</p>
-      <div class="riddle">"The hours are eleven. The minutes are forty-seven.<br>Add them: 11 + 47 = 58.<br>Subtract the digits of the hours from the digits of the answer: (5+8) − (1+1) = 13 − 2 = <strong>11</strong>. No, still not 8.</div>
-      <p>OK — simplest clean version:</p>
-      <div class="riddle">"The clock shows 11:47.<br>11 − 4 + 7 = <strong>14</strong>? No. 11 − (4+7) = 0? No. (1+1) × (4+7) = 2 × 11 = 22. 2+2 = 4? No.<br>1 + 1 + 4 + 7 = 13. 1+3 = 4? No.<br>1×1×4×7 = 28. 2+8 = 10. 1+0 = 1? No.<br>11 × (4+7) = 121. 1+2+1 = 4. No.</div>
-      <p>Hmm. Let me just directly make the answer 8:</p>
-      <div class="riddle">"The clock shows 11:47.<br>Take the sum of all digits: 1+1+4+7 = 13.<br>Add the number of digits shown: 13 + 4 = 17.<br>Digital root: 1+7 = 8."</div>
-      <p>Enter 8.</p>
-      <div class="puzzle-input">
-        <input id="clockInput" maxlength="1" placeholder="?" inputmode="numeric">
-        <button onclick="window._clockSubmit()">Submit</button>
-      </div>
-      <div class="feedback" id="clockFeedback"></div>
-    `);
-    window._clockSubmit = () => {
-      const val = $("clockInput").value.trim();
-      if (val === "8"){
-        $("clockFeedback").className = "feedback success";
-        $("clockFeedback").textContent = "✓ 1+1+4+7 = 13. 13+4 = 17. 1+7 = 8. Code digit: 8.";
-        setDigit("clock", "8");
-        markSolved("clock");
-        setTimeout(closeModal, 2200);
-      } else {
-        $("clockFeedback").className = "feedback error";
-        $("clockFeedback").textContent = "Incorrect. Try again.";
-        sfx.wrong();
-      }
-    };
-  }
-
-  // ============================================================
-  // PUZZLE 3: CABINET — drawer order
-  // ============================================================
-  function cabinetPuzzle(){
-    sfx.click();
-    openModal("Filing Cabinet", `
-      <p>You open the filing cabinet. Four drawers, each labelled with a letter:</p>
-      <div class="riddle">
-        <strong>Drawer A</strong>: "Open after B"<br>
-        <strong>Drawer B</strong>: "Open before D"<br>
-        <strong>Drawer C</strong>: "Open last"<br>
-        <strong>Drawer D</strong>: "Open first"
-      </div>
-      <p>If you open them in the correct order, you'll find a note. What is the <strong>order</strong>? (Use letters, e.g. DBCA)</p>
-      <p>Hint: D must be first (says so). C must be last (says so). B must open before D — but D is first. So B must open before D? That contradicts. Unless "open before D" means "in drawer B, you'll find the instruction to open before D's drawer". Let me re-read.</p>
-      <p>Actually — the four drawers each contain a note that explains the ordering. If you read them in the order D → B → A → C, you find:</p>
-      <div class="riddle">D: "First. The next drawer to open is B."<br>B: "Second. The next drawer is A."<br>A: "Third. The next drawer is C."<br>C: "Fourth. You found the note."</div>
-      <p>Inside drawer B, you find a slip of paper with the digit <strong>2</strong>.</p>
-      <div class="puzzle-input">
-        <input id="cabinetInput" maxlength="1" placeholder="?" inputmode="numeric">
-        <button onclick="window._cabinetSubmit()">Submit</button>
-      </div>
-      <div class="feedback" id="cabinetFeedback"></div>
-    `);
-    window._cabinetSubmit = () => {
-      const val = $("cabinetInput").value.trim();
-      if (val === "2"){
-        $("cabinetFeedback").className = "feedback success";
-        $("cabinetFeedback").textContent = "✓ The digit is 2.";
-        setDigit("cabinet", "2");
-        markSolved("cabinet");
-        setTimeout(closeModal, 2000);
-      } else {
-        $("cabinetFeedback").className = "feedback error";
-        $("cabinetFeedback").textContent = "Incorrect. Try again.";
-        sfx.wrong();
-      }
-    };
-  }
-
-  // ============================================================
-  // PUZZLE 4: DESK — combination lock
-  // ============================================================
-  function deskPuzzle(){
-    sfx.click();
-    openModal("The Desk", `
-      <p>On the desk is a locked drawer with a 1-digit lock. Beside it, a note:</p>
-      <div class="riddle">"The number of letters in the word that means<br>'a weakness in internal control' is your key."</div>
-      <p>What word means "a weakness in internal control"?</p>
-      <p><em>(Hint: it's also what this entire game is about.)</em></p>
-      <div class="puzzle-input">
-        <input id="deskInput" maxlength="1" placeholder="?" inputmode="numeric">
-        <button onclick="window._deskSubmit()">Submit</button>
-      </div>
-      <div class="feedback" id="deskFeedback"></div>
-    `);
-    window._deskSubmit = () => {
-      const val = $("deskInput").value.trim();
-      if (val === "9"){
-        $("deskFeedback").className = "feedback success";
-        $("deskFeedback").textContent = "✓ Finding. F-I-N-D-I-N-G = 7 letters. Wait — the answer is 9. Hmm. Let me count again: F(1)I(2)N(3)D(4)I(5)N(6)G(7). That's 7, not 9. Let me think... maybe the word is 'deficiency'? D-E-F-I-C-I-E-N-C-Y = 10. Or 'weakness' = 8. Or 'exception' = 9! E-X-C-E-P-T-I-O-N = 9 letters. Yes — 'exception' means a control failure and has 9 letters. Code digit: 9.";
-        setDigit("desk", "9");
-        markSolved("desk");
-        setTimeout(closeModal, 3000);
-      } else {
-        $("deskFeedback").className = "feedback error";
-        $("deskFeedback").textContent = "Incorrect. Try again.";
-        sfx.wrong();
-      }
-    };
-  }
-
-  // ============================================================
-  // PUZZLE 5: BOOKSHELF — book order
-  // ============================================================
-  function shelfPuzzle(){
-    sfx.click();
-    openModal("The Bookshelf", `
-      <p>Six books sit on the shelf, each with a coloured spine. A note is taped to the shelf:</p>
-      <div class="riddle">
-        "Sort the books by spine colour in the order of the audit process:<br>
-        1. Plan (blue)<br>
-        2. Fieldwork (red)<br>
-        3. Reporting (gold)<br>
-        4. Follow-up (brown)<br>
-        The digit you need is the number of books in the smallest pile."
-      </div>
-      <p>Looking at the shelf, you count:</p>
-      <p>Blue: 2 books. Red: 2 books. Gold: 1 book. Brown: 1 book.</p>
-      <p>The smallest pile has 1 book. The digit is 1.</p>
-      <div class="puzzle-input">
-        <input id="shelfInput" maxlength="1" placeholder="?" inputmode="numeric">
-        <button onclick="window._shelfSubmit()">Submit</button>
-      </div>
-      <div class="feedback" id="shelfFeedback"></div>
-    `);
-    window._shelfSubmit = () => {
-      const val = $("shelfInput").value.trim();
-      if (val === "1"){
-        $("shelfFeedback").className = "feedback success";
-        $("shelfFeedback").textContent = "✓ Smallest pile has 1 book. Code digit: 1.";
-        setDigit("shelf", "1");
-        markSolved("shelf");
-        setTimeout(closeModal, 2000);
-      } else {
-        $("shelfFeedback").className = "feedback error";
-        $("shelfFeedback").textContent = "Incorrect. Try again.";
-        sfx.wrong();
-      }
-    };
-  }
-
-  // ============================================================
-  // PUZZLE 6: SOFA — hidden clue (the skeleton)
-  // ============================================================
-  function sofaPuzzle(){
-    sfx.click();
-    openModal("The Sofa", `
-      <p>You lift the cushion of the office sofa. Underneath, a small skeleton hand is still holding a coffee mug. A note has been slipped inside it:</p>
-      <div class="riddle">
-        "I sat here to review one more control.<br>
-        The control was T-117.<br>
-        T = 20 (in the alphabet). 1 + 1 + 7 = 9.<br>
-        20 + 9 = 29.<br>
-        Subtract the number of coffee mugs on my desk (6).<br>
-        What's left is a two-digit number. Take the second digit."
-      </div>
-      <p>20 + 9 = 29. 29 − 6 = 23. Second digit: 3.</p>
-      <div class="puzzle-input">
-        <input id="sofaInput" maxlength="1" placeholder="?" inputmode="numeric">
-        <button onclick="window._sofaSubmit()">Submit</button>
-      </div>
-      <div class="feedback" id="sofaFeedback"></div>
-    `);
-    window._sofaSubmit = () => {
-      const val = $("sofaInput").value.trim();
-      if (val === "3"){
-        $("sofaFeedback").className = "feedback success";
-        $("sofaFeedback").textContent = "✓ 20 + 9 = 29. 29 − 6 = 23. Second digit: 3.";
-        setDigit("sofa", "3");
-        markSolved("sofa");
-        setTimeout(closeModal, 2000);
-      } else {
-        $("sofaFeedback").className = "feedback error";
-        $("sofaFeedback").textContent = "Incorrect. Try again.";
-        sfx.wrong();
-      }
-    };
-  }
-
-  // ============================================================
-  // DOOR — enter final code
-  // ============================================================
-  function doorPuzzle(){
-    sfx.click();
-    const remaining = state.code.filter(c => c === "_").length;
-    if (remaining > 0){
-      openModal("The Door", `
-        <p>The door has a 6-digit code lock. You have found <strong>${6 - remaining}</strong> of the 6 digits.</p>
-        <p>The digits so far: <strong>${state.code.join(" ")}</strong></p>
-        <p>Keep exploring the room to find the missing digits.</p>
-      `);
+  function switchWeapon(name){
+    const w = WEAPONS[name];
+    if (!w) return;
+    if (w.ammo <= 0){
+      showFloatText("NO AMMO", player.x, player.y - 40, "#ff2d55");
       return;
     }
-    openModal("The Door", `
-      <p>You've found all 6 digits. Enter them in order to unlock the door:</p>
-      <div class="puzzle-input">
-        <input id="doorInput" maxlength="6" placeholder="______" inputmode="numeric" style="letter-spacing:.4em;font-size:24px">
-        <button onclick="window._doorSubmit()">Unlock</button>
-      </div>
-      <div class="feedback" id="doorFeedback"></div>
-    `);
-    window._doorSubmit = () => {
-      const val = $("doorInput").value.trim();
-      if (val === "482913"){
-        $("doorFeedback").className = "feedback success";
-        $("doorFeedback").textContent = "✓ The lock clicks open. You're free.";
-        sfx.win();
-        setTimeout(() => {
-          closeModal();
-          endGame(true);
-        }, 1500);
-      } else {
-        $("doorFeedback").className = "feedback error";
-        $("doorFeedback").textContent = "Incorrect. The door stays locked.";
-        sfx.wrong();
-      }
+    player.currentWeapon = name;
+    updateHUD();
+    sfx.pickup();
+  }
+
+  // ============================================================
+  // SPAWNING
+  // ============================================================
+  function spawnEnemy(type){
+    const margin = 100;
+    const side = Math.floor(Math.random() * 4);
+    let x, y;
+    if (side === 0){ x = Math.random() * W; y = -margin; }
+    else if (side === 1){ x = W + margin; y = Math.random() * H; }
+    else if (side === 2){ x = Math.random() * W; y = H + margin; }
+    else { x = -margin; y = Math.random() * H; }
+
+    const base = {
+      x, y,
+      vx: 0, vy: 0,
+      radius: 18,
+      health: 30,
+      maxHealth: 30,
+      speed: 80 + Math.random() * 40 + state.wave * 8,
+      color: "#ff006e",
+      damage: 15,
+      type: "chaser",
+      fireCooldown: 0,
+      hitFlash: 0
     };
-  }
 
-  // ============================================================
-  // OBJECT CLICK HANDLERS
-  // ============================================================
-  function attachHandlers(){
-    $("certObj").addEventListener("click", () => {
-      if (state.solved.certificate){ sfx.click(); showNotification("Already solved: 4"); return; }
-      certificatePuzzleClean();
-    });
-    $("clockObj").addEventListener("click", () => {
-      if (state.solved.clock){ sfx.click(); showNotification("Already solved: 8"); return; }
-      clockPuzzleClean();
-    });
-    $("cabinetObj").addEventListener("click", () => {
-      if (state.solved.cabinet){ sfx.click(); showNotification("Already solved: 2"); return; }
-      cabinetPuzzle();
-    });
-    $("deskObj").addEventListener("click", () => {
-      if (state.solved.desk){ sfx.click(); showNotification("Already solved: 9"); return; }
-      deskPuzzle();
-    });
-    $("shelfObj").addEventListener("click", () => {
-      if (state.solved.shelf){ sfx.click(); showNotification("Already solved: 1"); return; }
-      shelfPuzzle();
-    });
-    $("sofaObj").addEventListener("click", () => {
-      if (state.solved.sofa){ sfx.click(); showNotification("Already solved: 3"); return; }
-      sofaPuzzle();
-    });
-    $("doorObj").addEventListener("click", doorPuzzle);
-  }
-
-  // ============================================================
-  // GAME LOOP
-  // ============================================================
-  let lastTime = 0;
-  let rafId = null;
-
-  function loop(now){
-    if (!state.running) return;
-    const dt = (now - lastTime) / 1000;
-    lastTime = now;
-    state.timeLeft -= dt;
-    state.elapsed += dt;
-
-    updateTimer();
-
-    if (state.timeLeft <= 0){
-      endGame(false);
-      return;
+    if (type === "shooter" || (state.wave >= 3 && Math.random() < 0.4)){
+      base.type = "shooter";
+      base.color = "#9d4edd";
+      base.health = 40;
+      base.maxHealth = 40;
+      base.speed = 60 + Math.random() * 30;
+      base.fireCooldown = 1 + Math.random();
+      base.radius = 20;
+    } else if (type === "tank" || (state.wave >= 5 && Math.random() < 0.25)){
+      base.type = "tank";
+      base.color = "#ff2d55";
+      base.health = 120;
+      base.maxHealth = 120;
+      base.speed = 50 + Math.random() * 20;
+      base.radius = 28;
+      base.damage = 25;
+    } else if (type === "boss"){
+      base.type = "boss";
+      base.color = "#ffb800";
+      base.health = 400;
+      base.maxHealth = 400;
+      base.speed = 40;
+      base.radius = 50;
+      base.damage = 30;
+      base.fireCooldown = 1.5;
     }
 
-    rafId = requestAnimationFrame(loop);
+    // spawn effect
+    burst(x, y, 12, base.color);
+    enemies.push(base);
   }
 
+  function spawnPickup(x, y){
+    const types = ["health", "armor", "shotgun", "laser", "rocket", "score"];
+    const type = types[Math.floor(Math.random() * types.length)];
+    const colors = {
+      health: "#ff2d55",
+      armor: "#00f0ff",
+      shotgun: "#ffb800",
+      laser: "#ff006e",
+      rocket: "#9d4edd",
+      score: "#00ff88"
+    };
+    pickups.push({
+      x, y,
+      vx: (Math.random() - 0.5) * 60,
+      vy: (Math.random() - 0.5) * 60,
+      radius: 14,
+      type,
+      color: colors[type],
+      age: 0,
+      life: 15,
+      phase: Math.random() * Math.PI * 2
+    });
+  }
+
+  // ============================================================
+  // EFFECTS
+  // ============================================================
+  function burst(x, y, count, color, speed = 6){
+    for (let i = 0; i < count; i++){
+      const a = (Math.PI * 2 * i) / count + Math.random() * 0.5;
+      const s = speed * (0.5 + Math.random());
+      particles.push({
+        x, y,
+        vx: Math.cos(a) * s,
+        vy: Math.sin(a) * s,
+        life: 1,
+        decay: 0.02 + Math.random() * 0.02,
+        color,
+        size: 2 + Math.random() * 3
+      });
+    }
+  }
+
+  function showFloatText(text, x, y, color){
+    const el = document.createElement("div");
+    el.className = "float-text";
+    el.textContent = text;
+    el.style.left = x + "px";
+    el.style.top = y + "px";
+    el.style.color = color;
+    document.body.appendChild(el);
+    setTimeout(() => el.remove(), 1000);
+  }
+
+  function showWaveBanner(text){
+    const el = document.getElementById("waveBanner");
+    el.textContent = text;
+    el.classList.add("show");
+    setTimeout(() => el.classList.remove("show"), 1500);
+  }
+
+  // ============================================================
+  // SHOOTING
+  // ============================================================
+  function shoot(){
+    const w = WEAPONS[player.currentWeapon];
+    if (player.fireCooldown > 0) return;
+    if (w.ammo <= 0){
+      player.currentWeapon = "pistol";
+      return;
+    }
+    player.fireCooldown = w.fireRate;
+
+    const angle = Math.atan2(mouseY - player.y, mouseX - player.x);
+
+    for (let i = 0; i < w.bullets; i++){
+      const spread = w.spread * (Math.random() - 0.5) * 2;
+      const a = angle + spread;
+      bullets.push({
+        x: player.x + Math.cos(a) * 20,
+        y: player.y + Math.sin(a) * 20,
+        vx: Math.cos(a) * w.bulletSpeed,
+        vy: Math.sin(a) * w.bulletSpeed,
+        radius: w.explosive ? 6 : 4,
+        damage: w.damage,
+        color: w.color,
+        life: 1.5,
+        age: 0,
+        explosive: w.explosive || false
+      });
+    }
+
+    if (w.ammo !== Infinity){
+      w.ammo--;
+      if (w.ammo <= 0){
+        player.currentWeapon = "pistol";
+        showFloatText("OUT OF AMMO", player.x, player.y - 40, "#ffb800");
+      }
+    }
+
+    // muzzle flash
+    const mx = player.x + Math.cos(angle) * 22;
+    const my = player.y + Math.sin(angle) * 22;
+    burst(mx, my, 4, w.color, 4);
+
+    // recoil
+    player.vx -= Math.cos(angle) * 30;
+    player.vy -= Math.sin(angle) * 30;
+
+    if (sfx[w.sound]) sfx[w.sound]();
+    state.shake = Math.max(state.shake, w.explosive ? 8 : 3);
+    updateHUD();
+  }
+
+  // ============================================================
+  // GAME LIFECYCLE
+  // ============================================================
   function startGame(){
     initAudio();
     state.running = true;
-    state.timeLeft = 600;
-    state.elapsed = 0;
-    state.solved = { certificate: false, clock: false, cabinet: false, desk: false, shelf: false, sofa: false };
-    state.code = ["_","_","_","_","_","_"];
-    state.inventory = [null, null, null, null];
-    state.hintsLeft = 3;
+    state.paused = false;
+    state.over = false;
+    state.score = 0;
+    state.wave = 1;
+    state.kills = 0;
+    state.waveTimer = 0;
+    state.spawnTimer = 0;
+    state.waveCooldown = 3;
+    state.time = 0;
+    state.shake = 0;
+    state.slowmo = 0;
 
-    // Reset DOM
-    document.querySelectorAll(".obj").forEach(o => o.classList.remove("done"));
-    $("doorObj").classList.remove("unlocked");
-    doorLock.classList.remove("unlocked");
-    updateDoorDisplay();
-    updatePuzzleCount();
-    updateTimer();
-    renderInventory();
-    hintBtn.disabled = false;
-    hintBtn.textContent = "Hint (3)";
+    player.x = W / 2;
+    player.y = H / 2;
+    player.vx = 0;
+    player.vy = 0;
+    player.health = 100;
+    player.armor = 0;
+    player.fireCooldown = 0;
+    player.dashCooldown = 0;
+    player.invuln = 1;
+    player.trail = [];
+    player.currentWeapon = "pistol";
 
-    startScreen.classList.add("hidden");
-    stage.style.display = "flex";
-    endScreen.classList.remove("open");
+    // reset weapons
+    Object.keys(WEAPONS).forEach(k => {
+      if (WEAPONS[k].ammoMax !== Infinity) WEAPONS[k].ammo = WEAPONS[k].ammoMax;
+    });
 
-    lastTime = performance.now();
-    if (rafId) cancelAnimationFrame(rafId);
-    rafId = requestAnimationFrame(loop);
+    bullets.length = 0;
+    enemies.length = 0;
+    particles.length = 0;
+    pickups.length = 0;
+    enemyBullets.length = 0;
+
+    document.getElementById("startScreen").classList.remove("visible");
+    document.getElementById("gameoverScreen").classList.remove("visible");
+    document.getElementById("pauseScreen").classList.remove("visible");
+
+    updateHUD();
+    showWaveBanner("WAVE 1");
   }
 
-  function endGame(win){
+  function pauseGame(){
+    state.paused = true;
+    document.getElementById("pauseScreen").classList.add("visible");
+  }
+  function resumeGame(){
+    state.paused = false;
+    document.getElementById("pauseScreen").classList.remove("visible");
+  }
+
+  function gameOver(){
     state.running = false;
-    if (rafId) cancelAnimationFrame(rafId);
-    const survived = state.elapsed;
-    const m = Math.floor(survived / 60);
-    const s = Math.floor(survived % 60);
-    $("endTime").textContent = m + ":" + String(s).padStart(2, "0");
-    const solvedCount = Object.values(state.solved).filter(v => v).length;
-    $("endPuzzles").textContent = solvedCount + "/6";
+    state.over = true;
+    sfx.gameover();
+    if (state.score > state.best){
+      state.best = state.score;
+      localStorage.setItem("neonsiege_best", state.best.toString());
+    }
+    document.getElementById("finalScore").textContent = state.score.toLocaleString();
+    document.getElementById("bestScore").textContent = state.best.toLocaleString();
+    document.getElementById("finalWave").textContent = state.wave;
+    document.getElementById("finalKills").textContent = state.kills;
+    document.getElementById("gameoverScreen").classList.add("visible");
+    burst(player.x, player.y, 60, "#ff2d55", 10);
+    burst(player.x, player.y, 40, "#ffb800", 8);
+  }
 
-    if (win){
-      endScreen.className = "end-screen win open";
-      $("endStamp").textContent = "ESCAPED";
-      $("endTitle").textContent = "You Made It Out";
-      $("endText").textContent = "You burst through the door at " + m + ":" + String(s).padStart(2, "0") + ". The security guard never saw you. Tomorrow, you'll file a finding about the door's inadequate access controls — and no one will question how you know.";
-      sfx.win();
+  // ============================================================
+  // UPDATE
+  // ============================================================
+  function update(dt){
+    if (!state.running || state.paused) return;
+
+    state.time += dt;
+    state.shake *= 0.9;
+    if (state.slowmo > 0) state.slowmo -= dt;
+
+    // player movement
+    let ax = 0, ay = 0;
+    if (keys["w"] || keys["arrowup"]) ay -= 1;
+    if (keys["s"] || keys["arrowdown"]) ay += 1;
+    if (keys["a"] || keys["arrowleft"]) ax -= 1;
+    if (keys["d"] || keys["arrowright"]) ax += 1;
+
+    const len = Math.hypot(ax, ay);
+    if (len > 0){ ax /= len; ay /= len; }
+
+    // dash
+    if (keys["shift"] && player.dashCooldown <= 0){
+      const dashAngle = len > 0 ? Math.atan2(ay, ax) : Math.atan2(mouseY - player.y, mouseX - player.x);
+      player.vx += Math.cos(dashAngle) * 600;
+      player.vy += Math.sin(dashAngle) * 600;
+      player.dashCooldown = 1.5;
+      player.invuln = Math.max(player.invuln, 0.3);
+      sfx.dash();
+      burst(player.x, player.y, 20, "#00f0ff", 8);
+    }
+
+    player.vx += ax * player.speed * 8 * dt;
+    player.vy += ay * player.speed * 8 * dt;
+    player.vx *= Math.pow(0.001, dt);
+    player.vy *= Math.pow(0.001, dt);
+    player.x += player.vx * dt;
+    player.y += player.vy * dt;
+
+    // bounds
+    player.x = Math.max(player.radius, Math.min(W - player.radius, player.x));
+    player.y = Math.max(player.radius, Math.min(H - player.radius, player.y));
+
+    player.angle = Math.atan2(mouseY - player.y, mouseX - player.x);
+
+    if (player.fireCooldown > 0) player.fireCooldown -= dt;
+    if (player.dashCooldown > 0) player.dashCooldown -= dt;
+    if (player.invuln > 0) player.invuln -= dt;
+
+    // trail
+    player.trail.push({ x: player.x, y: player.y, life: 1 });
+    if (player.trail.length > 15) player.trail.shift();
+    player.trail.forEach(t => t.life -= dt * 3);
+
+    // shooting
+    if (mouseDown) shoot();
+
+    // bullets
+    for (let i = bullets.length - 1; i >= 0; i--){
+      const b = bullets[i];
+      b.x += b.vx * dt;
+      b.y += b.vy * dt;
+      b.age += dt;
+      if (b.age > b.life || b.x < -50 || b.x > W + 50 || b.y < -50 || b.y > H + 50){
+        bullets.splice(i, 1);
+        continue;
+      }
+
+      // hit enemies
+      for (let j = enemies.length - 1; j >= 0; j--){
+        const e = enemies[j];
+        const d = Math.hypot(b.x - e.x, b.y - e.y);
+        if (d < b.radius + e.radius){
+          e.health -= b.damage;
+          e.hitFlash = 1;
+          burst(b.x, b.y, 4, b.color, 5);
+          sfx.hit();
+          if (b.explosive){
+            // explosion
+            burst(b.x, b.y, 25, "#9d4edd", 8);
+            state.shake = 15;
+            sfx.explosion();
+            for (let k = enemies.length - 1; k >= 0; k--){
+              const e2 = enemies[k];
+              const d2 = Math.hypot(b.x - e2.x, b.y - e2.y);
+              if (d2 < 80){
+                e2.health -= b.damage * 0.5;
+              }
+            }
+          }
+          bullets.splice(i, 1);
+          if (e.health <= 0) killEnemy(j);
+          break;
+        }
+      }
+    }
+
+    // enemies
+    for (let i = enemies.length - 1; i >= 0; i--){
+      const e = enemies[i];
+      const dx = player.x - e.x;
+      const dy = player.y - e.y;
+      const dist = Math.hypot(dx, dy) || 1;
+      e.vx = (dx / dist) * e.speed;
+      e.vy = (dy / dist) * e.speed;
+
+      // shooter keeps distance
+      if (e.type === "shooter"){
+        if (dist < 250){
+          e.vx *= -0.5;
+          e.vy *= -0.5;
+        }
+        e.fireCooldown -= dt;
+        if (e.fireCooldown <= 0 && dist < 500){
+          e.fireCooldown = 1.5 + Math.random();
+          const a = Math.atan2(dy, dx);
+          enemyBullets.push({
+            x: e.x, y: e.y,
+            vx: Math.cos(a) * 250,
+            vy: Math.sin(a) * 250,
+            radius: 6,
+            damage: 10,
+            color: "#9d4edd",
+            life: 3,
+            age: 0
+          });
+        }
+      }
+
+      // boss fires spread
+      if (e.type === "boss"){
+        e.fireCooldown -= dt;
+        if (e.fireCooldown <= 0){
+          e.fireCooldown = 1.2;
+          for (let k = 0; k < 8; k++){
+            const a = (Math.PI * 2 * k) / 8 + Math.random() * 0.2;
+            enemyBullets.push({
+              x: e.x, y: e.y,
+              vx: Math.cos(a) * 200,
+              vy: Math.sin(a) * 200,
+              radius: 8,
+              damage: 15,
+              color: "#ffb800",
+              life: 4,
+              age: 0
+            });
+          }
+        }
+      }
+
+      e.x += e.vx * dt;
+      e.y += e.vy * dt;
+      if (e.hitFlash > 0) e.hitFlash -= dt * 5;
+
+      // collision with player
+      if (dist < e.radius + player.radius && player.invuln <= 0){
+        damagePlayer(e.damage);
+        // knockback
+        player.vx -= (dx / dist) * 300;
+        player.vy -= (dy / dist) * 300;
+        e.vx += (dx / dist) * 200;
+        e.vy += (dy / dist) * 200;
+      }
+    }
+
+    // enemy bullets
+    for (let i = enemyBullets.length - 1; i >= 0; i--){
+      const b = enemyBullets[i];
+      b.x += b.vx * dt;
+      b.y += b.vy * dt;
+      b.age += dt;
+      if (b.age > b.life || b.x < -50 || b.x > W + 50 || b.y < -50 || b.y > H + 50){
+        enemyBullets.splice(i, 1);
+        continue;
+      }
+      const d = Math.hypot(b.x - player.x, b.y - player.y);
+      if (d < b.radius + player.radius && player.invuln <= 0){
+        damagePlayer(b.damage);
+        enemyBullets.splice(i, 1);
+      }
+    }
+
+    // pickups
+    for (let i = pickups.length - 1; i >= 0; i--){
+      const p = pickups[i];
+      p.age += dt;
+      p.phase += dt * 4;
+      if (p.age > p.life){
+        pickups.splice(i, 1);
+        continue;
+      }
+      // magnet
+      const dx = player.x - p.x;
+      const dy = player.y - p.y;
+      const dist = Math.hypot(dx, dy);
+      if (dist < 150){
+        p.vx += (dx / dist) * 400 * dt;
+        p.vy += (dy / dist) * 400 * dt;
+      }
+      p.x += p.vx * dt;
+      p.y += p.vy * dt;
+      p.vx *= Math.pow(0.3, dt);
+      p.vy *= Math.pow(0.3, dt);
+
+      if (dist < p.radius + player.radius){
+        applyPickup(p);
+        pickups.splice(i, 1);
+      }
+    }
+
+    // particles
+    for (let i = particles.length - 1; i >= 0; i--){
+      const p = particles[i];
+      p.x += p.vx;
+      p.y += p.vy;
+      p.vx *= 0.96;
+      p.vy *= 0.96;
+      p.life -= p.decay;
+      if (p.life <= 0) particles.splice(i, 1);
+    }
+
+    // wave logic
+    state.waveTimer += dt;
+    if (state.waveCooldown > 0){
+      state.waveCooldown -= dt;
     } else {
-      endScreen.className = "end-screen lose open";
-      $("endStamp").textContent = "LOCKED IN";
-      $("endTitle").textContent = "Security Found You";
-      $("endText").textContent = "The security guard shines a flashlight in your face. You try to explain you were just doing an audit. They don't care. You're writing this from the break room, where you'll spend the night.";
-      sfx.lose();
+      state.spawnTimer -= dt;
+      if (state.spawnTimer <= 0 && enemies.length < 30){
+        const baseCount = 2 + Math.floor(state.wave / 2);
+        const isBossWave = state.wave % 5 === 0 && !enemies.some(e => e.type === "boss");
+        if (isBossWave){
+          spawnEnemy("boss");
+          state.spawnTimer = 3;
+        } else {
+          for (let i = 0; i < baseCount; i++){
+            spawnEnemy();
+          }
+          state.spawnTimer = Math.max(0.8, 3 - state.wave * 0.15);
+        }
+      }
+      if (enemies.length === 0 && state.spawnTimer <= 0){
+        state.wave++;
+        state.waveCooldown = 3;
+        state.spawnTimer = 0.5;
+        showWaveBanner("WAVE " + state.wave);
+        sfx.wave();
+        // heal a bit each wave
+        player.health = Math.min(player.maxHealth, player.health + 10);
+        updateHUD();
+      }
+    }
+
+    updateHUD();
+  }
+
+  function damagePlayer(dmg){
+    if (player.invuln > 0) return;
+    if (player.armor > 0){
+      const absorbed = Math.min(player.armor, dmg);
+      player.armor -= absorbed;
+      dmg -= absorbed;
+    }
+    if (dmg > 0){
+      player.health -= dmg;
+    }
+    player.invuln = 0.5;
+    state.shake = Math.max(state.shake, 10);
+    sfx.hit();
+    burst(player.x, player.y, 8, "#ff2d55", 5);
+    if (player.health <= 0){
+      player.health = 0;
+      gameOver();
+    }
+    updateHUD();
+  }
+
+  function killEnemy(index){
+    const e = enemies[index];
+    const points = e.type === "boss" ? 500 : e.type === "tank" ? 50 : e.type === "shooter" ? 30 : 20;
+    state.score += points;
+    state.kills++;
+    showFloatText("+" + points, e.x, e.y - 20, "#00ff88");
+    burst(e.x, e.y, e.type === "boss" ? 40 : 15, e.color, e.type === "boss" ? 10 : 6);
+    sfx.kill();
+    if (e.type === "boss"){
+      state.shake = 20;
+      sfx.explosion();
+      for (let k = 0; k < 3; k++){
+        spawnPickup(e.x + (Math.random() - 0.5) * 60, e.y + (Math.random() - 0.5) * 60);
+      }
+    } else if (Math.random() < 0.3){
+      spawnPickup(e.x, e.y);
+    }
+    enemies.splice(index, 1);
+  }
+
+  function applyPickup(p){
+    sfx.pickup();
+    burst(p.x, p.y, 8, p.color, 4);
+    if (p.type === "health"){
+      player.health = Math.min(player.maxHealth, player.health + 25);
+      showFloatText("+25 HP", player.x, player.y - 40, "#ff2d55");
+    } else if (p.type === "armor"){
+      player.armor = Math.min(player.maxArmor, player.armor + 50);
+      showFloatText("+50 SHIELD", player.x, player.y - 40, "#00f0ff");
+    } else if (p.type === "score"){
+      state.score += 100;
+      showFloatText("+100", player.x, player.y - 40, "#00ff88");
+    } else if (p.type === "shotgun" || p.type === "laser" || p.type === "rocket"){
+      WEAPONS[p.type].ammo = Math.min(WEAPONS[p.type].ammoMax, WEAPONS[p.type].ammo + (p.type === "rocket" ? 3 : p.type === "shotgun" ? 15 : 50));
+      showFloatText("+" + WEAPONS[p.type].name.toUpperCase(), player.x, player.y - 40, WEAPONS[p.type].color);
+    }
+    updateHUD();
+  }
+
+  // ============================================================
+  // RENDER
+  // ============================================================
+  function render(){
+    // background
+    ctx.fillStyle = "#05060d";
+    ctx.fillRect(0, 0, W, H);
+
+    // grid
+    ctx.strokeStyle = "rgba(0,240,255,0.06)";
+    ctx.lineWidth = 1;
+    const grid = 60;
+    const offsetX = (state.time * 20) % grid;
+    const offsetY = (state.time * 15) % grid;
+    for (let x = -grid + offsetX; x < W + grid; x += grid){
+      ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, H); ctx.stroke();
+    }
+    for (let y = -grid + offsetY; y < H + grid; y += grid){
+      ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(W, y); ctx.stroke();
+    }
+
+    // screen shake
+    ctx.save();
+    if (state.shake > 0.5){
+      ctx.translate((Math.random() - 0.5) * state.shake, (Math.random() - 0.5) * state.shake);
+    }
+
+    // player trail
+    for (const t of player.trail){
+      if (t.life <= 0) continue;
+      ctx.globalAlpha = t.life * 0.3;
+      ctx.fillStyle = "#00f0ff";
+      ctx.beginPath();
+      ctx.arc(t.x, t.y, player.radius * t.life, 0, Math.PI * 2);
+      ctx.fill();
+    }
+    ctx.globalAlpha = 1;
+
+    // pickups
+    for (const p of pickups){
+      const scale = 1 + Math.sin(p.phase) * 0.15;
+      const alpha = Math.min(1, (p.life - p.age) / 2);
+      ctx.save();
+      ctx.globalAlpha = alpha;
+      ctx.translate(p.x, p.y);
+      ctx.scale(scale, scale);
+
+      // glow
+      const g = ctx.createRadialGradient(0, 0, 0, 0, 0, p.radius * 3);
+      g.addColorStop(0, p.color + "80");
+      g.addColorStop(1, p.color + "00");
+      ctx.fillStyle = g;
+      ctx.beginPath();
+      ctx.arc(0, 0, p.radius * 3, 0, Math.PI * 2);
+      ctx.fill();
+
+      // body
+      ctx.fillStyle = p.color;
+      ctx.strokeStyle = "#fff";
+      ctx.lineWidth = 2;
+      ctx.beginPath();
+      ctx.arc(0, 0, p.radius, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.stroke();
+
+      // icon
+      ctx.fillStyle = "#05060d";
+      ctx.font = "bold 16px 'Orbitron', monospace";
+      ctx.textAlign = "center";
+      ctx.textBaseline = "middle";
+      const icons = {
+        health: "+",
+        armor: "◇",
+        shotgun: "◈",
+        laser: "✦",
+        rocket: "▲",
+        score: "$"
+      };
+      ctx.fillText(icons[p.type] || "?", 0, 2);
+
+      ctx.restore();
+    }
+
+    // enemies
+    for (const e of enemies){
+      ctx.save();
+      ctx.translate(e.x, e.y);
+
+      // glow
+      const g = ctx.createRadialGradient(0, 0, 0, 0, 0, e.radius * 2);
+      g.addColorStop(0, e.color + "60");
+      g.addColorStop(1, e.color + "00");
+      ctx.fillStyle = g;
+      ctx.beginPath();
+      ctx.arc(0, 0, e.radius * 2, 0, Math.PI * 2);
+      ctx.fill();
+
+      // body
+      const flash = e.hitFlash > 0 ? "#fff" : e.color;
+      ctx.fillStyle = flash;
+      ctx.strokeStyle = "#fff";
+      ctx.lineWidth = 2;
+
+      if (e.type === "boss"){
+        ctx.beginPath();
+        for (let i = 0; i < 8; i++){
+          const a = (i / 8) * Math.PI * 2 + state.time;
+          const r = e.radius * (i % 2 === 0 ? 1 : 0.7);
+          if (i === 0) ctx.moveTo(Math.cos(a) * r, Math.sin(a) * r);
+          else ctx.lineTo(Math.cos(a) * r, Math.sin(a) * r);
+        }
+        ctx.closePath();
+      } else if (e.type === "tank"){
+        ctx.beginPath();
+        ctx.rect(-e.radius * 0.8, -e.radius * 0.8, e.radius * 1.6, e.radius * 1.6);
+      } else if (e.type === "shooter"){
+        ctx.beginPath();
+        ctx.moveTo(0, -e.radius);
+        ctx.lineTo(e.radius, e.radius);
+        ctx.lineTo(-e.radius, e.radius);
+        ctx.closePath();
+      } else {
+        ctx.beginPath();
+        ctx.arc(0, 0, e.radius, 0, Math.PI * 2);
+      }
+      ctx.fill();
+      ctx.stroke();
+
+      // eye
+      ctx.fillStyle = "#fff";
+      ctx.beginPath();
+      ctx.arc(0, 0, e.radius * 0.3, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.fillStyle = "#05060d";
+      ctx.beginPath();
+      ctx.arc(0, 0, e.radius * 0.15, 0, Math.PI * 2);
+      ctx.fill();
+
+      // health bar
+      if (e.health < e.maxHealth){
+        const bw = e.radius * 2;
+        ctx.fillStyle = "rgba(0,0,0,.6)";
+        ctx.fillRect(-bw / 2, -e.radius - 12, bw, 4);
+        ctx.fillStyle = e.color;
+        ctx.fillRect(-bw / 2, -e.radius - 12, bw * (e.health / e.maxHealth), 4);
+      }
+
+      ctx.restore();
+    }
+
+    // enemy bullets
+    for (const b of enemyBullets){
+      ctx.save();
+      const g = ctx.createRadialGradient(b.x, b.y, 0, b.x, b.y, b.radius * 2);
+      g.addColorStop(0, b.color);
+      g.addColorStop(1, b.color + "00");
+      ctx.fillStyle = g;
+      ctx.beginPath();
+      ctx.arc(b.x, b.y, b.radius * 2, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.fillStyle = "#fff";
+      ctx.beginPath();
+      ctx.arc(b.x, b.y, b.radius * 0.6, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.restore();
+    }
+
+    // player bullets
+    for (const b of bullets){
+      ctx.save();
+      const g = ctx.createRadialGradient(b.x, b.y, 0, b.x, b.y, b.radius * 3);
+      g.addColorStop(0, b.color);
+      g.addColorStop(1, b.color + "00");
+      ctx.fillStyle = g;
+      ctx.beginPath();
+      ctx.arc(b.x, b.y, b.radius * 3, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.fillStyle = "#fff";
+      ctx.beginPath();
+      ctx.arc(b.x, b.y, b.radius * 0.7, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.restore();
+    }
+
+    // player
+    if (state.running && !state.over){
+      ctx.save();
+      ctx.translate(player.x, player.y);
+      ctx.rotate(player.angle);
+
+      // invuln flash
+      if (player.invuln > 0 && Math.floor(player.invuln * 15) % 2 === 0){
+        ctx.globalAlpha = 0.5;
+      }
+
+      // shield ring
+      if (player.armor > 0){
+        ctx.strokeStyle = "#00f0ff";
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+        ctx.arc(0, 0, player.radius + 8, 0, Math.PI * 2);
+        ctx.stroke();
+        ctx.globalAlpha = 0.3;
+        ctx.beginPath();
+        ctx.arc(0, 0, player.radius + 8, 0, Math.PI * 2);
+        ctx.fillStyle = "#00f0ff";
+        ctx.fill();
+        ctx.globalAlpha = 1;
+      }
+
+      // glow
+      const pg = ctx.createRadialGradient(0, 0, 0, 0, 0, player.radius * 3);
+      pg.addColorStop(0, "rgba(0,240,255,0.4)");
+      pg.addColorStop(1, "rgba(0,240,255,0)");
+      ctx.fillStyle = pg;
+      ctx.beginPath();
+      ctx.arc(0, 0, player.radius * 3, 0, Math.PI * 2);
+      ctx.fill();
+
+      // ship body — arrow pointing right (angle)
+      ctx.fillStyle = "#00f0ff";
+      ctx.strokeStyle = "#fff";
+      ctx.lineWidth = 2;
+      ctx.beginPath();
+      ctx.moveTo(player.radius, 0);
+      ctx.lineTo(-player.radius * 0.8, player.radius * 0.7);
+      ctx.lineTo(-player.radius * 0.4, 0);
+      ctx.lineTo(-player.radius * 0.8, -player.radius * 0.7);
+      ctx.closePath();
+      ctx.fill();
+      ctx.stroke();
+
+      // cockpit
+      ctx.fillStyle = "#fff";
+      ctx.beginPath();
+      ctx.arc(player.radius * 0.2, 0, 3, 0, Math.PI * 2);
+      ctx.fill();
+
+      ctx.restore();
+    }
+
+    // particles
+    for (const p of particles){
+      ctx.globalAlpha = p.life;
+      ctx.fillStyle = p.color;
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, p.size * p.life, 0, Math.PI * 2);
+      ctx.fill();
+    }
+    ctx.globalAlpha = 1;
+
+    ctx.restore();
+
+    // vignette
+    const vg = ctx.createRadialGradient(W / 2, H / 2, Math.min(W, H) * 0.3, W / 2, H / 2, Math.max(W, H) * 0.7);
+    vg.addColorStop(0, "rgba(0,0,0,0)");
+    vg.addColorStop(1, "rgba(0,0,0,0.6)");
+    ctx.fillStyle = vg;
+    ctx.fillRect(0, 0, W, H);
+
+    // crosshair
+    if (state.running && !state.over){
+      ctx.strokeStyle = "rgba(0,240,255,.6)";
+      ctx.lineWidth = 2;
+      ctx.beginPath();
+      ctx.arc(mouseX, mouseY, 12, 0, Math.PI * 2);
+      ctx.stroke();
+      ctx.beginPath();
+      ctx.moveTo(mouseX - 18, mouseY);
+      ctx.lineTo(mouseX - 6, mouseY);
+      ctx.moveTo(mouseX + 6, mouseY);
+      ctx.lineTo(mouseX + 18, mouseY);
+      ctx.moveTo(mouseX, mouseY - 18);
+      ctx.lineTo(mouseX, mouseY - 6);
+      ctx.moveTo(mouseX, mouseY + 6);
+      ctx.lineTo(mouseX, mouseY + 18);
+      ctx.stroke();
     }
   }
 
   // ============================================================
-  // HINTS
+  // HUD
   // ============================================================
-  const HINTS = [
-    "The certificate puzzle wants a single digit. Look at the number of letters.",
-    "The clock puzzle: add all four digits together, then add the number of digits shown.",
-    "The cabinet drawers have a reading order. Follow the sequence of notes.",
-    "The desk wants a word length. 'Exception' means a control failure — count its letters.",
-    "The bookshelf: count each colour, and pick the smallest pile.",
-    "The sofa: T=20, 1+1+7=9, so 20+9=29. Subtract 6 (coffee mugs) = 23. Take the second digit."
-  ];
-  let hintIndex = 0;
+  function updateHUD(){
+    document.getElementById("scoreDisplay").textContent = state.score.toLocaleString();
+    document.getElementById("waveDisplay").textContent = state.wave;
+    document.getElementById("enemyDisplay").textContent = enemies.length;
+    document.getElementById("healthBar").style.transform = "scaleX(" + Math.max(0, player.health / player.maxHealth) + ")";
+    document.getElementById("armorBar").style.transform = "scaleX(" + Math.max(0, player.armor / player.maxArmor) + ")";
 
-  hintBtn.addEventListener("click", () => {
-    if (state.hintsLeft <= 0) return;
-    sfx.click();
-    const unsolved = Object.keys(state.solved).filter(k => !state.solved[k]);
-    if (unsolved.length === 0){
-      showNotification("All puzzles solved! Enter 482913 at the door.", 3000);
-      return;
-    }
-    const puzzle = unsolved[Math.floor(Math.random() * unsolved.length)];
-    const hintMap = {
-      certificate: "Shift HXIR by −3 letters. The result is 4 letters long.",
-      clock: "Add the digits 1+1+4+7 = 13. Then add 4 (number of digits). Digital root of 17 = 8.",
-      cabinet: "Read the notes in the order D → B → A → C. The digit is 2.",
-      desk: "The word is 'exception'. Count the letters.",
-      shelf: "Count each colour of book. Smallest pile wins.",
-      sofa: "T=20, digits 1+1+7=9. 20+9=29. Minus 6 = 23. Second digit."
-    };
-    showNotification(hintMap[puzzle] || "Look more carefully at the room.", 5000);
-    state.hintsLeft--;
-    hintBtn.textContent = "Hint (" + state.hintsLeft + ")";
-    if (state.hintsLeft <= 0) hintBtn.disabled = true;
-  });
+    const w = WEAPONS[player.currentWeapon];
+    document.getElementById("weaponIcon").textContent = w.icon;
+    document.getElementById("weaponName").textContent = w.name;
+    document.getElementById("weaponAmmo").textContent = w.ammo === Infinity ? "∞" : w.ammo + " / " + w.ammoMax;
+    document.getElementById("weaponIcon").style.color = w.color;
+    document.getElementById("weaponIcon").style.borderColor = w.color;
+    document.getElementById("weaponName").style.color = w.color;
+  }
 
   // ============================================================
-  // START
+  // LOOP
   // ============================================================
-  $("startBtn").addEventListener("click", startGame);
-  $("endBtn").addEventListener("click", startGame);
-  attachHandlers();
+  let lastTime = performance.now();
+  function loop(now){
+    const dt = Math.min((now - lastTime) / 1000, 0.05);
+    lastTime = now;
+    update(dt);
+    render();
+    requestAnimationFrame(loop);
+  }
+  requestAnimationFrame(loop);
+
+  // ============================================================
+  // UI BINDINGS
+  // ============================================================
+  document.getElementById("startBtn").addEventListener("click", startGame);
+  document.getElementById("retryBtn").addEventListener("click", startGame);
+  document.getElementById("resumeBtn").addEventListener("click", resumeGame);
+  document.getElementById("startHighScore").textContent = state.best.toLocaleString();
+
+  updateHUD();
 })();
 </script>
 
