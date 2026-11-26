@@ -6,20 +6,14 @@
 <title>Auditline – Internal audit management</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@600;700&family=Figtree:wght@400;500;600&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 <style>
-:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);
---bg:#edf1f4;--surf:#fff;--ink:#14202b;--mute:#5c6b78;--line:#dbe2e8;--brand:#0f5c63;--soft:#d9eded;--on:#fff;
---crit:#b3261e;--high:#d9731a;--med:#b8920f;--low:#2f8a63;--shadow:0 1px 2px rgba(20,32,43,.06),0 6px 20px -8px rgba(20,32,43,.12)}
-@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){color-scheme:dark;
---bg:#0d1418;--surf:#151f25;--ink:#e6edf1;--mute:#93a3ae;--line:#26343d;--brand:#4fb3ba;--soft:#173a3e;--on:#071418;
---crit:#ff7b72;--high:#f0a050;--med:#e3c14d;--low:#5fcf9d;--shadow:0 1px 2px rgba(0,0,0,.4)}}
-:root[data-theme="dark"]{color-scheme:dark;--bg:#0d1418;--surf:#151f25;--ink:#e6edf1;--mute:#93a3ae;--line:#26343d;--brand:#4fb3ba;--soft:#173a3e;--on:#071418;--crit:#ff7b72;--high:#f0a050;--med:#e3c14d;--low:#5fcf9d;--shadow:0 1px 2px rgba(0,0,0,.4)}
+:root{color-scheme:light;box-sizing:border-box;--bg:#edf1f4;--surf:#fff;--ink:#14202b;--mute:#5c6b78;--line:#dbe2e8;--brand:#0f5c63;--soft:#d9eded;--on:#fff;--crit:#b3261e;--high:#d9731a;--med:#b8920f;--low:#2f8a63;--shadow:0 1px 2px rgba(20,32,43,.06),0 6px 20px -8px rgba(20,32,43,.12)}
+@media(prefers-color-scheme:dark){:root:not([data-theme="light"]){color-scheme:dark;--bg:#0d1418;--surf:#151f25;--ink:#e6edf1;--mute:#93a3ae;--line:#26343d;--brand:#4fb3ba;--soft:#173a3e;--on:#071418;--crit:#ff7b72;--high:#f0a050;--med:#e3c14d;--low:#5fcf9d;--shadow:0 1px 2px rgba(0,0,0,.4)}}
 *,*::before,*::after{box-sizing:inherit}
-html{scroll-padding-top:env(safe-area-inset-top,0px)}
-body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.5 Figtree,system-ui,-apple-system,"Segoe UI",sans-serif}
-h1,h2,h3{font-family:"Bricolage Grotesque",Figtree,system-ui,sans-serif;margin:0;letter-spacing:-.01em}
-button,input,select{font:inherit;color:inherit}
-button{cursor:pointer}
+body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.5 Figtree,system-ui,-apple-system,"Segoe UI",sans-serif;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+h1,h2{font-family:"Bricolage Grotesque",Figtree,system-ui,sans-serif;margin:0;letter-spacing:-.01em}
+button,input,select,textarea{font:inherit;color:inherit}button{cursor:pointer}
 :focus-visible{outline:2px solid var(--brand);outline-offset:2px}
 .app{display:grid;grid-template-columns:232px 1fr;min-height:100vh}
 aside{background:var(--surf);border-right:1px solid var(--line);padding:22px 14px;position:sticky;top:0;height:100vh;display:flex;flex-direction:column;gap:6px}
@@ -27,221 +21,270 @@ aside{background:var(--surf);border-right:1px solid var(--line);padding:22px 14p
 .logo i{width:26px;height:26px;border-radius:8px;background:var(--brand);display:grid;place-items:center}
 .logo i::after{content:"";width:10px;height:10px;border:2.5px solid var(--on);border-radius:50%;border-right-color:transparent;transform:rotate(-30deg)}
 nav a{display:flex;justify-content:space-between;align-items:center;padding:9px 12px;border-radius:10px;color:var(--mute);text-decoration:none;font-weight:500}
-nav a:hover{background:var(--bg)}
-nav a.on{background:var(--soft);color:var(--brand);font-weight:600}
-nav small{background:var(--bg);border-radius:20px;padding:0 8px;font-size:12px;color:var(--mute)}
+nav a:hover{background:var(--bg)}nav a.on{background:var(--soft);color:var(--brand);font-weight:600}
+nav small{background:var(--bg);border-radius:20px;padding:0 8px;font-size:12px}
 .spacer{flex:1}
 .ghost{background:none;border:1px solid var(--line);border-radius:10px;padding:8px 12px;color:var(--mute)}
-main{padding:28px clamp(16px,3vw,40px) 60px;max-width:1180px;width:100%}
+main{padding:28px clamp(16px,3vw,40px) 60px;max-width:1240px;width:100%}
 .head{display:flex;justify-content:space-between;align-items:flex-end;gap:16px;flex-wrap:wrap;margin-bottom:22px}
-.head h1{font-size:28px}.head p{margin:2px 0 0;color:var(--mute)}
-.btn{background:var(--brand);color:var(--on);border:0;border-radius:10px;padding:10px 16px;font-weight:600}
+.head h1{font-size:28px}.head p{margin:2px 0 0;color:var(--mute);max-width:560px}
+.btns{display:flex;gap:8px;flex-wrap:wrap}
+.btn{background:var(--brand);color:var(--on);border:0;border-radius:10px;padding:9px 15px;font-weight:600}
 .btn:hover{filter:brightness(1.08)}
 .btn.sec{background:var(--surf);color:var(--ink);border:1px solid var(--line)}
 .btn.danger{background:none;color:var(--crit);border:1px solid var(--line)}
-.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:14px;margin-bottom:18px}
 .card{background:var(--surf);border:1px solid var(--line);border-radius:16px;padding:18px;box-shadow:var(--shadow)}
-.kpi b{display:block;font:700 34px/1.1 "Bricolage Grotesque",sans-serif}
-.kpi span{color:var(--mute);font-size:13px}
-.kpi.warn b{color:var(--crit)}
-.grid2{display:grid;grid-template-columns:1.6fr 1fr;gap:14px;margin-top:14px}
 .card h2{font-size:17px;margin-bottom:14px}
-.tl{overflow-x:auto}
-.tl-in{min-width:640px;position:relative}
-.months{display:grid;grid-template-columns:repeat(12,1fr);font-size:12px;color:var(--mute);border-bottom:1px solid var(--line);padding-bottom:6px;margin-left:150px}
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:14px;margin-bottom:14px}
+.kpi b{display:block;font:700 32px/1.1 "Bricolage Grotesque",sans-serif}
+.kpi span,.sub{color:var(--mute);font-size:13px}.sub{display:block}
+.kpi.warn b{color:var(--crit)}
+.grid2{display:grid;grid-template-columns:1.3fr 1fr;gap:14px;margin-top:14px}
+.tl{overflow-x:auto}.tl-in{min-width:640px;position:relative}
+.months{display:grid;grid-template-columns:repeat(12,1fr);font-size:12px;color:var(--mute);border-bottom:1px solid var(--line);padding-bottom:6px;margin-left:160px}
 .row{display:flex;align-items:center;height:34px}
-.row .lbl{width:150px;flex:none;font-size:13px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;padding-right:10px}
+.row .lbl{width:160px;flex:none;font-size:13px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;padding-right:10px}
 .track{position:relative;flex:1;height:100%;background:repeating-linear-gradient(90deg,transparent 0 calc(8.333% - 1px),var(--line) calc(8.333% - 1px) 8.333%)}
 .bar{position:absolute;top:8px;height:18px;border-radius:9px;background:var(--brand);overflow:hidden;cursor:pointer;border:0;padding:0}
 .bar span{position:absolute;inset:0 auto 0 0;background:rgba(255,255,255,.28)}
 .bar.Planned{background:var(--mute)}.bar.Reporting{background:var(--high)}.bar.Closed{background:var(--low)}
-.today{position:absolute;top:22px;bottom:0;width:2px;background:var(--crit);margin-left:150px}
+.today{position:absolute;top:22px;bottom:0;width:2px;background:var(--crit);margin-left:160px}
 .today::before{content:"Today";position:absolute;top:-18px;left:-14px;font-size:11px;color:var(--crit)}
-.legend{display:flex;flex-wrap:wrap;gap:12px;font-size:13px;color:var(--mute);margin-top:12px}
+.legend{display:flex;flex-wrap:wrap;gap:12px;font-size:13px;color:var(--mute);margin-top:12px}.legend.col{flex-direction:column;margin:0}
 .dot{display:inline-block;width:9px;height:9px;border-radius:50%;margin-right:6px}
 .donut{display:flex;align-items:center;gap:18px;flex-wrap:wrap}
+.heat{display:grid;grid-template-columns:34px repeat(5,1fr);gap:5px;align-items:center;font-size:12px;color:var(--mute)}
+.hc{min-height:44px;border-radius:9px;border:2px solid transparent;font:700 17px "Bricolage Grotesque",sans-serif;color:var(--ink)}
+.hc.sel{border-color:var(--ink)}.ax{text-align:center}
+.b{display:flex;align-items:center;gap:10px;margin:9px 0;font-size:13px}
+.b .n{width:150px;flex:none;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.b .t{flex:1;height:10px;background:var(--bg);border-radius:6px;overflow:hidden}.b .t i{display:block;height:100%}
+.stack{display:flex;height:14px;border-radius:8px;overflow:hidden;background:var(--bg)}
 .pill{display:inline-block;padding:2px 10px;border-radius:20px;font-size:12px;font-weight:600;border:1px solid currentColor;white-space:nowrap}
 .Critical{color:var(--crit)}.High{color:var(--high)}.Medium{color:var(--med)}.Low{color:var(--low)}
-.list{display:flex;flex-direction:column}
-.item{display:flex;justify-content:space-between;gap:10px;padding:10px 0;border-top:1px solid var(--line);align-items:center}
-.item:first-child{border-top:0}
-.item small{color:var(--mute);display:block}
 .over{color:var(--crit);font-weight:600}
+.item{display:flex;justify-content:space-between;gap:10px;padding:10px 0;border-top:1px solid var(--line);align-items:center}.item:first-of-type{border-top:0}
 .tools{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:14px;align-items:center}
-input,select{background:var(--surf);border:1px solid var(--line);border-radius:10px;padding:9px 12px;width:100%}
-.tools input{max-width:260px}
+input,select,textarea{background:var(--surf);border:1px solid var(--line);border-radius:10px;padding:9px 12px;width:100%}
+textarea{resize:vertical}.tools input{max-width:260px}
 .chip{background:var(--surf);border:1px solid var(--line);border-radius:20px;padding:6px 14px;color:var(--mute)}
 .chip.on{background:var(--brand);color:var(--on);border-color:var(--brand)}
 .tbl{overflow-x:auto;padding:0}
-table{border-collapse:collapse;width:100%;min-width:640px}
+table{border-collapse:collapse;width:100%;min-width:680px}
 th{text-align:left;font-weight:600;font-size:13px;color:var(--mute);padding:12px 16px;border-bottom:1px solid var(--line)}
 td{padding:12px 16px;border-top:1px solid var(--line);vertical-align:middle}
 tr.click{cursor:pointer}tr.click:hover td{background:var(--bg)}
-.prog{height:6px;background:var(--bg);border-radius:6px;min-width:90px;overflow:hidden}
-.prog i{display:block;height:100%;background:var(--brand)}
-.stat{border:0;background:var(--bg);border-radius:20px;padding:3px 12px;font-size:13px}
+.prog{height:6px;background:var(--bg);border-radius:6px;min-width:90px;overflow:hidden}.prog i{display:block;height:100%;background:var(--brand)}
+.stat{background:var(--bg);border-radius:20px;padding:3px 12px;font-size:13px;white-space:nowrap}
 .empty{padding:40px;text-align:center;color:var(--mute)}
-dialog{border:1px solid var(--line);border-radius:18px;background:var(--surf);color:var(--ink);padding:24px;width:min(480px,94vw);box-shadow:0 30px 80px -20px rgba(0,0,0,.5)}
-dialog::backdrop{background:rgba(10,18,24,.55)}
-dialog h2{margin-bottom:14px}
+.board{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+.tk{border:1px solid var(--line);border-radius:12px;padding:12px;margin-bottom:10px;background:var(--surf);cursor:pointer;display:flex;flex-direction:column;gap:6px;align-items:flex-start}
+dialog{border:1px solid var(--line);border-radius:18px;background:var(--surf);color:var(--ink);padding:24px;width:min(520px,94vw);box-shadow:0 30px 80px -20px rgba(0,0,0,.5)}
+dialog::backdrop{background:rgba(10,18,24,.55)}dialog h2{margin-bottom:14px}
 .f{display:grid;grid-template-columns:1fr 1fr;gap:12px}
-.f label{display:flex;flex-direction:column;gap:4px;font-size:13px;color:var(--mute)}
-.f .w{grid-column:1/-1}
+.f label{display:flex;flex-direction:column;gap:4px;font-size:13px;color:var(--mute)}.f .w{grid-column:1/-1}
 .acts{display:flex;gap:10px;justify-content:flex-end;margin-top:18px}
-.toast{position:fixed;left:50%;bottom:calc(20px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:10px 18px;border-radius:12px;font-size:14px;opacity:0;pointer-events:none;transition:opacity .2s}
+.toast{position:fixed;left:50%;bottom:20px;transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:10px 18px;border-radius:12px;font-size:14px;opacity:0;pointer-events:none;transition:opacity .2s}
 .toast.show{opacity:1}
-@media(max-width:860px){
-.app{grid-template-columns:1fr}
-aside{position:sticky;height:auto;flex-direction:row;align-items:center;padding:10px 12px;z-index:5;overflow-x:auto;top:env(safe-area-inset-top,0px)}
-.logo{padding:0 8px 0 0}.logo span,.spacer,.ghost{display:none}
-nav{display:flex;gap:4px}nav small{display:none}
-.grid2{grid-template-columns:1fr}}
-@media(prefers-reduced-motion:reduce){*{transition:none!important}}
+.rt{font-size:30px}.rs{color:var(--mute);margin:2px 0 24px}
+@media(max-width:860px){.app{grid-template-columns:1fr}
+aside{position:sticky;height:auto;flex-direction:row;align-items:center;padding:10px 12px;z-index:5;overflow-x:auto}
+.logo{padding:0 8px 0 0}.logo span,.spacer,aside .ghost{display:none}nav{display:flex;gap:4px;white-space:nowrap}nav small{display:none}
+.grid2,.board{grid-template-columns:1fr}}
+@media print{@page{margin:14mm}aside,.btns,.tools,.toast,.today::before{display:none!important}
+.app{display:block}main{padding:0;max-width:none}body{background:#fff}.card{box-shadow:none;break-inside:avoid}.pb{break-after:page}.tbl{overflow:visible}table{min-width:0}.tl{overflow:visible}.tl-in{min-width:0}}
 </style>
 </head>
 <body>
 <div class="app">
 <aside>
   <div class="logo"><i></i><span>Auditline</span></div>
-  <nav id="nav"></nav>
-  <div class="spacer"></div>
+  <nav id="nav"></nav><div class="spacer"></div>
   <button class="ghost" id="reset">Reset sample data</button>
 </aside>
 <main id="main"></main>
 </div>
-<dialog id="dlg"></dialog>
-<div class="toast" id="toast"></div>
+<dialog id="dlg"></dialog><div class="toast" id="toast"></div>
 
 <script>
-(function(){
-var KEY="auditline-v1",SEV=["Critical","High","Medium","Low"],EST=["Planned","Fieldwork","Reporting","Closed"],FST=["Open","In progress","Closed"];
-var seed=function(){return{
-eng:[
-{id:1,name:"Procure-to-pay controls",area:"Finance",lead:"Mara Keller",status:"Closed",start:"2026-01-12",end:"2026-03-20",progress:100},
-{id:2,name:"Access management review",area:"IT security",lead:"Jonas Weber",status:"Closed",start:"2026-02-16",end:"2026-05-08",progress:100},
-{id:3,name:"Third-party risk",area:"Procurement",lead:"Mara Keller",status:"Reporting",start:"2026-05-04",end:"2026-08-28",progress:88},
-{id:4,name:"Data privacy compliance",area:"Legal",lead:"Lea Brunner",status:"Fieldwork",start:"2026-07-06",end:"2026-12-11",progress:64},
-{id:5,name:"Payroll and benefits",area:"HR",lead:"Jonas Weber",status:"Fieldwork",start:"2026-09-14",end:"2027-01-29",progress:35},
-{id:6,name:"Business continuity",area:"Operations",lead:"Lea Brunner",status:"Planned",start:"2026-11-30",end:"2027-02-26",progress:5}],
+(()=>{
+const KEY="auditline-v2",SEV=["Critical","High","Medium","Low"],EST=["Planned","Fieldwork","Reporting","Closed"],FST=["Open","In progress","Closed"];
+const CF={Effective:.5,Partial:.75,Weak:1},CY={Critical:12,High:12,Medium:24,Low:36},SC={Overdue:"Critical","Due soon":"Medium","On cycle":"Low"};
+const seed=()=>({
+ent:[
+{id:1,name:"Procure-to-pay",dept:"Finance",owner:"CFO office",type:"Process",last:"2026-03-20",ctl:"Partial",L:4,I:4},
+{id:2,name:"IT access management",dept:"IT",owner:"CISO",type:"Technology",last:"2026-05-08",ctl:"Partial",L:4,I:5},
+{id:3,name:"Payroll and benefits",dept:"HR",owner:"HR director",type:"Process",last:"2024-10-15",ctl:"Effective",L:3,I:3},
+{id:4,name:"Data privacy",dept:"Legal",owner:"Data protection officer",type:"Compliance",last:"2025-06-30",ctl:"Weak",L:4,I:4},
+{id:5,name:"Third-party management",dept:"Procurement",owner:"COO",type:"Process",last:"2026-08-28",ctl:"Partial",L:3,I:4},
+{id:6,name:"Treasury",dept:"Finance",owner:"Treasurer",type:"Process",last:"2023-09-01",ctl:"Effective",L:2,I:5},
+{id:7,name:"Business continuity",dept:"Operations",owner:"COO",type:"Operations",last:"",ctl:"Weak",L:3,I:5},
+{id:8,name:"Facilities and safety",dept:"Operations",owner:"Head of facilities",type:"Operations",last:"2025-02-10",ctl:"Effective",L:2,I:2}],
+plan:[
+{id:1,name:"Procure-to-pay controls",ent:1,lead:"Mara Keller",start:"2026-01-12",end:"2026-03-20",hours:240,status:"Closed",progress:100},
+{id:2,name:"Access management review",ent:2,lead:"Jonas Weber",start:"2026-02-16",end:"2026-05-08",hours:320,status:"Closed",progress:100},
+{id:3,name:"Third-party risk",ent:5,lead:"Mara Keller",start:"2026-05-04",end:"2026-08-28",hours:280,status:"Closed",progress:100},
+{id:4,name:"Data privacy compliance",ent:4,lead:"Lea Brunner",start:"2026-07-06",end:"2026-12-11",hours:300,status:"Fieldwork",progress:64},
+{id:5,name:"Payroll review",ent:3,lead:"Jonas Weber",start:"2026-09-14",end:"2027-01-29",hours:220,status:"Fieldwork",progress:35},
+{id:6,name:"Business continuity audit",ent:7,lead:"Lea Brunner",start:"2026-11-30",end:"2027-02-26",hours:260,status:"Planned",progress:5}],
 fnd:[
-{id:1,title:"Duplicate vendor records bypass approval limits",eng:1,sev:"High",owner:"Finance ops",due:"2026-06-30",status:"Closed"},
-{id:2,title:"Leavers keep system access beyond 5 days",eng:2,sev:"Critical",owner:"IT service desk",due:"2026-07-31",status:"In progress"},
-{id:3,title:"No exit clause review for critical suppliers",eng:3,sev:"Medium",owner:"Procurement",due:"2026-11-15",status:"Open"},
-{id:4,title:"Data subject requests exceed 30-day limit",eng:4,sev:"High",owner:"Privacy office",due:"2026-12-18",status:"Open"},
-{id:5,title:"Privileged accounts lack quarterly recertification",eng:2,sev:"High",owner:"IT security",due:"2026-12-05",status:"In progress"},
-{id:6,title:"Overtime approvals not retained",eng:5,sev:"Low",owner:"HR payroll",due:"2027-01-15",status:"Open"},
-{id:7,title:"Supplier scorecards updated irregularly",eng:3,sev:"Low",owner:"Procurement",due:"2026-10-31",status:"Closed"}]};};
-var S;try{S=JSON.parse(localStorage.getItem(KEY))}catch(e){S=null}
-if(!S||!S.eng)S=seed();
-function save(){try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}}
-function $(s,r){return(r||document).querySelector(s)}
-function esc(t){return String(t==null?"":t).replace(/[&<>"']/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]})}
-function d(s){return new Date(s+"T00:00:00")}
-var TODAY=new Date();TODAY.setHours(0,0,0,0);
-function fmt(s){return d(s).toLocaleDateString("en-GB",{day:"numeric",month:"short",year:"numeric"})}
-function overdue(f){return f.status!=="Closed"&&d(f.due)<TODAY}
-function toast(m){var t=$("#toast");t.textContent=m;t.classList.add("show");clearTimeout(toast.t);toast.t=setTimeout(function(){t.classList.remove("show")},1800)}
-function engName(id){var e=S.eng.filter(function(x){return x.id==id})[0];return e?e.name:"Unassigned"}
-function colorVar(s){return"var(--"+{Critical:"crit",High:"high",Medium:"med",Low:"low"}[s]+")"}
-var view="dashboard",filt={sev:"All",q:"",hide:true};
-var VIEWS={dashboard:"Dashboard",engagements:"Engagements",findings:"Findings"};
+{id:1,title:"Duplicate vendor records bypass approval limits",ent:1,sev:"High",owner:"Finance operations",raised:"2026-03-24",due:"2026-06-30",status:"Closed",rec:"Block duplicate tax IDs at vendor creation."},
+{id:2,title:"Leavers keep system access beyond 5 days",ent:2,sev:"Critical",owner:"IT service desk",raised:"2026-05-12",due:"2026-07-31",status:"In progress",rec:"Automate the HR to access-system leaver feed."},
+{id:3,title:"No exit clause review for critical suppliers",ent:5,sev:"Medium",owner:"Procurement",raised:"2026-09-02",due:"2026-11-15",status:"Open",rec:""},
+{id:4,title:"Data subject requests exceed the 30-day limit",ent:4,sev:"High",owner:"Privacy office",raised:"2026-10-05",due:"2026-12-18",status:"Open",rec:""},
+{id:5,title:"Privileged accounts lack quarterly recertification",ent:2,sev:"High",owner:"IT security",raised:"2026-05-12",due:"2026-12-05",status:"In progress",rec:""},
+{id:6,title:"Overtime approvals not retained",ent:3,sev:"Low",owner:"HR payroll",raised:"2026-10-20",due:"2027-01-15",status:"Open",rec:""},
+{id:7,title:"Supplier scorecards updated irregularly",ent:5,sev:"Low",owner:"Procurement",raised:"2026-09-02",due:"2026-10-31",status:"Closed",rec:""},
+{id:8,title:"No tested recovery plan for core systems",ent:7,sev:"High",owner:"IT operations",raised:"2026-11-10",due:"2027-02-28",status:"Open",rec:""}]});
+let S;try{S=JSON.parse(localStorage.getItem(KEY))}catch(e){}if(!S||!S.ent)S=seed();
+const save=()=>{try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}};
+const $=(s,r)=>(r||document).querySelector(s);
+const esc=t=>String(t??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const d=s=>new Date(s+"T00:00:00"),D=s=>s instanceof Date?s:d(s);
+const TODAY=new Date();TODAY.setHours(0,0,0,0);
+const day=n=>new Date(TODAY.getTime()+n*864e5);
+const iso=x=>x.getFullYear()+"-"+String(x.getMonth()+1).padStart(2,"0")+"-"+String(x.getDate()).padStart(2,"0");
+const fmt=s=>s?D(s).toLocaleDateString("en-GB",{day:"numeric",month:"short",year:"numeric"}):"–";
+const ref=(p,i)=>p+"-"+String(i).padStart(3,"0"),nid=a=>a.reduce((m,x)=>Math.max(m,x.id),0)+1;
+const toast=m=>{const t=$("#toast");t.textContent=m;t.classList.add("show");clearTimeout(toast.t);toast.t=setTimeout(()=>t.classList.remove("show"),2200)};
+const entName=id=>(S.ent.find(e=>e.id==id)||{name:"Unassigned"}).name;
+const colorVar=s=>"var(--"+{Critical:"crit",High:"high",Medium:"med",Low:"low"}[s]+")";
+const T=s=>s>=20?"Critical":s>=12?"High":s>=6?"Medium":"Low";
+const over=f=>f.status!="Closed"&&d(f.due)<TODAY,age=f=>Math.max(0,Math.round((TODAY-d(f.raised))/864e5));
+function calc(e){const inh=e.L*e.I,res=Math.round(inh*CF[e.ctl]),rate=T(res),cyc=CY[rate];let nx=null;
+ if(e.last){nx=new Date(d(e.last));nx.setMonth(nx.getMonth()+cyc)}
+ return{inh,res,rate,cyc,nx,st:!nx||nx<TODAY?"Overdue":nx<day(90)?"Due soon":"On cycle"}}
+function stats(){const cs=S.ent.map(calc),open=S.fnd.filter(f=>f.status!="Closed");
+ return{cs,open,od:S.fnd.filter(over),hi:cs.filter(c=>c.rate=="Critical"||c.rate=="High").length,
+ cov:cs.length?Math.round(cs.filter(c=>c.st!="Overdue").length/cs.length*100):0,
+ prog:Math.round(S.plan.reduce((a,p)=>a+p.progress,0)/Math.max(1,S.plan.length))}}
 
-function nav(){
-  var open=S.fnd.filter(function(f){return f.status!=="Closed"}).length;
-  $("#nav").innerHTML=Object.keys(VIEWS).map(function(k){
-    var n=k==="engagements"?S.eng.length:k==="findings"?open:"";
-    return'<a href="#'+k+'" class="'+(k===view?"on":"")+'">'+VIEWS[k]+(n!==""?"<small>"+n+"</small>":"")+"</a>"}).join("");
-}
+let view="dashboard",hm="",filt={sev:"All",q:"",hide:true};
+const V={dashboard:["Dashboard",()=>dash()],universe:["Audit universe",()=>uni()],risk:["Risk assessment",()=>risk()],plan:["Audit plan",()=>plan()],findings:["Findings",()=>fnds()],tracker:["Tracker",()=>track()]};
 
-function dash(){
-  var open=S.fnd.filter(function(f){return f.status!=="Closed"}),od=S.fnd.filter(overdue);
-  var act=S.eng.filter(function(e){return e.status==="Fieldwork"||e.status==="Reporting"});
-  var avg=Math.round(S.eng.reduce(function(a,e){return a+e.progress},0)/Math.max(1,S.eng.length));
-  var Y=TODAY.getFullYear(),y0=new Date(Y,0,1),y1=new Date(Y+1,0,1),span=y1-y0;
-  var pos=function(s){return Math.max(0,Math.min(100,(d(s)-y0)/span*100))};
-  var months=["J","F","M","A","M","J","J","A","S","O","N","D"].map(function(m){return"<span>"+m+"</span>"}).join("");
-  var rows=S.eng.map(function(e){var l=pos(e.start),r=pos(e.end);
-    return'<div class="row"><div class="lbl" title="'+esc(e.name)+'">'+esc(e.name)+'</div><div class="track"><button class="bar '+e.status+'" data-e="'+e.id+'" style="left:'+l+'%;width:'+Math.max(2,r-l)+'%" title="'+esc(e.status+" · "+e.progress+"%")+'" aria-label="'+esc(e.name)+', '+e.status+', '+e.progress+' percent"><span style="width:'+e.progress+'%"></span></button></div></div>'}).join("");
-  var tp=(TODAY-y0)/span*100;
-  var counts=SEV.map(function(s){return S.fnd.filter(function(f){return f.sev===s&&f.status!=="Closed"}).length});
-  var tot=counts.reduce(function(a,b){return a+b},0),C=2*Math.PI*42,off=0;
-  var arcs=counts.map(function(c,i){if(!c)return"";var len=c/tot*C,s='<circle r="42" cx="60" cy="60" fill="none" stroke="'+colorVar(SEV[i])+'" stroke-width="14" stroke-dasharray="'+len+' '+(C-len)+'" stroke-dashoffset="'+(-off)+'" transform="rotate(-90 60 60)"/>';off+=len;return s}).join("");
-  var soon=open.slice().sort(function(a,b){return d(a.due)-d(b.due)}).slice(0,5).map(function(f){
-    return'<div class="item"><div>'+esc(f.title)+'<small>'+esc(f.owner)+' · <span class="'+(overdue(f)?"over":"")+'">'+(overdue(f)?"Overdue since ":"Due ")+fmt(f.due)+'</span></small></div><span class="pill '+f.sev+'">'+f.sev+'</span></div>'}).join("")||'<div class="empty">Nothing open. Nice work.</div>';
-  return'<div class="head"><div><h1>Dashboard</h1><p>Where the audit plan and its findings stand today.</p></div><button class="btn" data-new="eng">New engagement</button></div>'+
-  '<div class="kpis"><div class="card kpi"><b>'+act.length+'</b><span>Active engagements</span></div><div class="card kpi"><b>'+open.length+'</b><span>Open findings</span></div><div class="card kpi '+(od.length?"warn":"")+'"><b>'+od.length+'</b><span>Overdue actions</span></div><div class="card kpi"><b>'+avg+'%</b><span>Average completion</span></div></div>'+
-  '<div class="card"><h2>Audit plan '+Y+'</h2><div class="tl"><div class="tl-in"><div class="months">'+months+'</div>'+rows+'<div class="today" style="left:calc((100% - 150px)*'+(tp/100)+')"></div></div></div>'+
-  '<div class="legend"><span><i class="dot" style="background:var(--mute)"></i>Planned</span><span><i class="dot" style="background:var(--brand)"></i>Fieldwork</span><span><i class="dot" style="background:var(--high)"></i>Reporting</span><span><i class="dot" style="background:var(--low)"></i>Closed</span></div></div>'+
-  '<div class="grid2"><div class="card"><h2>Next actions due</h2><div class="list">'+soon+'</div></div>'+
-  '<div class="card"><h2>Open findings by severity</h2><div class="donut"><svg width="130" height="130" viewBox="0 0 120 120" role="img" aria-label="Open findings by severity">'+(tot?arcs:'<circle r="42" cx="60" cy="60" fill="none" stroke="var(--line)" stroke-width="14"/>')+'<text x="60" y="66" text-anchor="middle" font-size="22" font-weight="700" fill="var(--ink)" font-family="Bricolage Grotesque,sans-serif">'+tot+'</text></svg>'+
-  '<div class="legend" style="flex-direction:column;margin:0">'+SEV.map(function(s,i){return'<span><i class="dot" style="background:'+colorVar(s)+'"></i>'+s+" · "+counts[i]+"</span>"}).join("")+'</div></div></div></div>';
-}
+const head=(t,s,nk,nl,x="")=>`<div class="head"><div><h1>${t}</h1><p>${s}</p></div><div class="btns">${x}<button class="btn sec" data-act="xl">Export Excel</button><button class="btn sec" data-act="pdf">Export PDF</button>${nk?`<button class="btn" data-new="${nk}">${nl}</button>`:""}</div></div>`;
+const kpi=(v,l,w)=>`<div class="card kpi${w?" warn":""}"><b>${v}</b><span>${l}</span></div>`;
+const sub=(a,b)=>`<b>${esc(a)}</b><span class="sub">${esc(b)}</span>`;
+const tr=(ed,c)=>`<tr class="click" data-ed="${ed}" tabindex="0">${c.map(x=>`<td>${x}</td>`).join("")}</tr>`;
+const tbl=(h,r,m)=>`<div class="card tbl"><table><thead><tr>${h.map(x=>`<th>${x}</th>`).join("")}</tr></thead><tbody>${r.join("")||`<tr><td colspan="${h.length}" class="empty">${m}</td></tr>`}</tbody></table></div>`;
+const bars=a=>{const m=Math.max(1,...a.map(x=>x[1]));return a.map(([l,v,c])=>`<div class="b"><span class="n" title="${esc(l)}">${esc(l)}</span><div class="t"><i style="width:${v/m*100}%;background:${c}"></i></div><b>${v}</b></div>`).join("")};
 
-function engs(){
-  var rows=S.eng.map(function(e){var n=S.fnd.filter(function(f){return f.eng==e.id&&f.status!=="Closed"}).length;
-    return'<tr class="click" data-e="'+e.id+'" tabindex="0"><td><b>'+esc(e.name)+'</b><div style="color:var(--mute);font-size:13px">'+esc(e.area)+'</div></td><td>'+esc(e.lead)+'</td><td>'+fmt(e.start)+' – '+fmt(e.end)+'</td><td><span class="stat">'+e.status+'</span></td><td><div class="prog"><i style="width:'+e.progress+'%"></i></div><small style="color:var(--mute)">'+e.progress+'%</small></td><td>'+n+' open</td></tr>'}).join("");
-  return'<div class="head"><div><h1>Engagements</h1><p>Select a row to edit scope, dates, and progress.</p></div><button class="btn" data-new="eng">New engagement</button></div><div class="card tbl"><table><thead><tr><th>Engagement</th><th>Lead</th><th>Fieldwork window</th><th>Status</th><th>Progress</th><th>Findings</th></tr></thead><tbody>'+(rows||'<tr><td colspan="6" class="empty">No engagements yet. Add your first one.</td></tr>')+'</tbody></table></div>';
-}
+function heat(){let h='<div class="heat">';
+ for(let l=5;l>0;l--){h+=`<span>L${l}</span>`;for(let i=1;i<6;i++){const n=S.ent.filter(e=>e.L==l&&e.I==i).length;
+  h+=`<button class="hc${hm==l+"-"+i?" sel":""}" data-hm="${l}-${i}" style="background:color-mix(in srgb,${colorVar(T(l*i))} 38%,var(--surf))" aria-label="Likelihood ${l}, impact ${i}, ${n} entities">${n||""}</button>`}}
+ return h+"<span></span>"+[1,2,3,4,5].map(i=>`<span class="ax">I${i}</span>`).join("")+"</div>"}
 
-function fnds(){
-  var list=S.fnd.filter(function(f){
-    if(filt.sev!=="All"&&f.sev!==filt.sev)return false;
-    if(filt.hide&&f.status==="Closed")return false;
-    var q=filt.q.toLowerCase();
-    return!q||(f.title+f.owner+engName(f.eng)).toLowerCase().indexOf(q)>-1}).sort(function(a,b){return SEV.indexOf(a.sev)-SEV.indexOf(b.sev)||d(a.due)-d(b.due)});
-  var rows=list.map(function(f){
-    return'<tr class="click" data-f="'+f.id+'" tabindex="0"><td><b>'+esc(f.title)+'</b><div style="color:var(--mute);font-size:13px">'+esc(engName(f.eng))+'</div></td><td><span class="pill '+f.sev+'">'+f.sev+'</span></td><td>'+esc(f.owner)+'</td><td class="'+(overdue(f)?"over":"")+'">'+fmt(f.due)+'</td><td><button class="stat" data-cycle="'+f.id+'" title="Click to change status">'+f.status+'</button></td></tr>'}).join("");
-  return'<div class="head"><div><h1>Findings</h1><p>Track every issue from first report to closure.</p></div><button class="btn" data-new="fnd">New finding</button></div>'+
-  '<div class="tools"><input id="q" type="search" placeholder="Search findings, owners, engagements" value="'+esc(filt.q)+'" aria-label="Search findings">'+
-  ["All"].concat(SEV).map(function(s){return'<button class="chip '+(filt.sev===s?"on":"")+'" data-sev="'+s+'">'+s+"</button>"}).join("")+
-  '<button class="chip '+(filt.hide?"on":"")+'" id="hide">Hide closed</button></div>'+
-  '<div class="card tbl"><table><thead><tr><th>Finding</th><th>Severity</th><th>Owner</th><th>Due</th><th>Status</th></tr></thead><tbody>'+(rows||'<tr><td colspan="5" class="empty">No findings match. Clear the filters or add a new finding.</td></tr>')+'</tbody></table></div>';
-}
+function tl(){const Y=TODAY.getFullYear(),y0=new Date(Y,0,1),sp=new Date(Y+1,0,1)-y0,pos=s=>Math.max(0,Math.min(100,(d(s)-y0)/sp*100));
+ const rows=S.plan.map(p=>{const l=pos(p.start),r=pos(p.end);return`<div class="row"><div class="lbl" title="${esc(p.name)}">${esc(p.name)}</div><div class="track"><button class="bar ${p.status}" data-ed="plan:${p.id}" style="left:${l}%;width:${Math.max(2,r-l)}%" title="${esc(p.status)} · ${p.progress}%" aria-label="${esc(p.name)}, ${p.status}, ${p.progress} percent"><span style="width:${p.progress}%"></span></button></div></div>`}).join("");
+ return`<div class="tl"><div class="tl-in"><div class="months">${"JFMAMJJASOND".split("").map(m=>`<span>${m}</span>`).join("")}</div>${rows}<div class="today" style="left:calc((100% - 160px)*${(TODAY-y0)/sp})"></div></div></div>
+ <div class="legend"><span><i class="dot" style="background:var(--mute)"></i>Planned</span><span><i class="dot" style="background:var(--brand)"></i>Fieldwork</span><span><i class="dot" style="background:var(--high)"></i>Reporting</span><span><i class="dot" style="background:var(--low)"></i>Closed</span></div>`}
 
-function render(){
-  var h=location.hash.slice(1);view=VIEWS[h]?h:"dashboard";
-  nav();$("#main").innerHTML=view==="dashboard"?dash():view==="engagements"?engs():fnds();
-  var q=$("#q");if(q){q.oninput=function(){filt.q=q.value;var p=q.selectionStart;render();var n=$("#q");n.focus();n.setSelectionRange(p,p)}}
-}
+function dash(){const s=stats(),{cs,open,od}=s;
+ const cnt=SEV.map(v=>open.filter(f=>f.sev==v).length),tot=cnt.reduce((a,b)=>a+b,0),C=2*Math.PI*42;let off=0;
+ const arcs=cnt.map((c,i)=>{if(!c)return"";const len=c/tot*C,r=`<circle r="42" cx="60" cy="60" fill="none" stroke="${colorVar(SEV[i])}" stroke-width="14" stroke-dasharray="${len} ${C-len}" stroke-dashoffset="${-off}" transform="rotate(-90 60 60)"/>`;off+=len;return r}).join("");
+ const ag=[0,0,0,0];open.forEach(f=>{const a=age(f);ag[a<=30?0:a<=90?1:a<=180?2:3]++});
+ const st=FST.map(x=>S.fnd.filter(f=>f.status==x).length),sc=["var(--high)","var(--brand)","var(--low)"],all=Math.max(1,S.fnd.length);
+ const top=cs.map((c,i)=>({c,e:S.ent[i]})).sort((a,b)=>b.c.res-a.c.res).slice(0,5);
+ return head("Dashboard","Risk, plan, and findings at a glance.")+
+ `<div class="kpis">${kpi(S.ent.length,"Entities in universe")}${kpi(s.hi,"High or critical risk")}${kpi(s.cov+"%","Audit coverage on cycle")}${kpi(s.prog+"%","Plan completion")}${kpi(open.length,"Open findings")}${kpi(od.length,"Overdue actions",od.length)}</div>
+ <div class="card"><h2>Audit plan ${TODAY.getFullYear()}</h2>${tl()}</div>
+ <div class="grid2"><div class="card"><h2>Risk heat map</h2>${heat()}<span class="sub" style="margin-top:8px">Likelihood by impact, inherent risk. Numbers show entities.</span></div>
+ <div class="card"><h2>Open findings by severity</h2><div class="donut"><svg width="130" height="130" viewBox="0 0 120 120" role="img" aria-label="Open findings by severity">${tot?arcs:'<circle r="42" cx="60" cy="60" fill="none" stroke="var(--line)" stroke-width="14"/>'}<text x="60" y="66" text-anchor="middle" font-size="22" font-weight="700" fill="var(--ink)">${tot}</text></svg>
+ <div class="legend col">${SEV.map((v,i)=>`<span><i class="dot" style="background:${colorVar(v)}"></i>${v} · ${cnt[i]}</span>`).join("")}</div></div>
+ <h2 style="margin-top:20px">Findings by status</h2><div class="stack">${st.map((n,i)=>`<i style="width:${n/all*100}%;background:${sc[i]}"></i>`).join("")}</div>
+ <div class="legend">${FST.map((x,i)=>`<span><i class="dot" style="background:${sc[i]}"></i>${x} · ${st[i]}</span>`).join("")}</div></div></div>
+ <div class="grid2"><div class="card"><h2>Highest residual risk</h2>${top.map(x=>`<div class="item"><div>${sub(x.e.name,x.e.dept+" · "+x.e.ctl+" controls")}</div><span class="pill ${x.c.rate}">${x.c.rate} · ${x.c.res}</span></div>`).join("")||'<div class="empty">No entities yet.</div>'}</div>
+ <div class="card"><h2>Age of open findings</h2>${bars([["0 to 30 days",ag[0],"var(--low)"],["31 to 90 days",ag[1],"var(--med)"],["91 to 180 days",ag[2],"var(--high)"],["Over 180 days",ag[3],"var(--crit)"]])}</div></div>`}
 
-function opts(arr,sel){return arr.map(function(o){return'<option'+(o===sel?" selected":"")+'>'+o+"</option>"}).join("")}
-function dlg(kind,id){
-  var D=$("#dlg"),isE=kind==="eng",it=isE?S.eng.filter(function(x){return x.id==id})[0]:S.fnd.filter(function(x){return x.id==id})[0];
-  var iso=function(x){return x.toISOString().slice(0,10)};
-  if(!it)it=isE?{name:"",area:"",lead:"",status:"Planned",start:iso(TODAY),end:iso(new Date(TODAY.getTime()+90*864e5)),progress:0}:{title:"",eng:S.eng[0]?S.eng[0].id:"",sev:"Medium",owner:"",due:iso(new Date(TODAY.getTime()+30*864e5)),status:"Open"};
-  var isNew=!it.id;
-  D.innerHTML=isE?
-  '<h2>'+(isNew?"New engagement":"Edit engagement")+'</h2><div class="f"><label class="w">Name<input id="a" value="'+esc(it.name)+'"></label><label>Business area<input id="b" value="'+esc(it.area)+'"></label><label>Audit lead<input id="c" value="'+esc(it.lead)+'"></label><label>Start<input id="s" type="date" value="'+it.start+'"></label><label>End<input id="e" type="date" value="'+it.end+'"></label><label>Status<select id="t">'+opts(EST,it.status)+'</select></label><label>Progress: <span id="pv">'+it.progress+'%</span><input id="p" type="range" min="0" max="100" value="'+it.progress+'"></label></div>':
-  '<h2>'+(isNew?"New finding":"Edit finding")+'</h2><div class="f"><label class="w">Title<input id="a" value="'+esc(it.title)+'"></label><label class="w">Engagement<select id="g">'+S.eng.map(function(e){return'<option value="'+e.id+'"'+(e.id==it.eng?" selected":"")+'>'+esc(e.name)+"</option>"}).join("")+'</select></label><label>Severity<select id="v">'+opts(SEV,it.sev)+'</select></label><label>Status<select id="t">'+opts(FST,it.status)+'</select></label><label>Action owner<input id="o" value="'+esc(it.owner)+'"></label><label>Due date<input id="u" type="date" value="'+it.due+'"></label></div>';
-  D.innerHTML+='<div class="acts">'+(isNew?"":'<button class="btn danger" id="del">Delete</button>')+'<button class="btn sec" id="x">Cancel</button><button class="btn" id="ok">Save '+(isE?"engagement":"finding")+'</button></div>';
-  var p=$("#p",D);if(p)p.oninput=function(){$("#pv",D).textContent=p.value+"%"};
-  $("#x",D).onclick=function(){D.close()};
-  var del=$("#del",D);if(del)del.onclick=function(){
-    if(isE){S.eng=S.eng.filter(function(x){return x.id!==it.id});S.fnd.forEach(function(f){if(f.eng==it.id)f.eng=""})}else S.fnd=S.fnd.filter(function(x){return x.id!==it.id});
-    save();D.close();render();toast("Deleted")};
-  $("#ok",D).onclick=function(){
-    var a=$("#a",D).value.trim();if(!a){$("#a",D).focus();toast("Add a name first");return}
-    if(isE){it.name=a;it.area=$("#b",D).value.trim();it.lead=$("#c",D).value.trim();it.start=$("#s",D).value;it.end=$("#e",D).value;it.status=$("#t",D).value;it.progress=+$("#p",D).value;
-      if(it.end<it.start){toast("End date must be after start");return}}
-    else{it.title=a;it.eng=$("#g",D).value;it.sev=$("#v",D).value;it.status=$("#t",D).value;it.owner=$("#o",D).value.trim();it.due=$("#u",D).value}
-    if(isNew){it.id=Date.now();(isE?S.eng:S.fnd).push(it)}
-    save();D.close();render();toast("Saved")};
-  D.showModal();$("#a",D).focus();
-}
+function uni(){return head("Audit universe","Every auditable entity, when it was last covered, and when it is due next.","ent","New entity")+
+ tbl(["Ref","Entity","Owner","Last audit","Next due","Coverage","Findings"],S.ent.map(e=>{const c=calc(e),n=S.fnd.filter(f=>f.ent==e.id&&f.status!="Closed").length;
+ return tr("ent:"+e.id,[ref("E",e.id),sub(e.name,e.dept+" · "+e.type),esc(e.owner),fmt(e.last),c.nx?fmt(c.nx):"Never audited",`<span class="pill ${SC[c.st]}">${c.st}</span>`,n+" open"])}),"No entities yet. Add your first one.")}
 
-document.addEventListener("click",function(ev){
-  var t=ev.target.closest("[data-new],[data-e],[data-f],[data-cycle],[data-sev],#hide");if(!t)return;
-  if(t.dataset.cycle){ev.stopPropagation();var f=S.fnd.filter(function(x){return x.id==t.dataset.cycle})[0];f.status=FST[(FST.indexOf(f.status)+1)%3];save();render();return}
-  if(t.dataset.new)dlg(t.dataset.new);
-  else if(t.dataset.e)dlg("eng",t.dataset.e);
-  else if(t.dataset.f)dlg("fnd",t.dataset.f);
-  else if(t.dataset.sev){filt.sev=t.dataset.sev;render()}
-  else if(t.id==="hide"){filt.hide=!filt.hide;render()}
-});
-document.addEventListener("keydown",function(ev){if(ev.key==="Enter"&&ev.target.matches("tr.click"))ev.target.click()});
-$("#reset").onclick=function(){if(confirm("Replace everything with the sample data?")){S=seed();save();render();toast("Sample data restored")}};
-window.addEventListener("hashchange",render);
-render();
+function risk(){const cs=S.ent.map(e=>({e,c:calc(e)})).sort((a,b)=>b.c.res-a.c.res),[l,i]=hm?hm.split("-").map(Number):[0,0];
+ const sel=hm?(cs.filter(x=>x.e.L==l&&x.e.I==i).map(x=>esc(x.e.name)).join(", ")||"No entities in this cell"):"";
+ return head("Risk assessment","Score likelihood and impact from 1 to 5. Control strength lowers it to a residual score, which sets the audit cycle.","ent","New entity")+
+ `<div class="grid2" style="margin:0 0 14px"><div class="card"><h2>Risk heat map</h2>${heat()}<span class="sub" style="margin-top:8px">${hm?`L${l} × I${i}: ${sel}`:"Select a cell to see its entities."}</span></div>
+ <div class="card"><h2>Residual risk by entity</h2>${bars(cs.map(x=>[x.e.name,x.c.res,colorVar(x.c.rate)]))}</div></div>`+
+ tbl(["Entity","Likelihood","Impact","Inherent","Controls","Residual","Rating","Cycle"],cs.map(({e,c})=>tr("ent:"+e.id,[sub(e.name,e.dept),e.L,e.I,c.inh,e.ctl,c.res,`<span class="pill ${c.rate}">${c.rate}</span>`,c.cyc+" months"])),"No entities yet.")}
+
+function plan(){return head("Audit plan","Engagements across the year. Build a draft from risk, then adjust it.","plan","New engagement",`<button class="btn sec" data-act="gen">Build risk-based plan</button>`)+
+ `<div class="card" style="margin-bottom:14px"><h2>Plan ${TODAY.getFullYear()}</h2>${tl()}</div>`+
+ tbl(["Engagement","Lead","Window","Budget","Status","Progress"],S.plan.map(p=>tr("plan:"+p.id,[sub(p.name,entName(p.ent)),esc(p.lead)||"Unassigned",fmt(p.start)+" – "+fmt(p.end),p.hours+" h",`<span class="stat">${p.status}</span>`,`<div class="prog"><i style="width:${p.progress}%"></i></div><span class="sub">${p.progress}%</span>`])),"No engagements yet.")}
+
+function fnds(){const q=filt.q.toLowerCase();
+ const l=S.fnd.filter(f=>(filt.sev=="All"||f.sev==filt.sev)&&!(filt.hide&&f.status=="Closed")&&(!q||(f.title+f.owner+entName(f.ent)).toLowerCase().includes(q))).sort((a,b)=>SEV.indexOf(a.sev)-SEV.indexOf(b.sev)||d(a.due)-d(b.due));
+ return head("Findings","The register of every issue, with its owner, due date, and status.","fnd","New finding")+
+ `<div class="tools"><input id="q" type="search" placeholder="Search findings, owners, entities" value="${esc(filt.q)}" aria-label="Search findings">${["All",...SEV].map(s=>`<button class="chip${filt.sev==s?" on":""}" data-sev="${s}">${s}</button>`).join("")}<button class="chip${filt.hide?" on":""}" id="hide">Hide closed</button></div>`+
+ tbl(["Ref","Finding","Severity","Owner","Due","Status"],l.map(f=>tr("fnd:"+f.id,[ref("F",f.id),sub(f.title,entName(f.ent)),`<span class="pill ${f.sev}">${f.sev}</span>`,esc(f.owner),`<span class="${over(f)?"over":""}">${fmt(f.due)}</span>`,`<span class="stat">${f.status}</span>`])),"No findings match. Clear the filters or add a new finding.")}
+
+function track(){const s=stats(),o=s.open,due30=o.filter(f=>!over(f)&&d(f.due)<=day(30)).length,avg=o.length?Math.round(o.reduce((a,f)=>a+age(f),0)/o.length):0,cl=S.fnd.length?Math.round((S.fnd.length-o.length)/S.fnd.length*100):0;
+ return head("Findings tracker","Move each action from open to closed and watch what is slipping.","fnd","New finding")+
+ `<div class="kpis">${kpi(s.od.length,"Overdue",s.od.length)}${kpi(due30,"Due in 30 days")}${kpi(avg+" d","Average age of open")}${kpi(cl+"%","Closure rate")}</div>
+ <div class="board">${FST.map((st,i)=>{const l=S.fnd.filter(f=>f.status==st).sort((a,b)=>d(a.due)-d(b.due));
+ return`<div><h2 style="margin-bottom:12px">${st} <span class="sub" style="display:inline">${l.length}</span></h2>${l.map(f=>`<div class="tk" data-ed="fnd:${f.id}" tabindex="0"><span class="pill ${f.sev}">${f.sev}</span><b>${esc(f.title)}</b><span class="sub">${esc(entName(f.ent))} · ${esc(f.owner)}</span><span class="sub ${over(f)?"over":""}">${over(f)?"Overdue, due ":"Due "}${fmt(f.due)} · ${age(f)} days old</span>${i<2?`<button class="btn sec" data-adv="${f.id}">Move to ${FST[i+1]}</button>`:""}</div>`).join("")||'<div class="empty">Nothing here.</div>'}</div>`}).join("")}</div>`}
+
+const ENTS=()=>S.ent.map(e=>[e.id,e.name]);
+const F={
+ ent:{t:"entity",k:"ent",f:[["name","Entity name","text",,1],["dept","Department","text"],["owner","Process owner","text"],["type","Type","sel",["Process","Technology","Compliance","Operations","Strategic"]],["last","Last audit (optional)","date"],["ctl","Control environment","sel",["Effective","Partial","Weak"]],["L","Likelihood (1 to 5)","sel",[1,2,3,4,5]],["I","Impact (1 to 5)","sel",[1,2,3,4,5]]]},
+ plan:{t:"engagement",k:"plan",f:[["name","Engagement","text",,1],["ent","Audit entity","sel",ENTS,1],["lead","Audit lead","text"],["hours","Budget hours","num"],["start","Start","date"],["end","End","date"],["status","Status","sel",EST],["progress","Progress %","num"]]},
+ fnd:{t:"finding",k:"fnd",f:[["title","Finding","text",,1],["ent","Audit entity","sel",ENTS,1],["sev","Severity","sel",SEV],["status","Status","sel",FST],["owner","Action owner","text"],["raised","Raised","date"],["due","Due date","date"],["rec","Recommendation and management response","area",,1]]}};
+const DEF={ent:()=>({name:"",dept:"",owner:"",type:"Process",last:"",ctl:"Partial",L:3,I:3}),
+ plan:()=>({name:"",ent:S.ent[0]?.id,lead:"",hours:200,status:"Planned",progress:0,start:iso(TODAY),end:iso(day(90))}),
+ fnd:()=>({title:"",ent:S.ent[0]?.id,sev:"Medium",status:"Open",owner:"",raised:iso(TODAY),due:iso(day(30)),rec:""})};
+const opt=o=>typeof o=="function"?o():o;
+
+function dlg(kind,id){const Dg=$("#dlg"),m=F[kind],list=S[m.k],cur=list.find(x=>x.id==id),isNew=!cur,it=cur||DEF[kind]();
+ Dg.innerHTML=`<h2>${isNew?"New":"Edit"} ${m.t}</h2><div class="f">${m.f.map(([k,l,t,o,w])=>{const v=it[k]??"";let c;
+  if(t=="sel")c=`<select data-k="${k}">${opt(o).map(x=>{const[a,b]=Array.isArray(x)?x:[x,x];return`<option value="${esc(a)}"${a==v?" selected":""}>${esc(b)}</option>`}).join("")}</select>`;
+  else if(t=="area")c=`<textarea data-k="${k}" rows="3">${esc(v)}</textarea>`;
+  else c=`<input data-k="${k}" type="${t=="num"?"number":t}" value="${esc(v)}">`;
+  return`<label class="${w?"w":""}">${l}${c}</label>`}).join("")}</div>
+ <div class="acts">${isNew?"":'<button class="btn danger" id="del">Delete</button>'}<button class="btn sec" id="x">Cancel</button><button class="btn" id="ok">Save</button></div>`;
+ $("#x",Dg).onclick=()=>Dg.close();
+ const del=$("#del",Dg);if(del)del.onclick=()=>{list.splice(list.indexOf(cur),1);save();Dg.close();render();toast("Deleted")};
+ $("#ok",Dg).onclick=()=>{const v={};
+  m.f.forEach(([k,,t,o])=>{let x=$(`[data-k=${k}]`,Dg).value;const a=t=="sel"?opt(o):null,o0=a?(Array.isArray(a[0])?a[0][0]:a[0]):null;if(t=="num"||typeof o0=="number")x=+x;v[k]=x});
+  if(!String(v[m.f[0][0]]).trim()){toast("Add a name first");return}
+  if(v.end&&v.end<v.start){toast("End date must be after start");return}
+  if("progress" in v)v.progress=Math.max(0,Math.min(100,v.progress||0));
+  Object.assign(it,v);if(isNew){it.id=nid(list);list.push(it)}save();Dg.close();render();toast("Saved")};
+ Dg.showModal();$("[data-k]",Dg).focus()}
+
+function gen(){let n=0;const end=new Date(TODAY.getFullYear()+1,11,31);
+ S.ent.map(e=>({e,c:calc(e)})).filter(x=>(!x.c.nx||x.c.nx<=end)&&!S.plan.some(p=>p.ent==x.e.id&&p.status!="Closed")).sort((a,b)=>b.c.res-a.c.res).forEach(x=>{
+  const s=new Date(Math.max(TODAY,x.c.nx||TODAY));S.plan.push({id:nid(S.plan),name:x.e.name+" audit",ent:x.e.id,lead:"",start:iso(s),end:iso(new Date(s.getTime()+75*864e5)),hours:x.c.res>=12?280:160,status:"Planned",progress:0});n++});
+ save();render();toast(n?n+" engagements added, highest residual risk first":"The plan already covers every entity that is due")}
+
+function xl(){if(!window.XLSX){toast("The Excel library did not load. Check your connection.");return}
+ const wb=XLSX.utils.book_new(),add=(n,r)=>XLSX.utils.book_append_sheet(wb,XLSX.utils.json_to_sheet(r),n),s=stats();
+ add("Summary",[["Entities in universe",S.ent.length],["High or critical risk entities",s.hi],["Audit coverage on cycle %",s.cov],["Plan completion %",s.prog],["Open findings",s.open.length],["Overdue actions",s.od.length],["Report date",iso(TODAY)]].map(([Metric,Value])=>({Metric,Value})));
+ add("Audit universe",S.ent.map(e=>{const c=calc(e);return{Ref:ref("E",e.id),Entity:e.name,Department:e.dept,Owner:e.owner,Type:e.type,"Last audit":e.last,Likelihood:e.L,Impact:e.I,"Inherent score":c.inh,Controls:e.ctl,"Residual score":c.res,"Risk rating":c.rate,"Cycle (months)":c.cyc,"Next audit due":c.nx?iso(c.nx):"Never audited",Coverage:c.st}}));
+ add("Audit plan",S.plan.map(p=>({Engagement:p.name,Entity:entName(p.ent),Lead:p.lead,Start:p.start,End:p.end,"Budget hours":p.hours,Status:p.status,"Progress %":p.progress})));
+ add("Findings",S.fnd.map(f=>({Ref:ref("F",f.id),Finding:f.title,Entity:entName(f.ent),Severity:f.sev,Owner:f.owner,Raised:f.raised,Due:f.due,Status:f.status,"Age (days)":age(f),Overdue:over(f)?"Yes":"No",Recommendation:f.rec})));
+ XLSX.writeFile(wb,"Auditline-"+iso(TODAY)+".xlsx")}
+
+function pdf(){const h=document.documentElement,old=h.dataset.theme,sf={...filt},sh=hm;h.dataset.theme="light";Object.assign(filt,{sev:"All",q:"",hide:false});hm="";
+ $("#main").innerHTML=`<h1 class="rt">Internal audit report</h1><p class="rs">Generated ${fmt(TODAY)}</p>`+["dashboard","risk","universe","plan","findings"].map(k=>`<section class="pb">${V[k][1]()}</section>`).join("");
+ addEventListener("afterprint",()=>{old?h.dataset.theme=old:delete h.dataset.theme;Object.assign(filt,sf);hm=sh;render()},{once:true});
+ setTimeout(()=>print(),150)}
+
+function render(){const h=location.hash.slice(1);view=V[h]?h:"dashboard";
+ const open=S.fnd.filter(f=>f.status!="Closed").length,n={universe:S.ent.length,plan:S.plan.length,findings:open};
+ $("#nav").innerHTML=Object.keys(V).map(k=>`<a href="#${k}" class="${k==view?"on":""}">${V[k][0]}${n[k]!=null?`<small>${n[k]}</small>`:""}</a>`).join("");
+ $("#main").innerHTML=V[view][1]();
+ const q=$("#q");if(q)q.oninput=()=>{filt.q=q.value;const p=q.selectionStart;render();const x=$("#q");x.focus();x.setSelectionRange(p,p)}}
+
+document.addEventListener("click",ev=>{const t=ev.target.closest("[data-new],[data-ed],[data-adv],[data-sev],[data-hm],[data-act],#hide");if(!t)return;const a=t.dataset;
+ if(a.adv){const f=S.fnd.find(x=>x.id==a.adv);f.status=FST[FST.indexOf(f.status)+1];save();render()}
+ else if(a.new)dlg(a.new);
+ else if(a.ed){const[k,i]=a.ed.split(":");dlg(k,i)}
+ else if(a.sev){filt.sev=a.sev;render()}
+ else if(a.hm){hm=hm==a.hm?"":a.hm;render()}
+ else if(a.act)({xl,pdf,gen})[a.act]();
+ else if(t.id=="hide"){filt.hide=!filt.hide;render()}});
+document.addEventListener("keydown",ev=>{if(ev.key=="Enter"&&ev.target.matches("tr.click,.tk"))ev.target.click()});
+$("#reset").onclick=()=>{if(confirm("Replace everything with the sample data?")){S=seed();save();render();toast("Sample data restored")}};
+addEventListener("hashchange",render);render();
 })();
 </script>
 </body>
