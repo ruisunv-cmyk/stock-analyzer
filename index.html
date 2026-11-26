@@ -2,18 +2,29 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Auditline – Internal audit management</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Auditline — Internal Audit Manager</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@600;700&family=Figtree:wght@400;500;600&display=swap" rel="stylesheet">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 <style>
-:root{color-scheme:light;box-sizing:border-box;--bg:#edf1f4;--surf:#fff;--ink:#14202b;--mute:#5c6b78;--line:#dbe2e8;--brand:#0f5c63;--soft:#d9eded;--on:#fff;--crit:#b3261e;--high:#d9731a;--med:#b8920f;--low:#2f8a63;--shadow:0 1px 2px rgba(20,32,43,.06),0 6px 20px -8px rgba(20,32,43,.12)}
-@media(prefers-color-scheme:dark){:root:not([data-theme="light"]){color-scheme:dark;--bg:#0d1418;--surf:#151f25;--ink:#e6edf1;--mute:#93a3ae;--line:#26343d;--brand:#4fb3ba;--soft:#173a3e;--on:#071418;--crit:#ff7b72;--high:#f0a050;--med:#e3c14d;--low:#5fcf9d;--shadow:0 1px 2px rgba(0,0,0,.4)}}
+:root{
+  color-scheme:light;box-sizing:border-box;
+  --bg:#edf1f4;--surf:#fff;--ink:#14202b;--mute:#5c6b78;--line:#dbe2e8;
+  --brand:#0f5c63;--soft:#d9eded;--on:#fff;
+  --crit:#b3261e;--high:#d9731a;--med:#b8920f;--low:#2f8a63;--ok:#2f8a63;
+  --shadow:0 1px 2px rgba(20,32,43,.06),0 6px 20px -8px rgba(20,32,43,.12)
+}
+@media(prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  color-scheme:dark;--bg:#0d1418;--surf:#151f25;--ink:#e6edf1;--mute:#93a3ae;
+  --line:#26343d;--brand:#4fb3ba;--soft:#173a3e;--on:#071418;
+  --crit:#ff7b72;--high:#f0a050;--med:#e3c14d;--low:#5fcf9d;--ok:#5fcf9d;
+  --shadow:0 1px 2px rgba(0,0,0,.4)
+}}
 *,*::before,*::after{box-sizing:inherit}
 body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.5 Figtree,system-ui,-apple-system,"Segoe UI",sans-serif;-webkit-print-color-adjust:exact;print-color-adjust:exact}
-h1,h2{font-family:"Bricolage Grotesque",Figtree,system-ui,sans-serif;margin:0;letter-spacing:-.01em}
-button,input,select,textarea{font:inherit;color:inherit}button{cursor:pointer}
+h1,h2,h3{font-family:"Bricolage Grotesque",Figtree,system-ui,sans-serif;margin:0;letter-spacing:-.01em}
+button,input,select,textarea{font:inherit;color:inherit}
+button{cursor:pointer}
 :focus-visible{outline:2px solid var(--brand);outline-offset:2px}
 .app{display:grid;grid-template-columns:232px 1fr;min-height:100vh}
 aside{background:var(--surf);border-right:1px solid var(--line);padding:22px 14px;position:sticky;top:0;height:100vh;display:flex;flex-direction:column;gap:6px}
@@ -25,9 +36,9 @@ nav a:hover{background:var(--bg)}nav a.on{background:var(--soft);color:var(--bra
 nav small{background:var(--bg);border-radius:20px;padding:0 8px;font-size:12px}
 .spacer{flex:1}
 .ghost{background:none;border:1px solid var(--line);border-radius:10px;padding:8px 12px;color:var(--mute)}
-main{padding:28px clamp(16px,3vw,40px) 60px;max-width:1240px;width:100%}
+main{padding:28px clamp(16px,3vw,40px) 60px;max-width:1320px;width:100%}
 .head{display:flex;justify-content:space-between;align-items:flex-end;gap:16px;flex-wrap:wrap;margin-bottom:22px}
-.head h1{font-size:28px}.head p{margin:2px 0 0;color:var(--mute);max-width:560px}
+.head h1{font-size:28px}.head p{margin:2px 0 0;color:var(--mute);max-width:640px}
 .btns{display:flex;gap:8px;flex-wrap:wrap}
 .btn{background:var(--brand);color:var(--on);border:0;border-radius:10px;padding:9px 15px;font-weight:600}
 .btn:hover{filter:brightness(1.08)}
@@ -40,252 +51,161 @@ main{padding:28px clamp(16px,3vw,40px) 60px;max-width:1240px;width:100%}
 .kpi span,.sub{color:var(--mute);font-size:13px}.sub{display:block}
 .kpi.warn b{color:var(--crit)}
 .grid2{display:grid;grid-template-columns:1.3fr 1fr;gap:14px;margin-top:14px}
-.tl{overflow-x:auto}.tl-in{min-width:640px;position:relative}
-.months{display:grid;grid-template-columns:repeat(12,1fr);font-size:12px;color:var(--mute);border-bottom:1px solid var(--line);padding-bottom:6px;margin-left:160px}
-.row{display:flex;align-items:center;height:34px}
-.row .lbl{width:160px;flex:none;font-size:13px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;padding-right:10px}
-.track{position:relative;flex:1;height:100%;background:repeating-linear-gradient(90deg,transparent 0 calc(8.333% - 1px),var(--line) calc(8.333% - 1px) 8.333%)}
-.bar{position:absolute;top:8px;height:18px;border-radius:9px;background:var(--brand);overflow:hidden;cursor:pointer;border:0;padding:0}
-.bar span{position:absolute;inset:0 auto 0 0;background:rgba(255,255,255,.28)}
-.bar.Planned{background:var(--mute)}.bar.Reporting{background:var(--high)}.bar.Closed{background:var(--low)}
-.today{position:absolute;top:22px;bottom:0;width:2px;background:var(--crit);margin-left:160px}
-.today::before{content:"Today";position:absolute;top:-18px;left:-14px;font-size:11px;color:var(--crit)}
-.legend{display:flex;flex-wrap:wrap;gap:12px;font-size:13px;color:var(--mute);margin-top:12px}.legend.col{flex-direction:column;margin:0}
-.dot{display:inline-block;width:9px;height:9px;border-radius:50%;margin-right:6px}
-.donut{display:flex;align-items:center;gap:18px;flex-wrap:wrap}
-.heat{display:grid;grid-template-columns:34px repeat(5,1fr);gap:5px;align-items:center;font-size:12px;color:var(--mute)}
-.hc{min-height:44px;border-radius:9px;border:2px solid transparent;font:700 17px "Bricolage Grotesque",sans-serif;color:var(--ink)}
-.hc.sel{border-color:var(--ink)}.ax{text-align:center}
-.b{display:flex;align-items:center;gap:10px;margin:9px 0;font-size:13px}
-.b .n{width:150px;flex:none;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.b .t{flex:1;height:10px;background:var(--bg);border-radius:6px;overflow:hidden}.b .t i{display:block;height:100%}
-.stack{display:flex;height:14px;border-radius:8px;overflow:hidden;background:var(--bg)}
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:14px}
 .pill{display:inline-block;padding:2px 10px;border-radius:20px;font-size:12px;font-weight:600;border:1px solid currentColor;white-space:nowrap}
-.Critical{color:var(--crit)}.High{color:var(--high)}.Medium{color:var(--med)}.Low{color:var(--low)}
+.High{color:var(--high)}.Medium{color:var(--med)}.Low{color:var(--low)}
+.Open{color:var(--high)}.InProgress{color:var(--med)}.Closed{color:var(--ok)}
 .over{color:var(--crit);font-weight:600}
 .item{display:flex;justify-content:space-between;gap:10px;padding:10px 0;border-top:1px solid var(--line);align-items:center}.item:first-of-type{border-top:0}
 .tools{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:14px;align-items:center}
 input,select,textarea{background:var(--surf);border:1px solid var(--line);border-radius:10px;padding:9px 12px;width:100%}
-textarea{resize:vertical}.tools input{max-width:260px}
+textarea{resize:vertical}.tools input{max-width:280px}.tools select{max-width:180px}
 .chip{background:var(--surf);border:1px solid var(--line);border-radius:20px;padding:6px 14px;color:var(--mute)}
 .chip.on{background:var(--brand);color:var(--on);border-color:var(--brand)}
 .tbl{overflow-x:auto;padding:0}
-table{border-collapse:collapse;width:100%;min-width:680px}
-th{text-align:left;font-weight:600;font-size:13px;color:var(--mute);padding:12px 16px;border-bottom:1px solid var(--line)}
-td{padding:12px 16px;border-top:1px solid var(--line);vertical-align:middle}
+table{border-collapse:collapse;width:100%;min-width:820px}
+th{text-align:left;font-weight:600;font-size:12.5px;color:var(--mute);padding:12px 14px;border-bottom:1px solid var(--line);white-space:nowrap}
+td{padding:12px 14px;border-top:1px solid var(--line);vertical-align:top;font-size:14px}
 tr.click{cursor:pointer}tr.click:hover td{background:var(--bg)}
-.prog{height:6px;background:var(--bg);border-radius:6px;min-width:90px;overflow:hidden}.prog i{display:block;height:100%;background:var(--brand)}
-.stat{background:var(--bg);border-radius:20px;padding:3px 12px;font-size:13px;white-space:nowrap}
+.stat{background:var(--bg);border-radius:20px;padding:3px 12px;font-size:12px;white-space:nowrap}
 .empty{padding:40px;text-align:center;color:var(--mute)}
 .board{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
 .tk{border:1px solid var(--line);border-radius:12px;padding:12px;margin-bottom:10px;background:var(--surf);cursor:pointer;display:flex;flex-direction:column;gap:6px;align-items:flex-start}
-dialog{border:1px solid var(--line);border-radius:18px;background:var(--surf);color:var(--ink);padding:24px;width:min(520px,94vw);box-shadow:0 30px 80px -20px rgba(0,0,0,.5)}
+dialog{border:1px solid var(--line);border-radius:18px;background:var(--surf);color:var(--ink);padding:24px;width:min(560px,94vw);max-height:90vh;overflow:auto;box-shadow:0 30px 80px -20px rgba(0,0,0,.5)}
 dialog::backdrop{background:rgba(10,18,24,.55)}dialog h2{margin-bottom:14px}
 .f{display:grid;grid-template-columns:1fr 1fr;gap:12px}
 .f label{display:flex;flex-direction:column;gap:4px;font-size:13px;color:var(--mute)}.f .w{grid-column:1/-1}
-.acts{display:flex;gap:10px;justify-content:flex-end;margin-top:18px}
+.acts{display:flex;gap:10px;justify-content:flex-end;margin-top:18px;position:sticky;bottom:0;background:var(--surf);padding-top:12px}
 .toast{position:fixed;left:50%;bottom:20px;transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:10px 18px;border-radius:12px;font-size:14px;opacity:0;pointer-events:none;transition:opacity .2s}
 .toast.show{opacity:1}
-.rt{font-size:30px}.rs{color:var(--mute);margin:2px 0 24px}
+.b{display:flex;align-items:center;gap:10px;margin:9px 0;font-size:13px}
+.b .n{width:150px;flex:none;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.b .t{flex:1;height:10px;background:var(--bg);border-radius:6px;overflow:hidden}.b .t i{display:block;height:100%}
+.mini{font-size:12px;color:var(--mute)}
+@media(max-width:960px){.grid3{grid-template-columns:1fr}}
 @media(max-width:860px){.app{grid-template-columns:1fr}
 aside{position:sticky;height:auto;flex-direction:row;align-items:center;padding:10px 12px;z-index:5;overflow-x:auto}
 .logo{padding:0 8px 0 0}.logo span,.spacer,aside .ghost{display:none}nav{display:flex;gap:4px;white-space:nowrap}nav small{display:none}
 .grid2,.board{grid-template-columns:1fr}}
-@media print{@page{margin:14mm}aside,.btns,.tools,.toast,.today::before{display:none!important}
-.app{display:block}main{padding:0;max-width:none}body{background:#fff}.card{box-shadow:none;break-inside:avoid}.pb{break-after:page}.tbl{overflow:visible}table{min-width:0}.tl{overflow:visible}.tl-in{min-width:0}}
+@media print{@page{margin:14mm}aside,.btns,.tools,.toast{display:none!important}
+.app{display:block}main{padding:0;max-width:none}body{background:#fff}.card{box-shadow:none;break-inside:avoid}.pb{break-after:page}.tbl{overflow:visible}table{min-width:0}}
 </style>
 </head>
 <body>
 <div class="app">
 <aside>
   <div class="logo"><i></i><span>Auditline</span></div>
-  <nav id="nav"></nav><div class="spacer"></div>
-  <button class="ghost" id="reset">Reset sample data</button>
+  <nav id="nav"></nav>
+  <div class="spacer"></div>
+  <button class="ghost" id="settings">Settings</button>
+  <button class="ghost" id="reset">Reset data</button>
 </aside>
 <main id="main"></main>
 </div>
-<dialog id="dlg"></dialog><div class="toast" id="toast"></div>
+<dialog id="dlg"></dialog>
+<div class="toast" id="toast"></div>
 
 <script>
 (()=>{
-const KEY="auditline-v2",SEV=["Critical","High","Medium","Low"],EST=["Planned","Fieldwork","Reporting","Closed"],FST=["Open","In progress","Closed"];
-const CF={Effective:.5,Partial:.75,Weak:1},CY={Critical:12,High:12,Medium:24,Low:36},SC={Overdue:"Critical","Due soon":"Medium","On cycle":"Low"};
+"use strict";
+
+/* ============================================================
+   Constants matching the company workbook
+   ============================================================ */
+const KEY="auditline-tecan-v1";
+const SEV=["High","Medium","Low"];
+const FST=["Open","In Progress","Closed"];
+const EST=["Planned","In Progress","Report Draft","Report Final","Overdue"];
+const AREAS=[
+  "Delegation of Authority (DoA)",
+  "Financial Reporting",
+  "Inventory Management",
+  "Receivable and payable (incl. IC)",
+  "IT Asset Management & Data Security",
+  "Segregation of Duties (SoD)",
+  "Security & Administrative Oversight",
+  "Human Resources",
+  "Procurement Contracts",
+  "Order Entry & Sales Forecasting",
+  "Pricing",
+  "Credit Management & Customer Payment Terms"
+];
+
+/* ============================================================
+   Seed: transcribed from your workbook
+   Entities (Sheet 2), Engagements (Sheet 3), Findings (Sheet 1)
+   ============================================================ */
 const seed=()=>({
+meta:{
+  orgName:"Tecan Group",
+  currentUser:"Internal Audit",
+  lastUpdated:new Date().toISOString()
+},
 ent:[
-{id:1,name:"Procure-to-pay",dept:"Finance",owner:"CFO office",type:"Process",last:"2026-03-20",ctl:"Partial",L:4,I:4},
-{id:2,name:"IT access management",dept:"IT",owner:"CISO",type:"Technology",last:"2026-05-08",ctl:"Partial",L:4,I:5},
-{id:3,name:"Payroll and benefits",dept:"HR",owner:"HR director",type:"Process",last:"2024-10-15",ctl:"Effective",L:3,I:3},
-{id:4,name:"Data privacy",dept:"Legal",owner:"Data protection officer",type:"Compliance",last:"2025-06-30",ctl:"Weak",L:4,I:4},
-{id:5,name:"Third-party management",dept:"Procurement",owner:"COO",type:"Process",last:"2026-08-28",ctl:"Partial",L:3,I:4},
-{id:6,name:"Treasury",dept:"Finance",owner:"Treasurer",type:"Process",last:"2023-09-01",ctl:"Effective",L:2,I:5},
-{id:7,name:"Business continuity",dept:"Operations",owner:"COO",type:"Operations",last:"",ctl:"Weak",L:3,I:5},
-{id:8,name:"Facilities and safety",dept:"Operations",owner:"Head of facilities",type:"Operations",last:"2025-02-10",ctl:"Effective",L:2,I:2}],
-plan:[
-{id:1,name:"Procure-to-pay controls",ent:1,lead:"Mara Keller",start:"2026-01-12",end:"2026-03-20",hours:240,status:"Closed",progress:100},
-{id:2,name:"Access management review",ent:2,lead:"Jonas Weber",start:"2026-02-16",end:"2026-05-08",hours:320,status:"Closed",progress:100},
-{id:3,name:"Third-party risk",ent:5,lead:"Mara Keller",start:"2026-05-04",end:"2026-08-28",hours:280,status:"Closed",progress:100},
-{id:4,name:"Data privacy compliance",ent:4,lead:"Lea Brunner",start:"2026-07-06",end:"2026-12-11",hours:300,status:"Fieldwork",progress:64},
-{id:5,name:"Payroll review",ent:3,lead:"Jonas Weber",start:"2026-09-14",end:"2027-01-29",hours:220,status:"Fieldwork",progress:35},
-{id:6,name:"Business continuity audit",ent:7,lead:"Lea Brunner",start:"2026-11-30",end:"2027-02-26",hours:260,status:"Planned",progress:5}],
+  {id:1,code:"105",name:"Tecan Schweiz AG",short:"T-CH"},
+  {id:2,code:"110",name:"Tecan Austria GmbH",short:"T-AT"},
+  {id:3,code:"140",name:"Tecan US Inc.",short:"T-US"},
+  {id:4,code:"150",name:"Tecan Deutschland GmbH",short:"T-DE"},
+  {id:5,code:"160",name:"Tecan Japan Ltd.",short:"T-JP"},
+  {id:6,code:"170",name:"Tecan UK Ltd.",short:"T-UK"},
+  {id:7,code:"180",name:"Tecan France S.A.",short:"T-FR"},
+  {id:8,code:"190",name:"Tecan Italia S.r.l",short:"T-IT"},
+  {id:9,code:"200",name:"Tecan Asia (PTe) Ltd.",short:"T-AS"},
+  {id:10,code:"240",name:"Tecan Benelux BV. BE/NL",short:"T-BE"},
+  {id:11,code:"250",name:"Tecan Munich GmbH",short:"T-MU"},
+  {id:12,code:"260",name:"Tecan Landesholding GmbH",short:"T-LH"},
+  {id:13,code:"280",name:"Tecan Trading AG",short:"T-TR"},
+  {id:14,code:"300",name:"Tecan Sales Switzerland",short:"T-SCH"},
+  {id:15,code:"310",name:"Tecan Sales Austria GmbH",short:"T-SAT"},
+  {id:16,code:"320",name:"Tecan Software C.C. GmbH",short:"T-SW"},
+  {id:17,code:"330",name:"Tecan Nordic AB",short:"T-NO"},
+  {id:18,code:"335",name:"Tecan Denmark A/S",short:"T-DK"},
+  {id:19,code:"340",name:"Tecan Sales International",short:"T-SAI"},
+  {id:20,code:"350",name:"Tecan Iberica Instr. S.L.",short:"T-IB"},
+  {id:21,code:"360",name:"Tecan China",short:"T-CN"},
+  {id:22,code:"370",name:"Tecan Australia Pty Ltd",short:"T-AUS"},
+  {id:23,code:"660",name:"IBL International GmbH",short:"T-IBL"},
+  {id:24,code:"700",name:"Tecan SP, Inc.",short:"T-SP"},
+  {id:25,code:"720",name:"Tecan Genomics, Inc.",short:"T-GEN"},
+  {id:26,code:"730",name:"Tecan Precision Machining MH, Inc.",short:"T-PMM"},
+  {id:27,code:"740",name:"Tecan Precision Machining VN Co. Ltd",short:"T-PMV"},
+  {id:28,code:"755",name:"Tecan CDMO Solutions MH, Corp.",short:"T-CDMM"},
+  {id:29,code:"760",name:"Tecan CDMO Solutions PN Sdn. Bhd.",short:"T-CDMP"},
+  {id:30,code:"910",name:"Tecan Corporate Accounts",short:"T-CA"},
+  {id:31,code:"920",name:"Tecan Schweiz PB",short:"T-TR-PB"}
+],
+eng:[
+  {id:1,lastAudited:"2024",entityCode:"0240/0245",entity:"T-BE",start:"2026-02-11",end:"2026-02-13",onSite:"",area1:"Indirect Expenses",area2:"Order Entry & Sales Forecasting",area3:"Instrument Warranty Replacement Process",location:"Brussels",status:"Report Final",draft:"x",cfo:"x",group:"x",audcom:"x",ey:"x",comments:""},
+  {id:2,lastAudited:"2024",entityCode:"0180",entity:"T-FR",start:"2026-03-11",end:"2026-03-13",onSite:"",area1:"Indirect Expenses",area2:"Order Entry & Sales Forecasting",area3:"Instrument Warranty Replacement Process",location:"Lyon",status:"Report Final",draft:"x",cfo:"x",group:"x",audcom:"x",ey:"x",comments:""},
+  {id:3,lastAudited:"2024",entityCode:"0150",entity:"T-DE",start:"2026-03-16",end:"2026-03-18",onSite:"",area1:"Indirect Expenses",area2:"Order Entry & Sales Forecasting",area3:"Instrument Warranty Replacement Process",location:"Crailsheim",status:"Report Final",draft:"x",cfo:"x",group:"x",audcom:"x",ey:"x",comments:""},
+  {id:4,lastAudited:"2025",entityCode:"0105",entity:"T-CH",start:"2026-04-13",end:"2026-04-30",onSite:"",area1:"Indirect Expenses",area2:"Balance Sheet Review",area3:"Credit Management & Customer Payment Terms",location:"CH",status:"Planned",draft:"",cfo:"",group:"",audcom:"",ey:"",comments:""},
+  {id:5,lastAudited:"2025",entityCode:"0280",entity:"T-TR",start:"2026-04-13",end:"2026-04-30",onSite:"",area1:"Indirect Expenses",area2:"Pricing",area3:"Credit Management & Customer Payment Terms",location:"CH",status:"Planned",draft:"",cfo:"",group:"",audcom:"",ey:"",comments:"Trade compliance -> new head"},
+  {id:6,lastAudited:"2025",entityCode:"360",entity:"T-CN",start:"2026-04-13",end:"2026-04-17",onSite:"",area1:"Indirect Expenses",area2:"Order Entry & Sales Forecasting",area3:"Sales Contracts & Margin Review",location:"Shanghai",status:"Report Final",draft:"x",cfo:"x",group:"x",audcom:"x",ey:"x",comments:""},
+  {id:7,lastAudited:"2024",entityCode:"0370",entity:"T-AUS",start:"2026-05-11",end:"2026-05-22",onSite:"",area1:"Indirect Expenses",area2:"Order Entry & Sales Forecasting",area3:"Instrument Warranty Replacement Process",location:"Melbourne",status:"Planned",draft:"x",cfo:"",group:"",audcom:"",ey:"",comments:""},
+  {id:8,lastAudited:"2024",entityCode:"0740",entity:"T-PMV",start:"2026-06-01",end:"2026-06-05",onSite:"",area1:"Indirect Expenses",area2:"Pricing (ILP & 3rd Party)",area3:"Credit Management & Customer Payment Terms",location:"Ho Chi Minh",status:"Planned",draft:"x",cfo:"",group:"",audcom:"",ey:"",comments:""},
+  {id:9,lastAudited:"2024",entityCode:"0330/0335",entity:"T-NO",start:"2026-06-08",end:"2026-06-19",onSite:"",area1:"Indirect Expenses",area2:"Order Entry & Sales Forecasting",area3:"Instrument Warranty Replacement Process",location:"Stockholm",status:"Planned",draft:"x",cfo:"x",group:"x",audcom:"",ey:"",comments:""},
+  {id:10,lastAudited:"2025",entityCode:"0140",entity:"T-US",start:"2026-07-20",end:"2026-07-24",onSite:"",area1:"Indirect Expenses",area2:"Order Entry & Sales Forecasting",area3:"Instrument Warranty Replacement Process",location:"Raleigh",status:"Planned",draft:"x",cfo:"",group:"",audcom:"",ey:"",comments:""},
+  {id:11,lastAudited:"2024",entityCode:"0160",entity:"T-JP",start:"2026-08-10",end:"2026-08-21",onSite:"",area1:"Indirect Expenses",area2:"Order Entry & Sales Forecasting",area3:"Instrument Warranty Replacement Process",location:"Tokyo",status:"Planned",draft:"x",cfo:"",group:"",audcom:"",ey:"",comments:""},
+  {id:12,lastAudited:"2025",entityCode:"0755",entity:"T-CDMM",start:"2026-10-12",end:"2026-10-23",onSite:"",area1:"Indirect Expenses",area2:"Demo & Service Inventory",area3:"Credit Management & Customer Payment Terms",location:"San Jose",status:"Planned",draft:"",cfo:"",group:"",audcom:"",ey:"",comments:""},
+  {id:13,lastAudited:"2025",entityCode:"0760",entity:"T-CDMP",start:"2026-11-09",end:"2026-11-20",onSite:"",area1:"Indirect Expenses",area2:"Inventory",area3:"Procurement Contracts",location:"Penang",status:"Planned",draft:"",cfo:"",group:"",audcom:"",ey:"",comments:""}
+],
 fnd:[
-{id:1,title:"Duplicate vendor records bypass approval limits",ent:1,sev:"High",owner:"Finance operations",raised:"2026-03-24",due:"2026-06-30",status:"Closed",rec:"Block duplicate tax IDs at vendor creation."},
-{id:2,title:"Leavers keep system access beyond 5 days",ent:2,sev:"Critical",owner:"IT service desk",raised:"2026-05-12",due:"2026-07-31",status:"In progress",rec:"Automate the HR to access-system leaver feed."},
-{id:3,title:"No exit clause review for critical suppliers",ent:5,sev:"Medium",owner:"Procurement",raised:"2026-09-02",due:"2026-11-15",status:"Open",rec:""},
-{id:4,title:"Data subject requests exceed the 30-day limit",ent:4,sev:"High",owner:"Privacy office",raised:"2026-10-05",due:"2026-12-18",status:"Open",rec:""},
-{id:5,title:"Privileged accounts lack quarterly recertification",ent:2,sev:"High",owner:"IT security",raised:"2026-05-12",due:"2026-12-05",status:"In progress",rec:""},
-{id:6,title:"Overtime approvals not retained",ent:3,sev:"Low",owner:"HR payroll",raised:"2026-10-20",due:"2027-01-15",status:"Open",rec:""},
-{id:7,title:"Supplier scorecards updated irregularly",ent:5,sev:"Low",owner:"Procurement",raised:"2026-09-02",due:"2026-10-31",status:"Closed",rec:""},
-{id:8,title:"No tested recovery plan for core systems",ent:7,sev:"High",owner:"IT operations",raised:"2026-11-10",due:"2027-02-28",status:"Open",rec:""}]});
-let S;try{S=JSON.parse(localStorage.getItem(KEY))}catch(e){}if(!S||!S.ent)S=seed();
-const save=()=>{try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}};
-const $=(s,r)=>(r||document).querySelector(s);
-const esc=t=>String(t??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
-const d=s=>new Date(s+"T00:00:00"),D=s=>s instanceof Date?s:d(s);
-const TODAY=new Date();TODAY.setHours(0,0,0,0);
-const day=n=>new Date(TODAY.getTime()+n*864e5);
-const iso=x=>x.getFullYear()+"-"+String(x.getMonth()+1).padStart(2,"0")+"-"+String(x.getDate()).padStart(2,"0");
-const fmt=s=>s?D(s).toLocaleDateString("en-GB",{day:"numeric",month:"short",year:"numeric"}):"–";
-const ref=(p,i)=>p+"-"+String(i).padStart(3,"0"),nid=a=>a.reduce((m,x)=>Math.max(m,x.id),0)+1;
-const toast=m=>{const t=$("#toast");t.textContent=m;t.classList.add("show");clearTimeout(toast.t);toast.t=setTimeout(()=>t.classList.remove("show"),2200)};
-const entName=id=>(S.ent.find(e=>e.id==id)||{name:"Unassigned"}).name;
-const colorVar=s=>"var(--"+{Critical:"crit",High:"high",Medium:"med",Low:"low"}[s]+")";
-const T=s=>s>=20?"Critical":s>=12?"High":s>=6?"Medium":"Low";
-const over=f=>f.status!="Closed"&&d(f.due)<TODAY,age=f=>Math.max(0,Math.round((TODAY-d(f.raised))/864e5));
-function calc(e){const inh=e.L*e.I,res=Math.round(inh*CF[e.ctl]),rate=T(res),cyc=CY[rate];let nx=null;
- if(e.last){nx=new Date(d(e.last));nx.setMonth(nx.getMonth()+cyc)}
- return{inh,res,rate,cyc,nx,st:!nx||nx<TODAY?"Overdue":nx<day(90)?"Due soon":"On cycle"}}
-function stats(){const cs=S.ent.map(calc),open=S.fnd.filter(f=>f.status!="Closed");
- return{cs,open,od:S.fnd.filter(over),hi:cs.filter(c=>c.rate=="Critical"||c.rate=="High").length,
- cov:cs.length?Math.round(cs.filter(c=>c.st!="Overdue").length/cs.length*100):0,
- prog:Math.round(S.plan.reduce((a,p)=>a+p.progress,0)/Math.max(1,S.plan.length))}}
-
-let view="dashboard",hm="",filt={sev:"All",q:"",hide:true};
-const V={dashboard:["Dashboard",()=>dash()],universe:["Audit universe",()=>uni()],risk:["Risk assessment",()=>risk()],plan:["Audit plan",()=>plan()],findings:["Findings",()=>fnds()],tracker:["Tracker",()=>track()]};
-
-const head=(t,s,nk,nl,x="")=>`<div class="head"><div><h1>${t}</h1><p>${s}</p></div><div class="btns">${x}<button class="btn sec" data-act="xl">Export Excel</button><button class="btn sec" data-act="pdf">Export PDF</button>${nk?`<button class="btn" data-new="${nk}">${nl}</button>`:""}</div></div>`;
-const kpi=(v,l,w)=>`<div class="card kpi${w?" warn":""}"><b>${v}</b><span>${l}</span></div>`;
-const sub=(a,b)=>`<b>${esc(a)}</b><span class="sub">${esc(b)}</span>`;
-const tr=(ed,c)=>`<tr class="click" data-ed="${ed}" tabindex="0">${c.map(x=>`<td>${x}</td>`).join("")}</tr>`;
-const tbl=(h,r,m)=>`<div class="card tbl"><table><thead><tr>${h.map(x=>`<th>${x}</th>`).join("")}</tr></thead><tbody>${r.join("")||`<tr><td colspan="${h.length}" class="empty">${m}</td></tr>`}</tbody></table></div>`;
-const bars=a=>{const m=Math.max(1,...a.map(x=>x[1]));return a.map(([l,v,c])=>`<div class="b"><span class="n" title="${esc(l)}">${esc(l)}</span><div class="t"><i style="width:${v/m*100}%;background:${c}"></i></div><b>${v}</b></div>`).join("")};
-
-function heat(){let h='<div class="heat">';
- for(let l=5;l>0;l--){h+=`<span>L${l}</span>`;for(let i=1;i<6;i++){const n=S.ent.filter(e=>e.L==l&&e.I==i).length;
-  h+=`<button class="hc${hm==l+"-"+i?" sel":""}" data-hm="${l}-${i}" style="background:color-mix(in srgb,${colorVar(T(l*i))} 38%,var(--surf))" aria-label="Likelihood ${l}, impact ${i}, ${n} entities">${n||""}</button>`}}
- return h+"<span></span>"+[1,2,3,4,5].map(i=>`<span class="ax">I${i}</span>`).join("")+"</div>"}
-
-function tl(){const Y=TODAY.getFullYear(),y0=new Date(Y,0,1),sp=new Date(Y+1,0,1)-y0,pos=s=>Math.max(0,Math.min(100,(d(s)-y0)/sp*100));
- const rows=S.plan.map(p=>{const l=pos(p.start),r=pos(p.end);return`<div class="row"><div class="lbl" title="${esc(p.name)}">${esc(p.name)}</div><div class="track"><button class="bar ${p.status}" data-ed="plan:${p.id}" style="left:${l}%;width:${Math.max(2,r-l)}%" title="${esc(p.status)} · ${p.progress}%" aria-label="${esc(p.name)}, ${p.status}, ${p.progress} percent"><span style="width:${p.progress}%"></span></button></div></div>`}).join("");
- return`<div class="tl"><div class="tl-in"><div class="months">${"JFMAMJJASOND".split("").map(m=>`<span>${m}</span>`).join("")}</div>${rows}<div class="today" style="left:calc((100% - 160px)*${(TODAY-y0)/sp})"></div></div></div>
- <div class="legend"><span><i class="dot" style="background:var(--mute)"></i>Planned</span><span><i class="dot" style="background:var(--brand)"></i>Fieldwork</span><span><i class="dot" style="background:var(--high)"></i>Reporting</span><span><i class="dot" style="background:var(--low)"></i>Closed</span></div>`}
-
-function dash(){const s=stats(),{cs,open,od}=s;
- const cnt=SEV.map(v=>open.filter(f=>f.sev==v).length),tot=cnt.reduce((a,b)=>a+b,0),C=2*Math.PI*42;let off=0;
- const arcs=cnt.map((c,i)=>{if(!c)return"";const len=c/tot*C,r=`<circle r="42" cx="60" cy="60" fill="none" stroke="${colorVar(SEV[i])}" stroke-width="14" stroke-dasharray="${len} ${C-len}" stroke-dashoffset="${-off}" transform="rotate(-90 60 60)"/>`;off+=len;return r}).join("");
- const ag=[0,0,0,0];open.forEach(f=>{const a=age(f);ag[a<=30?0:a<=90?1:a<=180?2:3]++});
- const st=FST.map(x=>S.fnd.filter(f=>f.status==x).length),sc=["var(--high)","var(--brand)","var(--low)"],all=Math.max(1,S.fnd.length);
- const top=cs.map((c,i)=>({c,e:S.ent[i]})).sort((a,b)=>b.c.res-a.c.res).slice(0,5);
- return head("Dashboard","Risk, plan, and findings at a glance.")+
- `<div class="kpis">${kpi(S.ent.length,"Entities in universe")}${kpi(s.hi,"High or critical risk")}${kpi(s.cov+"%","Audit coverage on cycle")}${kpi(s.prog+"%","Plan completion")}${kpi(open.length,"Open findings")}${kpi(od.length,"Overdue actions",od.length)}</div>
- <div class="card"><h2>Audit plan ${TODAY.getFullYear()}</h2>${tl()}</div>
- <div class="grid2"><div class="card"><h2>Risk heat map</h2>${heat()}<span class="sub" style="margin-top:8px">Likelihood by impact, inherent risk. Numbers show entities.</span></div>
- <div class="card"><h2>Open findings by severity</h2><div class="donut"><svg width="130" height="130" viewBox="0 0 120 120" role="img" aria-label="Open findings by severity">${tot?arcs:'<circle r="42" cx="60" cy="60" fill="none" stroke="var(--line)" stroke-width="14"/>'}<text x="60" y="66" text-anchor="middle" font-size="22" font-weight="700" fill="var(--ink)">${tot}</text></svg>
- <div class="legend col">${SEV.map((v,i)=>`<span><i class="dot" style="background:${colorVar(v)}"></i>${v} · ${cnt[i]}</span>`).join("")}</div></div>
- <h2 style="margin-top:20px">Findings by status</h2><div class="stack">${st.map((n,i)=>`<i style="width:${n/all*100}%;background:${sc[i]}"></i>`).join("")}</div>
- <div class="legend">${FST.map((x,i)=>`<span><i class="dot" style="background:${sc[i]}"></i>${x} · ${st[i]}</span>`).join("")}</div></div></div>
- <div class="grid2"><div class="card"><h2>Highest residual risk</h2>${top.map(x=>`<div class="item"><div>${sub(x.e.name,x.e.dept+" · "+x.e.ctl+" controls")}</div><span class="pill ${x.c.rate}">${x.c.rate} · ${x.c.res}</span></div>`).join("")||'<div class="empty">No entities yet.</div>'}</div>
- <div class="card"><h2>Age of open findings</h2>${bars([["0 to 30 days",ag[0],"var(--low)"],["31 to 90 days",ag[1],"var(--med)"],["91 to 180 days",ag[2],"var(--high)"],["Over 180 days",ag[3],"var(--crit)"]])}</div></div>`}
-
-function uni(){return head("Audit universe","Every auditable entity, when it was last covered, and when it is due next.","ent","New entity")+
- tbl(["Ref","Entity","Owner","Last audit","Next due","Coverage","Findings"],S.ent.map(e=>{const c=calc(e),n=S.fnd.filter(f=>f.ent==e.id&&f.status!="Closed").length;
- return tr("ent:"+e.id,[ref("E",e.id),sub(e.name,e.dept+" · "+e.type),esc(e.owner),fmt(e.last),c.nx?fmt(c.nx):"Never audited",`<span class="pill ${SC[c.st]}">${c.st}</span>`,n+" open"])}),"No entities yet. Add your first one.")}
-
-function risk(){const cs=S.ent.map(e=>({e,c:calc(e)})).sort((a,b)=>b.c.res-a.c.res),[l,i]=hm?hm.split("-").map(Number):[0,0];
- const sel=hm?(cs.filter(x=>x.e.L==l&&x.e.I==i).map(x=>esc(x.e.name)).join(", ")||"No entities in this cell"):"";
- return head("Risk assessment","Score likelihood and impact from 1 to 5. Control strength lowers it to a residual score, which sets the audit cycle.","ent","New entity")+
- `<div class="grid2" style="margin:0 0 14px"><div class="card"><h2>Risk heat map</h2>${heat()}<span class="sub" style="margin-top:8px">${hm?`L${l} × I${i}: ${sel}`:"Select a cell to see its entities."}</span></div>
- <div class="card"><h2>Residual risk by entity</h2>${bars(cs.map(x=>[x.e.name,x.c.res,colorVar(x.c.rate)]))}</div></div>`+
- tbl(["Entity","Likelihood","Impact","Inherent","Controls","Residual","Rating","Cycle"],cs.map(({e,c})=>tr("ent:"+e.id,[sub(e.name,e.dept),e.L,e.I,c.inh,e.ctl,c.res,`<span class="pill ${c.rate}">${c.rate}</span>`,c.cyc+" months"])),"No entities yet.")}
-
-function plan(){return head("Audit plan","Engagements across the year. Build a draft from risk, then adjust it.","plan","New engagement",`<button class="btn sec" data-act="gen">Build risk-based plan</button>`)+
- `<div class="card" style="margin-bottom:14px"><h2>Plan ${TODAY.getFullYear()}</h2>${tl()}</div>`+
- tbl(["Engagement","Lead","Window","Budget","Status","Progress"],S.plan.map(p=>tr("plan:"+p.id,[sub(p.name,entName(p.ent)),esc(p.lead)||"Unassigned",fmt(p.start)+" – "+fmt(p.end),p.hours+" h",`<span class="stat">${p.status}</span>`,`<div class="prog"><i style="width:${p.progress}%"></i></div><span class="sub">${p.progress}%</span>`])),"No engagements yet.")}
-
-function fnds(){const q=filt.q.toLowerCase();
- const l=S.fnd.filter(f=>(filt.sev=="All"||f.sev==filt.sev)&&!(filt.hide&&f.status=="Closed")&&(!q||(f.title+f.owner+entName(f.ent)).toLowerCase().includes(q))).sort((a,b)=>SEV.indexOf(a.sev)-SEV.indexOf(b.sev)||d(a.due)-d(b.due));
- return head("Findings","The register of every issue, with its owner, due date, and status.","fnd","New finding")+
- `<div class="tools"><input id="q" type="search" placeholder="Search findings, owners, entities" value="${esc(filt.q)}" aria-label="Search findings">${["All",...SEV].map(s=>`<button class="chip${filt.sev==s?" on":""}" data-sev="${s}">${s}</button>`).join("")}<button class="chip${filt.hide?" on":""}" id="hide">Hide closed</button></div>`+
- tbl(["Ref","Finding","Severity","Owner","Due","Status"],l.map(f=>tr("fnd:"+f.id,[ref("F",f.id),sub(f.title,entName(f.ent)),`<span class="pill ${f.sev}">${f.sev}</span>`,esc(f.owner),`<span class="${over(f)?"over":""}">${fmt(f.due)}</span>`,`<span class="stat">${f.status}</span>`])),"No findings match. Clear the filters or add a new finding.")}
-
-function track(){const s=stats(),o=s.open,due30=o.filter(f=>!over(f)&&d(f.due)<=day(30)).length,avg=o.length?Math.round(o.reduce((a,f)=>a+age(f),0)/o.length):0,cl=S.fnd.length?Math.round((S.fnd.length-o.length)/S.fnd.length*100):0;
- return head("Findings tracker","Move each action from open to closed and watch what is slipping.","fnd","New finding")+
- `<div class="kpis">${kpi(s.od.length,"Overdue",s.od.length)}${kpi(due30,"Due in 30 days")}${kpi(avg+" d","Average age of open")}${kpi(cl+"%","Closure rate")}</div>
- <div class="board">${FST.map((st,i)=>{const l=S.fnd.filter(f=>f.status==st).sort((a,b)=>d(a.due)-d(b.due));
- return`<div><h2 style="margin-bottom:12px">${st} <span class="sub" style="display:inline">${l.length}</span></h2>${l.map(f=>`<div class="tk" data-ed="fnd:${f.id}" tabindex="0"><span class="pill ${f.sev}">${f.sev}</span><b>${esc(f.title)}</b><span class="sub">${esc(entName(f.ent))} · ${esc(f.owner)}</span><span class="sub ${over(f)?"over":""}">${over(f)?"Overdue, due ":"Due "}${fmt(f.due)} · ${age(f)} days old</span>${i<2?`<button class="btn sec" data-adv="${f.id}">Move to ${FST[i+1]}</button>`:""}</div>`).join("")||'<div class="empty">Nothing here.</div>'}</div>`}).join("")}</div>`}
-
-const ENTS=()=>S.ent.map(e=>[e.id,e.name]);
-const F={
- ent:{t:"entity",k:"ent",f:[["name","Entity name","text",,1],["dept","Department","text"],["owner","Process owner","text"],["type","Type","sel",["Process","Technology","Compliance","Operations","Strategic"]],["last","Last audit (optional)","date"],["ctl","Control environment","sel",["Effective","Partial","Weak"]],["L","Likelihood (1 to 5)","sel",[1,2,3,4,5]],["I","Impact (1 to 5)","sel",[1,2,3,4,5]]]},
- plan:{t:"engagement",k:"plan",f:[["name","Engagement","text",,1],["ent","Audit entity","sel",ENTS,1],["lead","Audit lead","text"],["hours","Budget hours","num"],["start","Start","date"],["end","End","date"],["status","Status","sel",EST],["progress","Progress %","num"]]},
- fnd:{t:"finding",k:"fnd",f:[["title","Finding","text",,1],["ent","Audit entity","sel",ENTS,1],["sev","Severity","sel",SEV],["status","Status","sel",FST],["owner","Action owner","text"],["raised","Raised","date"],["due","Due date","date"],["rec","Recommendation and management response","area",,1]]}};
-const DEF={ent:()=>({name:"",dept:"",owner:"",type:"Process",last:"",ctl:"Partial",L:3,I:3}),
- plan:()=>({name:"",ent:S.ent[0]?.id,lead:"",hours:200,status:"Planned",progress:0,start:iso(TODAY),end:iso(day(90))}),
- fnd:()=>({title:"",ent:S.ent[0]?.id,sev:"Medium",status:"Open",owner:"",raised:iso(TODAY),due:iso(day(30)),rec:""})};
-const opt=o=>typeof o=="function"?o():o;
-
-function dlg(kind,id){const Dg=$("#dlg"),m=F[kind],list=S[m.k],cur=list.find(x=>x.id==id),isNew=!cur,it=cur||DEF[kind]();
- Dg.innerHTML=`<h2>${isNew?"New":"Edit"} ${m.t}</h2><div class="f">${m.f.map(([k,l,t,o,w])=>{const v=it[k]??"";let c;
-  if(t=="sel")c=`<select data-k="${k}">${opt(o).map(x=>{const[a,b]=Array.isArray(x)?x:[x,x];return`<option value="${esc(a)}"${a==v?" selected":""}>${esc(b)}</option>`}).join("")}</select>`;
-  else if(t=="area")c=`<textarea data-k="${k}" rows="3">${esc(v)}</textarea>`;
-  else c=`<input data-k="${k}" type="${t=="num"?"number":t}" value="${esc(v)}">`;
-  return`<label class="${w?"w":""}">${l}${c}</label>`}).join("")}</div>
- <div class="acts">${isNew?"":'<button class="btn danger" id="del">Delete</button>'}<button class="btn sec" id="x">Cancel</button><button class="btn" id="ok">Save</button></div>`;
- $("#x",Dg).onclick=()=>Dg.close();
- const del=$("#del",Dg);if(del)del.onclick=()=>{list.splice(list.indexOf(cur),1);save();Dg.close();render();toast("Deleted")};
- $("#ok",Dg).onclick=()=>{const v={};
-  m.f.forEach(([k,,t,o])=>{let x=$(`[data-k=${k}]`,Dg).value;const a=t=="sel"?opt(o):null,o0=a?(Array.isArray(a[0])?a[0][0]:a[0]):null;if(t=="num"||typeof o0=="number")x=+x;v[k]=x});
-  if(!String(v[m.f[0][0]]).trim()){toast("Add a name first");return}
-  if(v.end&&v.end<v.start){toast("End date must be after start");return}
-  if("progress" in v)v.progress=Math.max(0,Math.min(100,v.progress||0));
-  Object.assign(it,v);if(isNew){it.id=nid(list);list.push(it)}save();Dg.close();render();toast("Saved")};
- Dg.showModal();$("[data-k]",Dg).focus()}
-
-function gen(){let n=0;const end=new Date(TODAY.getFullYear()+1,11,31);
- S.ent.map(e=>({e,c:calc(e)})).filter(x=>(!x.c.nx||x.c.nx<=end)&&!S.plan.some(p=>p.ent==x.e.id&&p.status!="Closed")).sort((a,b)=>b.c.res-a.c.res).forEach(x=>{
-  const s=new Date(Math.max(TODAY,x.c.nx||TODAY));S.plan.push({id:nid(S.plan),name:x.e.name+" audit",ent:x.e.id,lead:"",start:iso(s),end:iso(new Date(s.getTime()+75*864e5)),hours:x.c.res>=12?280:160,status:"Planned",progress:0});n++});
- save();render();toast(n?n+" engagements added, highest residual risk first":"The plan already covers every entity that is due")}
-
-function xl(){if(!window.XLSX){toast("The Excel library did not load. Check your connection.");return}
- const wb=XLSX.utils.book_new(),add=(n,r)=>XLSX.utils.book_append_sheet(wb,XLSX.utils.json_to_sheet(r),n),s=stats();
- add("Summary",[["Entities in universe",S.ent.length],["High or critical risk entities",s.hi],["Audit coverage on cycle %",s.cov],["Plan completion %",s.prog],["Open findings",s.open.length],["Overdue actions",s.od.length],["Report date",iso(TODAY)]].map(([Metric,Value])=>({Metric,Value})));
- add("Audit universe",S.ent.map(e=>{const c=calc(e);return{Ref:ref("E",e.id),Entity:e.name,Department:e.dept,Owner:e.owner,Type:e.type,"Last audit":e.last,Likelihood:e.L,Impact:e.I,"Inherent score":c.inh,Controls:e.ctl,"Residual score":c.res,"Risk rating":c.rate,"Cycle (months)":c.cyc,"Next audit due":c.nx?iso(c.nx):"Never audited",Coverage:c.st}}));
- add("Audit plan",S.plan.map(p=>({Engagement:p.name,Entity:entName(p.ent),Lead:p.lead,Start:p.start,End:p.end,"Budget hours":p.hours,Status:p.status,"Progress %":p.progress})));
- add("Findings",S.fnd.map(f=>({Ref:ref("F",f.id),Finding:f.title,Entity:entName(f.ent),Severity:f.sev,Owner:f.owner,Raised:f.raised,Due:f.due,Status:f.status,"Age (days)":age(f),Overdue:over(f)?"Yes":"No",Recommendation:f.rec})));
- XLSX.writeFile(wb,"Auditline-"+iso(TODAY)+".xlsx")}
-
-function pdf(){const h=document.documentElement,old=h.dataset.theme,sf={...filt},sh=hm;h.dataset.theme="light";Object.assign(filt,{sev:"All",q:"",hide:false});hm="";
- $("#main").innerHTML=`<h1 class="rt">Internal audit report</h1><p class="rs">Generated ${fmt(TODAY)}</p>`+["dashboard","risk","universe","plan","findings"].map(k=>`<section class="pb">${V[k][1]()}</section>`).join("");
- addEventListener("afterprint",()=>{old?h.dataset.theme=old:delete h.dataset.theme;Object.assign(filt,sf);hm=sh;render()},{once:true});
- setTimeout(()=>print(),150)}
-
-function render(){const h=location.hash.slice(1);view=V[h]?h:"dashboard";
- const open=S.fnd.filter(f=>f.status!="Closed").length,n={universe:S.ent.length,plan:S.plan.length,findings:open};
- $("#nav").innerHTML=Object.keys(V).map(k=>`<a href="#${k}" class="${k==view?"on":""}">${V[k][0]}${n[k]!=null?`<small>${n[k]}</small>`:""}</a>`).join("");
- $("#main").innerHTML=V[view][1]();
- const q=$("#q");if(q)q.oninput=()=>{filt.q=q.value;const p=q.selectionStart;render();const x=$("#q");x.focus();x.setSelectionRange(p,p)}}
-
-document.addEventListener("click",ev=>{const t=ev.target.closest("[data-new],[data-ed],[data-adv],[data-sev],[data-hm],[data-act],#hide");if(!t)return;const a=t.dataset;
- if(a.adv){const f=S.fnd.find(x=>x.id==a.adv);f.status=FST[FST.indexOf(f.status)+1];save();render()}
- else if(a.new)dlg(a.new);
- else if(a.ed){const[k,i]=a.ed.split(":");dlg(k,i)}
- else if(a.sev){filt.sev=a.sev;render()}
- else if(a.hm){hm=hm==a.hm?"":a.hm;render()}
- else if(a.act)({xl,pdf,gen})[a.act]();
- else if(t.id=="hide"){filt.hide=!filt.hide;render()}});
-document.addEventListener("keydown",ev=>{if(ev.key=="Enter"&&ev.target.matches("tr.click,.tk"))ev.target.click()});
-$("#reset").onclick=()=>{if(confirm("Replace everything with the sample data?")){S=seed();save();render();toast("Sample data restored")}};
-addEventListener("hashchange",render);render();
-})();
-</script>
-</body>
-</html>
+  {id:1,year:2025,entity:"T-UK",area:"Segregation of Duties (SoD)",name:"Segregation of Duties – Purchase Order & Goods Receipt",finding:"During 2024, several occurrences were identified where the same user created a purchase order and performed the goods receipt for the same order.",assessment:"",severity:"Medium",action:"",auditee:"Paul Noble, Sr. UK Service and Support Manager & Commercial Service Manager, T-UK",due:"2025-02-28",status:"Closed"},
+  {id:2,year:2025,entity:"T-UK",area:"Financial Reporting",name:"Inventory Count Difference",finding:"The inventory count difference from November 2024 was approved as a net figure, resulting in the missing MB level approval required by the DoA. The DoA requires inventory count differences to be considered as gross difference values and the result of GBP 49k exceeds the CHF 50k limit for MB approval.",assessment:"",severity:"Low",action:"",auditee:"Agnes Grau, Head of Finance & Controlling Europe, T-TR",due:"2025-03-21",status:"Closed"},
+  {id:3,year:2025,entity:"T-UK",area:"Financial Reporting",name:"Holiday Accrual",finding:"The ending balance for holiday accrual in December 2024 was missing the reversal of the balance from 2023. This causes an over-accrual compared to payroll records of GBP 23k.",assessment:"",severity:"Medium",action:"",auditee:"Kristina Gurung, Legal Entity Controller, T-UK",due:"2025-03-31",status:"Closed"},
+  {id:4,year:2025,entity:"T-UK",area:"Financial Reporting",name:"Operations SlowMover Approval",finding:"T-UK has a process in place for the quarterly approval of Operations as confirmation of their review of the SlowMover report. The ICS requires this control frequency to be performed monthly.",assessment:"",severity:"Low",action:"",auditee:"Kristina Gurung, Legal Entity Controller, T-UK",due:"2025-03-31",status:"Closed"},
+  {id:5,year:2025,entity:"T-UK",area:"Financial Reporting",name:"Incorrect VAT postings & Reconciliation",finding:"Erroneous VAT postings from August 2024 are causing unexplainable balance sheet entries that remain in the ending balance in December 2024. The errors are caused by the execution of month-end VAT processes twice. These additional postings result in a gross total balance sheet misstatement of GBP 337k. This entry has no income statement impact.",assessment:"",severity:"High",action:"",auditee:"Kristina Gurung, Legal Entity Controller, T-UK",due:"2025-03-31",status:"Closed"},
+  {id:6,year:2025,entity:"T-UK",area:"Financial Reporting",name:"Bonus Accrual",finding:"The ending balance for bonus accrual in December 2024 was a debit balance of GBP 37k. The error was caused by the final adjustment posting being posted twice.",assessment:"",severity:"Medium",action:"",auditee:"Kristina Gurung, Legal Entity Controller, T-UK",due:"2025-03-31",status:"Closed"},
+  {id:7,year:2025,entity:"T-UK",area:"Financial Reporting",name:"Three-Way Match",finding:"The required 3-way match control, T-104, was not performed at any point during the period of review.",assessment:"",severity:"Low",action:"",auditee:"Kristina Gurung, Legal Entity Controller, T-UK",due:"2025-03-31",status:"Closed"},
+  {id:8,year:2025,entity:"T-UK",area:"Segregation of Duties (SoD)",name:"Update Bank Authorizations",finding:"The audit found that the local bank signature card still contained three employees who had left the company several years ago. The local team was aware of the issue and was already actively working with the bank to resolve it when the audit started.",assessment:"",severity:"High",action:"",auditee:"Kristina Gurung, Legal Entity Controller, T-UK",due:"2025-03-31",status:"Closed"},
+  {id:9,year:2025,entity:"T-UK",area:"Financial Reporting",name:"External Service Costs",finding:"Two invoices booked as external service costs were identified as material purchases for inventory. The invoices clearly referred to a purchase order that was missing invoice posting in SAP. The products were purchased for integration in a complex system sale to a customer.",assessment:"",severity:"Low",action:"",auditee:"Kristina Gurung, Legal Entity Controller, T-UK",due:"2025-03-31",status:"Closed"},
+  {id:10,year:2025,entity:"T-CH",area:"Financial Reporting",name:"Financial Reporting – Goods received not invoiced",finding:"The goods received not invoiced account contains over 4000 uncleared positions from the years 2014 to 2023. At the time of the audit, these positions total an uncleared balance of nearly CHF 1m. This is a repeat finding from the past several internal audits. The quarterly control performed for this account has not lead to any action.",assessment:"",severity:"High",action:"",auditee:"Patrick Bieri, Head Accounting Switzerland, T-TR",due:"2025-06-30",status:"Closed"},
+  {id:11,year:2025,entity:"T-CH",area:"Segregation of Duties (SoD)",name:"Segregation of Duties – Purchase Order & Goods Receipt",finding:"During 2024, several occurrences were identified where the same user created a purchase order and performed the goods receipt for the same order.",assessment:"",severity:"Medium",action:"",auditee:"Frank Flammer, Head Supply Management, T-CH",due:"2025-04-03",status:"Closed"},
+  {id:12,year:2025,entity:"T-CH",area:"Security & Administrative Oversight",name:"Security and Administrative Oversight – Administration Access Rights",finding:"The roles assigned to several employees grant broad access to sensitive financial and operational processes, including accounts payable/receivable, general ledger, procurement, inventory management, and asset maintenance. Additionally, several roles related to Segregation of Duties (SoD), such as automatic payments, credit management, and transaction reversals, could create potential conflicts of interest. At the time of the audit it's not clearly defined who should perform the required quarterly internal control for access rights.",assessment:"",severity:"High",action:"",auditee:"Julien Hug, Head Finance & Controlling Global Operations, T-TR",due:"2025-09-30",status:"Closed"},
+  {id:13,year:2025,entity:"T-TR",area:"Delegation of Authority (DoA)",name:"Delegation of Authority – End-of-Life Scrapping",finding:"The audit discovered CHF 98k of scrapping that was not approved in accordance with the delegation of authority. The scrap originated from an end-of-life decision for the D300 product. The end-of-life decision was also made without the required M9 and M10 milestone meeting and management presentations.",assessment:"",severity:"High",action:"",auditee:"Rafaela Truffer, Associate Product Manager, T-TR",due:"2025-06-30",status:"Closed"},
+  {id:14,year:2025,entity:"T-TR",area:"Segregation of Duties (SoD)",name:"Segregation of Duties – Purchase Order & Goods Receipt",finding:"During 2024, several occurrences were identified where the same user created a purchase order and performed the goods receipt for the same order.",assessment:"",severity:"Medium",action:"",auditee:"Katharina Basan, Head Consumables SCM, T-TR",due:"2025-06-30",status:"Closed"},
+  {id:15,year:2025,entity:"T-TR",area:"Delegation of Authority (DoA)",name:"Delegation of Authority – Quality Scrapping",finding:"The audit discovered CHF 131k of MCA384 scrapping that was not approved in accordance with the delegation of authority. The scrap originated directly from incoming quality inspection that deemed the product unusable and scrapped without approval.",assessment:"",severity:"Medium",action:"",auditee:"Julien Hug, Head Finance & Controlling Global Operations, T-TR",due:"2025-06-30",status:"Closed"},
+  {id:16,year:2025,entity:"T-SAS",area:"Receivable and payable (incl. IC)",name:"Receivables & Payables – Missing Risk Category for Credit Management",finding:"A total of 222 customers, 20 of which had activity in 2024 or 2025, are missing a risk category setting in SAP. The risk category setting is required in order to enable credit management functionality in SAP.",assessment:"",severity:"High",action:"",auditee:"Agnes Grau, Head of Finance & Controlling Europe, T-TR",due:"2025-06-30",status:"Closed"},
+  {id:17,year:2025,entity:"T-SAS",area:"Financial Reporting",name:"Financial Reporting – Goods Under Installation",finding:"The goods under installation account held uncleared positions totaling CHF 358k from 2023 that originated from a goods return. The postings were not matched with the expected customer credit for returns that should follow a goods return.",assessment:"",severity:"Medium",action:"",auditee:"Agnes Grau, Head of Finance & Controlling Europe, T-TR",due:"2025-06-30",status:"Closed"},
+  {id:18,year:2025,entity:"T-SAS",area:"Inventory Management",name:"Inventory Management – DEMO Instruments held as inventory",finding:"Internal audit identified two MagicPrep systems on sales employee consignment inventory. The systems were received in 2022 and 2023 and have been confirmed with customer operations to be in use as demo instruments. The instruments are currently valued at CHF 49k but should have a depreciated value of CHF 11k.",assessment:"",severity:"Medium",action:"",auditee:"Michaela Frueck-Pfanz, Head Operations DACH, T-DE",due:"2025-06-30",status:"Closed"},
+  {id:19,year:2025,entity:"T-SAS",area:"Receivable and payable (incl. IC)",name:"Receivables & Payables – Negative Credit Exposure",finding:"A total of 105 customers were identified to have a negative (net) credit exposure at the time of the audit. This is caused by an SAP error of unknown origin and must be manually corrected on a regular basis by IT resources.",assessment:"",severity:"High",action:"",auditee:"Agnes Grau, Head of Finance & Controlling Europe, T
