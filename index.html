@@ -3,573 +3,747 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Sudoku — A Quiet Puzzle</title>
+<title>The Prince's Heart — A Love Story</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,400;9..144,500;9..144,600&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400;1,500&family=Cormorant+Unicase:wght@400;700&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
 :root{
-  --cream:#f4efe6;
-  --paper:#fbf8f2;
-  --ink:#2a2620;
-  --ink-soft:#5a5348;
-  --muted:#8a8275;
-  --line:#d9d2c2;
-  --line-strong:#2a2620;
-  --accent:#c96f4a;
-  --accent-soft:#f0ddd0;
-  --given:#2a2620;
-  --user:#c96f4a;
-  --pencil:#a09889;
-  --highlight:#ede4d3;
-  --peer:#f6efe0;
-  --same:#e8d9c3;
-  --error:#b83a3a;
-  --error-soft:#f4dada;
-  --success:#5a7d5a;
-  --success-soft:#dde8dd;
+  --cream:#f6efe4;
+  --paper:#faf5ec;
+  --parchment:#ede0cc;
+  --rose:#c9748a;
+  --rose-deep:#a5586f;
+  --rose-soft:#f0d8de;
+  --gold:#c9a961;
+  --gold-soft:#e8dbb5;
+  --ink:#2a1f1a;
+  --ink-soft:#5a4a40;
+  --muted:#8a7a6a;
+  --forest:#4a5a3f;
+  --sky:#a8b5c9;
+  --line:#d4c4a8;
+  --shadow:rgba(42,31,26,.15);
   --ease:cubic-bezier(.16,1,.3,1);
 }
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-html{scroll-behavior:smooth}
+html,body{width:100%;height:100%;overflow:hidden}
 body{
-  background:var(--cream);
+  background:var(--ink);
   color:var(--ink);
   font-family:'Inter',system-ui,sans-serif;
   font-weight:400;
-  line-height:1.6;
-  min-height:100vh;
+  line-height:1.7;
   -webkit-font-smoothing:antialiased;
-  padding:32px 20px 60px;
+  user-select:none;
+}
+
+/* ============ STAGE ============ */
+#stage{
+  position:fixed;
+  inset:0;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  background:radial-gradient(ellipse at 50% 30%,#3a2820 0%,#1a100c 100%);
+  overflow:hidden;
+}
+#stage::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  background-image:
+    radial-gradient(circle at 20% 30%,rgba(201,169,97,.08) 0%,transparent 40%),
+    radial-gradient(circle at 80% 70%,rgba(201,116,138,.06) 0%,transparent 40%);
+  pointer-events:none;
+}
+
+.frame{
+  position:relative;
+  width:min(100vw,1100px);
+  height:min(100vh,720px);
+  background:var(--cream);
+  overflow:hidden;
+  box-shadow:0 40px 120px rgba(0,0,0,.7),0 0 0 1px rgba(201,169,97,.3);
+  display:flex;
+  flex-direction:column;
+}
+
+/* ============ SCENE ============ */
+.scene{
+  position:relative;
+  flex:1;
+  overflow:hidden;
+  background:
+    linear-gradient(180deg,#c9d4dc 0%,#e8dcc8 40%,#d4b895 70%,#8a6a4a 100%);
+  transition:background 2s var(--ease);
+}
+.scene::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  background:
+    radial-gradient(ellipse 60% 40% at 70% 20%,rgba(255,240,200,.6) 0%,transparent 60%),
+    radial-gradient(ellipse 80% 50% at 30% 100%,rgba(74,90,63,.3) 0%,transparent 60%);
+  pointer-events:none;
+}
+.scene::after{
+  content:"";
+  position:absolute;
+  inset:0;
+  background-image:
+    radial-gradient(circle at 15% 25%,rgba(255,255,255,.5) 1px,transparent 1px),
+    radial-gradient(circle at 85% 15%,rgba(255,255,255,.4) 1px,transparent 1px),
+    radial-gradient(circle at 45% 45%,rgba(255,255,255,.3) 1px,transparent 1px);
+  background-size:200px 200px,300px 300px,400px 400px;
+  opacity:.4;
+  animation:shimmer 8s ease-in-out infinite;
+  pointer-events:none;
+}
+@keyframes shimmer{
+  0%,100%{opacity:.3}
+  50%{opacity:.5}
+}
+
+/* Scene variants */
+.scene.garden{
+  background:linear-gradient(180deg,#b8c9b0 0%,#d4ddb8 30%,#a8b888 70%,#6a7a4a 100%);
+}
+.scene.garden::before{
+  background:
+    radial-gradient(ellipse 40% 30% at 25% 30%,rgba(255,220,200,.5) 0%,transparent 60%),
+    radial-gradient(ellipse 30% 40% at 75% 60%,rgba(200,220,180,.4) 0%,transparent 60%);
+}
+
+.scene.ballroom{
+  background:linear-gradient(180deg,#2a1a20 0%,#4a2a30 30%,#8a5a5a 70%,#c9a961 100%);
+}
+.scene.ballroom::before{
+  background:
+    radial-gradient(circle 30% at 50% 20%,rgba(255,220,150,.5) 0%,transparent 60%),
+    radial-gradient(ellipse 80% 30% at 50% 100%,rgba(201,169,97,.4) 0%,transparent 60%);
+}
+
+.scene.library{
+  background:linear-gradient(180deg,#3a2a1a 0%,#5a4030 40%,#8a6a40 80%,#a88860 100%);
+}
+.scene.library::before{
+  background:
+    radial-gradient(ellipse 40% 30% at 30% 30%,rgba(255,200,120,.4) 0%,transparent 60%),
+    radial-gradient(ellipse 30% 40% at 70% 70%,rgba(200,140,80,.3) 0%,transparent 60%);
+}
+
+.scene.balcony{
+  background:linear-gradient(180deg,#0a0a1a 0%,#2a2a4a 30%,#4a4a6a 60%,#6a5a4a 100%);
+}
+.scene.balcony::before{
+  background:
+    radial-gradient(circle 40% at 70% 15%,rgba(255,240,200,.3) 0%,transparent 60%),
+    radial-gradient(circle 20% at 30% 25%,rgba(220,220,255,.4) 0%,transparent 60%),
+    radial-gradient(circle 15% at 80% 30%,rgba(255,220,180,.3) 0%,transparent 60%);
+}
+
+.scene.chapel{
+  background:linear-gradient(180deg,#e8d0b0 0%,#d4b088 40%,#a88860 70%,#6a4a30 100%);
+}
+.scene.chapel::before{
+  background:
+    radial-gradient(ellipse 30% 50% at 50% 30%,rgba(255,240,200,.7) 0%,transparent 60%);
+}
+
+.scene.corridor{
+  background:linear-gradient(180deg,#c8b8a0 0%,#a89880 40%,#7a6a5a 70%,#4a3a30 100%);
+}
+
+/* Sun/moon */
+.celestial{
+  position:absolute;
+  width:120px;
+  height:120px;
+  border-radius:50%;
+  background:radial-gradient(circle,rgba(255,240,200,.9) 0%,rgba(255,220,150,.5) 40%,transparent 70%);
+  filter:blur(4px);
+  animation:celestialPulse 6s ease-in-out infinite;
+  pointer-events:none;
+}
+.celestial.moon{
+  background:radial-gradient(circle,rgba(240,240,255,.9) 0%,rgba(200,200,240,.4) 40%,transparent 70%);
+}
+@keyframes celestialPulse{
+  0%,100%{transform:scale(1);opacity:.8}
+  50%{transform:scale(1.05);opacity:1}
+}
+
+/* Prince silhouette */
+.prince{
+  position:absolute;
+  bottom:0;
+  left:50%;
+  transform:translateX(-50%);
+  width:180px;
+  height:400px;
+  pointer-events:none;
+  opacity:.95;
+  animation:princeBreathe 4s ease-in-out infinite;
+}
+@keyframes princeBreathe{
+  0%,100%{transform:translateX(-50%) scale(1)}
+  50%{transform:translateX(-50%) scale(1.02)}
+}
+.prince svg{width:100%;height:100%;filter:drop-shadow(0 10px 30px rgba(0,0,0,.5))}
+
+/* ============ CHARACTER PORTRAIT ============ */
+.portrait{
+  position:absolute;
+  bottom:0;
+  left:50%;
+  transform:translateX(-50%);
+  width:240px;
+  height:360px;
+  pointer-events:none;
+  transition:all 1s var(--ease);
+  z-index:2;
+}
+.portrait svg{width:100%;height:100%;filter:drop-shadow(0 20px 40px rgba(0,0,0,.4))}
+
+/* ============ UI OVERLAY ============ */
+.ui-layer{
+  position:absolute;
+  inset:0;
+  pointer-events:none;
+  z-index:10;
+}
+
+/* Affection meter */
+.affection{
+  position:absolute;
+  top:20px;
+  right:20px;
+  background:rgba(42,31,26,.85);
+  backdrop-filter:blur(10px);
+  border:1px solid rgba(201,169,97,.4);
+  border-radius:12px;
+  padding:12px 16px;
+  display:flex;
+  flex-direction:column;
+  gap:6px;
+  min-width:180px;
+}
+.affection-label{
+  font-size:9px;
+  letter-spacing:.3em;
+  text-transform:uppercase;
+  color:var(--gold);
+  font-weight:500;
+}
+.affection-bar{
+  height:8px;
+  background:rgba(201,169,97,.15);
+  border-radius:4px;
+  overflow:hidden;
+  position:relative;
+}
+.affection-fill{
+  height:100%;
+  background:linear-gradient(90deg,var(--rose),var(--rose-deep),var(--gold));
+  border-radius:4px;
+  transition:width .8s var(--ease),box-shadow .8s;
+  box-shadow:0 0 10px rgba(201,116,138,.6);
+}
+.affection-value{
+  font-family:'Cormorant Garamond',serif;
+  font-style:italic;
+  font-size:16px;
+  color:var(--paper);
+  text-align:right;
+}
+
+/* Day indicator */
+.day-indicator{
+  position:absolute;
+  top:20px;
+  left:20px;
+  background:rgba(42,31,26,.85);
+  backdrop-filter:blur(10px);
+  border:1px solid rgba(201,169,97,.4);
+  border-radius:12px;
+  padding:12px 20px;
+  color:var(--paper);
+}
+.day-label{
+  font-size:9px;
+  letter-spacing:.3em;
+  text-transform:uppercase;
+  color:var(--gold);
+  font-weight:500;
+  margin-bottom:2px;
+}
+.day-value{
+  font-family:'Cormorant Garamond',serif;
+  font-size:20px;
+  font-weight:500;
+  font-style:italic;
+  color:var(--paper);
+  line-height:1;
+}
+.day-value .of{
+  font-size:13px;
+  color:var(--muted);
+  font-style:normal;
+  margin-left:2px;
+}
+
+/* ============ DIALOGUE BOX ============ */
+.dialogue-wrap{
+  position:absolute;
+  bottom:0;
+  left:0;
+  right:0;
+  padding:0 40px 40px;
+  z-index:20;
+  pointer-events:auto;
+}
+.dialogue{
+  background:linear-gradient(180deg,rgba(250,245,236,.97),rgba(246,239,228,.99));
+  border:1px solid var(--line);
+  border-radius:16px;
+  padding:28px 32px;
+  box-shadow:0 -8px 40px rgba(42,31,26,.3),0 0 0 1px rgba(201,169,97,.2);
+  position:relative;
+  max-width:900px;
+  margin:0 auto;
+  animation:dialogueIn .6s var(--ease);
+}
+@keyframes dialogueIn{
+  from{opacity:0;transform:translateY(20px)}
+  to{opacity:1;transform:translateY(0)}
+}
+.dialogue::before{
+  content:"";
+  position:absolute;
+  inset:6px;
+  border:1px solid rgba(201,169,97,.25);
+  border-radius:12px;
+  pointer-events:none;
+}
+
+.speaker{
+  font-family:'Cormorant Garamond',serif;
+  font-size:22px;
+  font-style:italic;
+  font-weight:500;
+  color:var(--rose-deep);
+  margin-bottom:12px;
+  display:flex;
+  align-items:center;
+  gap:12px;
+}
+.speaker::after{
+  content:"";
+  flex:1;
+  height:1px;
+  background:linear-gradient(90deg,var(--line),transparent);
+}
+
+.text{
+  font-family:'Cormorant Garamond',Georgia,serif;
+  font-size:clamp(18px,2vw,22px);
+  line-height:1.65;
+  color:var(--ink);
+  font-weight:400;
+  min-height:80px;
+  letter-spacing:.005em;
+}
+.text .choice-free{
+  color:var(--rose-deep);
+  font-style:italic;
+}
+
+/* Typewriter cursor */
+.cursor{
+  display:inline-block;
+  width:2px;
+  height:1.1em;
+  background:var(--rose);
+  vertical-align:text-bottom;
+  margin-left:2px;
+  animation:blink .8s ease-in-out infinite;
+}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:0}}
+
+.continue-hint{
+  position:absolute;
+  bottom:16px;
+  right:28px;
+  font-size:10px;
+  letter-spacing:.3em;
+  text-transform:uppercase;
+  color:var(--rose-deep);
+  font-weight:500;
+  opacity:0;
+  transition:opacity .3s;
+}
+.continue-hint.show{opacity:1;animation:bounce 1.4s ease-in-out infinite}
+@keyframes bounce{
+  0%,100%{transform:translateX(0)}
+  50%{transform:translateX(4px)}
+}
+
+/* ============ CHOICES ============ */
+.choices{
+  display:flex;
+  flex-direction:column;
+  gap:10px;
+  margin-top:20px;
+  animation:choicesIn .6s var(--ease) .3s both;
+}
+@keyframes choicesIn{
+  from{opacity:0;transform:translateY(10px)}
+  to{opacity:1;transform:translateY(0)}
+}
+.choice{
+  background:var(--paper);
+  border:1px solid var(--line);
+  border-radius:10px;
+  padding:16px 22px;
+  font-family:'Cormorant Garamond',Georgia,serif;
+  font-size:18px;
+  color:var(--ink);
+  cursor:pointer;
+  transition:all .3s var(--ease);
+  text-align:left;
+  position:relative;
+  padding-left:52px;
+  line-height:1.4;
+}
+.choice::before{
+  content:"❦";
+  position:absolute;
+  left:22px;
+  top:50%;
+  transform:translateY(-50%);
+  color:var(--gold);
+  font-size:14px;
+  transition:all .3s var(--ease);
+}
+.choice:hover{
+  background:var(--rose-soft);
+  border-color:var(--rose);
+  transform:translateX(4px);
+  box-shadow:0 4px 20px rgba(201,116,138,.15);
+}
+.choice:hover::before{
+  color:var(--rose-deep);
+  transform:translateY(-50%) scale(1.2) rotate(15deg);
+}
+.choice small{
+  display:block;
+  font-family:'Inter',sans-serif;
+  font-size:11px;
+  color:var(--muted);
+  font-style:normal;
+  letter-spacing:.05em;
+  margin-top:4px;
+}
+
+/* ============ HEART ANIMATION ============ */
+.floating-heart{
+  position:fixed;
+  color:var(--rose);
+  font-size:24px;
+  pointer-events:none;
+  z-index:100;
+  animation:floatHeart 1.6s ease-out forwards;
+}
+@keyframes floatHeart{
+  0%{opacity:1;transform:translate(0,0) scale(.5)}
+  50%{opacity:1;transform:translate(-10px,-40px) scale(1.2)}
+  100%{opacity:0;transform:translate(-20px,-100px) scale(.8)}
+}
+
+/* ============ SCREEN EFFECTS ============ */
+.fade-overlay{
+  position:absolute;
+  inset:0;
+  background:var(--ink);
+  z-index:50;
+  opacity:0;
+  pointer-events:none;
+  transition:opacity .8s var(--ease);
+}
+.fade-overlay.fade-in{opacity:1;pointer-events:auto}
+
+/* ============ SCREENS ============ */
+.screen{
+  position:absolute;
+  inset:0;
+  z-index:100;
   display:flex;
   flex-direction:column;
   align-items:center;
+  justify-content:center;
+  padding:40px;
+  text-align:center;
+  background:
+    radial-gradient(ellipse at 50% 40%,#2a1f1a 0%,#0f0806 100%);
+  opacity:0;
+  visibility:hidden;
+  transition:opacity .8s var(--ease),visibility .8s;
+}
+.screen.visible{opacity:1;visibility:visible}
+.screen::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  background-image:
+    radial-gradient(circle at 10% 20%,rgba(201,169,97,.15) 1px,transparent 1px),
+    radial-gradient(circle at 90% 80%,rgba(201,116,138,.1) 1px,transparent 1px),
+    radial-gradient(circle at 50% 50%,rgba(255,220,180,.08) 1px,transparent 1px);
+  background-size:300px 300px,400px 400px,500px 500px;
+  animation:shimmer 10s ease-in-out infinite;
 }
 
-/* ============ TYPOGRAPHY ============ */
-h1,h2,h3{font-family:'Fraunces',Georgia,serif;font-weight:400;letter-spacing:-.015em;line-height:1.1}
+.screen-content{
+  position:relative;
+  z-index:1;
+  max-width:560px;
+  width:100%;
+}
+
+.ornament{
+  font-family:'Cormorant Garamond',serif;
+  font-size:24px;
+  color:var(--gold);
+  letter-spacing:.6em;
+  margin-bottom:20px;
+  opacity:.8;
+}
+
 .title{
-  font-size:clamp(40px,7vw,72px);
+  font-family:'Cormorant Garamond',serif;
+  font-size:clamp(48px,8vw,88px);
   font-weight:300;
   font-style:italic;
-  color:var(--ink);
-  text-align:center;
-  margin-bottom:4px;
+  line-height:1;
+  color:var(--cream);
+  margin-bottom:12px;
+  letter-spacing:-.01em;
 }
-.title em{font-style:normal;color:var(--accent);font-weight:500}
+.title em{
+  font-style:normal;
+  color:var(--gold);
+  font-weight:500;
+}
 .subtitle{
+  font-family:'Cormorant Unicase',serif;
+  font-size:12px;
+  letter-spacing:.5em;
+  text-transform:uppercase;
+  color:rgba(201,169,97,.8);
+  margin-bottom:40px;
+}
+.intro-text{
+  font-family:'Cormorant Garamond',Georgia,serif;
+  font-size:18px;
+  line-height:1.7;
+  color:rgba(246,239,228,.85);
+  margin-bottom:48px;
+  font-style:italic;
+  max-width:460px;
+  margin-left:auto;
+  margin-right:auto;
+}
+.intro-text strong{color:var(--gold);font-style:normal;font-weight:500}
+
+.btn{
+  font-family:'Cormorant Garamond',serif;
+  font-size:16px;
+  letter-spacing:.15em;
+  text-transform:uppercase;
+  padding:16px 48px;
+  background:transparent;
+  color:var(--cream);
+  border:1px solid var(--gold);
+  border-radius:100px;
+  cursor:pointer;
+  transition:all .4s var(--ease);
+  position:relative;
+  overflow:hidden;
+  font-weight:500;
+}
+.btn::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  background:linear-gradient(90deg,var(--rose),var(--gold));
+  opacity:0;
+  transition:opacity .4s var(--ease);
+  z-index:-1;
+}
+.btn:hover{
+  color:var(--ink);
+  border-color:var(--rose);
+  box-shadow:0 0 40px rgba(201,116,138,.5);
+  transform:translateY(-2px);
+}
+.btn:hover::before{opacity:1}
+
+.btn.primary{
+  background:var(--gold);
+  color:var(--ink);
+  border-color:var(--gold);
+}
+.btn.primary:hover{
+  background:var(--rose);
+  border-color:var(--rose);
+}
+
+/* Ending screen */
+.ending-emblem{
+  font-size:64px;
+  margin-bottom:24px;
+  animation:heartPulse 2s ease-in-out infinite;
+}
+@keyframes heartPulse{
+  0%,100%{transform:scale(1)}
+  50%{transform:scale(1.1)}
+}
+.ending-title{
+  font-family:'Cormorant Garamond',serif;
+  font-size:clamp(36px,6vw,56px);
+  font-weight:300;
+  font-style:italic;
+  color:var(--cream);
+  margin-bottom:16px;
+  line-height:1.1;
+}
+.ending-title em{color:var(--gold);font-style:normal;font-weight:500}
+.ending-subtitle{
+  font-family:'Cormorant Unicase',serif;
   font-size:11px;
   letter-spacing:.4em;
   text-transform:uppercase;
-  color:var(--muted);
-  text-align:center;
-  margin-bottom:40px;
-  font-weight:500;
+  color:var(--rose);
+  margin-bottom:32px;
 }
-
-/* ============ LAYOUT ============ */
-.app{
-  width:100%;
-  max-width:1000px;
-  display:flex;
-  flex-direction:column;
-  align-items:center;
-  gap:28px;
-}
-
-.top-bar{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  width:100%;
-  max-width:560px;
-  padding:0 4px;
-  flex-wrap:wrap;
-  gap:16px;
-}
-.info-group{
-  display:flex;
-  gap:24px;
-}
-.info{
-  display:flex;
-  flex-direction:column;
-}
-.info-label{
-  font-size:9px;
-  letter-spacing:.3em;
-  text-transform:uppercase;
-  color:var(--muted);
-  font-weight:600;
-  margin-bottom:2px;
-}
-.info-value{
-  font-family:'Fraunces',Georgia,serif;
-  font-size:22px;
-  font-weight:500;
-  color:var(--ink);
-  line-height:1;
-  font-variant-numeric:tabular-nums;
-}
-.info-value.mono{
-  font-family:'Inter',sans-serif;
-  font-weight:500;
-  font-size:20px;
-  letter-spacing:.02em;
-}
-
-.difficulty{
-  display:flex;
-  gap:4px;
-  background:var(--paper);
-  padding:4px;
-  border-radius:100px;
-  border:1px solid var(--line);
-}
-.diff-btn{
-  background:transparent;
-  border:none;
-  padding:8px 16px;
-  font-family:inherit;
-  font-size:11px;
-  letter-spacing:.12em;
-  text-transform:uppercase;
-  font-weight:500;
-  color:var(--muted);
-  border-radius:100px;
-  cursor:pointer;
-  transition:all .3s var(--ease);
-}
-.diff-btn:hover{color:var(--ink)}
-.diff-btn.active{background:var(--ink);color:var(--cream)}
-
-/* ============ BOARD ============ */
-.board-wrap{
-  position:relative;
-  background:var(--paper);
-  border-radius:16px;
-  padding:20px;
-  box-shadow:
-    0 1px 3px rgba(42,38,32,.06),
-    0 8px 30px -10px rgba(42,38,32,.12),
-    0 40px 80px -40px rgba(42,38,32,.15);
-}
-.board{
-  position:relative;
-  width:min(88vw,520px);
-  height:min(88vw,520px);
-  display:grid;
-  grid-template-columns:repeat(9,1fr);
-  grid-template-rows:repeat(9,1fr);
-  border:2px solid var(--line-strong);
-  border-radius:6px;
-  overflow:hidden;
-  background:var(--paper);
-}
-.cell{
-  position:relative;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  font-family:'Fraunces',Georgia,serif;
-  font-size:clamp(20px,4.4vw,30px);
-  font-weight:400;
-  color:var(--user);
-  cursor:pointer;
-  transition:background .2s var(--ease),color .2s var(--ease);
-  border-right:1px solid var(--line);
-  border-bottom:1px solid var(--line);
-  user-select:none;
-  -webkit-tap-highlight-color:transparent;
-  outline:none;
-}
-.cell:nth-child(9n){border-right:none}
-.cell:nth-child(n+73){border-bottom:none}
-.cell:nth-child(3n):not(:nth-child(9n)){border-right:1px solid var(--line-strong)}
-.cell:nth-child(n+19):nth-child(-n+27):not(:nth-child(9n)),
-.cell:nth-child(n+46):nth-child(-n+54):not(:nth-child(9n)),
-.cell:nth-child(n+73):nth-child(-n+81):not(:nth-child(9n)){border-bottom:1px solid var(--line-strong)}
-.cell:nth-child(n+28):nth-child(-n+36),
-.cell:nth-child(n+55):nth-child(-n+63){border-bottom:1px solid var(--line-strong)}
-
-.cell.given{color:var(--given);font-weight:500}
-.cell.user{color:var(--user);font-weight:400}
-.cell.peer{background:var(--peer)}
-.cell.same{background:var(--same)}
-.cell.selected{
-  background:var(--accent-soft);
-  z-index:2;
-  box-shadow:inset 0 0 0 2px var(--accent);
-}
-.cell.error{color:var(--error);background:var(--error-soft)}
-.cell.hint-flash{animation:hintFlash .8s var(--ease)}
-@keyframes hintFlash{
-  0%{background:var(--success-soft);transform:scale(1)}
-  50%{background:var(--success-soft);transform:scale(1.08)}
-  100%{background:transparent;transform:scale(1)}
-}
-.cell.solved-flash{animation:solvedFlash 1s var(--ease)}
-@keyframes solvedFlash{
-  0%{background:var(--success-soft)}
-  100%{background:transparent}
-}
-
-/* pencil marks */
-.cell .pencil{
-  position:absolute;
-  inset:2px;
-  display:grid;
-  grid-template-columns:repeat(3,1fr);
-  grid-template-rows:repeat(3,1fr);
-  font-family:'Inter',sans-serif;
-  font-size:clamp(8px,1.5vw,11px);
-  font-weight:500;
-  color:var(--pencil);
-  pointer-events:none;
-}
-.cell .pencil span{
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  line-height:1;
-}
-
-/* ============ NUMBER PAD ============ */
-.numpad{
-  display:grid;
-  grid-template-columns:repeat(5,1fr);
-  gap:10px;
-  width:100%;
-  max-width:560px;
-  margin-top:8px;
-}
-.num-btn{
-  position:relative;
-  aspect-ratio:1;
-  background:var(--paper);
-  border:1px solid var(--line);
-  border-radius:12px;
-  font-family:'Fraunces',Georgia,serif;
-  font-size:clamp(22px,4vw,28px);
-  font-weight:400;
-  color:var(--ink);
-  cursor:pointer;
-  transition:all .2s var(--ease);
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  padding-bottom:4px;
-}
-.num-btn:hover:not(:disabled){
-  background:var(--highlight);
-  border-color:var(--accent);
-  color:var(--accent);
-  transform:translateY(-2px);
-  box-shadow:0 6px 16px -8px rgba(201,111,74,.4);
-}
-.num-btn:active:not(:disabled){transform:translateY(0)}
-.num-btn:disabled{
-  opacity:.35;
-  cursor:not-allowed;
-}
-.num-btn .remaining{
-  position:absolute;
-  bottom:4px;
-  right:6px;
-  font-family:'Inter',sans-serif;
-  font-size:9px;
-  font-weight:600;
-  color:var(--muted);
-  letter-spacing:0;
-}
-.num-btn.completed .remaining{color:var(--success)}
-.num-btn.erase{
-  font-family:'Inter',sans-serif;
-  font-size:11px;
-  letter-spacing:.15em;
-  text-transform:uppercase;
-  font-weight:600;
-  color:var(--muted);
-}
-
-/* ============ ACTIONS ============ */
-.actions{
-  display:flex;
-  gap:10px;
-  flex-wrap:wrap;
-  justify-content:center;
-  width:100%;
-  max-width:560px;
-}
-.action-btn{
-  flex:1;
-  min-width:100px;
-  background:transparent;
-  border:1px solid var(--line);
-  border-radius:12px;
-  padding:14px 18px;
-  font-family:'Inter',sans-serif;
-  font-size:11px;
-  letter-spacing:.15em;
-  text-transform:uppercase;
-  font-weight:600;
-  color:var(--ink-soft);
-  cursor:pointer;
-  transition:all .25s var(--ease);
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  gap:8px;
-}
-.action-btn:hover{
-  background:var(--paper);
-  border-color:var(--ink-soft);
-  color:var(--ink);
-}
-.action-btn:active{transform:scale(.98)}
-.action-btn.primary{
-  background:var(--ink);
-  color:var(--cream);
-  border-color:var(--ink);
-}
-.action-btn.primary:hover{
-  background:var(--accent);
-  border-color:var(--accent);
-}
-.action-btn.toggled{
-  background:var(--accent-soft);
-  border-color:var(--accent);
-  color:var(--accent);
-}
-.action-btn svg{
-  width:14px;
-  height:14px;
-  stroke:currentColor;
-  fill:none;
-  stroke-width:2;
-  stroke-linecap:round;
-  stroke-linejoin:round;
-}
-.action-btn .count{
-  font-family:'Fraunces',serif;
-  font-weight:500;
-  font-size:14px;
-  color:var(--accent);
-  letter-spacing:0;
-  text-transform:none;
-}
-
-/* ============ FOOTER ============ */
-.footnote{
-  margin-top:24px;
-  font-size:11px;
-  letter-spacing:.2em;
-  text-transform:uppercase;
-  color:var(--muted);
-  text-align:center;
-}
-.footnote kbd{
-  display:inline-block;
-  padding:2px 8px;
-  background:var(--paper);
-  border:1px solid var(--line);
-  border-radius:4px;
-  font-family:'Inter',sans-serif;
-  font-size:10px;
-  font-weight:600;
-  color:var(--ink-soft);
-  letter-spacing:0;
-  text-transform:none;
-  margin:0 2px;
-}
-
-/* ============ WIN OVERLAY ============ */
-.overlay{
-  position:fixed;
-  inset:0;
-  background:rgba(244,239,230,.85);
-  backdrop-filter:blur(8px);
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  padding:24px;
-  z-index:100;
-  opacity:0;
-  visibility:hidden;
-  transition:opacity .5s var(--ease),visibility .5s;
-}
-.overlay.show{opacity:1;visibility:visible}
-.win-card{
-  background:var(--paper);
-  border-radius:20px;
-  padding:48px 40px;
-  text-align:center;
-  max-width:420px;
-  width:100%;
-  box-shadow:
-    0 1px 3px rgba(42,38,32,.06),
-    0 20px 60px -20px rgba(42,38,32,.25);
-  transform:translateY(20px) scale(.95);
-  transition:transform .6s var(--ease);
-}
-.overlay.show .win-card{transform:translateY(0) scale(1)}
-.win-title{
-  font-family:'Fraunces',Georgia,serif;
-  font-size:36px;
-  font-weight:400;
+.ending-text{
+  font-family:'Cormorant Garamond',Georgia,serif;
+  font-size:19px;
+  line-height:1.8;
+  color:rgba(246,239,228,.9);
   font-style:italic;
-  color:var(--ink);
-  margin-bottom:12px;
+  max-width:480px;
+  margin:0 auto 40px;
 }
-.win-title em{color:var(--accent);font-style:normal;font-weight:500}
-.win-subtitle{
-  font-size:13px;
-  color:var(--muted);
-  letter-spacing:.1em;
-  text-transform:uppercase;
-  margin-bottom:32px;
-  font-weight:500;
-}
-.win-stats{
+.ending-stats{
   display:flex;
-  justify-content:center;
   gap:32px;
-  margin-bottom:32px;
+  justify-content:center;
+  margin-bottom:40px;
   padding:20px 0;
-  border-top:1px solid var(--line);
-  border-bottom:1px solid var(--line);
+  border-top:1px solid rgba(201,169,97,.2);
+  border-bottom:1px solid rgba(201,169,97,.2);
 }
-.win-stat{text-align:center}
-.win-stat .lbl{
+.ending-stat{text-align:center}
+.ending-stat .lbl{
+  font-family:'Cormorant Unicase',serif;
   font-size:9px;
   letter-spacing:.3em;
   text-transform:uppercase;
-  color:var(--muted);
-  font-weight:600;
+  color:rgba(201,169,97,.7);
   margin-bottom:4px;
 }
-.win-stat .val{
-  font-family:'Fraunces',Georgia,serif;
-  font-size:26px;
-  font-weight:500;
-  color:var(--ink);
-  font-variant-numeric:tabular-nums;
-}
-
-/* ============ NUMBER CONFETTI ============ */
-.confetti{
-  position:fixed;
-  top:-40px;
-  font-family:'Fraunces',Georgia,serif;
+.ending-stat .val{
+  font-family:'Cormorant Garamond',serif;
   font-size:24px;
-  font-weight:500;
-  color:var(--accent);
-  pointer-events:none;
-  z-index:99;
-  animation:confettiFall 3s linear forwards;
-}
-@keyframes confettiFall{
-  0%{transform:translateY(0) rotate(0deg);opacity:1}
-  100%{transform:translateY(110vh) rotate(720deg);opacity:0}
+  font-style:italic;
+  color:var(--cream);
 }
 
-/* ============ RESPONSIVE ============ */
-@media(max-width:600px){
-  body{padding:20px 12px 40px}
-  .board-wrap{padding:12px;border-radius:12px}
-  .board{width:min(92vw,420px);height:min(92vw,420px)}
-  .num-btn{border-radius:10px}
-  .actions .action-btn{padding:12px 10px;font-size:10px;min-width:calc(50% - 5px)}
-  .footnote{font-size:10px}
-  .top-bar{gap:12px}
-  .difficulty{padding:3px}
-  .diff-btn{padding:6px 12px;font-size:10px}
+/* Responsive */
+@media(max-width:700px){
+  .dialogue-wrap{padding:0 16px 16px}
+  .dialogue{padding:20px 22px;border-radius:12px}
+  .speaker{font-size:18px}
+  .text{font-size:17px;min-height:60px}
+  .choice{font-size:16px;padding:14px 18px 14px 44px}
+  .choice::before{left:16px}
+  .affection{top:12px;right:12px;padding:10px 12px;min-width:140px}
+  .day-indicator{top:12px;left:12px;padding:10px 14px}
+  .day-value{font-size:16px}
+  .portrait{width:160px;height:240px}
+  .scene{min-height:260px}
+  .screen{padding:24px}
 }
 </style>
 </head>
 <body>
 
-<header>
-  <h1 class="title">Sudoku</h1>
-  <p class="subtitle">A quiet puzzle</p>
-</header>
+<div id="stage">
+  <div class="frame">
+    <div class="scene" id="scene">
+      <div class="celestial" id="celestial" style="top:40px;right:80px;"></div>
+      <div class="portrait" id="portrait"></div>
+    </div>
 
-<main class="app">
-
-  <div class="top-bar">
-    <div class="info-group">
-      <div class="info">
-        <span class="info-label">Time</span>
-        <span class="info-value mono" id="timer">00:00</span>
+    <div class="ui-layer">
+      <div class="day-indicator" id="dayIndicator" style="display:none">
+        <div class="day-label">Day</div>
+        <div class="day-value"><span id="dayNum">1</span><span class="of">/ 7</span></div>
       </div>
-      <div class="info">
-        <span class="info-label">Mistakes</span>
-        <span class="info-value" id="mistakes">0</span>
+      <div class="affection" id="affection" style="display:none">
+        <div class="affection-label">Affection</div>
+        <div class="affection-bar">
+          <div class="affection-fill" id="affectionFill" style="width:0%"></div>
+        </div>
+        <div class="affection-value"><span id="affectionValue">0</span> / 100</div>
       </div>
     </div>
-    <div class="difficulty" id="difficulty">
-      <button class="diff-btn" data-diff="easy">Easy</button>
-      <button class="diff-btn active" data-diff="medium">Medium</button>
-      <button class="diff-btn" data-diff="hard">Hard</button>
-      <button class="diff-btn" data-diff="expert">Expert</button>
-    </div>
-  </div>
 
-  <div class="board-wrap">
-    <div class="board" id="board"></div>
-  </div>
-
-  <div class="numpad" id="numpad"></div>
-
-  <div class="actions">
-    <button class="action-btn" id="eraseBtn">
-      <svg viewBox="0 0 24 24"><path d="M3 21h18M16 3l5 5-9 9H7l-4-4 8-8z"/></svg>
-      Erase
-    </button>
-    <button class="action-btn" id="pencilBtn">
-      <svg viewBox="0 0 24 24"><path d="M12 19l7-7 3 3-7 7-3-3z"/><path d="M18 13l-1.5-7.5L2 2l3.5 14.5L13 18l5-5z"/></svg>
-      Notes
-    </button>
-    <button class="action-btn" id="hintBtn">
-      <svg viewBox="0 0 24 24"><path d="M9 18h6M10 22h4M12 2a7 7 0 00-4 12.7V17h8v-2.3A7 7 0 0012 2z"/></svg>
-      Hint <span class="count" id="hintCount">3</span>
-    </button>
-    <button class="action-btn" id="undoBtn">
-      <svg viewBox="0 0 24 24"><path d="M3 7v6h6M3 13a9 9 0 103-7.7L3 8"/></svg>
-      Undo
-    </button>
-    <button class="action-btn primary" id="newBtn">
-      <svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>
-      New
-    </button>
-  </div>
-
-  <p class="footnote">
-    <kbd>1</kbd>–<kbd>9</kbd> to place · <kbd>←</kbd><kbd>→</kbd><kbd>↑</kbd><kbd>↓</kbd> to move · <kbd>N</kbd> notes · <kbd>Del</kbd> erase
-  </p>
-
-</main>
-
-<!-- WIN OVERLAY -->
-<div class="overlay" id="overlay">
-  <div class="win-card">
-    <h2 class="win-title">Puzzle <em>solved</em></h2>
-    <p class="win-subtitle">Beautifully done</p>
-    <div class="win-stats">
-      <div class="win-stat">
-        <div class="lbl">Time</div>
-        <div class="val" id="winTime">00:00</div>
-      </div>
-      <div class="win-stat">
-        <div class="lbl">Mistakes</div>
-        <div class="val" id="winMistakes">0</div>
-      </div>
-      <div class="win-stat">
-        <div class="lbl">Level</div>
-        <div class="val" id="winDiff">Medium</div>
+    <div class="dialogue-wrap" id="dialogueWrap" style="display:none">
+      <div class="dialogue">
+        <div class="speaker" id="speaker"></div>
+        <div class="text" id="text"></div>
+        <div class="choices" id="choices"></div>
+        <div class="continue-hint" id="continueHint">Continue →</div>
       </div>
     </div>
-    <button class="action-btn primary" id="playAgainBtn" style="width:100%">Play again</button>
+
+    <div class="fade-overlay" id="fadeOverlay"></div>
+
+    <!-- START SCREEN -->
+    <div class="screen visible" id="startScreen">
+      <div class="screen-content">
+        <div class="ornament">✦ ❦ ✦</div>
+        <h1 class="title">The Prince's<br><em>Heart</em></h1>
+        <p class="subtitle">A Seven-Day Romance</p>
+        <p class="intro-text">
+          You are a commoner invited to the royal court as a <strong>scholar</strong>. The prince is cold, distant, unreachable. You have <strong>seven days</strong> to win his heart before the royal engagement is announced. Choose wisely.
+        </p>
+        <button class="btn primary" id="startBtn">Begin the Story</button>
+      </div>
+    </div>
+
+    <!-- ENDING SCREEN -->
+    <div class="screen" id="endingScreen">
+      <div class="screen-content">
+        <div class="ending-emblem" id="endingEmblem">♥</div>
+        <h1 class="ending-title" id="endingTitle"></h1>
+        <p class="ending-subtitle" id="endingSubtitle"></p>
+        <p class="ending-text" id="endingText"></p>
+        <div class="ending-stats">
+          <div class="ending-stat">
+            <div class="lbl">Affection</div>
+            <div class="val" id="endingAffection">0</div>
+          </div>
+          <div class="ending-stat">
+            <div class="lbl">Days</div>
+            <div class="val" id="endingDays">7</div>
+          </div>
+        </div>
+        <button class="btn primary" id="restartBtn">Begin Again</button>
+      </div>
+    </div>
   </div>
 </div>
 
@@ -578,523 +752,725 @@ h1,h2,h3{font-family:'Fraunces',Georgia,serif;font-weight:400;letter-spacing:-.0
   "use strict";
 
   // ============================================================
-  // SUDOKU GENERATOR (backtracking)
-  // ============================================================
-  function emptyGrid(){
-    return Array.from({ length: 9 }, () => Array(9).fill(0));
-  }
-
-  function isValid(grid, row, col, num){
-    for (let i = 0; i < 9; i++){
-      if (grid[row][i] === num) return false;
-      if (grid[i][col] === num) return false;
-    }
-    const br = Math.floor(row / 3) * 3;
-    const bc = Math.floor(col / 3) * 3;
-    for (let r = br; r < br + 3; r++){
-      for (let c = bc; c < bc + 3; c++){
-        if (grid[r][c] === num) return false;
-      }
-    }
-    return true;
-  }
-
-  function solve(grid){
-    for (let r = 0; r < 9; r++){
-      for (let c = 0; c < 9; c++){
-        if (grid[r][c] === 0){
-          const nums = shuffle([1,2,3,4,5,6,7,8,9]);
-          for (const n of nums){
-            if (isValid(grid, r, c, n)){
-              grid[r][c] = n;
-              if (solve(grid)) return true;
-              grid[r][c] = 0;
-            }
-          }
-          return false;
-        }
-      }
-    }
-    return true;
-  }
-
-  function shuffle(arr){
-    for (let i = arr.length - 1; i > 0; i--){
-      const j = Math.floor(Math.random() * (i + 1));
-      [arr[i], arr[j]] = [arr[j], arr[i]];
-    }
-    return arr;
-  }
-
-  function generateFull(){
-    const grid = emptyGrid();
-    solve(grid);
-    return grid;
-  }
-
-  function countSolutions(grid, limit = 2){
-    let count = 0;
-    function recurse(){
-      if (count >= limit) return;
-      for (let r = 0; r < 9; r++){
-        for (let c = 0; c < 9; c++){
-          if (grid[r][c] === 0){
-            for (let n = 1; n <= 9; n++){
-              if (isValid(grid, r, c, n)){
-                grid[r][c] = n;
-                recurse();
-                grid[r][c] = 0;
-                if (count >= limit) return;
-              }
-            }
-            return;
-          }
-        }
-      }
-      count++;
-    }
-    recurse();
-    return count;
-  }
-
-  const DIFFICULTY = {
-    easy: 40,
-    medium: 34,
-    hard: 28,
-    expert: 24
-  };
-
-  function generatePuzzle(difficulty){
-    const full = generateFull();
-    const puzzle = full.map(row => row.slice());
-    const targetClues = DIFFICULTY[difficulty] || 34;
-    const cells = [];
-    for (let r = 0; r < 9; r++) for (let c = 0; c < 9; c++) cells.push([r, c]);
-    shuffle(cells);
-
-    let clues = 81;
-    for (const [r, c] of cells){
-      if (clues <= targetClues) break;
-      const backup = puzzle[r][c];
-      puzzle[r][c] = 0;
-      if (countSolutions(puzzle.map(row => row.slice()), 2) !== 1){
-        puzzle[r][c] = backup;
-      } else {
-        clues--;
-      }
-    }
-    return { puzzle, solution: full };
-  }
-
-  // ============================================================
-  // GAME STATE
+  // STATE
   // ============================================================
   const state = {
-    puzzle: [],
-    solution: [],
-    given: [],
-    user: [],
-    pencil: [],
-    selected: null,
-    pencilMode: false,
-    mistakes: 0,
-    hintsLeft: 3,
-    seconds: 0,
-    difficulty: "medium",
-    solved: false,
-    history: [],
-    timerId: null
+    day: 1,
+    affection: 0,
+    currentNode: null,
+    typing: false,
+    typeTimer: null,
+    fullText: "",
+    hearts: 0
+  };
+
+  // ============================================================
+  // PORTRAIT SVG
+  // ============================================================
+  const princeSVG = `
+    <svg viewBox="0 0 240 360" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <linearGradient id="cape" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#4a1a28"/>
+          <stop offset="100%" stop-color="#2a0a18"/>
+        </linearGradient>
+        <linearGradient id="tunic" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#2a3a4a"/>
+          <stop offset="100%" stop-color="#1a2a3a"/>
+        </linearGradient>
+        <radialGradient id="skin" cx="50%" cy="40%">
+          <stop offset="0%" stop-color="#f4d8c4"/>
+          <stop offset="100%" stop-color="#d4b090"/>
+        </radialGradient>
+        <radialGradient id="faceGlow">
+          <stop offset="0%" stop-color="rgba(255,240,200,.4)"/>
+          <stop offset="100%" stop-color="rgba(255,240,200,0)"/>
+        </radialGradient>
+      </defs>
+
+      <!-- Cape -->
+      <path d="M 40 360 Q 20 240 60 180 L 80 180 L 80 360 Z" fill="url(#cape)"/>
+      <path d="M 200 360 Q 220 240 180 180 L 160 180 L 160 360 Z" fill="url(#cape)"/>
+      <path d="M 60 180 Q 120 200 180 180 L 180 360 L 60 360 Z" fill="url(#cape)" opacity=".7"/>
+
+      <!-- Face glow -->
+      <circle cx="120" cy="110" r="80" fill="url(#faceGlow)"/>
+
+      <!-- Hair -->
+      <path d="M 70 100 Q 70 50 120 40 Q 170 50 170 100 Q 175 80 165 70 Q 150 55 120 55 Q 90 55 75 70 Q 65 80 70 100 Z" fill="#2a1a12"/>
+      <path d="M 70 100 Q 65 120 75 140 Q 70 120 80 110 Z" fill="#2a1a12"/>
+      <path d="M 170 100 Q 175 120 165 140 Q 170 120 160 110 Z" fill="#2a1a12"/>
+
+      <!-- Face -->
+      <ellipse cx="120" cy="110" rx="48" ry="58" fill="url(#skin)"/>
+
+      <!-- Neck -->
+      <rect x="105" y="160" width="30" height="30" fill="url(#skin)"/>
+
+      <!-- Eyes -->
+      <ellipse cx="100" cy="110" rx="7" ry="5" fill="#fff"/>
+      <ellipse cx="140" cy="110" rx="7" ry="5" fill="#fff"/>
+      <circle cx="100" cy="110" r="3.5" fill="#2a3a4a"/>
+      <circle cx="140" cy="110" r="3.5" fill="#2a3a4a"/>
+      <circle cx="101" cy="109" r="1.2" fill="#fff"/>
+      <circle cx="141" cy="109" r="1.2" fill="#fff"/>
+      <!-- Eyelashes -->
+      <path d="M 93 105 Q 100 102 107 105" stroke="#2a1a12" stroke-width="1.5" fill="none"/>
+      <path d="M 133 105 Q 140 102 147 105" stroke="#2a1a12" stroke-width="1.5" fill="none"/>
+
+      <!-- Eyebrows -->
+      <path d="M 90 97 Q 100 93 110 96" stroke="#2a1a12" stroke-width="2" fill="none" stroke-linecap="round"/>
+      <path d="M 130 96 Q 140 93 150 97" stroke="#2a1a12" stroke-width="2" fill="none" stroke-linecap="round"/>
+
+      <!-- Nose -->
+      <path d="M 118 118 Q 116 128 120 132 Q 122 133 124 132" stroke="#b09070" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+
+      <!-- Lips -->
+      <path d="M 108 145 Q 120 140 132 145 Q 120 155 108 145 Z" fill="#b85a5a" opacity=".8"/>
+
+      <!-- Blush -->
+      <ellipse cx="88" cy="128" rx="8" ry="4" fill="#e8a0a0" opacity=".4"/>
+      <ellipse cx="152" cy="128" rx="8" ry="4" fill="#e8a0a0" opacity=".4"/>
+
+      <!-- Crown -->
+      <path d="M 90 60 L 95 40 L 105 55 L 115 35 L 125 55 L 135 35 L 145 55 L 155 40 L 160 60 Z" fill="#c9a961" stroke="#8a6a30" stroke-width="1"/>
+      <circle cx="120" cy="48" r="3" fill="#a5586f"/>
+      <circle cx="105" cy="53" r="2" fill="#a5586f"/>
+      <circle cx="135" cy="53" r="2" fill="#a5586f"/>
+
+      <!-- Shoulders / tunic -->
+      <path d="M 80 190 Q 120 175 160 190 L 175 360 L 65 360 Z" fill="url(#tunic)"/>
+      <path d="M 80 190 L 120 220 L 160 190" stroke="#c9a961" stroke-width="2" fill="none"/>
+      <line x1="120" y1="220" x2="120" y2="360" stroke="#c9a961" stroke-width="1" opacity=".5"/>
+
+      <!-- Brooch -->
+      <circle cx="120" cy="205" r="8" fill="#c9a961"/>
+      <circle cx="120" cy="205" r="4" fill="#a5586f"/>
+    </svg>
+  `;
+
+  const portrait = document.getElementById("portrait");
+  portrait.innerHTML = princeSVG;
+
+  // ============================================================
+  // STORY DATA
+  // ============================================================
+  const STORY = {
+    // DAY 1 — Arrival
+    d1_start: {
+      day: 1,
+      scene: "corridor",
+      speaker: "Narrator",
+      text: "The palace corridors stretch endlessly before you, all marble and shadow. Your invitation — an appointment as royal scholar — felt like a dream until this moment. Now, lost among the tapestries, you wonder if you have made a terrible mistake.",
+      next: "d1_meet"
+    },
+    d1_meet: {
+      day: 1,
+      scene: "corridor",
+      speaker: "A voice",
+      text: "\"You are lost.\" The voice is cool, unhurried. You turn. A young man in deep blue stands at the end of the hall — silver circlet at his brow, a book tucked under one arm. \"The library is the other way. Follow me.\"",
+      choices: [
+        { text: "\"Thank you, Your Highness.\" Bow deeply.", hint: "Show respect", affection: 5, next: "d1_bow" },
+        { text: "\"I know the way. I was merely... admiring the tapestries.\"", hint: "Show confidence", affection: 8, next: "d1_conf" },
+        { text: "Say nothing. Just follow.", hint: "Be mysterious", affection: 3, next: "d1_silent" }
+      ]
+    },
+    d1_bow: {
+      day: 1,
+      scene: "library",
+      speaker: "The Prince",
+      text: "\"Bowing is for courtiers, not scholars. Save it for the ball.\" He gestures to a seat. \"You'll be cataloguing the eastern collection. Start tomorrow.\" He pauses at the door. \"You chose a dull profession for someone with such curious eyes.\"",
+      affection: 3,
+      next: "d1_end"
+    },
+    d1_conf: {
+      day: 1,
+      scene: "library",
+      speaker: "The Prince",
+      text: "A pause. Then — unexpectedly — a smile. \"The tapestries are five hundred years old. The one behind you depicts a war that never happened, commissioned by a king who wanted an excuse to raise taxes.\" He meets your eyes. \"Most scholars quote it as fact. You'll do well here.\"",
+      affection: 5,
+      next: "d1_end"
+    },
+    d1_silent: {
+      day: 1,
+      scene: "library",
+      speaker: "The Prince",
+      text: "He walks in silence. At the library door, he turns. \"I am not used to being followed without conversation.\" A beat. \"I think I like it. Start with the eastern collection tomorrow.\"",
+      affection: 4,
+      next: "d1_end"
+    },
+    d1_end: {
+      day: 1,
+      scene: "library",
+      speaker: "Narrator",
+      text: "You are left alone in the vast library, torchlight flickering over leather spines. The prince's footsteps fade. On the desk before you lies a note, already written: 'Begin with the eastern collection. — A.' The initial of his name. You did not tell him your name. He did not tell you his. But you both know.",
+      next: "d2_start"
+    },
+
+    // DAY 2 — The Garden
+    d2_start: {
+      day: 2,
+      scene: "garden",
+      speaker: "Narrator",
+      text: "Morning finds you in the royal garden, cataloguing botanical manuscripts. The air is warm with honeysuckle. And there — among the roses, unguarded, alone — sits the prince. He does not notice you yet.",
+      next: "d2_meet"
+    },
+    d2_meet: {
+      day: 2,
+      scene: "garden",
+      speaker: "The Prince",
+      text: "He finally looks up. \"Ah. The scholar who was not lost.\" He closes his book. \"Sit, if you wish. I am reading poetry I do not understand.\"",
+      choices: [
+        { text: "\"May I ask what you're reading?\"", hint: "Show curiosity", affection: 6, next: "d2_curious" },
+        { text: "\"Perhaps I could read it to you.\"", hint: "Be bold", affection: 10, next: "d2_bold" },
+        { text: "Sit quietly and say nothing.", hint: "Be present", affection: 7, next: "d2_quiet" }
+      ]
+    },
+    d2_curious: {
+      day: 2,
+      scene: "garden",
+      speaker: "The Prince",
+      text: "\"A poet from the northern provinces. He wrote only of winter. I find it comforting — a reminder that cold can be beautiful.\" He turns the book toward you. \"You know this poet?\" You do not. But you will, by tomorrow.",
+      affection: 4,
+      next: "d2_end"
+    },
+    d2_bold: {
+      day: 2,
+      scene: "garden",
+      speaker: "The Prince",
+      text: "He is surprised — and something softens in his face. \"You would do that?\" He hands you the book. You read a page aloud. When you finish, he is watching you in a way that makes your cheeks warm. \"No one has read to me since I was a child. My mother used to.\"",
+      affection: 8,
+      next: "d2_end"
+    },
+    d2_quiet: {
+      day: 2,
+      scene: "garden",
+      speaker: "Narrator",
+      text: "You sit in silence. Minutes pass. It is not uncomfortable. Eventually he says, without looking up: \"You are the first person in years who has not filled the silence with flattery. Thank you.\" He closes his book. \"Stay, if you like. The garden is yours as much as mine.\"",
+      affection: 6,
+      next: "d2_end"
+    },
+    d2_end: {
+      day: 2,
+      scene: "garden",
+      speaker: "Narrator",
+      text: "You part ways at sunset. He pauses at the gate. \"Tomorrow evening, there is a ball. My mother insists I attend. I will understand if a scholar would find it tedious.\" He is asking. Without quite asking.",
+      next: "d3_start"
+    },
+
+    // DAY 3 — The Ballroom
+    d3_start: {
+      day: 3,
+      scene: "ballroom",
+      speaker: "Narrator",
+      text: "The grand ballroom blazes with candlelight. Nobles in silk and jewels swirl past. You stand at the edge, in your plainest clothes, wondering if you should have come. And then — there he is. Across the room. Watching you.",
+      next: "d3_meet"
+    },
+    d3_meet: {
+      day: 3,
+      scene: "ballroom",
+      speaker: "The Prince",
+      text: "He crosses the ballroom, ignoring the nobles who try to catch his sleeve. \"You came.\" He offers his hand. \"Dance with me. The court is watching. Let them.\"",
+      choices: [
+        { text: "\"I don't know how to dance.\"", hint: "Be honest", affection: 8, next: "d3_honest" },
+        { text: "Take his hand without a word.", hint: "Be fearless", affection: 12, next: "d3_hand" },
+        { text: "\"What will they think of you, dancing with a scholar?\"", hint: "Protect him", affection: 10, next: "d3_protect" }
+      ]
+    },
+    d3_honest: {
+      day: 3,
+      scene: "ballroom",
+      speaker: "The Prince",
+      text: "\"Then we shall invent a new dance,\" he says, and sweeps you into the crowd. His steps are patient. \"Do not look at your feet. Look at me.\" You do. The entire room falls away.",
+      affection: 6,
+      next: "d3_end"
+    },
+    d3_hand: {
+      day: 3,
+      scene: "ballroom",
+      speaker: "The Prince",
+      text: "His hand closes around yours. \"Excellent answer.\" He spins you into the dance, and you laugh — an honest laugh — and the court stares. He does not look at them. He only looks at you.",
+      affection: 8,
+      next: "d3_end"
+    },
+    d3_protect: {
+      day: 3,
+      scene: "ballroom",
+      speaker: "The Prince",
+      text: "He stops. For a long moment, he simply looks at you. \"In three days, you have thought more of my reputation than I have in three years.\" His voice is quiet. \"Dance with me. I don't care what they think.\"",
+      affection: 8,
+      next: "d3_end"
+    },
+    d3_end: {
+      day: 3,
+      scene: "ballroom",
+      speaker: "Narrator",
+      text: "The music ends too soon. He holds your hand a moment longer than necessary. \"Tomorrow,\" he says, \"I must ride to the northern estate. I would like you to come with me. As royal scholar. Officially.\" He pauses. \"Unofficially... I would like you to come. Full stop.\"",
+      next: "d4_start"
+    },
+
+    // DAY 4 — The Journey
+    d4_start: {
+      day: 4,
+      scene: "forest",
+      speaker: "Narrator",
+      text: "The northern road is long and quiet. Your horse rides beside his. The servants trail far behind — he asked them to. \"Tell me something true,\" he says at last. \"Something no one else knows.\"",
+      next: "d4_meet"
+    },
+    d4_meet: {
+      day: 4,
+      scene: "forest",
+      speaker: "The Prince",
+      text: "\"Something true.\" The forest hushes around you. He watches you, patient, a little vulnerable. A prince asking to be let into someone's secret.",
+      choices: [
+        { text: "\"I have been afraid my whole life of being ordinary.\"", hint: "Be vulnerable", affection: 12, next: "d4_vuln" },
+        { text: "\"I have been in love with you since the garden.\"", hint: "Confess early", affection: 15, next: "d4_confess" },
+        { text: "\"I have never told anyone this — I write poetry.\"", hint: "Share a gift", affection: 10, next: "d4_poet" }
+      ]
+    },
+    d4_vuln: {
+      day: 4,
+      scene: "forest",
+      speaker: "The Prince",
+      text: "\"I have been afraid of nothing else,\" he says softly. \"I was born to be extraordinary. It is exhausting.\" He reaches for your hand — and holds it. \"You make me feel like I could be ordinary. It is the greatest gift anyone has given me.\"",
+      affection: 10,
+      next: "d4_end"
+    },
+    d4_confess: {
+      day: 4,
+      scene: "forest",
+      speaker: "The Prince",
+      text: "He stops his horse. Turns to face you fully. \"You cannot mean that.\" But his voice catches. \"Four days. You have known me four days.\" And then, quieter: \"I have loved you since the library.\"",
+      affection: 15,
+      next: "d4_end"
+    },
+    d4_poet: {
+      day: 4,
+      scene: "forest",
+      speaker: "The Prince",
+      text: "\"Read me one.\" He says it so gently that you cannot refuse. You do. When you finish, he is silent for a long time. \"I have never heard anything so beautiful from someone not paid to flatter me. Read me another tomorrow.\"",
+      affection: 8,
+      next: "d4_end"
+    },
+    d4_end: {
+      day: 4,
+      scene: "forest",
+      speaker: "Narrator",
+      text: "You arrive at the northern estate as the sun sets. The servants bustle, but he pulls you aside. \"Tomorrow, the royal family arrives. There will be an announcement.\" His voice is careful. \"They intend to betroth me to a duchess I have never met. I do not intend to allow it. But I need to know...\" He cannot finish.",
+      next: "d5_start"
+    },
+
+    // DAY 5 — The Announcement
+    d5_start: {
+      day: 5,
+      scene: "chapel",
+      speaker: "Narrator",
+      text: "The great hall is filled with the royal family, the court, the duchess and her retinue. The king is speaking. You stand at the back. The prince has not looked at you once.",
+      next: "d5_moment"
+    },
+    d5_moment: {
+      day: 5,
+      scene: "chapel",
+      speaker: "The King",
+      text: "\"And so it is with great pleasure that I announce the betrothal of my son, the Crown Prince, to the Duchess of —\" The prince stands. The hall freezes. He does not look at the duchess. He looks at you.",
+      choices: [
+        { text: "Step forward. Say nothing. Just be seen.", hint: "Stand beside him", affection: 14, next: "d5_stand" },
+        { text: "Shake your head gently. Do not ruin him.", hint: "Sacrifice for him", affection: 18, next: "d5_sacrifice" },
+        { text: "Turn and leave. Let him choose.", hint: "Trust him", affection: 12, next: "d5_leave" }
+      ]
+    },
+    d5_stand: {
+      day: 5,
+      scene: "chapel",
+      speaker: "The Prince",
+      text: "\"Father,\" the prince says, his voice clear. \"I cannot marry the duchess.\" Murmurs erupt. \"I am in love with someone else.\" He crosses the room to you. Takes your hand in front of everyone. \"This is the person I choose.\"",
+      affection: 12,
+      next: "d5_end"
+    },
+    d5_sacrifice: {
+      day: 5,
+      scene: "chapel",
+      speaker: "The Prince",
+      text: "He sees you shake your head. And you see something break in him — and then, understanding. He squares his shoulders. \"Father, I cannot marry the duchess.\" He does not name you. He does not have to. The king looks at you. The king understands. \"This audience is dismissed.\"",
+      affection: 15,
+      next: "d5_end"
+    },
+    d5_leave: {
+      day: 5,
+      scene: "chapel",
+      speaker: "Narrator",
+      text: "You turn and walk out. You hear the doors close behind you. For a terrible moment you wonder if you have made the wrong choice. Then the doors open again. Footsteps. \"You absolute fool,\" he says, breathless. \"I would have chosen you anyway.\"",
+      affection: 12,
+      next: "d5_end"
+    },
+    d5_end: {
+      day: 5,
+      scene: "chapel",
+      speaker: "Narrator",
+      text: "The betrothal is not announced. The court is in chaos. The duchess departs in a fury. The king does not speak to his son. And in the garden, under a cold moon, the prince finds you. \"Two days,\" he says. \"Two days until the council decides whether I am fit to rule. Stay with me.\"",
+      next: "d6_start"
+    },
+
+    // DAY 6 — The Long Night
+    d6_start: {
+      day: 6,
+      scene: "balcony",
+      speaker: "Narrator",
+      text: "The balcony overlooks the sleeping kingdom. The prince stands at the railing, hair loose, crown abandoned somewhere hours ago. He does not turn when you approach. \"I am not the son he wanted,\" he says quietly. \"I have never been. I am the son who reads poetry and falls in love with scholars.\"",
+      next: "d6_moment"
+    },
+    d6_moment: {
+      day: 6,
+      scene: "balcony",
+      speaker: "The Prince",
+      text: "He turns. His eyes are bright with something unshed. \"Tell me I am not wrong. Tell me that all of this — you, us, this — is worth losing a kingdom for.\"",
+      choices: [
+        { text: "\"You are worth more than a kingdom.\"", hint: "Reassure him", affection: 15, next: "d6_worth" },
+        { text: "\"A kingdom needs a king who loves. Not one who cannot.\"", hint: "Challenge him", affection: 14, next: "d6_wise" },
+        { text: "Say nothing. Take his hand.", hint: "Be with him", affection: 16, next: "d6_silent" }
+      ]
+    },
+    d6_worth: {
+      day: 6,
+      scene: "balcony",
+      speaker: "The Prince",
+      text: "\"You would say that.\" He laughs — wet, broken. \"You are the only person in this world who has ever said that to me and meant it.\" He pulls you close. \"Tomorrow I will fight for us. I promise.\"",
+      affection: 10,
+      next: "d6_end"
+    },
+    d6_wise: {
+      day: 6,
+      scene: "balcony",
+      speaker: "The Prince",
+      text: "\"A king who loves.\" He turns the words over. \"My father loves nothing but order. He has ruled for thirty years and no one has ever sung for him.\" He looks at you. \"You have changed what I think a king should be.\"",
+      affection: 12,
+      next: "d6_end"
+    },
+    d6_silent: {
+      day: 6,
+      scene: "balcony",
+      speaker: "Narrator",
+      text: "You take his hand. His fingers are cold. You hold them anyway. Minutes pass. When he finally speaks, his voice is steady. \"Thank you. For not trying to fix me.\" He turns to face you. \"Tomorrow, I will do what must be done. But tonight, I am just a man holding someone's hand.\"",
+      affection: 8,
+      next: "d6_end"
+    },
+    d6_end: {
+      day: 6,
+      scene: "balcony",
+      speaker: "Narrator",
+      text: "You stay on the balcony until dawn. The kingdom wakes below you, indifferent to the small, quiet revolution happening on the parapet. When the sun rises, he is still holding your hand.",
+      next: "d7_start"
+    },
+
+    // DAY 7 — The Choice
+    d7_start: {
+      day: 7,
+      scene: "corridor",
+      speaker: "Narrator",
+      text: "The council chamber is cold. Twelve lords of the realm sit in judgment. The king presides. The prince stands before them — crown in his hands, not on his head. He does not look afraid. He looks certain.",
+      next: "d7_moment"
+    },
+    d7_moment: {
+      day: 7,
+      scene: "corridor",
+      speaker: "The King",
+      text: "\"Speak, son. Tell this council why you should remain heir.\" The prince turns. He does not address the council. He addresses you. \"Because a king should be someone who knows how to love something more than power.\" The room is silent. The choice — the final choice — is not his. It is yours.",
+      choices: [
+        { text: "Stand and speak for him.", hint: "Be bold", affection: 12, next: "d7_speak" },
+        { text: "Nod. Let the choice be his alone.", hint: "Trust the moment", affection: 10, next: "d7_nod" },
+        { text: "Step forward and take his hand in front of the council.", hint: "Make the claim", affection: 15, next: "d7_claim" }
+      ]
+    },
+    d7_speak: {
+      day: 7,
+      scene: "corridor",
+      speaker: "You",
+      text: "\"My lords, I am a scholar. I was not born to speak before kings. But I have read every history in the eastern collection, and I have learned this: the kings remembered best are not the ones who won the most battles. They are the ones who were remembered by someone who loved them. Your prince is such a man.\" The chamber is silent. Then — the king laughs.",
+      next: "d7_end_good"
+    },
+    d7_nod: {
+      day: 7,
+      scene: "corridor",
+      speaker: "The Prince",
+      text: "You nod. He smiles — small, private — and turns back to the council. \"Then let my record speak. Let my choices speak. Let this council decide whether a man who loves is fit to rule.\" He places the crown on the table. \"If not, then I am content to be a man who loves, and not a king.\"",
+      next: "d7_end_good"
+    },
+    d7_claim: {
+      day: 7,
+      scene: "corridor",
+      speaker: "Narrator",
+      text: "You cross the chamber. You take his hand in yours. The council gasps. The king half-rises. And the prince — the prince just smiles, and squeezes your hand back. \"Father,\" he says, \"I have made my choice. This is my answer.\"",
+      next: "d7_end_epic"
+    },
+    d7_end_epic: {
+      day: 7,
+      scene: "chapel",
+      speaker: "Narrator",
+      text: "The kingdom had never seen anything like it. A prince who chose a scholar. A council who — after long hours — relented. A wedding in the spring. You stood beside him at the altar, and when the vows came, he did not say the words written for him. He said, \"I choose you. I will always choose you.\" The kingdom wept. The kingdom remembered. And every year, on the same day, you returned to the library together, and he read to you from the eastern collection. Because some stories — the best ones — begin in silence.",
+      next: "end"
+    },
+    d7_end_good: {
+      day: 7,
+      scene: "chapel",
+      speaker: "Narrator",
+      text: "The council deliberated for three days. On the fourth day, they returned with their answer. The prince would not rule alone — but he would rule. With you beside him. Not as a consort, but as an equal. The kingdom had never had a scholar on the throne. It would learn. And you would learn, in turn, the long slow art of loving a man who had been loved by no one, and had learned, because of you, how to love himself.",
+      next: "end"
+    },
+    end: {
+      day: 7,
+      scene: "chapel",
+      speaker: "Narrator",
+      text: "The rest, as they say, is history.",
+      next: "ending"
+    }
   };
 
   // ============================================================
   // DOM
   // ============================================================
   const $ = id => document.getElementById(id);
-  const boardEl = $("board");
-  const numpadEl = $("numpad");
-  const timerEl = $("timer");
-  const mistakesEl = $("mistakes");
-  const hintCountEl = $("hintCount");
-  const overlayEl = $("overlay");
+  const scene = $("scene");
+  const speaker = $("speaker");
+  const textEl = $("text");
+  const choicesEl = $("choices");
+  const continueHint = $("continueHint");
+  const dayIndicator = $("dayIndicator");
+  const dayNum = $("dayNum");
+  const affection = $("affection");
+  const affectionFill = $("affectionFill");
+  const affectionValue = $("affectionValue");
+  const dialogueWrap = $("dialogueWrap");
+  const fadeOverlay = $("fadeOverlay");
+  const startScreen = $("startScreen");
+  const endingScreen = $("endingScreen");
 
   // ============================================================
-  // BUILD DOM
+  // TYPEWRITER
   // ============================================================
-  function buildBoard(){
-    boardEl.innerHTML = "";
-    for (let r = 0; r < 9; r++){
-      for (let c = 0; c < 9; c++){
-        const cell = document.createElement("div");
-        cell.className = "cell";
-        cell.dataset.row = r;
-        cell.dataset.col = c;
-        cell.addEventListener("click", () => selectCell(r, c));
-        boardEl.appendChild(cell);
-      }
-    }
-  }
+  function typeText(text, callback){
+    state.typing = true;
+    state.fullText = text;
+    textEl.innerHTML = "";
+    continueHint.classList.remove("show");
+    let i = 0;
+    const cursor = document.createElement("span");
+    cursor.className = "cursor";
+    textEl.appendChild(cursor);
 
-  function buildNumpad(){
-    numpadEl.innerHTML = "";
-    for (let n = 1; n <= 9; n++){
-      const btn = document.createElement("button");
-      btn.className = "num-btn";
-      btn.dataset.num = n;
-      btn.innerHTML = n + '<span class="remaining"></span>';
-      btn.addEventListener("click", () => placeNumber(n));
-      numpadEl.appendChild(btn);
-    }
-    const erase = document.createElement("button");
-    erase.className = "num-btn erase";
-    erase.textContent = "Erase";
-    erase.addEventListener("click", eraseCell);
-    numpadEl.appendChild(erase);
-  }
-
-  // ============================================================
-  // RENDERING
-  // ============================================================
-  function render(){
-    const cells = boardEl.querySelectorAll(".cell");
-    const sel = state.selected;
-    const selVal = sel ? (state.user[sel.r][sel.c] || state.puzzle[sel.r][sel.c] || 0) : 0;
-
-    cells.forEach(cell => {
-      const r = +cell.dataset.row;
-      const c = +cell.dataset.col;
-      const given = state.given[r][c];
-      const user = state.user[r][c];
-      const value = given || user;
-
-      cell.className = "cell";
-      cell.innerHTML = "";
-
-      if (given){
-        cell.classList.add("given");
-        cell.textContent = given;
-      } else if (user){
-        cell.classList.add("user");
-        cell.textContent = user;
-        if (user !== state.solution[r][c]){
-          cell.classList.add("error");
-        }
-      } else if (state.pencil[r][c].length){
-        const p = document.createElement("div");
-        p.className = "pencil";
-        for (let n = 1; n <= 9; n++){
-          const s = document.createElement("span");
-          if (state.pencil[r][c].includes(n)) s.textContent = n;
-          p.appendChild(s);
-        }
-        cell.appendChild(p);
-      }
-
-      if (sel){
-        const sameRow = r === sel.r;
-        const sameCol = c === sel.c;
-        const sameBox = Math.floor(r / 3) === Math.floor(sel.r / 3) && Math.floor(c / 3) === Math.floor(sel.c / 3);
-        if (sameRow || sameCol || sameBox) cell.classList.add("peer");
-        if (selVal && value === selVal && !(r === sel.r && c === sel.c)) cell.classList.add("same");
-        if (r === sel.r && c === sel.c) cell.classList.add("selected");
-      }
-    });
-
-    // numpad remaining counts
-    const counts = Array(10).fill(0);
-    for (let r = 0; r < 9; r++){
-      for (let c = 0; c < 9; c++){
-        const v = state.given[r][c] || state.user[r][c];
-        if (v) counts[v]++;
-      }
-    }
-    numpadEl.querySelectorAll(".num-btn[data-num]").forEach(btn => {
-      const n = +btn.dataset.num;
-      const remaining = 9 - counts[n];
-      const label = btn.querySelector(".remaining");
-      if (remaining <= 0){
-        label.textContent = "";
-        btn.classList.add("completed");
+    clearInterval(state.typeTimer);
+    state.typeTimer = setInterval(() => {
+      if (i < text.length){
+        cursor.insertAdjacentText("beforebegin", text[i]);
+        i++;
+        // subtle sound skipped
       } else {
-        label.textContent = remaining;
-        btn.classList.remove("completed");
+        clearInterval(state.typeTimer);
+        state.typing = false;
+        cursor.remove();
+        if (callback) callback();
+      }
+    }, 18);
+  }
+
+  function skipTyping(){
+    if (!state.typing) return false;
+    clearInterval(state.typeTimer);
+    textEl.textContent = state.fullText;
+    state.typing = false;
+    return true;
+  }
+
+  // ============================================================
+  // SCENE CHANGE
+  // ============================================================
+  function changeScene(sceneName){
+    scene.className = "scene " + sceneName;
+  }
+
+  // ============================================================
+  // AFFECTION
+  // ============================================================
+  function addAffection(amount){
+    if (!amount) return;
+    state.affection = Math.min(100, Math.max(0, state.affection + amount));
+    updateAffectionUI();
+    if (amount > 0){
+      spawnHearts(amount > 8 ? 5 : 3);
+    }
+  }
+  function updateAffectionUI(){
+    const pct = state.affection;
+    affectionFill.style.width = pct + "%";
+    affectionValue.textContent = state.affection;
+  }
+  function spawnHearts(count){
+    for (let i = 0; i < count; i++){
+      setTimeout(() => {
+        const heart = document.createElement("div");
+        heart.className = "floating-heart";
+        heart.textContent = "♥";
+        heart.style.left = (40 + Math.random() * 20) + "%";
+        heart.style.top = "40%";
+        heart.style.animationDelay = (i * 0.1) + "s";
+        heart.style.color = Math.random() > 0.5 ? "#c9748a" : "#c9a961";
+        document.querySelector(".frame").appendChild(heart);
+        setTimeout(() => heart.remove(), 2000);
+      }, i * 100);
+    }
+  }
+
+  // ============================================================
+  // NODE ENGINE
+  // ============================================================
+  function goToNode(nodeId){
+    const node = STORY[nodeId];
+    if (!node) return;
+
+    // Apply node affection
+    if (node.affection) addAffection(node.affection);
+
+    // Day update
+    if (node.day && node.day !== state.day){
+      state.day = node.day;
+      dayNum.textContent = state.day;
+    }
+
+    // Scene
+    if (node.scene) changeScene(node.scene);
+
+    // Speaker
+    speaker.textContent = node.speaker || "";
+
+    // Clear choices
+    choicesEl.innerHTML = "";
+
+    // Dialogue
+    dialogueWrap.style.display = "block";
+
+    // Type out text
+    typeText(node.text, () => {
+      if (node.choices){
+        renderChoices(node.choices);
+      } else if (node.next){
+        continueHint.classList.add("show");
       }
     });
 
-    mistakesEl.textContent = state.mistakes;
-    hintCountEl.textContent = state.hintsLeft;
+    state.currentNode = nodeId;
   }
 
-  function updateTimer(){
-    const m = Math.floor(state.seconds / 60);
-    const s = state.seconds % 60;
-    timerEl.textContent = String(m).padStart(2, "0") + ":" + String(s).padStart(2, "0");
-  }
-
-  function startTimer(){
-    if (state.timerId) clearInterval(state.timerId);
-    state.timerId = setInterval(() => {
-      if (!state.solved){
-        state.seconds++;
-        updateTimer();
-      }
-    }, 1000);
-  }
-
-  // ============================================================
-  // INTERACTION
-  // ============================================================
-  function selectCell(r, c){
-    if (state.solved) return;
-    if (state.given[r][c]) {
-      // still select for highlighting
-    }
-    state.selected = { r, c };
-    render();
-  }
-
-  function placeNumber(n){
-    if (!state.selected || state.solved) return;
-    const { r, c } = state.selected;
-    if (state.given[r][c]) return;
-
-    pushHistory();
-
-    if (state.pencilMode){
-      const arr = state.pencil[r][c];
-      if (state.user[r][c]){
-        state.user[r][c] = 0;
-      }
-      if (arr.includes(n)) arr.splice(arr.indexOf(n), 1);
-      else arr.push(n);
-      arr.sort((a, b) => a - b);
-      render();
-      return;
-    }
-
-    if (state.user[r][c] === n){
-      state.user[r][c] = 0;
-      render();
-      return;
-    }
-
-    state.user[r][c] = n;
-    state.pencil[r][c] = [];
-
-    if (n !== state.solution[r][c]){
-      state.mistakes++;
-    }
-
-    // clear pencil marks in peers
-    if (n === state.solution[r][c]){
-      for (let i = 0; i < 9; i++){
-        removePencil(r, i, n);
-        removePencil(i, c, n);
-      }
-      const br = Math.floor(r / 3) * 3;
-      const bc = Math.floor(c / 3) * 3;
-      for (let rr = br; rr < br + 3; rr++){
-        for (let cc = bc; cc < bc + 3; cc++){
-          removePencil(rr, cc, n);
-        }
-      }
-    }
-
-    render();
-    checkSolved();
-  }
-
-  function removePencil(r, c, n){
-    const idx = state.pencil[r][c].indexOf(n);
-    if (idx !== -1) state.pencil[r][c].splice(idx, 1);
-  }
-
-  function eraseCell(){
-    if (!state.selected || state.solved) return;
-    const { r, c } = state.selected;
-    if (state.given[r][c]) return;
-    pushHistory();
-    state.user[r][c] = 0;
-    state.pencil[r][c] = [];
-    render();
-  }
-
-  function pushHistory(){
-    state.history.push({
-      user: state.user.map(row => row.slice()),
-      pencil: state.pencil.map(row => row.map(a => a.slice())),
-      mistakes: state.mistakes
+  function renderChoices(choices){
+    choicesEl.innerHTML = "";
+    choices.forEach((choice, i) => {
+      const btn = document.createElement("button");
+      btn.className = "choice";
+      btn.innerHTML = choice.text + (choice.hint ? `<small>${choice.hint}</small>` : "");
+      btn.addEventListener("click", () => {
+        addAffection(choice.affection || 0);
+        goToNode(choice.next);
+      });
+      choicesEl.appendChild(btn);
     });
-    if (state.history.length > 50) state.history.shift();
   }
 
-  function undo(){
-    if (!state.history.length) return;
-    const prev = state.history.pop();
-    state.user = prev.user;
-    state.pencil = prev.pencil;
-    state.mistakes = prev.mistakes;
-    render();
+  function advance(){
+    const node = STORY[state.currentNode];
+    if (!node) return;
+    if (state.typing){ skipTyping(); 
+      if (node.choices) renderChoices(node.choices);
+      else if (node.next) continueHint.classList.add("show");
+      return;
+    }
+    if (node.choices) return;
+    if (node.next === "ending"){
+      showEnding();
+      return;
+    }
+    if (node.next){
+      goToNode(node.next);
+    }
   }
 
-  function giveHint(){
-    if (state.hintsLeft <= 0 || state.solved) return;
-    let target = state.selected;
-    if (!target || state.given[target.r][target.c] || state.user[target.r][target.c] === state.solution[target.r][target.c]){
-      // find a random empty cell
-      const empties = [];
-      for (let r = 0; r < 9; r++){
-        for (let c = 0; c < 9; c++){
-          if (!state.given[r][c] && state.user[r][c] !== state.solution[r][c]){
-            empties.push({ r, c });
-          }
-        }
+  // ============================================================
+  // ENDING
+  // ============================================================
+  function showEnding(){
+    fadeOverlay.classList.add("fade-in");
+    setTimeout(() => {
+      let title, subtitle, text, emblem;
+      if (state.affection >= 75){
+        title = "The <em>Golden</em> Vow";
+        subtitle = "A Love That Changed a Kingdom";
+        text = "The council relented. The wedding was held in spring, and the kingdom — the whole of it — celebrated for seven days. You ruled beside him, not as a consort, but as an equal. On quiet evenings, when the court had gone, he read to you from the eastern collection, and you knew that every day was a gift. Some love stories end. Yours simply became a life.";
+        emblem = "♛";
+      } else if (state.affection >= 50){
+        title = "A <em>Quiet</em> Kind of King";
+        subtitle = "A Love Worth Waiting For";
+        text = "The council allowed the marriage, though they grumbled. Some would never accept a scholar on the throne. But the prince did not care. \"Let them doubt,\" he said. \"We have a lifetime to prove them wrong.\" And every year, on the same day, you returned to the garden where it all began, and he read poetry to you, and you listened, and the kingdom flourished, and no one ever doubted again.";
+        emblem = "♥";
+      } else {
+        title = "A Love <em>Remembered</em>";
+        subtitle = "Not All Love Stories End in Marriage";
+        text = "The council ruled against the marriage. The prince was betrothed to the duchess the following spring. But on the last night before the wedding, he came to your chambers, and he held you, and he said, \"In another life. In every other life.\" You never saw him again. But you remembered. And years later, when the kingdom had a new king, you heard a story of a man who kept a book of poetry on his throne, and you knew. You knew.";
+        emblem = "✧";
       }
-      if (!empties.length) return;
-      target = empties[Math.floor(Math.random() * empties.length)];
-    }
-    pushHistory();
-    state.user[target.r][target.c] = state.solution[target.r][target.c];
-    state.pencil[target.r][target.c] = [];
-    state.hintsLeft--;
-    state.selected = target;
-    render();
 
-    // flash animation
-    const cell = boardEl.querySelector(`.cell[data-row="${target.r}"][data-col="${target.c}"]`);
-    if (cell) cell.classList.add("hint-flash");
+      $("endingEmblem").textContent = emblem;
+      $("endingTitle").innerHTML = title;
+      $("endingSubtitle").textContent = subtitle;
+      $("endingText").textContent = text;
+      $("endingAffection").textContent = state.affection;
+      $("endingDays").textContent = state.day;
 
-    checkSolved();
+      endingScreen.classList.add("visible");
+      fadeOverlay.classList.remove("fade-in");
+    }, 900);
   }
-
-  function checkSolved(){
-    for (let r = 0; r < 9; r++){
-      for (let c = 0; c < 9; c++){
-        const v = state.given[r][c] || state.user[r][c];
-        if (v !== state.solution[r][c]) return;
-      }
-    }
-    state.solved = true;
-    if (state.timerId) clearInterval(state.timerId);
-
-    // animate solved cells
-    boardEl.querySelectorAll(".cell").forEach((cell, i) => {
-      setTimeout(() => cell.classList.add("solved-flash"), i * 8);
-    });
-
-    setTimeout(showWin, 1200);
-  }
-
-  function showWin(){
-    $("winTime").textContent = timerEl.textContent;
-    $("winMistakes").textContent = state.mistakes;
-    $("winDiff").textContent = state.difficulty.charAt(0).toUpperCase() + state.difficulty.slice(1);
-    overlayEl.classList.add("show");
-    spawnConfetti();
-  }
-
-  function spawnConfetti(){
-    const chars = ["1","2","3","4","5","6","7","8","9"];
-    for (let i = 0; i < 40; i++){
-      const el = document.createElement("div");
-      el.className = "confetti";
-      el.textContent = chars[Math.floor(Math.random() * chars.length)];
-      el.style.left = Math.random() * 100 + "vw";
-      el.style.animationDelay = Math.random() * 1.5 + "s";
-      el.style.animationDuration = (2 + Math.random() * 2) + "s";
-      el.style.fontSize = (16 + Math.random() * 16) + "px";
-      el.style.opacity = 0.5 + Math.random() * 0.5;
-      document.body.appendChild(el);
-      setTimeout(() => el.remove(), 5000);
-    }
-  }
-
-  // ============================================================
-  // NEW GAME
-  // ============================================================
-  function newGame(difficulty){
-    state.difficulty = difficulty || state.difficulty;
-    overlayEl.classList.remove("show");
-
-    const { puzzle, solution } = generatePuzzle(state.difficulty);
-
-    state.puzzle = puzzle.map(row => row.slice());
-    state.solution = solution.map(row => row.slice());
-    state.given = puzzle.map(row => row.map(v => v));
-    state.user = emptyGrid();
-    state.pencil = Array.from({ length: 9 }, () => Array.from({ length: 9 }, () => []));
-    state.selected = null;
-    state.mistakes = 0;
-    state.hintsLeft = 3;
-    state.seconds = 0;
-    state.solved = false;
-    state.history = [];
-    state.pencilMode = false;
-
-    $("pencilBtn").classList.remove("toggled");
-    updateTimer();
-    render();
-    startTimer();
-  }
-
-  // ============================================================
-  // EVENT BINDINGS
-  // ============================================================
-  $("newBtn").addEventListener("click", () => newGame());
-  $("playAgainBtn").addEventListener("click", () => newGame());
-  $("eraseBtn").addEventListener("click", eraseCell);
-  $("undoBtn").addEventListener("click", undo);
-  $("hintBtn").addEventListener("click", giveHint);
-  $("pencilBtn").addEventListener("click", () => {
-    state.pencilMode = !state.pencilMode;
-    $("pencilBtn").classList.toggle("toggled", state.pencilMode);
-  });
-
-  document.querySelectorAll(".diff-btn").forEach(btn => {
-    btn.addEventListener("click", () => {
-      document.querySelectorAll(".diff-btn").forEach(b => b.classList.remove("active"));
-      btn.classList.add("active");
-      newGame(btn.dataset.diff);
-    });
-  });
-
-  // Keyboard
-  document.addEventListener("keydown", e => {
-    if (e.key >= "1" && e.key <= "9" && !e.metaKey && !e.ctrlKey){
-      placeNumber(+e.key);
-      return;
-    }
-    if (e.key === "Backspace" || e.key === "Delete"){
-      e.preventDefault();
-      eraseCell();
-      return;
-    }
-    if (e.key.toLowerCase() === "n"){
-      state.pencilMode = !state.pencilMode;
-      $("pencilBtn").classList.toggle("toggled", state.pencilMode);
-      return;
-    }
-    if (e.key.toLowerCase() === "h"){
-      giveHint();
-      return;
-    }
-    if (e.key.toLowerCase() === "u"){
-      undo();
-      return;
-    }
-    if (!state.selected) return;
-    const { r, c } = state.selected;
-    if (e.key === "ArrowUp" && r > 0) selectCell(r - 1, c);
-    else if (e.key === "ArrowDown" && r < 8) selectCell(r + 1, c);
-    else if (e.key === "ArrowLeft" && c > 0) selectCell(r, c - 1);
-    else if (e.key === "ArrowRight" && c < 8) selectCell(r, c + 1);
-  });
 
   // ============================================================
   // INIT
   // ============================================================
-  buildBoard();
-  buildNumpad();
-  newGame("medium");
+  function startGame(){
+    state.day = 1;
+    state.affection = 0;
+    state.currentNode = "d1_start";
+    state.typing = false;
+    updateAffectionUI();
+    dayNum.textContent = 1;
+    dayIndicator.style.display = "block";
+    affection.style.display = "block";
+    startScreen.classList.remove("visible");
+    endingScreen.classList.remove("visible");
+    setTimeout(() => goToNode("d1_start"), 300);
+  }
+
+  document.getElementById("startBtn").addEventListener("click", startGame);
+  document.getElementById("restartBtn").addEventListener("click", () => {
+    endingScreen.classList.remove("visible");
+    setTimeout(startGame, 300);
+  });
+
+  // Click on dialogue = advance
+  document.querySelector(".dialogue").addEventListener("click", (e) => {
+    if (e.target.classList.contains("choice") || e.target.closest(".choice")) return;
+    advance();
+  });
+
+  // Click anywhere on scene = advance if continuing
+  scene.addEventListener("click", () => {
+    if (state.currentNode && STORY[state.currentNode] && !STORY[state.currentNode].choices){
+      advance();
+    }
+  });
+
+  // Keyboard: Space or Enter to advance
+  document.addEventListener("keydown", e => {
+    if (e.key === " " || e.key === "Enter"){
+      e.preventDefault();
+      const node = STORY[state.currentNode];
+      if (node && !node.choices) advance();
+    }
+  });
 })();
 </script>
 
