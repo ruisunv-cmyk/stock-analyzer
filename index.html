@@ -3,40 +3,27 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>AuditPro — Audit & Findings Manager</title>
+<title>Internal Audit Report Generator</title>
 <style>
   :root {
-    --bg: #f4f6fb;
-    --card: #ffffff;
-    --border: #e2e6ef;
-    --primary: #1d4ed8;
-    --primary-dark: #1e40af;
-    --text: #1a1a2e;
-    --muted: #6b7280;
-    --danger: #dc2626;
-    --warn: #d97706;
-    --ok: #059669;
-    --info: #2563eb;
+    --bg: #f4f6fb; --card: #fff; --border: #e2e6ef;
+    --primary: #1d4ed8; --primary-dark: #1e40af;
+    --text: #1a1a2e; --muted: #6b7280;
+    --danger: #dc2626; --warn: #d97706; --ok: #059669;
   }
   * { box-sizing: border-box; margin: 0; padding: 0; }
   body {
     font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
-    background: var(--bg);
-    color: var(--text);
-    padding: 1.5rem;
-    line-height: 1.45;
+    background: var(--bg); color: var(--text); padding: 1.5rem; line-height: 1.45;
   }
-  h1, h2, h3 { font-weight: 700; }
   h1 { font-size: 1.5rem; color: var(--primary); }
-  h2 { font-size: 1.15rem; margin-bottom: 1rem; }
-  h3 { font-size: 1rem; }
-
+  h2 { font-size: 1.1rem; margin-bottom: 1rem; }
+  h3 { font-size: .95rem; }
   .topbar {
     display: flex; justify-content: space-between; align-items: center;
     flex-wrap: wrap; gap: 1rem; margin-bottom: 1.5rem;
   }
-  .topbar .actions { display: flex; gap: .6rem; flex-wrap: wrap; }
-
+  .actions { display: flex; gap: .6rem; flex-wrap: wrap; }
   button {
     font-family: inherit; font-size: .9rem; font-weight: 600;
     padding: .55rem 1rem; border-radius: 8px; border: 1px solid transparent;
@@ -49,35 +36,20 @@
   .btn-danger { background: #fee2e2; color: var(--danger); }
   .btn-danger:hover { background: #fecaca; }
 
-  .stats {
-    display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
-    gap: 1rem; margin-bottom: 1.5rem;
-  }
-  .stat {
-    background: var(--card); padding: 1.1rem 1.25rem; border-radius: 12px;
-    border: 1px solid var(--border);
-  }
-  .stat .label { font-size: .8rem; color: var(--muted); text-transform: uppercase; letter-spacing: .04em; }
-  .stat .value { font-size: 1.8rem; font-weight: 700; margin-top: .25rem; }
-  .stat.risk .value { color: var(--danger); }
-  .stat.open .value { color: var(--warn); }
-  .stat.ok .value { color: var(--ok); }
-
   .panel {
     background: var(--card); border: 1px solid var(--border);
-    border-radius: 12px; padding: 1.25rem; margin-bottom: 1.5rem;
+    border-radius: 12px; padding: 1.25rem; margin-bottom: 1.25rem;
   }
   .panel-head {
     display: flex; justify-content: space-between; align-items: center;
     flex-wrap: wrap; gap: .75rem; margin-bottom: 1rem;
   }
-
   form.grid {
     display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
     gap: .75rem;
   }
   form.grid .full { grid-column: 1 / -1; }
-  label { display: block; font-size: .8rem; font-weight: 600; color: var(--muted); margin-bottom: .3rem; }
+  label { display: block; font-size: .78rem; font-weight: 600; color: var(--muted); margin-bottom: .3rem; }
   input, select, textarea {
     width: 100%; padding: .55rem .65rem; font-family: inherit; font-size: .9rem;
     border: 1px solid var(--border); border-radius: 8px; background: #fff;
@@ -87,12 +59,9 @@
   }
   textarea { min-height: 60px; resize: vertical; }
 
-  .filters { display: flex; gap: .6rem; flex-wrap: wrap; }
-  .filters input, .filters select { width: auto; min-width: 140px; }
-
-  table { width: 100%; border-collapse: collapse; font-size: .9rem; }
-  th, td { text-align: left; padding: .65rem .5rem; border-bottom: 1px solid var(--border); vertical-align: top; }
-  th { font-size: .78rem; text-transform: uppercase; letter-spacing: .04em; color: var(--muted); }
+  table { width: 100%; border-collapse: collapse; font-size: .88rem; }
+  th, td { text-align: left; padding: .6rem .5rem; border-bottom: 1px solid var(--border); vertical-align: top; }
+  th { font-size: .75rem; text-transform: uppercase; letter-spacing: .04em; color: var(--muted); }
   tr:hover td { background: #fafbff; }
 
   .badge {
@@ -106,12 +75,11 @@
   .badge.open { background: #fef3c7; color: #92400e; }
   .badge.in-progress { background: #dbeafe; color: #1e40af; }
   .badge.closed { background: #d1fae5; color: #065f46; }
-  .badge.planned { background: #e5e7eb; color: #374151; }
 
-  .empty { color: var(--muted); text-align: center; padding: 1.5rem; font-style: italic; }
+  .empty { color: var(--muted); text-align: center; padding: 1.25rem; font-style: italic; }
+  .muted { color: var(--muted); font-size: .82rem; }
   .actions-cell { white-space: nowrap; }
   .actions-cell button { padding: .3rem .55rem; font-size: .78rem; }
-  .muted { color: var(--muted); font-size: .82rem; }
 
   #toast {
     position: fixed; bottom: 1.25rem; right: 1.25rem;
@@ -121,9 +89,10 @@
   }
   #toast.show { opacity: 1; transform: translateY(0); }
 
-  @media (max-width: 640px) {
-    table { font-size: .8rem; }
-    th, td { padding: .45rem .3rem; }
+  .hint {
+    background: #eff6ff; border: 1px solid #bfdbfe; color: #1e40af;
+    padding: .65rem .9rem; border-radius: 8px; font-size: .82rem;
+    margin-bottom: 1rem;
   }
 </style>
 </head>
@@ -131,61 +100,68 @@
 
 <div class="topbar">
   <div>
-    <h1>AuditPro</h1>
-    <p class="muted">Audit plans & findings — stored locally in your browser</p>
+    <h1>Internal Audit Report Generator</h1>
+    <p class="muted">Fill in the report details and findings, then export a polished PDF.</p>
   </div>
   <div class="actions">
-    <button class="btn-ghost" id="export-json">Export JSON</button>
-    <button class="btn-ghost" id="export-csv">Export CSV</button>
-    <button class="btn-danger" id="reset-all">Reset All</button>
+    <button class="btn-ghost" id="load-sample">Load Sample</button>
+    <button class="btn-ghost" id="reset-all">Reset</button>
+    <button class="btn-primary" id="export-pdf">Export PDF</button>
   </div>
 </div>
 
-<!-- STATS -->
-<section class="stats">
-  <div class="stat"><div class="label">Total Audits</div><div class="value" id="stat-audits">0</div></div>
-  <div class="stat open"><div class="label">Open Findings</div><div class="value" id="stat-open">0</div></div>
-  <div class="stat risk"><div class="label">High/Critical</div><div class="value" id="stat-risk">0</div></div>
-  <div class="stat ok"><div class="label">Closed</div><div class="value" id="stat-closed">0</div></div>
-</section>
-
-<!-- NEW AUDIT -->
+<!-- REPORT METADATA -->
 <section class="panel">
-  <div class="panel-head"><h2>New Audit Plan</h2></div>
-  <form class="grid" id="audit-form">
-    <div><label for="a-title">Title</label><input id="a-title" required placeholder="Q1 Financial Audit" /></div>
-    <div><label for="a-dept">Department</label>
-      <select id="a-dept" required>
-        <option value="">Select…</option>
-        <option>Finance</option><option>Operations</option><option>IT</option>
-        <option>HR</option><option>Compliance</option><option>Procurement</option>
-      </select>
+  <div class="panel-head"><h2>Report Details</h2></div>
+  <form class="grid" id="meta-form">
+    <div class="full"><label for="m-title">Report Title</label>
+      <input id="m-title" value="Internal Audit Report — FY2025 Q1" required />
     </div>
-    <div><label for="a-auditor">Auditor</label><input id="a-auditor" required placeholder="Full name" /></div>
-    <div><label for="a-start">Start Date</label><input type="date" id="a-start" required /></div>
-    <div><label for="a-end">End Date</label><input type="date" id="a-end" required /></div>
-    <div><label for="a-status">Status</label>
-      <select id="a-status" required>
-        <option value="planned">Planned</option>
-        <option value="in-progress">In Progress</option>
-        <option value="closed">Closed</option>
-      </select>
+    <div><label for="m-client">Organisation / Client</label>
+      <input id="m-client" value="Acme Corporation" required />
     </div>
-    <div class="full"><label for="a-notes">Scope / Notes</label><textarea id="a-notes" placeholder="Optional"></textarea></div>
-    <div class="full" style="text-align:right">
-      <button type="submit" class="btn-primary">Add Audit</button>
+    <div><label for="m-audit-id">Audit Reference</label>
+      <input id="m-audit-id" value="AUD-2025-Q1-001" />
+    </div>
+    <div><label for="m-lead">Lead Auditor</label>
+      <input id="m-lead" value="Jane Smith" required />
+    </div>
+    <div><label for="m-reviewer">Reviewer</label>
+      <input id="m-reviewer" value="John Doe" />
+    </div>
+    <div><label for="m-period">Audit Period</label>
+      <input id="m-period" value="Jan 1 – Mar 31, 2025" />
+    </div>
+    <div><label for="m-date">Report Date</label>
+      <input type="date" id="m-date" required />
+    </div>
+    <div class="full"><label for="m-scope">Scope</label>
+      <textarea id="m-scope">Financial controls, procurement, and access management for Q1 2025.</textarea>
+    </div>
+    <div class="full"><label for="m-objective">Objective</label>
+      <textarea id="m-objective">Assess the design and operating effectiveness of key internal controls.</textarea>
+    </div>
+    <div class="full"><label for="m-summary">Executive Summary</label>
+      <textarea id="m-summary">The audit identified several control weaknesses in access management and procurement approvals. Overall, the control environment is partially effective. Management has committed to remediation actions as detailed in this report.</textarea>
     </div>
   </form>
 </section>
 
-<!-- NEW FINDING -->
+<!-- FINDINGS -->
 <section class="panel">
-  <div class="panel-head"><h2>New Finding</h2></div>
+  <div class="panel-head">
+    <h2>Findings</h2>
+    <span class="muted" id="finding-count">0 findings</span>
+  </div>
+
+  <div class="hint">
+    Tip: order matters — findings appear in the PDF in the order listed below.
+  </div>
+
   <form class="grid" id="finding-form">
-    <div><label for="f-audit">Audit</label>
-      <select id="f-audit" required></select>
+    <div class="full"><label for="f-title">Finding Title</label>
+      <input id="f-title" required placeholder="Weak password policy" />
     </div>
-    <div><label for="f-title">Finding</label><input id="f-title" required placeholder="Weak password policy" /></div>
     <div><label for="f-severity">Severity</label>
       <select id="f-severity" required>
         <option value="low">Low</option>
@@ -201,33 +177,33 @@
         <option value="closed">Closed</option>
       </select>
     </div>
-    <div class="full"><label for="f-recommendation">Recommendation</label><textarea id="f-recommendation" placeholder="Optional"></textarea></div>
+    <div><label for="f-owner">Owner</label>
+      <input id="f-owner" placeholder="IT Manager" />
+    </div>
+    <div><label for="f-due">Remediation Due</label>
+      <input type="date" id="f-due" />
+    </div>
+    <div class="full"><label for="f-condition">Condition (what was found)</label>
+      <textarea id="f-condition" placeholder="Passwords allowed to be 6 characters with no complexity."></textarea>
+    </div>
+    <div class="full"><label for="f-criteria">Criteria (what should be)</label>
+      <textarea id="f-criteria" placeholder="Policy requires minimum 12 characters with complexity."></textarea>
+    </div>
+    <div class="full"><label for="f-risk">Risk / Impact</label>
+      <textarea id="f-risk" placeholder="Accounts may be compromised via brute force."></textarea>
+    </div>
+    <div class="full"><label for="f-recommendation">Recommendation</label>
+      <textarea id="f-recommendation" placeholder="Enforce 12-char minimum and MFA within 30 days."></textarea>
+    </div>
     <div class="full" style="text-align:right">
       <button type="submit" class="btn-primary">Add Finding</button>
     </div>
   </form>
-</section>
 
-<!-- FINDINGS TABLE -->
-<section class="panel">
-  <div class="panel-head">
-    <h2>Findings</h2>
-    <div class="filters">
-      <input type="search" id="filter-text" placeholder="Search…" />
-      <select id="filter-severity">
-        <option value="">All severities</option>
-        <option>low</option><option>medium</option><option>high</option><option>critical</option>
-      </select>
-      <select id="filter-status">
-        <option value="">All statuses</option>
-        <option>open</option><option>in-progress</option><option>closed</option>
-      </select>
-    </div>
-  </div>
-  <table>
+  <table style="margin-top:1rem">
     <thead>
       <tr>
-        <th>Finding</th><th>Audit</th><th>Severity</th><th>Status</th><th>Created</th><th></th>
+        <th>#</th><th>Finding</th><th>Severity</th><th>Status</th><th>Owner</th><th></th>
       </tr>
     </thead>
     <tbody id="findings-body"></tbody>
@@ -235,43 +211,28 @@
   <div id="findings-empty" class="empty">No findings yet — add one above.</div>
 </section>
 
-<!-- AUDITS TABLE -->
-<section class="panel">
-  <div class="panel-head"><h2>Audit Plans</h2></div>
-  <table>
-    <thead>
-      <tr>
-        <th>Title</th><th>Department</th><th>Auditor</th><th>Dates</th><th>Status</th><th></th>
-      </tr>
-    </thead>
-    <tbody id="audits-body"></tbody>
-  </table>
-  <div id="audits-empty" class="empty">No audits yet — add one above.</div>
-</section>
-
 <div id="toast"></div>
+
+<!-- jsPDF + AutoTable -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js"></script>
 
 <script>
 (function () {
   "use strict";
 
-  const STORAGE = { audits: "auditpro.audits", findings: "auditpro.findings" };
+  const STORAGE = "auditreport.v1";
 
   const state = {
-    audits: load(STORAGE.audits),
-    findings: load(STORAGE.findings),
-    filters: { text: "", severity: "", status: "" },
+    meta: {
+      title: "", client: "", auditId: "", lead: "", reviewer: "",
+      period: "", date: "", scope: "", objective: "", summary: "",
+    },
+    findings: [],
   };
 
-  function load(key) {
-    try { return JSON.parse(localStorage.getItem(key)) || []; }
-    catch { return []; }
-  }
-  function save() {
-    localStorage.setItem(STORAGE.audits, JSON.stringify(state.audits));
-    localStorage.setItem(STORAGE.findings, JSON.stringify(state.findings));
-  }
-  function uid() { return Date.now().toString(36) + Math.random().toString(36).slice(2, 7); }
+  // ---------- Utilities ----------
+  function uid() { return Date.now().toString(36) + Math.random().toString(36).slice(2, 6); }
   function esc(s) {
     return String(s ?? "").replace(/[&<>"']/g, c =>
       ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
@@ -282,216 +243,535 @@
     clearTimeout(toast._t);
     toast._t = setTimeout(() => t.classList.remove("show"), 2200);
   }
-
-  // ---------- RENDERING ----------
-  function renderStats() {
-    const open = state.findings.filter(f => f.status !== "closed").length;
-    const risk = state.findings.filter(f => f.severity === "high" || f.severity === "critical").length;
-    const closed = state.findings.filter(f => f.status === "closed").length;
-    document.getElementById("stat-audits").textContent = state.audits.length;
-    document.getElementById("stat-open").textContent = open;
-    document.getElementById("stat-risk").textContent = risk;
-    document.getElementById("stat-closed").textContent = closed;
+  function todayISO() {
+    return new Date().toISOString().slice(0, 10);
   }
 
-  function auditTitle(id) {
-    const a = state.audits.find(x => x.id === id);
-    return a ? a.title : "(deleted audit)";
+  // ---------- Persistence ----------
+  function save() { localStorage.setItem(STORAGE, JSON.stringify(state)); }
+  function loadState() {
+    try {
+      const raw = localStorage.getItem(STORAGE);
+      if (raw) {
+        const p = JSON.parse(raw);
+        if (p.meta) Object.assign(state.meta, p.meta);
+        if (Array.isArray(p.findings)) state.findings = p.findings;
+      }
+    } catch { /* ignore */ }
   }
 
-  function renderAuditSelect() {
-    const sel = document.getElementById("f-audit");
-    const current = sel.value;
-    sel.innerHTML = "";
-    if (!state.audits.length) {
-      sel.innerHTML = '<option value="">— create an audit first —</option>';
-      return;
-    }
-    state.audits.forEach(a => {
-      const o = document.createElement("option");
-      o.value = a.id;
-      o.textContent = a.title;
-      sel.appendChild(o);
-    });
-    if (current) sel.value = current;
-  }
+  // ---------- Form binding ----------
+  const META_FIELDS = [
+    ["m-title", "title"], ["m-client", "client"], ["m-audit-id", "auditId"],
+    ["m-lead", "lead"], ["m-reviewer", "reviewer"], ["m-period", "period"],
+    ["m-date", "date"], ["m-scope", "scope"], ["m-objective", "objective"],
+    ["m-summary", "summary"],
+  ];
 
-  function renderAudits() {
-    const body = document.getElementById("audits-body");
-    const empty = document.getElementById("audits-empty");
-    body.innerHTML = "";
-    empty.style.display = state.audits.length ? "none" : "block";
-
-    state.audits.slice().reverse().forEach(a => {
-      const tr = document.createElement("tr");
-      tr.innerHTML = `
-        <td><strong>${esc(a.title)}</strong></td>
-        <td>${esc(a.department)}</td>
-        <td>${esc(a.auditor)}</td>
-        <td class="muted">${esc(a.start)} → ${esc(a.end)}</td>
-        <td><span class="badge ${esc(a.status)}">${esc(a.status)}</span></td>
-        <td class="actions-cell">
-          <button class="btn-danger" data-del-audit="${esc(a.id)}">Delete</button>
-        </td>`;
-      body.appendChild(tr);
+  function bindMeta() {
+    META_FIELDS.forEach(([id, key]) => {
+      const el = document.getElementById(id);
+      el.value = state.meta[key] ?? "";
+      el.addEventListener("input", () => {
+        state.meta[key] = el.value;
+        save();
+      });
     });
   }
+
+  function refreshMetaInputs() {
+    META_FIELDS.forEach(([id, key]) => {
+      document.getElementById(id).value = state.meta[key] ?? "";
+    });
+  }
+
+  // ---------- Findings rendering ----------
+  const SEV_ORDER = { critical: 0, high: 1, medium: 2, low: 3 };
 
   function renderFindings() {
     const body = document.getElementById("findings-body");
     const empty = document.getElementById("findings-empty");
+    const count = document.getElementById("finding-count");
     body.innerHTML = "";
+    empty.style.display = state.findings.length ? "none" : "block";
+    count.textContent = `${state.findings.length} finding${state.findings.length === 1 ? "" : "s"}`;
 
-    const q = state.filters.text.toLowerCase();
-    const list = state.findings
-      .filter(f =>
-        (!q || (f.title + " " + (f.recommendation || "")).toLowerCase().includes(q)) &&
-        (!state.filters.severity || f.severity === state.filters.severity) &&
-        (!state.filters.status || f.status === state.filters.status)
-      )
-      .slice().reverse();
-
-    empty.style.display = list.length ? "none" : "block";
-
-    list.forEach(f => {
+    state.findings.forEach((f, i) => {
       const tr = document.createElement("tr");
       tr.innerHTML = `
-        <td><strong>${esc(f.title)}</strong>${f.recommendation ? `<div class="muted">${esc(f.recommendation)}</div>` : ""}</td>
-        <td>${esc(auditTitle(f.auditId))}</td>
+        <td>${i + 1}</td>
+        <td><strong>${esc(f.title)}</strong></td>
         <td><span class="badge ${esc(f.severity)}">${esc(f.severity)}</span></td>
         <td><span class="badge ${esc(f.status)}">${esc(f.status)}</span></td>
-        <td class="muted">${esc(new Date(f.createdAt).toLocaleDateString())}</td>
+        <td class="muted">${esc(f.owner || "—")}</td>
         <td class="actions-cell">
-          <button class="btn-ghost" data-cycle-finding="${esc(f.id)}">Toggle</button>
-          <button class="btn-danger" data-del-finding="${esc(f.id)}">×</button>
+          <button class="btn-ghost" data-up="${esc(f.id)}" title="Move up">↑</button>
+          <button class="btn-ghost" data-down="${esc(f.id)}" title="Move down">↓</button>
+          <button class="btn-ghost" data-edit="${esc(f.id)}">Edit</button>
+          <button class="btn-danger" data-del="${esc(f.id)}">×</button>
         </td>`;
       body.appendChild(tr);
     });
   }
 
-  function renderAll() {
-    renderStats();
-    renderAuditSelect();
-    renderAudits();
-    renderFindings();
+  // ---------- Findings form ----------
+  const F_FIELDS = [
+    "f-title", "f-severity", "f-status", "f-owner", "f-due",
+    "f-condition", "f-criteria", "f-risk", "f-recommendation",
+  ];
+
+  function clearFindingForm() {
+    F_FIELDS.forEach(id => {
+      const el = document.getElementById(id);
+      if (el.tagName === "SELECT") el.selectedIndex = 0;
+      else el.value = "";
+    });
   }
 
-  // ---------- EVENTS ----------
-  document.getElementById("audit-form").addEventListener("submit", e => {
-    e.preventDefault();
-    const a = {
-      id: uid(),
-      title: document.getElementById("a-title").value.trim(),
-      department: document.getElementById("a-dept").value,
-      auditor: document.getElementById("a-auditor").value.trim(),
-      start: document.getElementById("a-start").value,
-      end: document.getElementById("a-end").value,
-      status: document.getElementById("a-status").value,
-      notes: document.getElementById("a-notes").value.trim(),
-      createdAt: new Date().toISOString(),
-    };
-    state.audits.push(a);
-    save(); renderAll(); e.target.reset();
-    toast("Audit added");
-  });
+  function fillFindingForm(f) {
+    document.getElementById("f-title").value = f.title || "";
+    document.getElementById("f-severity").value = f.severity || "medium";
+    document.getElementById("f-status").value = f.status || "open";
+    document.getElementById("f-owner").value = f.owner || "";
+    document.getElementById("f-due").value = f.due || "";
+    document.getElementById("f-condition").value = f.condition || "";
+    document.getElementById("f-criteria").value = f.criteria || "";
+    document.getElementById("f-risk").value = f.risk || "";
+    document.getElementById("f-recommendation").value = f.recommendation || "";
+  }
+
+  let editingId = null;
 
   document.getElementById("finding-form").addEventListener("submit", e => {
     e.preventDefault();
-    const auditId = document.getElementById("f-audit").value;
-    if (!auditId) { toast("Create an audit first"); return; }
-    const f = {
-      id: uid(),
-      auditId,
+    const payload = {
       title: document.getElementById("f-title").value.trim(),
       severity: document.getElementById("f-severity").value,
       status: document.getElementById("f-status").value,
+      owner: document.getElementById("f-owner").value.trim(),
+      due: document.getElementById("f-due").value,
+      condition: document.getElementById("f-condition").value.trim(),
+      criteria: document.getElementById("f-criteria").value.trim(),
+      risk: document.getElementById("f-risk").value.trim(),
       recommendation: document.getElementById("f-recommendation").value.trim(),
-      createdAt: new Date().toISOString(),
     };
-    state.findings.push(f);
-    save(); renderAll(); e.target.reset();
-    toast("Finding added");
+    if (editingId) {
+      const idx = state.findings.findIndex(x => x.id === editingId);
+      if (idx >= 0) state.findings[idx] = { ...state.findings[idx], ...payload };
+      editingId = null;
+      document.querySelector('#finding-form button[type=submit]').textContent = "Add Finding";
+      toast("Finding updated");
+    } else {
+      state.findings.push({ id: uid(), ...payload });
+      toast("Finding added");
+    }
+    save(); renderFindings(); clearFindingForm();
   });
 
-  document.getElementById("filter-text").addEventListener("input", e => {
-    state.filters.text = e.target.value; renderFindings();
-  });
-  document.getElementById("filter-severity").addEventListener("change", e => {
-    state.filters.severity = e.target.value; renderFindings();
-  });
-  document.getElementById("filter-status").addEventListener("change", e => {
-    state.filters.status = e.target.value; renderFindings();
-  });
-
-  // Delegated actions
-  document.body.addEventListener("click", e => {
+  // Reorder / edit / delete
+  document.getElementById("findings-body").addEventListener("click", e => {
     const t = e.target;
     if (!(t instanceof HTMLElement)) return;
+    const { up, down, edit, del } = t.dataset;
 
-    if (t.dataset.delAudit) {
-      const id = t.dataset.delAudit;
-      const a = state.audits.find(x => x.id === id);
-      if (!a) return;
-      if (!confirm(`Delete audit "${a.title}" and all its findings?`)) return;
-      state.audits = state.audits.filter(x => x.id !== id);
-      state.findings = state.findings.filter(f => f.auditId !== id);
-      save(); renderAll(); toast("Audit deleted");
+    if (up || down) {
+      const id = up || down;
+      const i = state.findings.findIndex(x => x.id === id);
+      if (i < 0) return;
+      const j = up ? i - 1 : i + 1;
+      if (j < 0 || j >= state.findings.length) return;
+      [state.findings[i], state.findings[j]] = [state.findings[j], state.findings[i]];
+      save(); renderFindings();
     }
 
-    if (t.dataset.delFinding) {
-      const id = t.dataset.delFinding;
-      state.findings = state.findings.filter(x => x.id !== id);
-      save(); renderAll(); toast("Finding deleted");
-    }
-
-    if (t.dataset.cycleFinding) {
-      const id = t.dataset.cycleFinding;
-      const f = state.findings.find(x => x.id === id);
+    if (edit) {
+      const f = state.findings.find(x => x.id === edit);
       if (!f) return;
-      const order = ["open", "in-progress", "closed"];
-      f.status = order[(order.indexOf(f.status) + 1) % order.length];
-      save(); renderAll();
+      editingId = f.id;
+      fillFindingForm(f);
+      document.querySelector('#finding-form button[type=submit]').textContent = "Update Finding";
+      document.getElementById("f-title").focus();
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+
+    if (del) {
+      state.findings = state.findings.filter(x => x.id !== del);
+      save(); renderFindings(); toast("Finding removed");
     }
   });
 
-  // Export JSON
-  document.getElementById("export-json").addEventListener("click", () => {
-    const blob = new Blob(
-      [JSON.stringify({ audits: state.audits, findings: state.findings }, null, 2)],
-      { type: "application/json" }
-    );
-    download(blob, "auditpro-export.json");
-  });
-
-  // Export CSV
-  document.getElementById("export-csv").addEventListener("click", () => {
-    const rows = [
-      ["type", "title", "audit", "department", "auditor", "severity", "status", "start", "end", "recommendation"],
-      ...state.audits.map(a => ["audit", a.title, "", a.department, a.auditor, "", a.status, a.start, a.end, ""]),
-      ...state.findings.map(f => ["finding", f.title, auditTitle(f.auditId), "", "", f.severity, f.status, "", "", f.recommendation]),
+  // ---------- Sample data ----------
+  document.getElementById("load-sample").addEventListener("click", () => {
+    state.meta = {
+      title: "Internal Audit Report — FY2025 Q1",
+      client: "Acme Corporation",
+      auditId: "AUD-2025-Q1-001",
+      lead: "Jane Smith",
+      reviewer: "John Doe",
+      period: "Jan 1 – Mar 31, 2025",
+      date: todayISO(),
+      scope: "Financial controls, procurement, and access management for Q1 2025.",
+      objective: "Assess the design and operating effectiveness of key internal controls.",
+      summary: "The audit identified several control weaknesses in access management and procurement approvals. Overall, the control environment is partially effective. Management has committed to remediation actions as detailed in this report.",
+    };
+    state.findings = [
+      {
+        id: uid(), title: "Weak password policy", severity: "high", status: "open",
+        owner: "IT Manager", due: "",
+        condition: "Passwords allowed to be 6 characters with no complexity requirement.",
+        criteria: "Policy requires a minimum of 12 characters with complexity and MFA.",
+        risk: "Accounts may be compromised via brute-force or credential-stuffing attacks.",
+        recommendation: "Enforce a 12-character minimum with complexity and enable MFA within 30 days.",
+      },
+      {
+        id: uid(), title: "Missing procurement approvals", severity: "critical", status: "in-progress",
+        owner: "Procurement Lead", due: "",
+        condition: "Three purchase orders above $50,000 lacked documented second-level approval.",
+        criteria: "Policy requires dual approval for all purchases above $50,000.",
+        risk: "Unauthorised or fraudulent spending may go undetected.",
+        recommendation: "Implement automated approval workflow with enforced dual sign-off.",
+      },
+      {
+        id: uid(), title: "Incomplete access reviews", severity: "medium", status: "open",
+        owner: "Compliance", due: "",
+        condition: "Quarterly access reviews were not performed for two systems.",
+        criteria: "Quarterly access reviews required for all in-scope systems.",
+        risk: "Excessive or stale access may persist unnoticed.",
+        recommendation: "Automate review reminders and track completion in the GRC tool.",
+      },
     ];
-    const csv = rows.map(r => r.map(cell => `"${String(cell).replace(/"/g, '""')}"`).join(",")).join("\n");
-    download(new Blob([csv], { type: "text/csv" }), "auditpro-export.csv");
+    save(); refreshMetaInputs(); renderFindings(); toast("Sample report loaded");
   });
 
-  // Reset
+  // ---------- Reset ----------
   document.getElementById("reset-all").addEventListener("click", () => {
-    if (!confirm("Delete ALL audits and findings? This cannot be undone.")) return;
-    state.audits = []; state.findings = [];
-    save(); renderAll(); toast("All data cleared");
+    if (!confirm("Clear the report and all findings?")) return;
+    state.meta = { title: "", client: "", auditId: "", lead: "", reviewer: "", period: "", date: "", scope: "", objective: "", summary: "" };
+    state.findings = [];
+    editingId = null;
+    document.querySelector('#finding-form button[type=submit]').textContent = "Add Finding";
+    save(); refreshMetaInputs(); clearFindingForm(); renderFindings();
+    toast("Cleared");
   });
 
-  function download(blob, filename) {
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement("a");
-    a.href = url; a.download = filename;
-    document.body.appendChild(a); a.click(); a.remove();
-    setTimeout(() => URL.revokeObjectURL(url), 1000);
-  }
+  // ---------- PDF EXPORT ----------
+  document.getElementById("export-pdf").addEventListener("click", () => {
+    if (!window.jspdf) { toast("PDF library not loaded"); return; }
+    try {
+      generatePDF();
+    } catch (err) {
+      console.error(err);
+      toast("PDF generation failed — see console");
+    }
+  });
 
-  // Init
-  renderAll();
-})();
-</script>
-</body>
-</html>
+  function generatePDF() {
+    const { jsPDF } = window.jspdf;
+    const doc = new jsPDF({ unit: "pt", format: "a4" });
+    const M = 48;                       // page margin
+    const W = doc.internal.pageSize.getWidth();
+    const H = doc.internal.pageSize.getHeight();
+    const contentW = W - M * 2;
+
+    const colors = {
+      primary: [29, 78, 216],
+      text: [26, 26, 46],
+      muted: [107, 114, 128],
+      border: [226, 230, 239],
+      headerBg: [29, 78, 216],
+      headText: [255, 255, 255],
+      altRow: [244, 246, 251],
+    };
+
+    const sevColor = {
+      low: [30, 64, 175],
+      medium: [180, 83, 9],
+      high: [185, 28, 28],
+      critical: [127, 29, 29],
+    };
+    const statusColor = {
+      open: [180, 83, 9],
+      "in-progress": [30, 64, 175],
+      closed: [6, 95, 70],
+    };
+
+    // ---- helpers ----
+    const fmtDate = (iso) => {
+      if (!iso) return "—";
+      const d = new Date(iso);
+      if (isNaN(d)) return iso;
+      return d.toLocaleDateString("en-GB", { day: "2-digit", month: "short", year: "numeric" });
+    };
+
+    let y = M;
+
+    function ensureSpace(needed) {
+      if (y + needed > H - M - 24) {
+        doc.addPage();
+        y = M;
+        addFooter();
+        return true;
+      }
+      return false;
+    }
+
+    function addFooter() {
+      const pageNum = doc.getNumberOfPages();
+      doc.setFont("helvetica", "normal");
+      doc.setFontSize(8);
+      doc.setTextColor(...colors.muted);
+      doc.text(
+        `${state.meta.title || "Internal Audit Report"}  ·  Page ${pageNum}`,
+        W / 2, H - 20, { align: "center" }
+      );
+    }
+
+    function heading(text) {
+      ensureSpace(34);
+      doc.setFillColor(...colors.primary);
+      doc.rect(M, y, contentW, 22, "F");
+      doc.setFont("helvetica", "bold");
+      doc.setFontSize(11);
+      doc.setTextColor(...colors.headText);
+      doc.text(text.toUpperCase(), M + 10, y + 15);
+      y += 30;
+    }
+
+    function paragraph(text, opts = {}) {
+      const size = opts.size || 10;
+      const lineH = size * 1.4;
+      doc.setFont("helvetica", opts.bold ? "bold" : "normal");
+      doc.setFontSize(size);
+      doc.setTextColor(...(opts.color || colors.text));
+      const lines = doc.splitTextToSize(text || "—", contentW);
+      lines.forEach(line => {
+        ensureSpace(lineH);
+        doc.text(line, M, y);
+        y += lineH;
+      });
+    }
+
+    function labelValue(label, value) {
+      ensureSpace(16);
+      doc.setFont("helvetica", "bold");
+      doc.setFontSize(9);
+      doc.setTextColor(...colors.muted);
+      doc.text(label.toUpperCase(), M, y);
+      doc.setFont("helvetica", "normal");
+      doc.setFontSize(10);
+      doc.setTextColor(...colors.text);
+      const lines = doc.splitTextToSize(value || "—", contentW);
+      lines.forEach((line, i) => {
+        if (i > 0) ensureSpace(14);
+        doc.text(line, M, y + 12 + i * 14);
+      });
+      y += 12 + lines.length * 14 + 4;
+    }
+
+    // ---- COVER ----
+    doc.setFillColor(...colors.primary);
+    doc.rect(0, 0, W, 160, "F");
+
+    doc.setFont("helvetica", "bold");
+    doc.setFontSize(11);
+    doc.setTextColor(255, 255, 255);
+    doc.text("INTERNAL AUDIT REPORT", M, 60);
+
+    doc.setFontSize(20);
+    const titleLines = doc.splitTextToSize(state.meta.title || "Internal Audit Report", contentW);
+    let ty = 90;
+    titleLines.forEach(l => { doc.text(l, M, ty); ty += 24; });
+
+    doc.setFont("helvetica", "normal");
+    doc.setFontSize(11);
+    doc.text(state.meta.client || "—", M, ty + 6);
+
+    // meta block
+    y = 200;
+    heading("Report Information");
+
+    const metaRows = [
+      ["Organisation", state.meta.client || "—"],
+      ["Audit Reference", state.meta.auditId || "—"],
+      ["Lead Auditor", state.meta.lead || "—"],
+      ["Reviewer", state.meta.reviewer || "—"],
+      ["Audit Period", state.meta.period || "—"],
+      ["Report Date", fmtDate(state.meta.date)],
+    ];
+    metaRows.forEach(([k, v]) => labelValue(k, v));
+
+    // ---- SCOPE / OBJECTIVE / SUMMARY ----
+    heading("Scope");
+    paragraph(state.meta.scope || "—");
+    y += 8;
+
+    heading("Objective");
+    paragraph(state.meta.objective || "—");
+    y += 8;
+
+    heading("Executive Summary");
+    paragraph(state.meta.summary || "—");
+    y += 8;
+
+    // ---- SUMMARY STATS ----
+    heading("Findings Overview");
+    const counts = { critical: 0, high: 0, medium: 0, low: 0 };
+    state.findings.forEach(f => { if (counts[f.severity] != null) counts[f.severity]++; });
+
+    const boxW = (contentW - 3 * 10) / 4;
+    const boxH = 60;
+    ensureSpace(boxH + 10);
+    const sevList = [["critical", counts.critical], ["high", counts.high], ["medium", counts.medium], ["low", counts.low]];
+    sevList.forEach(([sev, n], i) => {
+      const x = M + i * (boxW + 10);
+      doc.setFillColor(245, 247, 252);
+      doc.setDrawColor(...colors.border);
+      doc.roundedRect(x, y, boxW, boxH, 6, 6, "FD");
+      doc.setFont("helvetica", "bold");
+      doc.setFontSize(9);
+      doc.setTextColor(...sevColor[sev]);
+      doc.text(sev.toUpperCase(), x + 10, y + 18);
+      doc.setFontSize(20);
+      doc.setTextColor(...colors.text);
+      doc.text(String(n), x + 10, y + 46);
+    });
+    y += boxH + 16;
+
+    // ---- FINDINGS TABLE ----
+    heading("Summary of Findings");
+
+    if (!state.findings.length) {
+      paragraph("No findings recorded.", { color: colors.muted });
+    } else {
+      const rows = state.findings.map((f, i) => [
+        String(i + 1),
+        f.title,
+        f.severity,
+        f.status,
+        f.owner || "—",
+      ]);
+
+      doc.autoTable({
+        startY: y,
+        head: [["#", "Finding", "Severity", "Status", "Owner"]],
+        body: rows,
+        theme: "grid",
+        styles: { fontSize: 9, cellPadding: 6, textColor: colors.text, lineColor: colors.border, lineWidth: 0.5 },
+        headStyles: { fillColor: colors.headerBg, textColor: 255, fontStyle: "bold", fontSize: 9 },
+        alternateRowStyles: { fillColor: colors.altRow },
+        columnStyles: {
+          0: { cellWidth: 24, halign: "center" },
+          2: { cellWidth: 60, halign: "center" },
+          3: { cellWidth: 70, halign: "center" },
+          4: { cellWidth: 90 },
+        },
+        margin: { left: M, right: M },
+        didDrawPage: () => { addFooter(); },
+      });
+
+      y = doc.lastAutoTable.finalY + 16;
+    }
+
+    // ---- DETAILED FINDINGS ----
+    if (state.findings.length) {
+      doc.addPage();
+      y = M;
+      addFooter();
+      heading("Detailed Findings");
+
+      state.findings.forEach((f, i) => {
+        // estimate block height; if small, ensureSpace
+        ensureSpace(90);
+
+        // numbering + title bar
+        doc.setFillColor(245, 247, 252);
+        doc.setDrawColor(...colors.border);
+        doc.roundedRect(M, y, contentW, 28, 4, 4, "FD");
+
+        doc.setFont("helvetica", "bold");
+        doc.setFontSize(11);
+        doc.setTextColor(...colors.text);
+        doc.text(`${i + 1}. ${f.title}`, M + 10, y + 18);
+
+        // severity + status badges (right side)
+        const sevText = f.severity.toUpperCase();
+        const statText = f.status.toUpperCase();
+        doc.setFontSize(8);
+        let bx = M + contentW - 10;
+        // status
+        const statW = doc.getTextWidth(statText) + 12;
+        bx -= statW;
+        doc.setFillColor(...statusColor[f.status] || [100, 100, 100]);
+        doc.roundedRect(bx, y + 7, statW, 14, 7, 7, "F");
+        doc.setTextColor(255, 255, 255);
+        doc.text(statText, bx + statW / 2, y + 17, { align: "center" });
+        bx -= 6;
+        // severity
+        const sevW = doc.getTextWidth(sevText) + 12;
+        bx -= sevW;
+        doc.setFillColor(...sevColor[f.severity] || [100, 100, 100]);
+        doc.roundedRect(bx, y + 7, sevW, 14, 7, 7, "F");
+        doc.text(sevText, bx + sevW / 2, y + 17, { align: "center" });
+
+        y += 36;
+
+        // fields
+        const fields = [
+          ["Condition", f.condition],
+          ["Criteria", f.criteria],
+          ["Risk / Impact", f.risk],
+          ["Recommendation", f.recommendation],
+          ["Owner", f.owner || "—"],
+          ["Remediation Due", f.due ? fmtDate(f.due) : "—"],
+        ];
+
+        fields.forEach(([label, value]) => {
+          if (!value) return;
+          ensureSpace(30);
+          doc.setFont("helvetica", "bold");
+          doc.setFontSize(9);
+          doc.setTextColor(...colors.muted);
+          doc.text(label.toUpperCase(), M, y);
+          y += 12;
+          doc.setFont("helvetica", "normal");
+          doc.setFontSize(10);
+          doc.setTextColor(...colors.text);
+          const lines = doc.splitTextToSize(value, contentW);
+          lines.forEach(line => {
+            ensureSpace(14);
+            doc.text(line, M, y);
+            y += 14;
+          });
+          y += 6;
+        });
+
+        y += 6;
+        // separator
+        ensureSpace(10);
+        doc.setDrawColor(...colors.border);
+        doc.line(M, y, M + contentW, y);
+        y += 12;
+      });
+    }
+
+    // ---- SIGN-OFF ----
+    doc.addPage();
+    y = M;
+    addFooter();
+    heading("Sign-off");
+
+    ensureSpace(70);
+    doc.setFont("helvetica", "normal");
+    doc.setFontSize(10);
+    doc.setTextColor(...colors.text);
+    doc.text("Prepared by:", M, y); y += 30;
+    doc.line(M, y, M + 200, y);
+    doc.setFontSize(9); doc.setTextColor(...colors.muted);
+    doc.text("Lead Auditor — " + (state.meta.lead || ""), M, y + 12);
+    y += 50;
+
+    doc.setFontSize(10); doc.setTextColor(...colors.text);
+    doc.text("Reviewed by:", M, y); y += 30;
+    doc.line(M, y, M + 200, y);
+    doc.setFontSize(9); doc.setTextColor(...colors.muted);
+    doc.text("
