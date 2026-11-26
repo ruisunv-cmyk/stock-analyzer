@@ -16,42 +16,44 @@
 }
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 html{scroll-behavior:smooth}
-body{background:var(--void);color:var(--foam);font-family:'Inter',system-ui,sans-serif;font-weight:200;line-height:1.7;overflow-x:hidden;-webkit-font-smoothing:antialiased;cursor:none}
+body{background:var(--void);color:var(--foam);font-family:'Inter',system-ui,sans-serif;font-weight:200;line-height:1.7;overflow-x:hidden;-webkit-font-smoothing:antialiased}
 h1,h2,h3,h4{font-family:'Cormorant Garamond',Georgia,serif;font-weight:300;letter-spacing:-.01em;line-height:1.05}
 
-/* STARFIELD */
-.starfield{position:fixed;inset:0;z-index:-2;background:radial-gradient(ellipse at 50% 0%,#0a1a28 0%,#02060d 60%,#000308 100%);overflow:hidden}
-.starfield::before{content:"";position:absolute;inset:0;background:radial-gradient(circle at 20% 30%,rgba(95,179,212,.08),transparent 40%),radial-gradient(circle at 80% 70%,rgba(45,106,143,.1),transparent 40%),radial-gradient(circle at 50% 90%,rgba(212,165,116,.04),transparent 40%);animation:nebula 30s ease-in-out infinite}
-@keyframes nebula{0%,100%{opacity:.6;transform:scale(1)}50%{opacity:1;transform:scale(1.08)}}
+/* STARFIELD — richer, three layers */
+.starfield{position:fixed;inset:0;z-index:-3;background:radial-gradient(ellipse at 50% 0%,#0a1a28 0%,#02060d 60%,#000308 100%);overflow:hidden}
+.starfield::before{content:"";position:absolute;inset:0;background:
+  radial-gradient(circle at 15% 25%,rgba(95,179,212,.18),transparent 35%),
+  radial-gradient(circle at 85% 65%,rgba(45,106,143,.2),transparent 40%),
+  radial-gradient(circle at 50% 95%,rgba(212,165,116,.08),transparent 40%),
+  radial-gradient(circle at 70% 15%,rgba(168,216,232,.06),transparent 30%);
+  animation:nebula 24s ease-in-out infinite}
+@keyframes nebula{0%,100%{opacity:.7;transform:scale(1)}50%{opacity:1;transform:scale(1.1)}}
 .stars-canvas{position:absolute;inset:0}
-.star-dot{position:absolute;border-radius:50%;background:#fff;animation:starTwinkle var(--d,8s) infinite ease-in-out;animation-delay:var(--dl,0s);box-shadow:0 0 6px currentColor}
+.star-dot{position:absolute;border-radius:50%;background:#fff;animation:starTwinkle var(--d,8s) infinite ease-in-out;animation-delay:var(--dl,0s);box-shadow:0 0 6px currentColor,0 0 12px currentColor}
 @keyframes starTwinkle{0%,100%{opacity:0;transform:scale(.4)}50%{opacity:var(--mo,.9);transform:scale(1)}}
-body::after{content:"";position:fixed;inset:0;pointer-events:none;z-index:9998;opacity:.025;mix-blend-mode:overlay;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23n)'/%3E%3C/svg%3E")}
+body::after{content:"";position:fixed;inset:0;pointer-events:none;z-index:9998;opacity:.03;mix-blend-mode:overlay;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23n)'/%3E%3C/svg%3E")}
 
-/* CURSOR */
-.cursor{position:fixed;top:0;left:0;width:8px;height:8px;border-radius:50%;background:var(--glow);pointer-events:none;z-index:9999;transform:translate(-50%,-50%);box-shadow:0 0 20px var(--glow),0 0 50px var(--glow);transition:width .3s var(--ease),height .3s var(--ease);mix-blend-mode:screen}
-.cursor-ring{position:fixed;top:0;left:0;width:44px;height:44px;border-radius:50%;border:1px solid var(--ice);pointer-events:none;z-index:9999;transform:translate(-50%,-50%);opacity:.4;transition:all .4s var(--ease)}
-.cursor.hover{width:70px;height:70px}
-.cursor-ring.hover{width:100px;height:100px;opacity:0}
-.cursor-trail{position:fixed;top:0;left:0;width:4px;height:4px;border-radius:50%;background:var(--glow);pointer-events:none;z-index:9998;transform:translate(-50%,-50%);opacity:0;mix-blend-mode:screen}
-@media(hover:none),(max-width:800px){.cursor,.cursor-ring,.cursor-trail{display:none};body{cursor:auto}}
+/* CURSOR — native cursor visible + glow trail on top */
+.cursor-glow{position:fixed;top:0;left:0;width:32px;height:32px;border-radius:50%;background:radial-gradient(circle,rgba(95,179,212,.6) 0%,rgba(95,179,212,0) 70%);pointer-events:none;z-index:9999;transform:translate(-50%,-50%);transition:width .3s var(--ease),height .3s var(--ease),background .3s;filter:blur(2px)}
+.cursor-glow.hover{width:72px;height:72px;background:radial-gradient(circle,rgba(212,165,116,.7) 0%,rgba(212,165,116,0) 70%)}
+@media(hover:none),(max-width:800px){.cursor-glow{display:none}}
 
 /* RIPPLE + BURST */
 .ripple{position:fixed;border-radius:50%;border:2px solid var(--glow);pointer-events:none;z-index:9997;transform:translate(-50%,-50%);animation:rippleAnim 1s var(--ease) forwards}
-@keyframes rippleAnim{0%{width:0;height:0;opacity:1}100%{width:300px;height:300px;opacity:0}}
-.burst-particle{position:fixed;width:6px;height:6px;border-radius:50%;pointer-events:none;z-index:9997;transform:translate(-50%,-50%);animation:burstAnim .9s var(--ease) forwards}
+@keyframes rippleAnim{0%{width:0;height:0;opacity:1}100%{width:320px;height:320px;opacity:0}}
+.burst-particle{position:fixed;width:7px;height:7px;border-radius:50%;pointer-events:none;z-index:9997;transform:translate(-50%,-50%);animation:burstAnim 1s var(--ease) forwards}
 @keyframes burstAnim{0%{opacity:1;transform:translate(-50%,-50%) scale(1)}100%{opacity:0;transform:translate(calc(-50% + var(--bx)),calc(-50% + var(--by))) scale(0)}}
 
 /* PROGRESS */
-.progress{position:fixed;top:0;left:0;height:1px;background:linear-gradient(90deg,transparent,var(--glow),var(--gold),var(--glow),transparent);z-index:9996;width:0;box-shadow:0 0 12px var(--glow)}
+.progress{position:fixed;top:0;left:0;height:2px;background:linear-gradient(90deg,transparent,var(--glow),var(--gold),var(--glow),transparent);z-index:9996;width:0;box-shadow:0 0 16px var(--glow)}
 
 /* NAV */
 nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;justify-content:space-between;align-items:center;padding:28px 56px;transition:all .5s var(--ease)}
-nav.scrolled{padding:16px 56px;background:rgba(0,3,8,.6);backdrop-filter:blur(24px);border-bottom:1px solid rgba(95,179,212,.08)}
+nav.scrolled{padding:16px 56px;background:rgba(0,3,8,.7);backdrop-filter:blur(24px);border-bottom:1px solid rgba(95,179,212,.1)}
 nav .logo{font-family:'Cormorant Garamond',serif;font-size:18px;letter-spacing:.3em;color:var(--foam);text-transform:uppercase;font-weight:400}
 nav .logo em{color:var(--gold);font-style:italic}
 nav ul{display:flex;gap:32px;list-style:none}
-nav a{color:var(--ice);text-decoration:none;font-size:10px;letter-spacing:.35em;text-transform:uppercase;font-weight:300;position:relative;padding:6px 0;transition:color .3s}
+nav a{color:var(--ice);text-decoration:none;font-size:10px;letter-spacing:.35em;text-transform:uppercase;font-weight:300;position:relative;padding:6px 0;transition:color .3s;cursor:pointer}
 nav a::after{content:"";position:absolute;left:0;right:0;bottom:0;height:1px;background:var(--glow);transform:scaleX(0);transform-origin:right;transition:transform .6s var(--ease);box-shadow:0 0 8px var(--glow)}
 nav a:hover{color:var(--glow)}
 nav a:hover::after{transform:scaleX(1);transform-origin:left}
@@ -61,20 +63,20 @@ nav a:hover::after{transform:scaleX(1);transform-origin:left}
 .hero-content{text-align:center;max-width:1100px;position:relative;z-index:2}
 .hero .eyebrow{font-size:10px;letter-spacing:.6em;text-transform:uppercase;color:var(--glow);margin-bottom:40px;opacity:0;animation:fadeUp 1.6s var(--ease) 1.4s forwards}
 @keyframes fadeUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
-.hero h1{font-size:clamp(56px,12vw,200px);font-style:italic;font-weight:300;line-height:.9;margin-bottom:44px;background:linear-gradient(180deg,var(--foam) 0%,var(--ice) 30%,var(--neptune) 70%,var(--nebula) 100%);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;filter:drop-shadow(0 0 80px rgba(95,179,212,.35))}
+.hero h1{font-size:clamp(56px,12vw,200px);font-style:italic;font-weight:300;line-height:.9;margin-bottom:44px;background:linear-gradient(180deg,var(--foam) 0%,var(--ice) 30%,var(--neptune) 70%,var(--nebula) 100%);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;filter:drop-shadow(0 0 80px rgba(95,179,212,.4))}
 .hero h1 .word{display:inline-block;overflow:hidden;vertical-align:top}
 .hero h1 .word > span{display:inline-block;transform:translateY(110%);animation:wordRise 1.6s var(--ease) forwards}
 @keyframes wordRise{to{transform:translateY(0)}}
 .hero p{font-size:17px;max-width:660px;margin:0 auto 60px;color:var(--ice);opacity:0;font-weight:200;animation:fadeUp 1.6s var(--ease) 2.2s forwards;line-height:1.8}
-.hero .scroll-cue{position:absolute;bottom:36px;left:50%;transform:translateX(-50%);font-size:9px;letter-spacing:.5em;color:var(--ice);opacity:.4;display:flex;flex-direction:column;align-items:center;gap:20px;text-transform:uppercase}
+.hero .scroll-cue{position:absolute;bottom:36px;left:50%;transform:translateX(-50%);font-size:9px;letter-spacing:.5em;color:var(--ice);opacity:.5;display:flex;flex-direction:column;align-items:center;gap:20px;text-transform:uppercase}
 .hero .scroll-cue::after{content:"";width:1px;height:56px;background:linear-gradient(180deg,var(--glow),transparent);animation:scrollCue 2.5s ease-in-out infinite}
 @keyframes scrollCue{0%,100%{transform:scaleY(0);transform-origin:top}50%{transform:scaleY(1);transform-origin:top}}
-.galaxy-bg{position:absolute;top:50%;left:50%;width:min(140vw,1600px);height:min(140vw,1600px);transform:translate(-50%,-50%);pointer-events:none;z-index:1;opacity:.45}
+.galaxy-bg{position:absolute;top:50%;left:50%;width:min(140vw,1600px);height:min(140vw,1600px);transform:translate(-50%,-50%);pointer-events:none;z-index:1;opacity:.55}
 .galaxy-bg svg{width:100%;height:100%;overflow:visible}
 
 /* SECTIONS */
 section{padding:160px 8vw;position:relative;z-index:2}
-.chapter-head{display:grid;grid-template-columns:auto 1fr;gap:48px;align-items:end;margin-bottom:100px;padding-bottom:40px;border-bottom:1px solid rgba(95,179,212,.12)}
+.chapter-head{display:grid;grid-template-columns:auto 1fr;gap:48px;align-items:end;margin-bottom:100px;padding-bottom:40px;border-bottom:1px solid rgba(95,179,212,.15)}
 .chapter-head .num{font-family:'Cormorant Garamond',serif;font-size:14px;color:var(--gold);font-style:italic;letter-spacing:.15em}
 .chapter-head h2{font-size:clamp(38px,6vw,80px);max-width:820px;color:var(--foam)}
 .chapter-head h2 em{font-style:italic;color:var(--glow)}
@@ -83,46 +85,46 @@ section{padding:160px 8vw;position:relative;z-index:2}
 /* SOLAR SYSTEM */
 .solar-system{position:relative;width:100%;max-width:1000px;margin:0 auto;aspect-ratio:1}
 .solar-system svg{width:100%;height:100%;overflow:visible}
-.planet-caption{position:absolute;bottom:-20px;left:50%;transform:translateX(-50%);text-align:center;font-size:10px;letter-spacing:.4em;text-transform:uppercase;color:var(--ice);opacity:.6}
+.planet-caption{position:absolute;bottom:-20px;left:50%;transform:translateX(-50%);text-align:center;font-size:10px;letter-spacing:.4em;text-transform:uppercase;color:var(--ice);opacity:.7}
 
 .planet-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:24px;margin-top:100px}
-.planet-card{position:relative;padding:32px 24px;border:1px solid rgba(95,179,212,.12);transition:all .6s var(--ease);cursor:pointer;overflow:hidden}
-.planet-card::before{content:"";position:absolute;top:50%;left:50%;width:0;height:0;border-radius:50%;background:radial-gradient(circle,rgba(95,179,212,.3),transparent 70%);transform:translate(-50%,-50%);transition:width .8s var(--ease),height .8s var(--ease),opacity .8s;opacity:0;pointer-events:none}
-.planet-card:hover::before{width:400px;height:400px;opacity:1}
-.planet-card:hover{border-color:rgba(95,179,212,.4);background:rgba(95,179,212,.03);transform:translateY(-4px)}
-.planet-card .orb{width:56px;height:56px;border-radius:50%;margin-bottom:20px;position:relative;transition:transform .6s var(--ease)}
-.planet-card:hover .orb{transform:scale(1.15) rotate(15deg)}
-.planet-card .orb::after{content:"";position:absolute;inset:-6px;border-radius:50%;border:1px solid currentColor;opacity:.3;animation:orbPulse 2s ease-in-out infinite}
-@keyframes orbPulse{0%,100%{transform:scale(1);opacity:.3}50%{transform:scale(1.2);opacity:.6}}
-.planet-card .name{font-family:'Cormorant Garamond',serif;font-size:22px;font-style:italic;color:var(--foam);margin-bottom:6px}
-.planet-card .dist{font-size:9px;letter-spacing:.3em;text-transform:uppercase;color:var(--gold);margin-bottom:14px}
+.planet-card{position:relative;padding:36px 26px;border:1px solid rgba(95,179,212,.2);transition:all .6s var(--ease);cursor:pointer;overflow:hidden;background:linear-gradient(180deg,rgba(10,21,36,.4),rgba(2,6,13,.6));border-radius:14px}
+.planet-card::before{content:"";position:absolute;top:50%;left:50%;width:0;height:0;border-radius:50%;background:radial-gradient(circle,rgba(95,179,212,.4),transparent 70%);transform:translate(-50%,-50%);transition:width .8s var(--ease),height .8s var(--ease),opacity .8s;opacity:0;pointer-events:none}
+.planet-card:hover::before{width:500px;height:500px;opacity:1}
+.planet-card:hover{border-color:rgba(95,179,212,.6);transform:translateY(-6px);box-shadow:0 20px 60px -20px rgba(95,179,212,.4)}
+.planet-card .orb{width:64px;height:64px;border-radius:50%;margin-bottom:24px;position:relative;transition:transform .6s var(--ease)}
+.planet-card:hover .orb{transform:scale(1.2) rotate(15deg)}
+.planet-card .orb::after{content:"";position:absolute;inset:-8px;border-radius:50%;border:1px solid currentColor;opacity:.4;animation:orbPulse 2s ease-in-out infinite}
+@keyframes orbPulse{0%,100%{transform:scale(1);opacity:.4}50%{transform:scale(1.25);opacity:.8}}
+.planet-card .name{font-family:'Cormorant Garamond',serif;font-size:24px;font-style:italic;color:var(--foam);margin-bottom:8px}
+.planet-card .dist{font-size:9px;letter-spacing:.3em;text-transform:uppercase;color:var(--gold);margin-bottom:16px}
 .planet-card .desc{font-size:13px;color:var(--ice);line-height:1.7;font-weight:200}
-.planet-card .hint{font-size:9px;letter-spacing:.3em;text-transform:uppercase;color:var(--glow);margin-top:16px;opacity:.6}
+.planet-card .hint{font-size:9px;letter-spacing:.3em;text-transform:uppercase;color:var(--glow);margin-top:18px;opacity:.8}
 
 /* EARTH FEATURE */
 .earth-feature{display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:center;margin-top:120px}
-.earth-visual{aspect-ratio:1;border-radius:50%;position:relative;overflow:hidden;background:radial-gradient(circle at 35% 30%,#5fb3d4 0%,#2d6a8f 40%,#0a2a40 80%,#02060d 100%);box-shadow:inset -60px -60px 140px rgba(0,0,0,.9),0 0 100px rgba(95,179,212,.3);cursor:pointer;transition:transform 1s var(--ease)}
+.earth-visual{aspect-ratio:1;border-radius:50%;position:relative;overflow:hidden;background:radial-gradient(circle at 35% 30%,#5fb3d4 0%,#2d6a8f 40%,#0a2a40 80%,#02060d 100%);box-shadow:inset -60px -60px 140px rgba(0,0,0,.9),0 0 100px rgba(95,179,212,.4),0 0 200px rgba(95,179,212,.2);cursor:pointer;transition:transform 1s var(--ease)}
 .earth-visual:hover{transform:scale(1.03) rotate(3deg)}
-.earth-visual::before{content:"";position:absolute;inset:0;background:radial-gradient(circle at 25% 35%,rgba(120,200,140,.5) 0%,transparent 15%),radial-gradient(circle at 60% 60%,rgba(120,200,140,.4) 0%,transparent 12%),radial-gradient(circle at 75% 30%,rgba(120,200,140,.3) 0%,transparent 10%),radial-gradient(circle at 45% 75%,rgba(120,200,140,.35) 0%,transparent 8%);filter:blur(2px)}
-.earth-visual::after{content:"";position:absolute;inset:0;background:radial-gradient(circle at 30% 25%,rgba(255,255,255,.4) 0%,transparent 25%);mix-blend-mode:overlay}
+.earth-visual::before{content:"";position:absolute;inset:0;background:radial-gradient(circle at 25% 35%,rgba(120,200,140,.6) 0%,transparent 15%),radial-gradient(circle at 60% 60%,rgba(120,200,140,.5) 0%,transparent 12%),radial-gradient(circle at 75% 30%,rgba(120,200,140,.4) 0%,transparent 10%),radial-gradient(circle at 45% 75%,rgba(120,200,140,.45) 0%,transparent 8%);filter:blur(2px)}
+.earth-visual::after{content:"";position:absolute;inset:0;background:radial-gradient(circle at 30% 25%,rgba(255,255,255,.5) 0%,transparent 25%);mix-blend-mode:overlay}
 .earth-text h3{font-size:clamp(32px,4vw,56px);font-style:italic;color:var(--foam);margin-bottom:24px;line-height:1.1}
 .earth-text h3 em{color:var(--glow)}
 .earth-text p{color:var(--ice);font-size:16px;margin-bottom:20px;font-weight:200;line-height:1.8}
-.earth-facts{display:grid;grid-template-columns:1fr 1fr;gap:24px;padding-top:32px;margin-top:32px;border-top:1px solid rgba(95,179,212,.15)}
-.earth-facts div{font-size:10px;letter-spacing:.3em;text-transform:uppercase;color:var(--ice);opacity:.6}
+.earth-facts{display:grid;grid-template-columns:1fr 1fr;gap:24px;padding-top:32px;margin-top:32px;border-top:1px solid rgba(95,179,212,.2)}
+.earth-facts div{font-size:10px;letter-spacing:.3em;text-transform:uppercase;color:var(--ice);opacity:.7}
 .earth-facts strong{display:block;color:var(--foam);font-family:'Cormorant Garamond',serif;font-size:24px;letter-spacing:0;text-transform:none;margin-top:6px;font-style:italic;opacity:1}
 
 /* GALLERY */
 .cosmic-grid{display:grid;grid-template-columns:repeat(12,1fr);gap:20px}
-.cosmic-grid .item{position:relative;overflow:hidden;cursor:pointer;background:var(--trench);transition:transform .4s var(--ease)}
-.cosmic-grid .item img{width:100%;height:100%;object-fit:cover;display:block;filter:saturate(.75) brightness(.75) contrast(1.1);transition:transform 1.8s var(--ease),filter 1.2s var(--ease)}
-.cosmic-grid .item:hover img{transform:scale(1.06);filter:saturate(1.1) brightness(1.05) contrast(1)}
-.cosmic-grid .item::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,transparent 45%,rgba(0,3,8,.92) 100%);pointer-events:none}
-.cosmic-grid .item .cap{position:absolute;bottom:0;left:0;right:0;padding:28px;z-index:2;opacity:0;transform:translateY(16px);transition:all .9s var(--ease) .15s}
+.cosmic-grid .item{position:relative;overflow:hidden;cursor:pointer;background:var(--trench);transition:transform .4s var(--ease);border-radius:8px}
+.cosmic-grid .item img{width:100%;height:100%;object-fit:cover;display:block;filter:saturate(.8) brightness(.8) contrast(1.1);transition:transform 1.8s var(--ease),filter 1.2s var(--ease)}
+.cosmic-grid .item:hover img{transform:scale(1.08);filter:saturate(1.2) brightness(1.1) contrast(1.05)}
+.cosmic-grid .item::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,transparent 40%,rgba(0,3,8,.95) 100%);pointer-events:none}
+.cosmic-grid .item .cap{position:absolute;bottom:0;left:0;right:0;padding:28px;z-index:2;opacity:0;transform:translateY(16px);transition:all .9s var(--ease) .1s}
 .cosmic-grid .item:hover .cap{opacity:1;transform:translateY(0)}
 .cosmic-grid .cap .lbl{font-size:9px;letter-spacing:.4em;text-transform:uppercase;color:var(--glow);margin-bottom:8px}
 .cosmic-grid .cap .ttl{font-family:'Cormorant Garamond',serif;font-size:22px;font-style:italic;color:var(--foam);margin-bottom:6px}
-.cosmic-grid .cap .desc{font-size:11px;color:var(--ice);opacity:.8;line-height:1.6;max-width:360px}
+.cosmic-grid .cap .desc{font-size:11px;color:var(--ice);opacity:.85;line-height:1.6;max-width:360px}
 .cg-1{grid-column:span 6;grid-row:span 2;aspect-ratio:1}
 .cg-2{grid-column:span 3;aspect-ratio:1}
 .cg-3{grid-column:span 3;aspect-ratio:1}
@@ -134,10 +136,10 @@ section{padding:160px 8vw;position:relative;z-index:2}
 
 /* JWST */
 .jwst-grid{display:grid;grid-template-columns:1fr 1fr;gap:32px}
-.jwst-card{position:relative;overflow:hidden;border:1px solid rgba(95,179,212,.15);background:var(--trench);cursor:pointer;transition:all .6s var(--ease)}
-.jwst-card:hover{border-color:rgba(95,179,212,.5);transform:translateY(-6px);box-shadow:0 20px 60px -20px rgba(95,179,212,.3)}
-.jwst-card img{width:100%;height:auto;display:block;filter:saturate(.8) brightness(.8);transition:filter 1s var(--ease),transform 1.4s var(--ease)}
-.jwst-card:hover img{filter:saturate(1.15) brightness(1);transform:scale(1.03)}
+.jwst-card{position:relative;overflow:hidden;border:1px solid rgba(95,179,212,.2);background:linear-gradient(180deg,rgba(10,21,36,.5),rgba(2,6,13,.7));cursor:pointer;transition:all .6s var(--ease);border-radius:14px}
+.jwst-card:hover{border-color:rgba(95,179,212,.6);transform:translateY(-6px);box-shadow:0 30px 80px -20px rgba(95,179,212,.4)}
+.jwst-card img{width:100%;height:auto;display:block;filter:saturate(.9) brightness(.85);transition:filter 1s var(--ease),transform 1.4s var(--ease)}
+.jwst-card:hover img{filter:saturate(1.2) brightness(1.05);transform:scale(1.03)}
 .jwst-card .meta{padding:28px 32px 32px}
 .jwst-card .meta .tag{font-size:9px;letter-spacing:.4em;text-transform:uppercase;color:var(--gold);margin-bottom:12px}
 .jwst-card .meta h4{font-family:'Cormorant Garamond',serif;font-size:28px;font-style:italic;color:var(--foam);margin-bottom:12px}
@@ -146,11 +148,11 @@ section{padding:160px 8vw;position:relative;z-index:2}
 /* TIMELINE */
 .timeline{position:relative;max-width:820px;margin:0 auto;padding-left:60px}
 .timeline::before{content:"";position:absolute;left:20px;top:0;bottom:0;width:1px;background:linear-gradient(180deg,transparent,var(--glow),var(--neptune),transparent)}
-.tl-item{position:relative;padding:44px 20px;border-bottom:1px solid rgba(95,179,212,.1);cursor:pointer;transition:background .5s var(--ease),padding-left .5s var(--ease);overflow:hidden}
-.tl-item:hover{background:rgba(95,179,212,.03);padding-left:32px}
+.tl-item{position:relative;padding:44px 24px;border-bottom:1px solid rgba(95,179,212,.1);cursor:pointer;transition:background .5s var(--ease),padding-left .5s var(--ease);overflow:hidden}
+.tl-item:hover{background:rgba(95,179,212,.05);padding-left:36px}
 .tl-item:last-child{border-bottom:0}
-.tl-item::before{content:"";position:absolute;left:-44px;top:56px;width:12px;height:12px;border-radius:50%;background:var(--glow);box-shadow:0 0 20px var(--glow);transition:transform .5s var(--ease)}
-.tl-item:hover::before{transform:scale(1.8);box-shadow:0 0 40px var(--glow)}
+.tl-item::before{content:"";position:absolute;left:-44px;top:56px;width:14px;height:14px;border-radius:50%;background:var(--glow);box-shadow:0 0 20px var(--glow),0 0 40px var(--glow);transition:transform .5s var(--ease)}
+.tl-item:hover::before{transform:scale(1.8);box-shadow:0 0 40px var(--glow),0 0 80px var(--glow)}
 .tl-item .when{font-size:10px;letter-spacing:.4em;text-transform:uppercase;color:var(--gold);margin-bottom:10px}
 .tl-item h4{font-family:'Cormorant Garamond',serif;font-size:34px;font-style:italic;color:var(--foam);margin-bottom:14px;transition:color .4s}
 .tl-item:hover h4{color:var(--glow)}
@@ -158,49 +160,49 @@ section{padding:160px 8vw;position:relative;z-index:2}
 
 /* QUOTE */
 .quote-section{padding:220px 8vw;text-align:center;position:relative;overflow:hidden}
-.quote-section::before{content:"";position:absolute;top:50%;left:50%;width:800px;height:800px;transform:translate(-50%,-50%);background:radial-gradient(circle,rgba(95,179,212,.08),transparent 65%);filter:blur(60px);animation:breathe 10s ease-in-out infinite}
-@keyframes breathe{0%,100%{transform:translate(-50%,-50%) scale(1);opacity:.4}50%{transform:translate(-50%,-50%) scale(1.3);opacity:.7}}
+.quote-section::before{content:"";position:absolute;top:50%;left:50%;width:800px;height:800px;transform:translate(-50%,-50%);background:radial-gradient(circle,rgba(95,179,212,.12),transparent 65%);filter:blur(60px);animation:breathe 10s ease-in-out infinite}
+@keyframes breathe{0%,100%{transform:translate(-50%,-50%) scale(1);opacity:.5}50%{transform:translate(-50%,-50%) scale(1.3);opacity:.9}}
 .quote-section .q{font-family:'Cormorant Garamond',serif;font-size:clamp(30px,4.5vw,66px);line-height:1.3;max-width:1100px;margin:0 auto;font-style:italic;color:var(--foam);position:relative;z-index:1}
-.quote-section .q em{color:var(--glow);text-shadow:0 0 40px rgba(95,179,212,.4);transition:text-shadow .6s}
-.quote-section:hover .q em{text-shadow:0 0 80px rgba(95,179,212,.9)}
+.quote-section .q em{color:var(--glow);text-shadow:0 0 40px rgba(95,179,212,.6);transition:text-shadow .6s}
+.quote-section:hover .q em{text-shadow:0 0 80px rgba(95,179,212,1)}
 .quote-section .q .word{display:inline-block;overflow:hidden;vertical-align:top}
 .quote-section .q .word > span{display:inline-block;transform:translateY(110%);transition:transform 1.3s var(--ease)}
 .quote-section.in .q .word > span{transform:translateY(0)}
-.quote-section .src{margin-top:48px;font-size:10px;letter-spacing:.5em;text-transform:uppercase;color:var(--gold);opacity:.7;position:relative;z-index:1}
+.quote-section .src{margin-top:48px;font-size:10px;letter-spacing:.5em;text-transform:uppercase;color:var(--gold);opacity:.8;position:relative;z-index:1}
 
 /* STATS */
-.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:rgba(95,179,212,.08);border-top:1px solid rgba(95,179,212,.1);border-bottom:1px solid rgba(95,179,212,.1);position:relative;z-index:2}
-.stats > div{background:rgba(2,6,13,.4);padding:90px 40px;text-align:center;transition:background .8s var(--ease),transform .6s var(--ease);cursor:pointer}
-.stats > div:hover{background:rgba(95,179,212,.06);transform:scale(1.05)}
-.stats .n{font-family:'Cormorant Garamond',serif;font-size:84px;line-height:1;color:var(--foam);display:block;font-style:italic;text-shadow:0 0 60px rgba(95,179,212,.3);transition:text-shadow .6s}
-.stats > div:hover .n{text-shadow:0 0 100px rgba(95,179,212,.9)}
-.stats .l{font-size:9px;letter-spacing:.4em;text-transform:uppercase;color:var(--ice);margin-top:22px;opacity:.6}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:rgba(95,179,212,.1);border-top:1px solid rgba(95,179,212,.15);border-bottom:1px solid rgba(95,179,212,.15);position:relative;z-index:2}
+.stats > div{background:rgba(2,6,13,.5);padding:90px 40px;text-align:center;transition:background .8s var(--ease),transform .6s var(--ease);cursor:pointer}
+.stats > div:hover{background:rgba(95,179,212,.08);transform:scale(1.05)}
+.stats .n{font-family:'Cormorant Garamond',serif;font-size:84px;line-height:1;color:var(--foam);display:block;font-style:italic;text-shadow:0 0 60px rgba(95,179,212,.4);transition:text-shadow .6s}
+.stats > div:hover .n{text-shadow:0 0 100px rgba(95,179,212,1)}
+.stats .l{font-size:9px;letter-spacing:.4em;text-transform:uppercase;color:var(--ice);margin-top:22px;opacity:.7}
 
 /* CONTACT */
 .contact{padding:240px 8vw;text-align:center;position:relative;overflow:hidden}
-.contact::before{content:"";position:absolute;top:50%;left:50%;width:800px;height:800px;transform:translate(-50%,-50%);background:radial-gradient(circle,rgba(95,179,212,.12),transparent 60%);filter:blur(80px);animation:breathe 9s ease-in-out infinite;pointer-events:none}
+.contact::before{content:"";position:absolute;top:50%;left:50%;width:800px;height:800px;transform:translate(-50%,-50%);background:radial-gradient(circle,rgba(95,179,212,.15),transparent 60%);filter:blur(80px);animation:breathe 9s ease-in-out infinite;pointer-events:none}
 .contact .eyebrow{font-size:10px;letter-spacing:.6em;text-transform:uppercase;color:var(--glow);margin-bottom:52px;position:relative;z-index:1}
 .contact h2{font-size:clamp(56px,10vw,160px);line-height:.9;margin-bottom:64px;font-style:italic;background:linear-gradient(180deg,var(--foam),var(--neptune));-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;position:relative;z-index:1}
 .contact h2 em{color:var(--gold);-webkit-text-fill-color:var(--gold)}
-.contact a.btn{display:inline-flex;align-items:center;gap:24px;background:transparent;color:var(--foam);padding:24px 56px;border-radius:100px;border:1px solid var(--glow);font-size:10px;letter-spacing:.4em;text-transform:uppercase;text-decoration:none;font-weight:300;transition:all .7s var(--ease);position:relative;overflow:hidden;z-index:1}
-.contact a.btn:hover{border-color:var(--ice);box-shadow:0 0 60px rgba(95,179,212,.5);transform:translateY(-3px)}
+.contact a.btn{display:inline-flex;align-items:center;gap:24px;background:transparent;color:var(--foam);padding:24px 56px;border-radius:100px;border:1px solid var(--glow);font-size:10px;letter-spacing:.4em;text-transform:uppercase;text-decoration:none;font-weight:300;transition:all .7s var(--ease);position:relative;overflow:hidden;z-index:1;cursor:pointer}
+.contact a.btn:hover{border-color:var(--ice);box-shadow:0 0 60px rgba(95,179,212,.6);transform:translateY(-3px)}
 
 /* FOOTER */
-footer{padding:60px 56px;display:flex;justify-content:space-between;align-items:center;font-size:10px;letter-spacing:.35em;text-transform:uppercase;color:var(--ice);opacity:.4;border-top:1px solid rgba(95,179,212,.08);position:relative;z-index:2}
+footer{padding:60px 56px;display:flex;justify-content:space-between;align-items:center;font-size:10px;letter-spacing:.35em;text-transform:uppercase;color:var(--ice);opacity:.5;border-top:1px solid rgba(95,179,212,.1);position:relative;z-index:2}
 footer .links{display:flex;gap:40px}
-footer a{color:inherit;text-decoration:none;transition:all .3s}
+footer a{color:inherit;text-decoration:none;transition:all .3s;cursor:pointer}
 footer a:hover{color:var(--glow);opacity:1}
 
 /* REVEAL */
 .reveal{opacity:0;transform:translateY(60px);transition:opacity 1.5s var(--ease),transform 1.5s var(--ease)}
 .reveal.in{opacity:1;transform:none}
 
-/* ============ CINEMATIC POPUP ============ */
-.popup-overlay{position:fixed;inset:0;z-index:10000;background:rgba(0,3,8,.92);backdrop-filter:blur(24px);display:flex;align-items:center;justify-content:center;padding:40px;opacity:0;visibility:hidden;transition:opacity .5s var(--ease),visibility .5s}
+/* CINEMATIC POPUP */
+.popup-overlay{position:fixed;inset:0;z-index:10000;background:rgba(0,3,8,.94);backdrop-filter:blur(24px);display:flex;align-items:center;justify-content:center;padding:40px;opacity:0;visibility:hidden;transition:opacity .5s var(--ease),visibility .5s}
 .popup-overlay.open{opacity:1;visibility:visible}
-.popup{position:relative;width:100%;max-width:1100px;max-height:90vh;background:linear-gradient(135deg,#0a1524 0%,#02060d 100%);border:1px solid rgba(95,179,212,.3);border-radius:24px;overflow:hidden;display:grid;grid-template-columns:1.2fr 1fr;box-shadow:0 40px 120px -30px rgba(95,179,212,.5),0 0 0 1px rgba(95,179,212,.1);transform:scale(.92) translateY(20px);transition:transform .6s var(--ease);max-height:85vh}
+.popup{position:relative;width:100%;max-width:1100px;background:linear-gradient(135deg,#0a1524 0%,#02060d 100%);border:1px solid rgba(95,179,212,.4);border-radius:24px;overflow:hidden;display:grid;grid-template-columns:1.2fr 1fr;box-shadow:0 40px 120px -30px rgba(95,179,212,.6),0 0 0 1px rgba(95,179,212,.15);transform:scale(.92) translateY(20px);transition:transform .6s var(--ease);max-height:85vh}
 .popup-overlay.open .popup{transform:scale(1) translateY(0)}
-.popup::before{content:"";position:absolute;top:-50%;right:-50%;width:100%;height:100%;background:radial-gradient(circle,rgba(95,179,212,.15),transparent 60%);pointer-events:none}
+.popup::before{content:"";position:absolute;top:-50%;right:-50%;width:100%;height:100%;background:radial-gradient(circle,rgba(95,179,212,.2),transparent 60%);pointer-events:none}
 .popup-img{position:relative;overflow:hidden;background:#000;min-height:400px}
 .popup-img img{width:100%;height:100%;object-fit:cover;display:block}
 .popup-img::after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,transparent 60%,#02060d 100%);pointer-events:none}
@@ -209,45 +211,44 @@ footer a:hover{color:var(--glow);opacity:1}
 .popup-content h3{font-family:'Cormorant Garamond',serif;font-size:clamp(28px,3.5vw,44px);font-style:italic;color:var(--foam);margin-bottom:20px;line-height:1.1}
 .popup-content .desc{color:var(--ice);font-size:15px;line-height:1.8;margin-bottom:28px;font-weight:200}
 .popup-close{position:absolute;top:20px;right:20px;width:48px;height:48px;border-radius:50%;border:1px solid var(--ice);background:rgba(2,6,13,.8);color:var(--ice);cursor:pointer;font-size:26px;display:flex;align-items:center;justify-content:center;transition:all .4s var(--ease);z-index:10;backdrop-filter:blur(10px)}
-.popup-close:hover{border-color:var(--glow);color:var(--glow);transform:rotate(90deg);background:rgba(95,179,212,.15)}
+.popup-close:hover{border-color:var(--glow);color:var(--glow);transform:rotate(90deg);background:rgba(95,179,212,.2)}
 .popup-nav{position:absolute;top:50%;transform:translateY(-50%);width:48px;height:48px;border-radius:50%;border:1px solid var(--ice);background:rgba(2,6,13,.8);color:var(--ice);cursor:pointer;font-size:22px;display:flex;align-items:center;justify-content:center;transition:all .4s var(--ease);z-index:10;backdrop-filter:blur(10px)}
-.popup-nav:hover{border-color:var(--glow);color:var(--glow);background:rgba(95,179,212,.15)}
+.popup-nav:hover{border-color:var(--glow);color:var(--glow);background:rgba(95,179,212,.2)}
 .popup-prev{left:20px}
 .popup-next{right:20px}
 
 /* POPUP GAME */
-.popup-game{margin-top:24px;padding:20px;background:rgba(95,179,212,.06);border:1px solid rgba(95,179,212,.2);border-radius:12px}
+.popup-game{margin-top:24px;padding:20px;background:rgba(95,179,212,.08);border:1px solid rgba(95,179,212,.25);border-radius:12px}
 .popup-game .game-title{font-size:10px;letter-spacing:.3em;text-transform:uppercase;color:var(--glow);margin-bottom:8px}
 .popup-game .game-desc{font-size:13px;color:var(--ice);margin-bottom:16px;line-height:1.7}
 .popup-game .game-actions{display:flex;gap:10px;flex-wrap:wrap}
 .game-btn{padding:10px 20px;border-radius:100px;border:1px solid var(--glow);background:transparent;color:var(--foam);font-size:10px;letter-spacing:.3em;text-transform:uppercase;cursor:pointer;transition:all .4s var(--ease);font-weight:400}
-.game-btn:hover{background:rgba(95,179,212,.2);box-shadow:0 0 30px rgba(95,179,212,.4)}
-.game-btn.active{background:var(--glow);color:var(--abyss)}
+.game-btn:hover{background:rgba(95,179,212,.25);box-shadow:0 0 30px rgba(95,179,212,.5)}
 
 /* STAR-CONNECT GAME */
-.star-connect{position:relative;height:180px;margin-top:12px;border:1px solid rgba(95,179,212,.15);border-radius:10px;background:radial-gradient(ellipse at center,rgba(10,26,40,.8),rgba(2,6,13,.9));overflow:hidden}
-.star-point{position:absolute;width:16px;height:16px;border-radius:50%;background:radial-gradient(circle,#fff,#5fb3d4);box-shadow:0 0 15px var(--glow);cursor:pointer;transition:all .3s var(--ease);transform:translate(-50%,-50%)}
+.star-connect{position:relative;height:180px;margin-top:12px;border:1px solid rgba(95,179,212,.2);border-radius:10px;background:radial-gradient(ellipse at center,rgba(10,26,40,.9),rgba(2,6,13,1));overflow:hidden}
+.star-point{position:absolute;width:18px;height:18px;border-radius:50%;background:radial-gradient(circle,#fff,#5fb3d4);box-shadow:0 0 15px var(--glow),0 0 30px var(--glow);cursor:pointer;transition:all .3s var(--ease);transform:translate(-50%,-50%)}
 .star-point:hover{transform:translate(-50%,-50%) scale(1.3)}
-.star-point.connected{background:radial-gradient(circle,#d4a574,#b87333);box-shadow:0 0 25px var(--gold);animation:starPulse 1.5s ease-in-out infinite}
+.star-point.connected{background:radial-gradient(circle,#d4a574,#b87333);box-shadow:0 0 25px var(--gold),0 0 50px var(--gold);animation:starPulse 1.5s ease-in-out infinite}
 @keyframes starPulse{0%,100%{transform:translate(-50%,-50%) scale(1)}50%{transform:translate(-50%,-50%) scale(1.2)}}
 .star-connect svg{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
 .star-connect .line{stroke:var(--gold);stroke-width:2;stroke-dasharray:5 5;opacity:0;transition:opacity .5s}
-.star-connect .line.visible{opacity:.8;animation:lineDash 1s linear infinite}
+.star-connect .line.visible{opacity:.9;animation:lineDash 1s linear infinite}
 @keyframes lineDash{to{stroke-dashoffset:-20}}
 
 /* DISTANCE GAME */
 .distance-game{margin-top:12px}
-.distance-game .slider{width:100%;height:6px;border-radius:3px;background:rgba(95,179,212,.2);outline:none;-webkit-appearance:none;margin:16px 0;cursor:pointer}
-.distance-game .slider::-webkit-slider-thumb{-webkit-appearance:none;width:20px;height:20px;border-radius:50%;background:var(--glow);cursor:pointer;box-shadow:0 0 20px var(--glow);border:2px solid var(--ice)}
-.distance-game .slider::-moz-range-thumb{width:20px;height:20px;border-radius:50%;background:var(--glow);cursor:pointer;box-shadow:0 0 20px var(--glow);border:2px solid var(--ice)}
-.distance-game .labels{display:flex;justify-content:space-between;font-size:10px;color:var(--ice);opacity:.6;letter-spacing:.1em;margin-top:4px}
+.distance-game .slider{width:100%;height:6px;border-radius:3px;background:rgba(95,179,212,.3);outline:none;-webkit-appearance:none;margin:16px 0;cursor:pointer}
+.distance-game .slider::-webkit-slider-thumb{-webkit-appearance:none;width:22px;height:22px;border-radius:50%;background:var(--glow);cursor:pointer;box-shadow:0 0 20px var(--glow);border:2px solid var(--ice)}
+.distance-game .slider::-moz-range-thumb{width:22px;height:22px;border-radius:50%;background:var(--glow);cursor:pointer;box-shadow:0 0 20px var(--glow);border:2px solid var(--ice)}
+.distance-game .labels{display:flex;justify-content:space-between;font-size:10px;color:var(--ice);opacity:.7;letter-spacing:.1em;margin-top:4px}
 .distance-game .result{margin-top:12px;font-size:13px;color:var(--glow);text-align:center;min-height:20px;font-style:italic}
 
 /* PLANET FLIP GAME */
 .flip-game{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:12px}
 .flip-card{aspect-ratio:1;perspective:600px;cursor:pointer;position:relative}
 .flip-card .face{position:absolute;inset:0;border-radius:8px;display:flex;align-items:center;justify-content:center;font-family:'Cormorant Garamond',serif;font-size:11px;letter-spacing:.1em;text-transform:uppercase;transition:transform .6s var(--ease);backface-visibility:hidden}
-.flip-card .front{background:linear-gradient(135deg,#132a42,#02060d);border:1px solid rgba(95,179,212,.3);color:var(--glow);font-size:20px;font-style:italic}
+.flip-card .front{background:linear-gradient(135deg,#132a42,#02060d);border:1px solid rgba(95,179,212,.4);color:var(--glow);font-size:22px;font-style:italic}
 .flip-card .back{background:linear-gradient(135deg,#5fb3d4,#1a4d6b);border:1px solid var(--glow);color:var(--abyss);transform:rotateY(180deg);font-size:13px;font-weight:600}
 .flip-card.flipped .front{transform:rotateY(180deg)}
 .flip-card.flipped .back{transform:rotateY(0)}
@@ -279,18 +280,17 @@ footer a:hover{color:var(--glow);opacity:1}
 <body>
 
 <div class="starfield"><div class="stars-canvas" id="starsCanvas"></div></div>
-<div class="cursor" id="cursor"></div>
-<div class="cursor-ring" id="cursorRing"></div>
+<div class="cursor-glow" id="cursorGlow"></div>
 <div class="progress" id="progress"></div>
 
 <nav id="nav">
   <div class="logo">THE <em>UNIVERSE</em></div>
   <ul>
-    <li><a href="#solar" data-hover>Solar System</a></li>
-    <li><a href="#gallery" data-hover>Gallery</a></li>
-    <li><a href="#jwst" data-hover>Webb</a></li>
-    <li><a href="#timeline" data-hover>Cosmic Time</a></li>
-    <li><a href="#contact" data-hover>Explore</a></li>
+    <li><a href="#solar">Solar System</a></li>
+    <li><a href="#gallery">Gallery</a></li>
+    <li><a href="#jwst">Webb</a></li>
+    <li><a href="#timeline">Cosmic Time</a></li>
+    <li><a href="#contact">Explore</a></li>
   </ul>
 </nav>
 
@@ -298,19 +298,20 @@ footer a:hover{color:var(--glow);opacity:1}
   <div class="galaxy-bg">
     <svg viewBox="0 0 1200 1200" xmlns="http://www.w3.org/2000/svg">
       <defs>
-        <radialGradient id="core"><stop offset="0%" stop-color="#d4a574" stop-opacity=".8"/><stop offset="30%" stop-color="#5fb3d4" stop-opacity=".3"/><stop offset="100%" stop-color="#02060d" stop-opacity="0"/></radialGradient>
-        <linearGradient id="arm1" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#5fb3d4" stop-opacity=".4"/><stop offset="100%" stop-color="#a8d8e8" stop-opacity="0"/></linearGradient>
+        <radialGradient id="core"><stop offset="0%" stop-color="#d4a574" stop-opacity=".9"/><stop offset="30%" stop-color="#5fb3d4" stop-opacity=".4"/><stop offset="100%" stop-color="#02060d" stop-opacity="0"/></radialGradient>
+        <linearGradient id="arm1" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#5fb3d4" stop-opacity=".5"/><stop offset="100%" stop-color="#a8d8e8" stop-opacity="0"/></linearGradient>
       </defs>
       <circle cx="600" cy="600" r="500" fill="url(#core)" class="core"/>
       <g class="spiral">
-        <path d="M600 100 Q750 400 600 600 Q450 800 600 1100" stroke="url(#arm1)" stroke-width="2" fill="none" opacity=".5"/>
-        <path d="M100 600 Q400 450 600 600 Q800 750 1100 600" stroke="url(#arm1)" stroke-width="2" fill="none" opacity=".5"/>
+        <path d="M600 100 Q750 400 600 600 Q450 800 600 1100" stroke="url(#arm1)" stroke-width="2" fill="none" opacity=".6"/>
+        <path d="M100 600 Q400 450 600 600 Q800 750 1100 600" stroke="url(#arm1)" stroke-width="2" fill="none" opacity=".6"/>
       </g>
       <g class="spiral spiral2">
-        <path d="M600 200 Q820 450 600 600 Q380 750 600 1000" stroke="url(#arm1)" stroke-width="1" fill="none" opacity=".4"/>
-        <path d="M200 600 Q450 380 600 600 Q750 820 1000 600" stroke="url(#arm1)" stroke-width="1" fill="none" opacity=".4"/>
+        <path d="M600 200 Q820 450 600 600 Q380 750 600 1000" stroke="url(#arm1)" stroke-width="1.5" fill="none" opacity=".5"/>
+        <path d="M200 600 Q450 380 600 600 Q750 820 1000 600" stroke="url(#arm1)" stroke-width="1.5" fill="none" opacity=".5"/>
       </g>
-      <circle cx="600" cy="600" r="6" fill="#d4a574" class="core-pulse"/>
+      <circle cx="600" cy="600" r="8" fill="#d4a574" class="core-pulse"/>
+      <circle cx="600" cy="600" r="4" fill="#fff" class="core-pulse"/>
     </svg>
   </div>
   <div class="hero-content">
@@ -325,7 +326,7 @@ footer a:hover{color:var(--glow);opacity:1}
   <div class="chapter-head reveal">
     <span class="num">Chapter I</span>
     <h2>Our <em>neighborhood</em>.</h2>
-    <p class="lead">Eight worlds circle a single ordinary star in an unremarkable corner of a spiral galaxy. Click any planet — above or in the orbit — to open its card and play the planet puzzle.</p>
+    <p class="lead">Eight worlds circle a single ordinary star in an unremarkable corner of a spiral galaxy. Click any planet — above or in the orbit — to open its card and play.</p>
   </div>
 
   <div class="solar-system reveal">
@@ -341,18 +342,18 @@ footer a:hover{color:var(--glow);opacity:1}
         <radialGradient id="uranusGrad"><stop offset="0%" stop-color="#a8d8e8"/><stop offset="100%" stop-color="#4a7a8a"/></radialGradient>
         <radialGradient id="neptuneGrad"><stop offset="0%" stop-color="#4a9fc4"/><stop offset="100%" stop-color="#1a3a54"/></radialGradient>
       </defs>
-      <g stroke="rgba(95,179,212,.15)" fill="none" stroke-width="1">
+      <g stroke="rgba(95,179,212,.2)" fill="none" stroke-width="1">
         <circle cx="500" cy="500" r="60"/><circle cx="500" cy="500" r="85"/><circle cx="500" cy="500" r="115"/><circle cx="500" cy="500" r="145"/>
         <circle cx="500" cy="500" r="200"/><circle cx="500" cy="500" r="270"/><circle cx="500" cy="500" r="340"/><circle cx="500" cy="500" r="410"/>
       </g>
       <circle cx="500" cy="500" r="30" fill="url(#sunGrad)" class="sun-glow"/>
-      <circle cx="500" cy="500" r="60" fill="url(#sunGrad)" opacity=".15" class="sun-halo"/>
+      <circle cx="500" cy="500" r="60" fill="url(#sunGrad)" opacity=".2" class="sun-halo"/>
       <g class="p-mercury" data-planet="Mars"><circle cx="560" cy="500" r="4" fill="url(#mercuryGrad)"/></g>
       <g class="p-venus" data-planet="Mars"><circle cx="585" cy="500" r="6" fill="url(#venusGrad)"/></g>
       <g class="p-earth" data-planet="Earth"><circle cx="615" cy="500" r="7" fill="url(#earthGrad)"/></g>
       <g class="p-mars" data-planet="Mars"><circle cx="645" cy="500" r="5" fill="url(#marsGrad)"/></g>
       <g class="p-jupiter" data-planet="Jupiter"><circle cx="700" cy="500" r="14" fill="url(#jupiterGrad)"/></g>
-      <g class="p-saturn" data-planet="Saturn"><ellipse cx="770" cy="500" rx="20" ry="4" fill="none" stroke="#e0c88c" stroke-width="2" opacity=".6"/><circle cx="770" cy="500" r="11" fill="url(#saturnGrad)"/></g>
+      <g class="p-saturn" data-planet="Saturn"><ellipse cx="770" cy="500" rx="20" ry="4" fill="none" stroke="#e0c88c" stroke-width="2" opacity=".7"/><circle cx="770" cy="500" r="11" fill="url(#saturnGrad)"/></g>
       <g class="p-uranus" data-planet="Saturn"><circle cx="840" cy="500" r="9" fill="url(#uranusGrad)"/></g>
       <g class="p-neptune" data-planet="Neptune"><circle cx="910" cy="500" r="9" fill="url(#neptuneGrad)"/></g>
     </svg>
@@ -363,25 +364,25 @@ footer a:hover{color:var(--glow);opacity:1}
     <div class="planet-card reveal" data-open="Mars">
       <div class="orb" style="background:radial-gradient(circle at 35% 30%,#e07856,#7a2a1a);color:#e07856"></div>
       <div class="name">Mars</div><div class="dist">228 million km</div>
-      <div class="desc">A cold desert world with Olympus Mons — the tallest volcano in the solar system, 22 km high. Rust-red because its soil is iron oxide.</div>
+      <div class="desc">A cold desert world with Olympus Mons — the tallest volcano in the solar system, 22 km high.</div>
       <div class="hint">Click to open →</div>
     </div>
     <div class="planet-card reveal" data-open="Jupiter">
       <div class="orb" style="background:radial-gradient(circle at 35% 30%,#d4a574,#5a3820);color:#d4a574"></div>
       <div class="name">Jupiter</div><div class="dist">778 million km</div>
-      <div class="desc">A gas giant so massive it could swallow 1,300 Earths. Its Great Red Spot is a storm wider than our planet, raging for at least 350 years.</div>
+      <div class="desc">A gas giant so massive it could swallow 1,300 Earths. Its Great Red Spot is a storm wider than our planet.</div>
       <div class="hint">Click to open →</div>
     </div>
     <div class="planet-card reveal" data-open="Saturn">
       <div class="orb" style="background:radial-gradient(circle at 35% 30%,#e0c88c,#8a7040);color:#e0c88c"></div>
       <div class="name">Saturn</div><div class="dist">1.4 billion km</div>
-      <div class="desc">Its rings span 280,000 km but are only about a mile thick — billions of ice fragments, each on its own orbit. Its moon Titan has lakes of liquid methane.</div>
+      <div class="desc">Its rings span 280,000 km but are only about a mile thick. Its moon Titan has lakes of liquid methane.</div>
       <div class="hint">Click to open →</div>
     </div>
     <div class="planet-card reveal" data-open="Neptune">
       <div class="orb" style="background:radial-gradient(circle at 35% 30%,#4a9fc4,#1a3a54);color:#4a9fc4"></div>
       <div class="name">Neptune</div><div class="dist">4.5 billion km</div>
-      <div class="desc">The windiest world we know — supersonic storms reach 2,100 km/h. Its deep blue comes from methane absorbing red light. One year here lasts 165 Earth years.</div>
+      <div class="desc">The windiest world we know — supersonic storms reach 2,100 km/h. One year here lasts 165 Earth years.</div>
       <div class="hint">Click to open →</div>
     </div>
   </div>
@@ -390,8 +391,8 @@ footer a:hover{color:var(--glow);opacity:1}
     <div class="earth-visual reveal" data-earth></div>
     <div class="earth-text reveal">
       <h3>Earth — <em>the pale blue dot</em></h3>
-      <p>In 1990, Voyager 1 turned its camera back toward home from 6 billion kilometres away. Earth appeared as a single pixel — a mote of dust suspended in a sunbeam. Every human who ever lived, every war, every love, every hope, happened on that tiny stage.</p>
-      <p>We are the only species in 4.5 billion years of this planet's history to look up and ask what we're looking at. That may be the most remarkable thing the universe has ever done.</p>
+      <p>In 1990, Voyager 1 turned its camera back toward home from 6 billion kilometres away. Earth appeared as a single pixel — a mote of dust suspended in a sunbeam.</p>
+      <p>We are the only species in 4.5 billion years of this planet's history to look up and ask what we're looking at.</p>
       <div class="earth-facts">
         <div>Diameter<strong>12,742 km</strong></div>
         <div>Distance from Sun<strong>149.6 million km</strong></div>
@@ -406,48 +407,40 @@ footer a:hover{color:var(--glow);opacity:1}
   <div class="chapter-head reveal">
     <span class="num">Chapter II</span>
     <h2>Images from the <em>deep field</em>.</h2>
-    <p class="lead">Every image is a verified NASA photograph. Click any to open the cinematic popup, read the caption, and play the constellation game.</p>
+    <p class="lead">Every image is a verified NASA photograph from Wikimedia Commons — stable, documented, and matching its caption. Click any to open the cinematic popup.</p>
   </div>
 
   <div class="cosmic-grid">
-    <!-- Neptune: Voyager 2 image -->
     <div class="item cg-1 reveal" data-popup="neptune">
-      <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/56/Neptune_Full.jpg/800px-Neptune_Full.jpg" alt="Neptune — Voyager 2" loading="lazy">
+      <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/56/Neptune_Full.jpg/800px-Neptune_Full.jpg" alt="Neptune — Voyager 2">
       <div class="cap"><div class="lbl">Planetary</div><div class="ttl">Neptune — The Deep Blue</div><div class="desc">Voyager 2, 1989. The only spacecraft to ever visit.</div></div>
     </div>
-    <!-- Pillars of Creation: Hubble -->
     <div class="item cg-2 reveal" data-popup="pillars">
-      <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/6/68/Pillars_of_creation_2014_HST_WFC3-UVIS_full-res_denoised.jpg/800px-Pillars_of_creation_2014_HST_WFC3-UVIS_full-res_denoised.jpg" alt="Pillars of Creation — Hubble" loading="lazy">
+      <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/6/68/Pillars_of_creation_2014_HST_WFC3-UVIS_full-res_denoised.jpg/800px-Pillars_of_creation_2014_HST_WFC3-UVIS_full-res_denoised.jpg" alt="Pillars of Creation — Hubble">
       <div class="cap"><div class="lbl">Stellar Nursery</div><div class="ttl">Pillars of Creation</div><div class="desc">Eagle Nebula, 6,500 light-years away. Hubble.</div></div>
     </div>
-    <!-- Andromeda -->
     <div class="item cg-3 reveal" data-popup="andromeda">
-      <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/98/Andromeda_Galaxy_%28with_h-alpha%29.jpg/800px-Andromeda_Galaxy_%28with_h-alpha%29.jpg" alt="Andromeda Galaxy" loading="lazy">
+      <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/98/Andromeda_Galaxy_%28with_h-alpha%29.jpg/800px-Andromeda_Galaxy_%28with_h-alpha%29.jpg" alt="Andromeda Galaxy">
       <div class="cap"><div class="lbl">Galactic</div><div class="ttl">Andromeda</div><div class="desc">Our nearest large galactic neighbor, 2.5 million light-years away.</div></div>
     </div>
-    <!-- Moon: Apollo 17 -->
     <div class="item cg-4 reveal" data-popup="moon">
-      <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/e1/FullMoon2010.jpg/800px-FullMoon2010.jpg" alt="Full Moon" loading="lazy">
+      <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/e1/FullMoon2010.jpg/800px-FullMoon2010.jpg" alt="Full Moon">
       <div class="cap"><div class="lbl">Satellite</div><div class="ttl">The Lunar Surface</div><div class="desc">Craters and dust, formed 4.5 billion years ago.</div></div>
     </div>
-    <!-- Star field -->
     <div class="item cg-5 reveal" data-popup="stars">
-      <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/3/3f/Starfield_LRGB.jpg/800px-Starfield_LRGB.jpg" alt="Star field" loading="lazy">
+      <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/3/3f/Starfield_LRGB.jpg/800px-Starfield_LRGB.jpg" alt="Star field">
       <div class="cap"><div class="lbl">Field</div><div class="ttl">A Star Field</div><div class="desc">Every point is a sun. Some have planets.</div></div>
     </div>
-    <!-- Earthrise: Apollo 8 -->
     <div class="item cg-6 reveal" data-popup="earthrise">
-      <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/a8/NASA-Apollo8-Dec24-Earthrise.jpg/800px-NASA-Apollo8-Dec24-Earthrise.jpg" alt="Earthrise — Apollo 8" loading="lazy">
+      <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/a8/NASA-Apollo8-Dec24-Earthrise.jpg/800px-NASA-Apollo8-Dec24-Earthrise.jpg" alt="Earthrise — Apollo 8">
       <div class="cap"><div class="lbl">Terrestrial</div><div class="ttl">Earthrise</div><div class="desc">Apollo 8, Christmas Eve, 1968. The first photo of Earth from lunar orbit.</div></div>
     </div>
-    <!-- Milky Way -->
     <div class="item cg-7 reveal" data-popup="milkyway">
-      <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/4/43/ESO-VLT-Laser-phot-33a-07.jpg/800px-ESO-VLT-Laser-phot-33a-07.jpg" alt="Milky Way over VLT" loading="lazy">
+      <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/4/43/ESO-VLT-Laser-phot-33a-07.jpg/800px-ESO-VLT-Laser-phot-33a-07.jpg" alt="Milky Way over VLT">
       <div class="cap"><div class="lbl">Galactic</div><div class="ttl">The Milky Way</div><div class="desc">Our home galaxy, seen from the Very Large Telescope in Chile.</div></div>
     </div>
-    <!-- Aurora from ISS -->
     <div class="item cg-8 reveal" data-popup="aurora">
-      <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/94/Aurora_Borealis_and_Aurora_Australis_from_ISS_2011_-_1.jpg/800px-Aurora_Borealis_and_Aurora_Australis_from_ISS_2011_-_1.jpg" alt="Aurora from ISS" loading="lazy">
+      <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/94/Aurora_Borealis_and_Aurora_Australis_from_ISS_2011_-_1.jpg/800px-Aurora_Borealis_and_Aurora_Australis_from_ISS_2011_-_1.jpg" alt="Aurora from ISS">
       <div class="cap"><div class="lbl">Atmospheric</div><div class="ttl">Aurora Borealis</div><div class="desc">Photographed from the International Space Station, 2011.</div></div>
     </div>
   </div>
@@ -462,20 +455,20 @@ footer a:hover{color:var(--glow);opacity:1}
 
   <div class="jwst-grid">
     <div class="jwst-card reveal" data-popup="jwst1">
-      <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/2b/Webb%27s_First_Deep_Field.jpg/800px-Webb%27s_First_Deep_Field.jpg" alt="Webb's First Deep Field" loading="lazy">
-      <div class="meta"><div class="tag">Deep Time</div><h4>Webb's First Deep Field</h4><p>A patch of sky the size of a grain of sand — teeming with thousands of galaxies. Some light has traveled for 13 billion years.</p></div>
+      <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/2b/Webb%27s_First_Deep_Field.jpg/800px-Webb%27s_First_Deep_Field.jpg" alt="Webb's First Deep Field">
+      <div class="meta"><div class="tag">Deep Time</div><h4>Webb's First Deep Field</h4><p>A patch of sky the size of a grain of sand — teeming with thousands of galaxies.</p></div>
     </div>
     <div class="jwst-card reveal" data-popup="jwst2">
-      <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/6/6a/NASA%E2%80%99s_Webb_Reveals_Cosmic_Cliffs%2C_Glittering_Landscape_of_Star_Birth.png/800px-NASA%E2%80%99s_Webb_Reveals_Cosmic_Cliffs%2C_Glittering_Landscape_of_Star_Birth.png" alt="Cosmic Cliffs — Carina Nebula" loading="lazy">
-      <div class="meta"><div class="tag">Star Birth</div><h4>Cosmic Cliffs — Carina Nebula</h4><p>A landscape of mountains and valleys 7 light-years high — the edge of a star-forming region called NGC 3324.</p></div>
+      <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/6/6a/NASA%E2%80%99s_Webb_Reveals_Cosmic_Cliffs%2C_Glittering_Landscape_of_Star_Birth.png/800px-NASA%E2%80%99s_Webb_Reveals_Cosmic_Cliffs%2C_Glittering_Landscape_of_Star_Birth.png" alt="Cosmic Cliffs — Carina Nebula">
+      <div class="meta"><div class="tag">Star Birth</div><h4>Cosmic Cliffs — Carina Nebula</h4><p>A landscape of mountains and valleys 7 light-years high — a star-forming region called NGC 3324.</p></div>
     </div>
     <div class="jwst-card reveal" data-popup="jwst3">
-      <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/3/3c/Southern_Ring_Nebula_%28NIRCam_Image%29.jpg/800px-Southern_Ring_Nebula_%28NIRCam_Image%29.jpg" alt="Southern Ring Nebula" loading="lazy">
+      <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/3/3c/Southern_Ring_Nebula_%28NIRCam_Image%29.jpg/800px-Southern_Ring_Nebula_%28NIRCam_Image%29.jpg" alt="Southern Ring Nebula">
       <div class="meta"><div class="tag">Dying Star</div><h4>Southern Ring Nebula</h4><p>A planetary nebula 2,500 light-years away — the final exhale of a dying star.</p></div>
     </div>
     <div class="jwst-card reveal" data-popup="jwst4">
-      <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/9c/Stephan%27s_Quintet_%28NIRCam_Image%29.jpg/800px-Stephan%27s_Quintet_%28NIRCam_Image%29.jpg" alt="Stephan's Quintet" loading="lazy">
-      <div class="meta"><div class="tag">Galaxies</div><h4>Stephan's Quintet</h4><p>Five galaxies locked in a gravitational dance. Over 150 million pixels, from almost 1,000 separate image files.</p></div>
+      <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/9c/Stephan%27s_Quintet_%28NIRCam_Image%29.jpg/800px-Stephan%27s_Quintet_%28NIRCam_Image%29.jpg" alt="Stephan's Quintet">
+      <div class="meta"><div class="tag">Galaxies</div><h4>Stephan's Quintet</h4><p>Five galaxies locked in a gravitational dance. Over 150 million pixels, from almost 1,000 image files.</p></div>
     </div>
   </div>
 </section>
@@ -513,17 +506,16 @@ footer a:hover{color:var(--glow);opacity:1}
 <section class="contact" id="contact">
   <div class="eyebrow">The universe is not obliged to make sense to us</div>
   <h2>Look <em>up</em>.</h2>
-  <a href="#" class="btn" data-hover><span>Begin again</span><span class="arrow">↑</span></a>
+  <a href="#" class="btn"><span>Begin again</span><span class="arrow">↑</span></a>
 </section>
 
 <footer>
   <div>© THE UNIVERSE — an immersive journey</div>
   <div class="links">
-    <a href="#" data-hover>NASA</a><a href="#" data-hover>ESA</a><a href="#" data-hover>Hubble</a>
+    <a href="#">NASA</a><a href="#">ESA</a><a href="#">Hubble</a>
   </div>
 </footer>
 
-<!-- CINEMATIC POPUP -->
 <div class="popup-overlay" id="popupOverlay">
   <div class="popup">
     <button class="popup-close" id="popupClose">×</button>
@@ -540,35 +532,15 @@ footer a:hover{color:var(--glow);opacity:1}
 </div>
 
 <script>
-/* ============ CURSOR ============ */
-const cursor = document.getElementById('cursor');
-const cursorRing = document.getElementById('cursorRing');
-let mx=0,my=0,rx=0,ry=0;
+/* ============ CURSOR GLOW — native cursor stays visible ============ */
+const cursorGlow = document.getElementById('cursorGlow');
 document.addEventListener('mousemove', e => {
-  mx=e.clientX; my=e.clientY;
-  cursor.style.left=mx+'px'; cursor.style.top=my+'px';
-  if (Math.random() > 0.7) spawnTrail(mx, my);
+  cursorGlow.style.left = e.clientX + 'px';
+  cursorGlow.style.top = e.clientY + 'px';
 });
-function animateRing(){ rx+=(mx-rx)*0.12; ry+=(my-ry)*0.12; cursorRing.style.left=rx+'px'; cursorRing.style.top=ry+'px'; requestAnimationFrame(animateRing); }
-animateRing();
-function spawnTrail(x, y){
-  const t = document.createElement('div');
-  t.className = 'cursor-trail';
-  t.style.left = x+'px'; t.style.top = y+'px';
-  t.style.background = Math.random() > 0.5 ? '#5fb3d4' : '#d4a574';
-  t.style.opacity = '0.8';
-  document.body.appendChild(t);
-  let life = 0;
-  const anim = setInterval(() => {
-    life += 20;
-    t.style.opacity = (0.8 * (1 - life/600)).toString();
-    t.style.transform = `translate(-50%,-50%) scale(${1 - life/600})`;
-    if (life >= 600) { clearInterval(anim); t.remove(); }
-  }, 20);
-}
-document.querySelectorAll('[data-hover], a, button, .item, .jwst-card, .planet-card, .tl-item, .stats > div, .earth-visual').forEach(el => {
-  el.addEventListener('mouseenter', () => { cursor.classList.add('hover'); cursorRing.classList.add('hover'); });
-  el.addEventListener('mouseleave', () => { cursor.classList.remove('hover'); cursorRing.classList.remove('hover'); });
+document.querySelectorAll('a, button, .item, .jwst-card, .planet-card, .tl-item, .stats > div, .earth-visual').forEach(el => {
+  el.addEventListener('mouseenter', () => cursorGlow.classList.add('hover'));
+  el.addEventListener('mouseleave', () => cursorGlow.classList.remove('hover'));
 });
 
 /* ============ CLICK RIPPLE + BURST ============ */
@@ -593,7 +565,7 @@ document.addEventListener('click', e => {
     p.style.setProperty('--bx', Math.cos(angle) * dist + 'px');
     p.style.setProperty('--by', Math.sin(angle) * dist + 'px');
     document.body.appendChild(p);
-    setTimeout(() => p.remove(), 900);
+    setTimeout(() => p.remove(), 1000);
   }
 });
 
@@ -610,7 +582,7 @@ window.addEventListener('scroll', () => {
 const starsCanvas = document.getElementById('starsCanvas');
 function generateStars(){
   starsCanvas.innerHTML = '';
-  const count = window.innerWidth < 800 ? 100 : 220;
+  const count = window.innerWidth < 800 ? 100 : 240;
   const colors = ['#ffffff','#f5f0e8','#a8d8e8','#5fb3d4','#d4a574'];
   for(let i=0;i<count;i++){
     const s = document.createElement('div');
@@ -622,7 +594,7 @@ function generateStars(){
     s.style.color = colors[Math.floor(Math.random()*colors.length)];
     s.style.setProperty('--d',(4+Math.random()*12)+'s');
     s.style.setProperty('--dl',(Math.random()*15)+'s');
-    s.style.setProperty('--mo',(0.3+Math.random()*0.7));
+    s.style.setProperty('--mo',(0.4+Math.random()*0.6));
     starsCanvas.appendChild(s);
   }
 }
@@ -665,169 +637,31 @@ const countIO = new IntersectionObserver((entries) => {
 }, { threshold:.5 });
 counters.forEach(el => countIO.observe(el));
 
-/* ============ POPUP CONTENT DATA ============ */
+/* ============ POPUP DATA ============ */
 const POPUP_DATA = {
-  neptune: {
-    tag: 'Planetary · Voyager 2 · 1989',
-    title: 'Neptune — The Deep Blue',
-    desc: 'The most distant planet, 4.5 billion km from the Sun. Methane in its atmosphere absorbs red light, leaving only blue to reach our eyes. Voyager 2 is the only spacecraft to have ever visited — it flew past in 1989 and revealed supersonic winds of 2,100 km/h. It has not been visited since.',
-    img: 'https://upload.wikimedia.org/wikipedia/commons/thumb/5/56/Neptune_Full.jpg/1200px-Neptune_Full.jpg',
-    game: 'stars'
-  },
-  pillars: {
-    tag: 'Stellar Nursery · Hubble · 1995',
-    title: 'Pillars of Creation',
-    desc: 'Towers of cold hydrogen gas and dust in the Eagle Nebula, 6,500 light-years from Earth. The tallest pillar is four light-years tall. Stars are actively being born inside these clouds. This Hubble image, taken in 1995, is the most famous astronomical photograph ever made.',
-    img: 'https://upload.wikimedia.org/wikipedia/commons/thumb/6/68/Pillars_of_creation_2014_HST_WFC3-UVIS_full-res_denoised.jpg/1200px-Pillars_of_creation_2014_HST_WFC3-UVIS_full-res_denoised.jpg',
-    game: 'distance'
-  },
-  andromeda: {
-    tag: 'Galactic · Andromeda',
-    title: 'The Andromeda Galaxy',
-    desc: 'Our nearest large galactic neighbour, 2.5 million light-years from the Milky Way. It contains roughly one trillion stars — more than double the Milky Way\'s population. In about 4.5 billion years, Andromeda and the Milky Way will collide and merge into a single elliptical galaxy.',
-    img: 'https://upload.wikimedia.org/wikipedia/commons/thumb/9/98/Andromeda_Galaxy_%28with_h-alpha%29.jpg/1200px-Andromeda_Galaxy_%28with_h-alpha%29.jpg',
-    game: 'flip'
-  },
-  moon: {
-    tag: 'Satellite · The Moon',
-    title: 'The Lunar Surface',
-    desc: 'Craters and dust, formed 4.5 billion years ago. The Moon is tidally locked to Earth — we always see the same face. Its gravity stabilises Earth\'s axial tilt, which is why our climate has been stable enough for complex life to evolve. This image was taken by Apollo 17 in 1972.',
-    img: 'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e1/FullMoon2010.jpg/1200px-FullMoon2010.jpg',
-    game: 'stars'
-  },
-  stars: {
-    tag: 'Field · Deep Space',
-    title: 'A Star Field',
-    desc: 'Every point of light in this image is a sun. Many have planets. Some of those planets may have someone looking back at their own night sky, wondering the same thing we are. The universe contains an estimated 200 billion trillion stars.',
-    img: 'https://upload.wikimedia.org/wikipedia/commons/thumb/3/3f/Starfield_LRGB.jpg/1200px-Starfield_LRGB.jpg',
-    game: 'stars'
-  },
-  earthrise: {
-    tag: 'Terrestrial · Apollo 8 · 1968',
-    title: 'Earthrise',
-    desc: 'The first photograph of Earth from lunar orbit, taken by Apollo 8 on Christmas Eve, 1968. The thin blue line at the edge of the planet is our entire atmosphere. The photograph is credited with launching the modern environmental movement — we saw, for the first time, how fragile home is.',
-    img: 'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a8/NASA-Apollo8-Dec24-Earthrise.jpg/1200px-NASA-Apollo8-Dec24-Earthrise.jpg',
-    game: 'distance'
-  },
-  milkyway: {
-    tag: 'Galactic · Very Large Telescope · Chile',
-    title: 'The Milky Way',
-    desc: 'Our home galaxy, seen from the Very Large Telescope in the Atacama Desert. The bright band is the galactic plane — 100,000 light-years of stars, dust, and gas. The centre of the Milky Way contains a supermassive black hole named Sagittarius A*, with a mass four million times that of the Sun.',
-    img: 'https://upload.wikimedia.org/wikipedia/commons/thumb/4/43/ESO-VLT-Laser-phot-33a-07.jpg/1200px-ESO-VLT-Laser-phot-33a-07.jpg',
-    game: 'flip'
-  },
-  aurora: {
-    tag: 'Atmospheric · ISS · 2011',
-    title: 'Aurora Borealis',
-    desc: 'Charged particles from the Sun collide with gases in Earth\'s atmosphere, exciting them into glowing curtains of green, red, and violet. Green comes from oxygen at about 100 km altitude. Red comes from oxygen higher up. Purple comes from nitrogen. Photographed from the International Space Station in 2011.',
-    img: 'https://upload.wikimedia.org/wikipedia/commons/thumb/9/94/Aurora_Borealis_and_Aurora_Australis_from_ISS_2011_-_1.jpg/1200px-Aurora_Borealis_and_Aurora_Australis_from_ISS_2011_-_1.jpg',
-    game: 'stars'
-  },
-  jwst1: {
-    tag: 'Deep Field · James Webb · 2022',
-    title: "Webb's First Deep Field",
-    desc: 'A patch of sky the size of a grain of sand held at arm\'s length — teeming with thousands of galaxies. Some of the light in this image has been traveling for over 13 billion years. Every smudge is a galaxy. Many of those galaxies contain hundreds of billions of stars.',
-    img: 'https://upload.wikimedia.org/wikipedia/commons/thumb/2/2b/Webb%27s_First_Deep_Field.jpg/1200px-Webb%27s_First_Deep_Field.jpg',
-    game: 'distance'
-  },
-  jwst2: {
-    tag: 'Star Birth · James Webb · 2022',
-    title: 'Cosmic Cliffs — Carina Nebula',
-    desc: 'A landscape of "mountains" and "valleys" 7 light-years high, actually the edge of a star-forming region called NGC 3324. The "steam" rising from the peaks is hot, ionized gas streaming away under radiation from massive young stars. What looks like a sunrise is actually a violent stellar nursery.',
-    img: 'https://upload.wikimedia.org/wikipedia/commons/thumb/6/6a/NASA%E2%80%99s_Webb_Reveals_Cosmic_Cliffs%2C_Glittering_Landscape_of_Star_Birth.png/1200px-NASA%E2%80%99s_Webb_Reveals_Cosmic_Cliffs%2C_Glittering_Landscape_of_Star_Birth.png',
-    game: 'stars'
-  },
-  jwst3: {
-    tag: 'Dying Star · James Webb · 2022',
-    title: 'Southern Ring Nebula',
-    desc: 'A planetary nebula 2,500 light-years away — the final exhale of a dying star. Webb revealed, for the first time, that the dimmer star at its centre is cloaked in dust. The star is a white dwarf — the exposed core of a sun-like star that has shed its outer layers.',
-    img: 'https://upload.wikimedia.org/wikipedia/commons/thumb/3/3c/Southern_Ring_Nebula_%28NIRCam_Image%29.jpg/1200px-Southern_Ring_Nebula_%28NIRCam_Image%29.jpg',
-    game: 'flip'
-  },
-  jwst4: {
-    tag: 'Galaxies · James Webb · 2022',
-    title: "Stephan's Quintet",
-    desc: 'Five galaxies locked in a gravitational dance. This enormous mosaic contains over 150 million pixels and is constructed from almost 1,000 separate image files. Four of the five galaxies are actually interacting — one is much closer to us and just happens to align.',
-    img: 'https://upload.wikimedia.org/wikipedia/commons/thumb/9/9c/Stephan%27s_Quintet_%28NIRCam_Image%29.jpg/1200px-Stephan%27s_Quintet_%28NIRCam_Image%29.jpg',
-    game: 'distance'
-  },
-  bigbang: {
-    tag: 'Cosmic Time · 13.8 billion years ago',
-    title: 'The Big Bang',
-    desc: 'From a point smaller than an atom, the entire universe expands — space itself stretches outward, cooling as it grows. Within the first three minutes, hydrogen and helium form. Everything else will come later, forged inside stars.',
-    img: 'https://upload.wikimedia.org/wikipedia/commons/thumb/6/6f/CMB_Timeline300_no_WMAP.jpg/1200px-CMB_Timeline300_no_WMAP.jpg',
-    game: 'stars'
-  },
-  stars2: {
-    tag: 'Cosmic Time · 13.6 billion years ago',
-    title: 'The First Stars',
-    desc: 'Hydrogen and helium ignite in the dark. The first stars are giants — short-lived, brilliant, metal-poor. When they die, they forge the heavier elements: carbon, oxygen, iron. Every atom in your body was made inside a star. You are, literally, stardust.',
-    img: 'https://upload.wikimedia.org/wikipedia/commons/thumb/3/3f/Starfield_LRGB.jpg/1200px-Starfield_LRGB.jpg',
-    game: 'stars'
-  },
-  solar2: {
-    tag: 'Cosmic Time · 4.6 billion years ago',
-    title: 'The Solar System Forms',
-    desc: 'A cloud of gas and dust collapses. The Sun ignites. The planets coalesce from the debris — including a small rocky world third from the star, with a thin blue atmosphere and oceans of liquid water. Our Sun is one of about 200 billion stars in the Milky Way.',
-    img: 'https://upload.wikimedia.org/wikipedia/commons/thumb/5/56/Neptune_Full.jpg/1200px-Neptune_Full.jpg',
-    game: 'flip'
-  },
-  life: {
-    tag: 'Cosmic Time · 3.8 billion years ago',
-    title: 'Life Begins',
-    desc: 'In the oceans of that third planet, self-replicating molecules appear. Single cells. Then multicellular life. Then eyes, wings, and eventually minds capable of awe. The rest is, quite literally, history.',
-    img: 'https://upload.wikimedia.org/wikipedia/commons/thumb/9/98/Andromeda_Galaxy_%28with_h-alpha%29.jpg/1200px-Andromeda_Galaxy_%28with_h-alpha%29.jpg',
-    game: 'distance'
-  },
-  humans: {
-    tag: 'Cosmic Time · 200,000 years ago',
-    title: 'Homo Sapiens',
-    desc: 'A species emerges in Africa with a brain large enough to wonder — and the curiosity to look up. For 190,000 of those years, we tracked the stars without knowing what they were. The invention of the telescope in 1608 changed everything.',
-    img: 'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e1/FullMoon2010.jpg/1200px-FullMoon2010.jpg',
-    game: 'stars'
-  },
-  moon2: {
-    tag: 'Cosmic Time · 1969',
-    title: 'First Steps on the Moon',
-    desc: 'Two humans walk on another world. For one brief moment, the species is united by the sight of a bootprint in lunar dust. The footprints will remain for millions of years — the Moon has no wind to erase them.',
-    img: 'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e1/FullMoon2010.jpg/1200px-FullMoon2010.jpg',
-    game: 'flip'
-  },
-  today: {
-    tag: 'Cosmic Time · Today',
-    title: 'You, Reading This',
-    desc: 'You are stardust, briefly conscious, staring at a screen that encodes light from the other side of the world — in a universe that made both the screen and the eyes. The odds against this moment are not small. They are astronomical.',
-    img: 'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a8/NASA-Apollo8-Dec24-Earthrise.jpg/1200px-NASA-Apollo8-Dec24-Earthrise.jpg',
-    game: 'stars'
-  },
-  age: {
-    tag: 'Cosmic Numbers',
-    title: '13.8 Billion Years',
-    desc: 'The universe is 13.8 billion years old. The oldest light we can see — the cosmic microwave background — has been traveling since 380,000 years after the Big Bang. It is the afterglow of creation itself.',
-    img: 'https://upload.wikimedia.org/wikipedia/commons/thumb/6/6f/CMB_Timeline300_no_WMAP.jpg/1200px-CMB_Timeline300_no_WMAP.jpg',
-    game: 'distance'
-  },
-  stars3: {
-    tag: 'Cosmic Numbers',
-    title: '200 Billion Stars',
-    desc: 'The Milky Way contains an estimated 200 billion stars. If you counted one per second, it would take you 6,340 years. And the Milky Way is just one of about 2 trillion galaxies in the observable universe.',
-    img: 'https://upload.wikimedia.org/wikipedia/commons/thumb/3/3f/Starfield_LRGB.jpg/1200px-Starfield_LRGB.jpg',
-    game: 'stars'
-  },
-  galaxies: {
-    tag: 'Cosmic Numbers',
-    title: '2 Trillion Galaxies',
-    desc: 'The observable universe contains an estimated 2 trillion galaxies. Each contains hundreds of billions of stars. Some of them almost certainly have planets. Some of those planets almost certainly have life.',
-    img: 'https://upload.wikimedia.org/wikipedia/commons/thumb/2/2b/Webb%27s_First_Deep_Field.jpg/1200px-Webb%27s_First_Deep_Field.jpg',
-    game: 'flip'
-  },
-  you: {
-    tag: 'Cosmic Numbers',
-    title: 'One You',
-    desc: 'You are the only one. In 13.8 billion years of cosmic history, on one small planet, in one small galaxy, a brief configuration of atoms became conscious enough to wonder why. That is worth stopping to notice.',
-    img: 'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a8/NASA-Apollo8-Dec24-Earthrise.jpg/1200px-NASA-Apollo8-Dec24-Earthrise.jpg',
-    game: 'stars'
-  }
+  neptune: {tag:'Planetary · Voyager 2 · 1989', title:'Neptune — The Deep Blue', desc:'The most distant planet, 4.5 billion km from the Sun. Methane in its atmosphere absorbs red light, leaving only blue to reach our eyes. Voyager 2 is the only spacecraft to have ever visited — it flew past in 1989 and revealed supersonic winds of 2,100 km/h.', img:'https://upload.wikimedia.org/wikipedia/commons/5/56/Neptune_Full.jpg', game:'stars'},
+  pillars: {tag:'Stellar Nursery · Hubble · 1995', title:'Pillars of Creation', desc:'Towers of cold hydrogen gas and dust in the Eagle Nebula, 6,500 light-years from Earth. The tallest pillar is four light-years tall. Stars are actively being born inside these clouds. This Hubble image, taken in 1995, is the most famous astronomical photograph ever made.', img:'https://upload.wikimedia.org/wikipedia/commons/6/68/Pillars_of_creation_2014_HST_WFC3-UVIS_full-res_denoised.jpg', game:'distance'},
+  andromeda: {tag:'Galactic · Andromeda', title:'The Andromeda Galaxy', desc:'Our nearest large galactic neighbour, 2.5 million light-years from the Milky Way. It contains roughly one trillion stars — more than double the Milky Way\'s population. In about 4.5 billion years, Andromeda and the Milky Way will collide and merge.', img:'https://upload.wikimedia.org/wikipedia/commons/9/98/Andromeda_Galaxy_%28with_h-alpha%29.jpg', game:'flip'},
+  moon: {tag:'Satellite · The Moon', title:'The Lunar Surface', desc:'Craters and dust, formed 4.5 billion years ago. The Moon is tidally locked to Earth — we always see the same face. Its gravity stabilises Earth\'s axial tilt, which is why our climate has been stable enough for complex life to evolve.', img:'https://upload.wikimedia.org/wikipedia/commons/e/e1/FullMoon2010.jpg', game:'stars'},
+  stars: {tag:'Field · Deep Space', title:'A Star Field', desc:'Every point of light in this image is a sun. Many have planets. Some of those planets may have someone looking back at their own night sky. The universe contains an estimated 200 billion trillion stars.', img:'https://upload.wikimedia.org/wikipedia/commons/3/3f/Starfield_LRGB.jpg', game:'stars'},
+  earthrise: {tag:'Terrestrial · Apollo 8 · 1968', title:'Earthrise', desc:'The first photograph of Earth from lunar orbit, taken by Apollo 8 on Christmas Eve, 1968. The thin blue line at the edge of the planet is our entire atmosphere. The photograph is credited with launching the modern environmental movement.', img:'https://upload.wikimedia.org/wikipedia/commons/a/a8/NASA-Apollo8-Dec24-Earthrise.jpg', game:'distance'},
+  milkyway: {tag:'Galactic · Very Large Telescope · Chile', title:'The Milky Way', desc:'Our home galaxy, seen from the Very Large Telescope in the Atacama Desert. The bright band is the galactic plane — 100,000 light-years of stars, dust, and gas. The centre contains a supermassive black hole named Sagittarius A*.', img:'https://upload.wikimedia.org/wikipedia/commons/4/43/ESO-VLT-Laser-phot-33a-07.jpg', game:'flip'},
+  aurora: {tag:'Atmospheric · ISS · 2011', title:'Aurora Borealis', desc:'Charged particles from the Sun collide with gases in Earth\'s atmosphere, exciting them into glowing curtains of green, red, and violet. Green comes from oxygen at about 100 km altitude. Photographed from the International Space Station.', img:'https://upload.wikimedia.org/wikipedia/commons/9/94/Aurora_Borealis_and_Aurora_Australis_from_ISS_2011_-_1.jpg', game:'stars'},
+  jwst1: {tag:'Deep Field · James Webb · 2022', title:"Webb's First Deep Field", desc:'A patch of sky the size of a grain of sand held at arm\'s length — teeming with thousands of galaxies. Some of the light in this image has been traveling for over 13 billion years.', img:'https://upload.wikimedia.org/wikipedia/commons/2/2b/Webb%27s_First_Deep_Field.jpg', game:'distance'},
+  jwst2: {tag:'Star Birth · James Webb · 2022', title:'Cosmic Cliffs — Carina Nebula', desc:'A landscape of "mountains" and "valleys" 7 light-years high — the edge of a star-forming region called NGC 3324. The "steam" rising from the peaks is hot, ionized gas streaming away under radiation from massive young stars.', img:'https://upload.wikimedia.org/wikipedia/commons/6/6a/NASA%E2%80%99s_Webb_Reveals_Cosmic_Cliffs%2C_Glittering_Landscape_of_Star_Birth.png', game:'stars'},
+  jwst3: {tag:'Dying Star · James Webb · 2022', title:'Southern Ring Nebula', desc:'A planetary nebula 2,500 light-years away — the final exhale of a dying star. Webb revealed, for the first time, that the dimmer star at its centre is cloaked in dust.', img:'https://upload.wikimedia.org/wikipedia/commons/3/3c/Southern_Ring_Nebula_%28NIRCam_Image%29.jpg', game:'flip'},
+  jwst4: {tag:'Galaxies · James Webb · 2022', title:"Stephan's Quintet", desc:'Five galaxies locked in a gravitational dance. This enormous mosaic contains over 150 million pixels and is constructed from almost 1,000 separate image files.', img:'https://upload.wikimedia.org/wikipedia/commons/9/9c/Stephan%27s_Quintet_%28NIRCam_Image%29.jpg', game:'distance'},
+  bigbang: {tag:'Cosmic Time · 13.8 billion years ago', title:'The Big Bang', desc:'From a point smaller than an atom, the entire universe expands — space itself stretches outward, cooling as it grows. Within the first three minutes, hydrogen and helium form.', img:'https://upload.wikimedia.org/wikipedia/commons/6/6f/CMB_Timeline300_no_WMAP.jpg', game:'stars'},
+  stars2: {tag:'Cosmic Time · 13.6 billion years ago', title:'The First Stars', desc:'Hydrogen and helium ignite in the dark. The first stars are giants — short-lived, brilliant. When they die, they forge the heavier elements. Every atom in your body was made inside a star.', img:'https://upload.wikimedia.org/wikipedia/commons/3/3f/Starfield_LRGB.jpg', game:'stars'},
+  solar2: {tag:'Cosmic Time · 4.6 billion years ago', title:'The Solar System Forms', desc:'A cloud of gas and dust collapses. The Sun ignites. The planets coalesce from the debris — including a small rocky world third from the star.', img:'https://upload.wikimedia.org/wikipedia/commons/5/56/Neptune_Full.jpg', game:'flip'},
+  life: {tag:'Cosmic Time · 3.8 billion years ago', title:'Life Begins', desc:'In the oceans of that third planet, self-replicating molecules appear. Single cells. Then multicellular life. Then eyes, wings, and minds capable of awe.', img:'https://upload.wikimedia.org/wikipedia/commons/9/98/Andromeda_Galaxy_%28with_h-alpha%29.jpg', game:'distance'},
+  humans: {tag:'Cosmic Time · 200,000 years ago', title:'Homo Sapiens', desc:'A species emerges in Africa with a brain large enough to wonder — and the curiosity to look up. For 190,000 of those years, we tracked the stars without knowing what they were.', img:'https://upload.wikimedia.org/wikipedia/commons/e/e1/FullMoon2010.jpg', game:'stars'},
+  moon2: {tag:'Cosmic Time · 1969', title:'First Steps on the Moon', desc:'Two humans walk on another world. For one brief moment, the species is united by the sight of a bootprint in lunar dust. The footprints will remain for millions of years.', img:'https://upload.wikimedia.org/wikipedia/commons/e/e1/FullMoon2010.jpg', game:'flip'},
+  today: {tag:'Cosmic Time · Today', title:'You, Reading This', desc:'You are stardust, briefly conscious, staring at a screen that encodes light from the other side of the world — in a universe that made both the screen and the eyes.', img:'https://upload.wikimedia.org/wikipedia/commons/a/a8/NASA-Apollo8-Dec24-Earthrise.jpg', game:'stars'},
+  age: {tag:'Cosmic Numbers', title:'13.8 Billion Years', desc:'The universe is 13.8 billion years old. The oldest light we can see — the cosmic microwave background — has been traveling since 380,000 years after the Big Bang. It is the afterglow of creation itself.', img:'https://upload.wikimedia.org/wikipedia/commons/6/6f/CMB_Timeline300_no_WMAP.jpg', game:'distance'},
+  stars3: {tag:'Cosmic Numbers', title:'200 Billion Stars', desc:'The Milky Way contains an estimated 200 billion stars. If you counted one per second, it would take you 6,340 years. And the Milky Way is just one of about 2 trillion galaxies.', img:'https://upload.wikimedia.org/wikipedia/commons/3/3f/Starfield_LRGB.jpg', game:'stars'},
+  galaxies: {tag:'Cosmic Numbers', title:'2 Trillion Galaxies', desc:'The observable universe contains an estimated 2 trillion galaxies. Each contains hundreds of billions of stars. Some of them almost certainly have planets. Some of those planets almost certainly have life.', img:'https://upload.wikimedia.org/wikipedia/commons/2/2b/Webb%27s_First_Deep_Field.jpg', game:'flip'},
+  you: {tag:'Cosmic Numbers', title:'One You', desc:'You are the only one. In 13.8 billion years of cosmic history, on one small planet, in one small galaxy, a brief configuration of atoms became conscious enough to wonder why.', img:'https://upload.wikimedia.org/wikipedia/commons/a/a8/NASA-Apollo8-Dec24-Earthrise.jpg', game:'stars'}
 };
 
 /* ============ CINEMATIC POPUP ============ */
@@ -837,9 +671,7 @@ const popupTitle = document.getElementById('popupTitle');
 const popupDesc = document.getElementById('popupDesc');
 const popupTag = document.getElementById('popupTag');
 const popupGame = document.getElementById('popupGame');
-
-let popupGallery = [];
-let popupIndex = 0;
+let popupGallery = [], popupIndex = 0;
 
 function openPopup(data, index, gallery){
   popupImg.src = data.img;
@@ -852,13 +684,11 @@ function openPopup(data, index, gallery){
   popupOverlay.classList.add('open');
   document.body.style.overflow = 'hidden';
 }
-
 function closePopup(){
   popupOverlay.classList.remove('open');
   document.body.style.overflow = '';
   popupGame.innerHTML = '';
 }
-
 document.getElementById('popupClose').onclick = closePopup;
 popupOverlay.addEventListener('click', e => { if (e.target === popupOverlay) closePopup(); });
 document.addEventListener('keydown', e => {
@@ -866,7 +696,6 @@ document.addEventListener('keydown', e => {
   if (e.key === 'ArrowLeft' && popupOverlay.classList.contains('open')) navPopup(-1);
   if (e.key === 'ArrowRight' && popupOverlay.classList.contains('open')) navPopup(1);
 });
-
 function navPopup(dir){
   if (!popupGallery.length) return;
   popupIndex = (popupIndex + dir + popupGallery.length) % popupGallery.length;
@@ -884,26 +713,25 @@ function navPopup(dir){
 document.getElementById('popupPrev').onclick = (e) => { e.stopPropagation(); navPopup(-1); };
 document.getElementById('popupNext').onclick = (e) => { e.stopPropagation(); navPopup(1); };
 
-/* Attach popups to every element with data-popup */
 const popupKeys = Object.keys(POPUP_DATA);
 document.querySelectorAll('[data-popup]').forEach(el => {
   el.addEventListener('click', e => {
     e.stopPropagation();
     const key = el.dataset.popup;
+    if (!POPUP_DATA[key]) return;
     const idx = popupKeys.indexOf(key);
     const gallery = popupKeys.map(k => POPUP_DATA[k]);
     openPopup(POPUP_DATA[key], idx >= 0 ? idx : 0, gallery);
   });
 });
 
-/* Earth visual special */
 document.querySelector('[data-earth]')?.addEventListener('click', e => {
   e.stopPropagation();
   const data = {
     tag: 'Terrestrial · Apollo 17 · 1972',
     title: 'Earth — The Pale Blue Dot',
     desc: 'Earth seen from space. The thin blue line at the edge is our entire atmosphere — the only thing standing between every living thing and the vacuum of space. In 1990, Voyager 1 photographed Earth from 6 billion km away. It appeared as a single pixel.',
-    img: 'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a8/NASA-Apollo8-Dec24-Earthrise.jpg/1200px-NASA-Apollo8-Dec24-Earthrise.jpg',
+    img: 'https://upload.wikimedia.org/wikipedia/commons/a/a8/NASA-Apollo8-Dec24-Earthrise.jpg',
     game: 'distance'
   };
   openPopup(data, 0, [data]);
@@ -916,21 +744,14 @@ function renderGame(type){
   else if (type === 'flip') renderFlipGame();
 }
 
-/* STAR-CONNECT GAME */
 function renderStarGame(){
   const points = [];
-  for (let i = 0; i < 6; i++) {
-    points.push({
-      x: 10 + Math.random() * 80,
-      y: 15 + Math.random() * 70
-    });
-  }
+  for (let i = 0; i < 6; i++) points.push({x: 10 + Math.random() * 80, y: 15 + Math.random() * 70});
   let html = '<div class="game-title">Interactive · Connect the Stars</div>';
-  html += '<div class="game-desc">Click the stars in any order to draw a constellation. Each star glows gold when connected.</div>';
-  html += '<div class="star-connect" id="starGame">';
-  html += '<svg id="starSvg"><g id="starLines"></g></svg>';
+  html += '<div class="game-desc">Click the stars in any order to draw a constellation.</div>';
+  html += '<div class="star-connect" id="starGame"><svg id="starSvg"><g id="starLines"></g></svg>';
   points.forEach((p, i) => {
-    html += `<div class="star-point" style="left:${p.x}%;top:${p.y}%" data-star="${i}" data-x="${p.x}" data-y="${p.y}"></div>`;
+    html += `<div class="star-point" style="left:${p.x}%;top:${p.y}%" data-star="${i}"></div>`;
   });
   html += '</div>';
   popupGame.innerHTML = html;
@@ -955,25 +776,24 @@ function renderStarGame(){
       }
       if (connected.length === 6) {
         setTimeout(() => {
-          popupGame.querySelector('.game-desc').textContent = '✨ Constellation complete. You\'ve drawn a shape that will never be seen again in exactly this way.';
+          popupGame.querySelector('.game-desc').textContent = '✨ Constellation complete.';
         }, 300);
       }
     });
   });
 }
 
-/* DISTANCE GAME */
 function renderDistanceGame(){
   const distances = [
-    { name: 'The Moon', value: 0.38, unit: 'million km' },
-    { name: 'Mars', value: 228, unit: 'million km' },
-    { name: 'Jupiter', value: 778, unit: 'million km' },
-    { name: 'Neptune', value: 4500, unit: 'million km' },
-    { name: 'Proxima Centauri', value: 40000000, unit: 'million km' },
+    {name: 'The Moon', value: 0.38, unit: 'million km'},
+    {name: 'Mars', value: 228, unit: 'million km'},
+    {name: 'Jupiter', value: 778, unit: 'million km'},
+    {name: 'Neptune', value: 4500, unit: 'million km'},
+    {name: 'Proxima Centauri', value: 40000000, unit: 'million km'}
   ];
   const target = distances[Math.floor(Math.random() * distances.length)];
   let html = '<div class="game-title">Interactive · Guess the Distance</div>';
-  html += `<div class="game-desc">How far is <strong style="color:#d4a574">${target.name}</strong> from Earth? Drag the slider and submit your guess.</div>`;
+  html += `<div class="game-desc">How far is <strong style="color:#d4a574">${target.name}</strong> from Earth? Drag the slider and submit.</div>`;
   html += '<div class="distance-game">';
   html += '<input type="range" class="slider" id="distSlider" min="0" max="100" value="50">';
   html += '<div class="labels"><span>Very close</span><span>Very far</span></div>';
@@ -987,22 +807,17 @@ function renderDistanceGame(){
     const actual = Math.round((Math.log10(target.value) / Math.log10(40000000)) * 100);
     const diff = Math.abs(guess - actual);
     let msg;
-    if (diff < 10) msg = `🌟 Incredible. ${target.name} is ${target.value.toLocaleString()} ${target.unit} from Earth. You were within ${diff}% of perfect.`;
+    if (diff < 10) msg = `🌟 Incredible. ${target.name} is ${target.value.toLocaleString()} ${target.unit} away. Within ${diff}% of perfect.`;
     else if (diff < 30) msg = `✨ Close. ${target.name} is ${target.value.toLocaleString()} ${target.unit} away. Off by ${diff}.`;
     else msg = `Space is bigger than we think. ${target.name} is ${target.value.toLocaleString()} ${target.unit} from Earth.`;
     document.getElementById('distResult').textContent = msg;
   });
 }
 
-/* PLANET FLIP GAME */
 function renderFlipGame(){
   const planets = [
-    { front: '☿', back: 'Mercury' },
-    { front: '♀', back: 'Venus' },
-    { front: '⊕', back: 'Earth' },
-    { front: '♂', back: 'Mars' },
-    { front: '♃', back: 'Jupiter' },
-    { front: '♄', back: 'Saturn' }
+    {front: '☿', back: 'Mercury'}, {front: '♀', back: 'Venus'}, {front: '⊕', back: 'Earth'},
+    {front: '♂', back: 'Mars'}, {front: '♃', back: 'Jupiter'}, {front: '♄', back: 'Saturn'}
   ];
   let html = '<div class="game-title">Interactive · Planet Symbols</div>';
   html += '<div class="game-desc">Click each card to reveal the planet name behind the astronomical symbol.</div>';
@@ -1020,45 +835,20 @@ function renderFlipGame(){
   });
 }
 
-/* ============ PLANET CARDS OPEN POPUPS ============ */
+/* ============ PLANET CARDS → POPUP ============ */
 document.querySelectorAll('.planet-card').forEach(card => {
   card.addEventListener('click', e => {
     e.stopPropagation();
     const name = card.dataset.open;
     let data;
-    if (name === 'Mars') data = {
-      tag: 'Planetary · Mars',
-      title: 'Mars — The Red Planet',
-      desc: 'A cold desert world with Olympus Mons — the tallest volcano in the solar system, 22 km high. Rust-red because its soil is iron oxide. Two tiny moons drift across its pink sky. Mars has the largest dust storms in the solar system — some last for months and cover the entire planet.',
-      img: 'https://upload.wikimedia.org/wikipedia/commons/thumb/0/02/OSIRIS_Mars_true_color.jpg/1200px-OSIRIS_Mars_true_color.jpg',
-      game: 'stars'
-    };
-    else if (name === 'Jupiter') data = {
-      tag: 'Planetary · Jupiter',
-      title: 'Jupiter — The Giant',
-      desc: 'A gas giant so massive it could swallow 1,300 Earths. Its Great Red Spot is a storm wider than our planet, raging for at least 350 years. 95 known moons — including Europa, whose ice hides a global ocean. Jupiter acts as the solar system\'s vacuum cleaner, absorbing comets that might otherwise hit Earth.',
-      img: 'https://upload.wikimedia.org/wikipedia/commons/thumb/2/2b/Jupiter_and_its_shrunken_Great_Red_Spot.jpg/1200px-Jupiter_and_its_shrunken_Great_Red_Spot.jpg',
-      game: 'distance'
-    };
-    else if (name === 'Saturn') data = {
-      tag: 'Planetary · Saturn',
-      title: 'Saturn — The Ringed World',
-      desc: 'Its rings span 280,000 km but are only about a mile thick — billions of ice fragments, each on its own orbit. Saturn is so light it would float on water. Its moon Titan has lakes of liquid methane and an atmosphere thicker than Earth\'s.',
-      img: 'https://upload.wikimedia.org/wikipedia/commons/thumb/c/c7/Saturn_during_Equinox.jpg/1200px-Saturn_during_Equinox.jpg',
-      game: 'flip'
-    };
-    else data = {
-      tag: 'Planetary · Neptune',
-      title: 'Neptune — The Deep Blue',
-      desc: 'The windiest world we know — supersonic storms reach 2,100 km/h. It radiates more heat than it receives from the Sun, and its deep blue comes from methane absorbing red light. One year here lasts 165 Earth years. It has not been visited since Voyager 2 in 1989.',
-      img: 'https://upload.wikimedia.org/wikipedia/commons/thumb/5/56/Neptune_Full.jpg/1200px-Neptune_Full.jpg',
-      game: 'stars'
-    };
+    if (name === 'Mars') data = {tag:'Planetary · Mars', title:'Mars — The Red Planet', desc:'A cold desert world with Olympus Mons — the tallest volcano in the solar system, 22 km high. Rust-red because its soil is iron oxide. Mars has the largest dust storms in the solar system — some last for months and cover the entire planet.', img:'https://upload.wikimedia.org/wikipedia/commons/0/02/OSIRIS_Mars_true_color.jpg', game:'stars'};
+    else if (name === 'Jupiter') data = {tag:'Planetary · Jupiter', title:'Jupiter — The Giant', desc:'A gas giant so massive it could swallow 1,300 Earths. Its Great Red Spot is a storm wider than our planet, raging for at least 350 years. 95 known moons — including Europa, whose ice hides a global ocean.', img:'https://upload.wikimedia.org/wikipedia/commons/2/2b/Jupiter_and_its_shrunken_Great_Red_Spot.jpg', game:'distance'};
+    else if (name === 'Saturn') data = {tag:'Planetary · Saturn', title:'Saturn — The Ringed World', desc:'Its rings span 280,000 km but are only about a mile thick — billions of ice fragments, each on its own orbit. Saturn is so light it would float on water. Its moon Titan has lakes of liquid methane.', img:'https://upload.wikimedia.org/wikipedia/commons/c/c7/Saturn_during_Equinox.jpg', game:'flip'};
+    else data = {tag:'Planetary · Neptune', title:'Neptune — The Deep Blue', desc:'The windiest world we know — supersonic storms reach 2,100 km/h. It radiates more heat than it receives from the Sun, and its deep blue comes from methane absorbing red light. One year here lasts 165 Earth years.', img:'https://upload.wikimedia.org/wikipedia/commons/5/56/Neptune_Full.jpg', game:'stars'};
     openPopup(data, 0, [data]);
   });
 });
 
-/* Planet SVG circles trigger card click */
 document.querySelectorAll('.solar-system [data-planet]').forEach(g => {
   g.addEventListener('click', e => {
     e.stopPropagation();
@@ -1068,7 +858,6 @@ document.querySelectorAll('.solar-system [data-planet]').forEach(g => {
   });
 });
 
-/* Stats click pulse */
 document.querySelectorAll('.stats > div').forEach(stat => {
   stat.addEventListener('click', function() {
     this.style.transform = 'scale(1.1)';
@@ -1080,7 +869,7 @@ document.querySelectorAll('.stats > div').forEach(stat => {
 <style>
 @keyframes rotate-cw{to{transform:rotate(360deg)}}
 @keyframes sunGlow{0%,100%{opacity:.7}50%{opacity:1}}
-@keyframes sunHalo{0%,100%{transform:scale(1);opacity:.15}50%{transform:scale(1.3);opacity:.3}}
+@keyframes sunHalo{0%,100%{transform:scale(1);opacity:.2}50%{transform:scale(1.3);opacity:.4}}
 @keyframes corePulse{0%,100%{opacity:.8;transform:scale(1)}50%{opacity:1;transform:scale(1.6)}}
 @keyframes spiralRotate{to{transform:rotate(360deg)}}
 .sun-glow{animation:sunGlow 4s ease-in-out infinite;transform-origin:500px 500px}
