@@ -1,134 +1,497 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Audit Input</title>
-  <style>
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-    body {
-      font-family: system-ui, sans-serif;
-      background: #f7f9fc;
-      color: #1a1a2e;
-      display: flex;
-      justify-content: center;
-      padding: 3rem 1rem;
-    }
-    .container {
-      background: #fff;
-      padding: 2rem;
-      border-radius: 12px;
-      box-shadow: 0 2px 12px rgba(0,0,0,.08);
-      width: 100%;
-      max-width: 520px;
-    }
-    h1 { font-size: 1.4rem; margin-bottom: 1.5rem; color: #1d4ed8; }
-    label { display: block; font-size: .875rem; font-weight: 600; margin: .9rem 0 .35rem; }
-    input, select, textarea {
-      width: 100%;
-      padding: .65rem;
-      border: 1px solid #d1d5db;
-      border-radius: 8px;
-      font-size: .95rem;
-      font-family: inherit;
-    }
-    input:focus, select:focus, textarea:focus {
-      outline: 2px solid #1d4ed8;
-      border-color: transparent;
-    }
-    textarea { resize: vertical; min-height: 80px; }
-    button {
-      margin-top: 1.5rem;
-      width: 100%;
-      background: #1d4ed8;
-      color: #fff;
-      padding: .8rem;
-      border: none;
-      border-radius: 8px;
-      font-size: 1rem;
-      font-weight: 600;
-      cursor: pointer;
-    }
-    button:hover { background: #1e40af; }
-    #result {
-      margin-top: 1.25rem;
-      padding: .9rem;
-      background: #ecfdf5;
-      border: 1px solid #a7f3d0;
-      border-radius: 8px;
-      font-size: .9rem;
-      white-space: pre-wrap;
-      display: none;
-    }
-  </style>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>AuditPro — Audit & Findings Manager</title>
+<style>
+  :root {
+    --bg: #f4f6fb;
+    --card: #ffffff;
+    --border: #e2e6ef;
+    --primary: #1d4ed8;
+    --primary-dark: #1e40af;
+    --text: #1a1a2e;
+    --muted: #6b7280;
+    --danger: #dc2626;
+    --warn: #d97706;
+    --ok: #059669;
+    --info: #2563eb;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    padding: 1.5rem;
+    line-height: 1.45;
+  }
+  h1, h2, h3 { font-weight: 700; }
+  h1 { font-size: 1.5rem; color: var(--primary); }
+  h2 { font-size: 1.15rem; margin-bottom: 1rem; }
+  h3 { font-size: 1rem; }
+
+  .topbar {
+    display: flex; justify-content: space-between; align-items: center;
+    flex-wrap: wrap; gap: 1rem; margin-bottom: 1.5rem;
+  }
+  .topbar .actions { display: flex; gap: .6rem; flex-wrap: wrap; }
+
+  button {
+    font-family: inherit; font-size: .9rem; font-weight: 600;
+    padding: .55rem 1rem; border-radius: 8px; border: 1px solid transparent;
+    cursor: pointer; transition: .15s;
+  }
+  .btn-primary { background: var(--primary); color: #fff; }
+  .btn-primary:hover { background: var(--primary-dark); }
+  .btn-ghost { background: #fff; color: var(--text); border-color: var(--border); }
+  .btn-ghost:hover { background: #f0f3f9; }
+  .btn-danger { background: #fee2e2; color: var(--danger); }
+  .btn-danger:hover { background: #fecaca; }
+
+  .stats {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    gap: 1rem; margin-bottom: 1.5rem;
+  }
+  .stat {
+    background: var(--card); padding: 1.1rem 1.25rem; border-radius: 12px;
+    border: 1px solid var(--border);
+  }
+  .stat .label { font-size: .8rem; color: var(--muted); text-transform: uppercase; letter-spacing: .04em; }
+  .stat .value { font-size: 1.8rem; font-weight: 700; margin-top: .25rem; }
+  .stat.risk .value { color: var(--danger); }
+  .stat.open .value { color: var(--warn); }
+  .stat.ok .value { color: var(--ok); }
+
+  .panel {
+    background: var(--card); border: 1px solid var(--border);
+    border-radius: 12px; padding: 1.25rem; margin-bottom: 1.5rem;
+  }
+  .panel-head {
+    display: flex; justify-content: space-between; align-items: center;
+    flex-wrap: wrap; gap: .75rem; margin-bottom: 1rem;
+  }
+
+  form.grid {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: .75rem;
+  }
+  form.grid .full { grid-column: 1 / -1; }
+  label { display: block; font-size: .8rem; font-weight: 600; color: var(--muted); margin-bottom: .3rem; }
+  input, select, textarea {
+    width: 100%; padding: .55rem .65rem; font-family: inherit; font-size: .9rem;
+    border: 1px solid var(--border); border-radius: 8px; background: #fff;
+  }
+  input:focus, select:focus, textarea:focus {
+    outline: 2px solid var(--primary); border-color: transparent;
+  }
+  textarea { min-height: 60px; resize: vertical; }
+
+  .filters { display: flex; gap: .6rem; flex-wrap: wrap; }
+  .filters input, .filters select { width: auto; min-width: 140px; }
+
+  table { width: 100%; border-collapse: collapse; font-size: .9rem; }
+  th, td { text-align: left; padding: .65rem .5rem; border-bottom: 1px solid var(--border); vertical-align: top; }
+  th { font-size: .78rem; text-transform: uppercase; letter-spacing: .04em; color: var(--muted); }
+  tr:hover td { background: #fafbff; }
+
+  .badge {
+    display: inline-block; padding: .15rem .55rem; border-radius: 999px;
+    font-size: .72rem; font-weight: 700; text-transform: uppercase;
+  }
+  .badge.low { background: #dbeafe; color: #1e40af; }
+  .badge.medium { background: #fef3c7; color: #92400e; }
+  .badge.high { background: #fee2e2; color: #991b1b; }
+  .badge.critical { background: #7f1d1d; color: #fff; }
+  .badge.open { background: #fef3c7; color: #92400e; }
+  .badge.in-progress { background: #dbeafe; color: #1e40af; }
+  .badge.closed { background: #d1fae5; color: #065f46; }
+  .badge.planned { background: #e5e7eb; color: #374151; }
+
+  .empty { color: var(--muted); text-align: center; padding: 1.5rem; font-style: italic; }
+  .actions-cell { white-space: nowrap; }
+  .actions-cell button { padding: .3rem .55rem; font-size: .78rem; }
+  .muted { color: var(--muted); font-size: .82rem; }
+
+  #toast {
+    position: fixed; bottom: 1.25rem; right: 1.25rem;
+    background: #111827; color: #fff; padding: .75rem 1rem;
+    border-radius: 8px; font-size: .88rem; opacity: 0;
+    transform: translateY(10px); transition: .25s; pointer-events: none;
+  }
+  #toast.show { opacity: 1; transform: translateY(0); }
+
+  @media (max-width: 640px) {
+    table { font-size: .8rem; }
+    th, td { padding: .45rem .3rem; }
+  }
+</style>
 </head>
 <body>
 
-  <div class="container">
-    <h1>New Audit Entry</h1>
+<div class="topbar">
+  <div>
+    <h1>AuditPro</h1>
+    <p class="muted">Audit plans & findings — stored locally in your browser</p>
+  </div>
+  <div class="actions">
+    <button class="btn-ghost" id="export-json">Export JSON</button>
+    <button class="btn-ghost" id="export-csv">Export CSV</button>
+    <button class="btn-danger" id="reset-all">Reset All</button>
+  </div>
+</div>
 
-    <form id="audit-form">
-      <label for="title">Audit Title</label>
-      <input type="text" id="title" placeholder="e.g. Q1 Financial Audit" required />
+<!-- STATS -->
+<section class="stats">
+  <div class="stat"><div class="label">Total Audits</div><div class="value" id="stat-audits">0</div></div>
+  <div class="stat open"><div class="label">Open Findings</div><div class="value" id="stat-open">0</div></div>
+  <div class="stat risk"><div class="label">High/Critical</div><div class="value" id="stat-risk">0</div></div>
+  <div class="stat ok"><div class="label">Closed</div><div class="value" id="stat-closed">0</div></div>
+</section>
 
-      <label for="auditor">Auditor Name</label>
-      <input type="text" id="auditor" placeholder="Full name" required />
-
-      <label for="department">Department</label>
-      <select id="department" required>
+<!-- NEW AUDIT -->
+<section class="panel">
+  <div class="panel-head"><h2>New Audit Plan</h2></div>
+  <form class="grid" id="audit-form">
+    <div><label for="a-title">Title</label><input id="a-title" required placeholder="Q1 Financial Audit" /></div>
+    <div><label for="a-dept">Department</label>
+      <select id="a-dept" required>
         <option value="">Select…</option>
-        <option>Finance</option>
-        <option>Operations</option>
-        <option>IT</option>
-        <option>HR</option>
-        <option>Compliance</option>
+        <option>Finance</option><option>Operations</option><option>IT</option>
+        <option>HR</option><option>Compliance</option><option>Procurement</option>
       </select>
-
-      <label for="date">Audit Date</label>
-      <input type="date" id="date" required />
-
-      <label for="status">Status</label>
-      <select id="status" required>
+    </div>
+    <div><label for="a-auditor">Auditor</label><input id="a-auditor" required placeholder="Full name" /></div>
+    <div><label for="a-start">Start Date</label><input type="date" id="a-start" required /></div>
+    <div><label for="a-end">End Date</label><input type="date" id="a-end" required /></div>
+    <div><label for="a-status">Status</label>
+      <select id="a-status" required>
         <option value="planned">Planned</option>
         <option value="in-progress">In Progress</option>
-        <option value="completed">Completed</option>
+        <option value="closed">Closed</option>
       </select>
+    </div>
+    <div class="full"><label for="a-notes">Scope / Notes</label><textarea id="a-notes" placeholder="Optional"></textarea></div>
+    <div class="full" style="text-align:right">
+      <button type="submit" class="btn-primary">Add Audit</button>
+    </div>
+  </form>
+</section>
 
-      <label for="notes">Notes</label>
-      <textarea id="notes" placeholder="Optional description…"></textarea>
+<!-- NEW FINDING -->
+<section class="panel">
+  <div class="panel-head"><h2>New Finding</h2></div>
+  <form class="grid" id="finding-form">
+    <div><label for="f-audit">Audit</label>
+      <select id="f-audit" required></select>
+    </div>
+    <div><label for="f-title">Finding</label><input id="f-title" required placeholder="Weak password policy" /></div>
+    <div><label for="f-severity">Severity</label>
+      <select id="f-severity" required>
+        <option value="low">Low</option>
+        <option value="medium">Medium</option>
+        <option value="high">High</option>
+        <option value="critical">Critical</option>
+      </select>
+    </div>
+    <div><label for="f-status">Status</label>
+      <select id="f-status" required>
+        <option value="open">Open</option>
+        <option value="in-progress">In Progress</option>
+        <option value="closed">Closed</option>
+      </select>
+    </div>
+    <div class="full"><label for="f-recommendation">Recommendation</label><textarea id="f-recommendation" placeholder="Optional"></textarea></div>
+    <div class="full" style="text-align:right">
+      <button type="submit" class="btn-primary">Add Finding</button>
+    </div>
+  </form>
+</section>
 
-      <button type="submit">Save Audit</button>
-    </form>
-
-    <div id="result"></div>
+<!-- FINDINGS TABLE -->
+<section class="panel">
+  <div class="panel-head">
+    <h2>Findings</h2>
+    <div class="filters">
+      <input type="search" id="filter-text" placeholder="Search…" />
+      <select id="filter-severity">
+        <option value="">All severities</option>
+        <option>low</option><option>medium</option><option>high</option><option>critical</option>
+      </select>
+      <select id="filter-status">
+        <option value="">All statuses</option>
+        <option>open</option><option>in-progress</option><option>closed</option>
+      </select>
+    </div>
   </div>
+  <table>
+    <thead>
+      <tr>
+        <th>Finding</th><th>Audit</th><th>Severity</th><th>Status</th><th>Created</th><th></th>
+      </tr>
+    </thead>
+    <tbody id="findings-body"></tbody>
+  </table>
+  <div id="findings-empty" class="empty">No findings yet — add one above.</div>
+</section>
 
-  <script>
-    document.getElementById('audit-form').addEventListener('submit', function (e) {
-      e.preventDefault();
+<!-- AUDITS TABLE -->
+<section class="panel">
+  <div class="panel-head"><h2>Audit Plans</h2></div>
+  <table>
+    <thead>
+      <tr>
+        <th>Title</th><th>Department</th><th>Auditor</th><th>Dates</th><th>Status</th><th></th>
+      </tr>
+    </thead>
+    <tbody id="audits-body"></tbody>
+  </table>
+  <div id="audits-empty" class="empty">No audits yet — add one above.</div>
+</section>
 
-      const entry = {
-        title: document.getElementById('title').value.trim(),
-        auditor: document.getElementById('auditor').value.trim(),
-        department: document.getElementById('department').value,
-        date: document.getElementById('date').value,
-        status: document.getElementById('status').value,
-        notes: document.getElementById('notes').value.trim(),
-      };
+<div id="toast"></div>
 
-      // Save to localStorage
-      const saved = JSON.parse(localStorage.getItem('audits') || '[]');
-      saved.push(entry);
-      localStorage.setItem('audits', JSON.stringify(saved));
+<script>
+(function () {
+  "use strict";
 
-      // Show confirmation
-      const result = document.getElementById('result');
-      result.style.display = 'block';
-      result.textContent = '✅ Audit saved:\n' + JSON.stringify(entry, null, 2);
+  const STORAGE = { audits: "auditpro.audits", findings: "auditpro.findings" };
 
-      this.reset();
+  const state = {
+    audits: load(STORAGE.audits),
+    findings: load(STORAGE.findings),
+    filters: { text: "", severity: "", status: "" },
+  };
+
+  function load(key) {
+    try { return JSON.parse(localStorage.getItem(key)) || []; }
+    catch { return []; }
+  }
+  function save() {
+    localStorage.setItem(STORAGE.audits, JSON.stringify(state.audits));
+    localStorage.setItem(STORAGE.findings, JSON.stringify(state.findings));
+  }
+  function uid() { return Date.now().toString(36) + Math.random().toString(36).slice(2, 7); }
+  function esc(s) {
+    return String(s ?? "").replace(/[&<>"']/g, c =>
+      ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+  }
+  function toast(msg) {
+    const t = document.getElementById("toast");
+    t.textContent = msg; t.classList.add("show");
+    clearTimeout(toast._t);
+    toast._t = setTimeout(() => t.classList.remove("show"), 2200);
+  }
+
+  // ---------- RENDERING ----------
+  function renderStats() {
+    const open = state.findings.filter(f => f.status !== "closed").length;
+    const risk = state.findings.filter(f => f.severity === "high" || f.severity === "critical").length;
+    const closed = state.findings.filter(f => f.status === "closed").length;
+    document.getElementById("stat-audits").textContent = state.audits.length;
+    document.getElementById("stat-open").textContent = open;
+    document.getElementById("stat-risk").textContent = risk;
+    document.getElementById("stat-closed").textContent = closed;
+  }
+
+  function auditTitle(id) {
+    const a = state.audits.find(x => x.id === id);
+    return a ? a.title : "(deleted audit)";
+  }
+
+  function renderAuditSelect() {
+    const sel = document.getElementById("f-audit");
+    const current = sel.value;
+    sel.innerHTML = "";
+    if (!state.audits.length) {
+      sel.innerHTML = '<option value="">— create an audit first —</option>';
+      return;
+    }
+    state.audits.forEach(a => {
+      const o = document.createElement("option");
+      o.value = a.id;
+      o.textContent = a.title;
+      sel.appendChild(o);
     });
-  </script>
+    if (current) sel.value = current;
+  }
 
+  function renderAudits() {
+    const body = document.getElementById("audits-body");
+    const empty = document.getElementById("audits-empty");
+    body.innerHTML = "";
+    empty.style.display = state.audits.length ? "none" : "block";
+
+    state.audits.slice().reverse().forEach(a => {
+      const tr = document.createElement("tr");
+      tr.innerHTML = `
+        <td><strong>${esc(a.title)}</strong></td>
+        <td>${esc(a.department)}</td>
+        <td>${esc(a.auditor)}</td>
+        <td class="muted">${esc(a.start)} → ${esc(a.end)}</td>
+        <td><span class="badge ${esc(a.status)}">${esc(a.status)}</span></td>
+        <td class="actions-cell">
+          <button class="btn-danger" data-del-audit="${esc(a.id)}">Delete</button>
+        </td>`;
+      body.appendChild(tr);
+    });
+  }
+
+  function renderFindings() {
+    const body = document.getElementById("findings-body");
+    const empty = document.getElementById("findings-empty");
+    body.innerHTML = "";
+
+    const q = state.filters.text.toLowerCase();
+    const list = state.findings
+      .filter(f =>
+        (!q || (f.title + " " + (f.recommendation || "")).toLowerCase().includes(q)) &&
+        (!state.filters.severity || f.severity === state.filters.severity) &&
+        (!state.filters.status || f.status === state.filters.status)
+      )
+      .slice().reverse();
+
+    empty.style.display = list.length ? "none" : "block";
+
+    list.forEach(f => {
+      const tr = document.createElement("tr");
+      tr.innerHTML = `
+        <td><strong>${esc(f.title)}</strong>${f.recommendation ? `<div class="muted">${esc(f.recommendation)}</div>` : ""}</td>
+        <td>${esc(auditTitle(f.auditId))}</td>
+        <td><span class="badge ${esc(f.severity)}">${esc(f.severity)}</span></td>
+        <td><span class="badge ${esc(f.status)}">${esc(f.status)}</span></td>
+        <td class="muted">${esc(new Date(f.createdAt).toLocaleDateString())}</td>
+        <td class="actions-cell">
+          <button class="btn-ghost" data-cycle-finding="${esc(f.id)}">Toggle</button>
+          <button class="btn-danger" data-del-finding="${esc(f.id)}">×</button>
+        </td>`;
+      body.appendChild(tr);
+    });
+  }
+
+  function renderAll() {
+    renderStats();
+    renderAuditSelect();
+    renderAudits();
+    renderFindings();
+  }
+
+  // ---------- EVENTS ----------
+  document.getElementById("audit-form").addEventListener("submit", e => {
+    e.preventDefault();
+    const a = {
+      id: uid(),
+      title: document.getElementById("a-title").value.trim(),
+      department: document.getElementById("a-dept").value,
+      auditor: document.getElementById("a-auditor").value.trim(),
+      start: document.getElementById("a-start").value,
+      end: document.getElementById("a-end").value,
+      status: document.getElementById("a-status").value,
+      notes: document.getElementById("a-notes").value.trim(),
+      createdAt: new Date().toISOString(),
+    };
+    state.audits.push(a);
+    save(); renderAll(); e.target.reset();
+    toast("Audit added");
+  });
+
+  document.getElementById("finding-form").addEventListener("submit", e => {
+    e.preventDefault();
+    const auditId = document.getElementById("f-audit").value;
+    if (!auditId) { toast("Create an audit first"); return; }
+    const f = {
+      id: uid(),
+      auditId,
+      title: document.getElementById("f-title").value.trim(),
+      severity: document.getElementById("f-severity").value,
+      status: document.getElementById("f-status").value,
+      recommendation: document.getElementById("f-recommendation").value.trim(),
+      createdAt: new Date().toISOString(),
+    };
+    state.findings.push(f);
+    save(); renderAll(); e.target.reset();
+    toast("Finding added");
+  });
+
+  document.getElementById("filter-text").addEventListener("input", e => {
+    state.filters.text = e.target.value; renderFindings();
+  });
+  document.getElementById("filter-severity").addEventListener("change", e => {
+    state.filters.severity = e.target.value; renderFindings();
+  });
+  document.getElementById("filter-status").addEventListener("change", e => {
+    state.filters.status = e.target.value; renderFindings();
+  });
+
+  // Delegated actions
+  document.body.addEventListener("click", e => {
+    const t = e.target;
+    if (!(t instanceof HTMLElement)) return;
+
+    if (t.dataset.delAudit) {
+      const id = t.dataset.delAudit;
+      const a = state.audits.find(x => x.id === id);
+      if (!a) return;
+      if (!confirm(`Delete audit "${a.title}" and all its findings?`)) return;
+      state.audits = state.audits.filter(x => x.id !== id);
+      state.findings = state.findings.filter(f => f.auditId !== id);
+      save(); renderAll(); toast("Audit deleted");
+    }
+
+    if (t.dataset.delFinding) {
+      const id = t.dataset.delFinding;
+      state.findings = state.findings.filter(x => x.id !== id);
+      save(); renderAll(); toast("Finding deleted");
+    }
+
+    if (t.dataset.cycleFinding) {
+      const id = t.dataset.cycleFinding;
+      const f = state.findings.find(x => x.id === id);
+      if (!f) return;
+      const order = ["open", "in-progress", "closed"];
+      f.status = order[(order.indexOf(f.status) + 1) % order.length];
+      save(); renderAll();
+    }
+  });
+
+  // Export JSON
+  document.getElementById("export-json").addEventListener("click", () => {
+    const blob = new Blob(
+      [JSON.stringify({ audits: state.audits, findings: state.findings }, null, 2)],
+      { type: "application/json" }
+    );
+    download(blob, "auditpro-export.json");
+  });
+
+  // Export CSV
+  document.getElementById("export-csv").addEventListener("click", () => {
+    const rows = [
+      ["type", "title", "audit", "department", "auditor", "severity", "status", "start", "end", "recommendation"],
+      ...state.audits.map(a => ["audit", a.title, "", a.department, a.auditor, "", a.status, a.start, a.end, ""]),
+      ...state.findings.map(f => ["finding", f.title, auditTitle(f.auditId), "", "", f.severity, f.status, "", "", f.recommendation]),
+    ];
+    const csv = rows.map(r => r.map(cell => `"${String(cell).replace(/"/g, '""')}"`).join(",")).join("\n");
+    download(new Blob([csv], { type: "text/csv" }), "auditpro-export.csv");
+  });
+
+  // Reset
+  document.getElementById("reset-all").addEventListener("click", () => {
+    if (!confirm("Delete ALL audits and findings? This cannot be undone.")) return;
+    state.audits = []; state.findings = [];
+    save(); renderAll(); toast("All data cleared");
+  });
+
+  function download(blob, filename) {
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url; a.download = filename;
+    document.body.appendChild(a); a.click(); a.remove();
+    setTimeout(() => URL.revokeObjectURL(url), 1000);
+  }
+
+  // Init
+  renderAll();
+})();
+</script>
 </body>
 </html>
