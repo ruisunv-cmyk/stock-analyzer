@@ -2,779 +2,979 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>30 Days Strong</title>
-
-  <style>
-    @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@500;600;700&display=swap');
-
-    :root {
-      --bg: #f5f3ee;
-      --dark: #20251f;
-      --green: #c5d8b8;
-      --green-dark: #526b4c;
-      --muted: #85877f;
-      --white: #ffffff;
-      --border: #e5e3dc;
-    }
-
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
-
-    body {
-      background: var(--bg);
-      color: var(--dark);
-      font-family: 'DM Sans', sans-serif;
-    }
-
-    header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 25px 7%;
-      border-bottom: 1px solid var(--border);
-    }
-
-    .logo {
-      font-weight: 700;
-      letter-spacing: 2px;
-      font-size: 14px;
-    }
-
-    .logo span {
-      color: var(--green-dark);
-    }
-
-    .header-tag {
-      font-size: 12px;
-      color: var(--muted);
-      letter-spacing: 1px;
-    }
-
-    main {
-      max-width: 1250px;
-      margin: auto;
-      padding: 45px 7%;
-    }
-
-    .hero {
-      min-height: 360px;
-      border-radius: 24px;
-      overflow: hidden;
-      position: relative;
-      color: white;
-      padding: 55px;
-      display: flex;
-      align-items: center;
-      background:
-        linear-gradient(90deg, rgba(20,28,20,.88), rgba(20,28,20,.15)),
-        url("https://images.unsplash.com/photo-1518611012118-696072aa579a?auto=format&fit=crop&w=1600&q=85")
-        center 45% / cover;
-    }
-
-    .hero-content {
-      max-width: 520px;
-    }
-
-    .eyebrow {
-      text-transform: uppercase;
-      letter-spacing: 2px;
-      font-size: 11px;
-      font-weight: 700;
-      margin-bottom: 20px;
-      color: var(--green);
-    }
-
-    h1 {
-      font-family: 'Playfair Display', serif;
-      font-size: clamp(42px, 6vw, 72px);
-      line-height: 1.05;
-      font-weight: 500;
-      margin-bottom: 20px;
-    }
-
-    .hero p {
-      color: #e0e4dc;
-      font-size: 15px;
-      line-height: 1.8;
-      max-width: 390px;
-    }
-
-    .hero-bottom {
-      display: flex;
-      align-items: center;
-      gap: 15px;
-      margin-top: 30px;
-    }
-
-    .primary-btn {
-      background: var(--green);
-      color: var(--dark);
-      border: none;
-      padding: 14px 22px;
-      border-radius: 30px;
-      font-weight: 700;
-      cursor: pointer;
-      font-family: inherit;
-      transition: .2s;
-    }
-
-    .primary-btn:hover {
-      background: white;
-      transform: translateY(-2px);
-    }
-
-    .hero-note {
-      font-size: 12px;
-      color: #d9ded5;
-    }
-
-    .dashboard {
-      display: grid;
-      grid-template-columns: 1.2fr 1fr;
-      gap: 25px;
-      margin-top: 35px;
-    }
-
-    .panel {
-      background: var(--white);
-      border-radius: 20px;
-      padding: 28px;
-    }
-
-    .panel-heading {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 25px;
-    }
-
-    .panel-heading h2 {
-      font-size: 17px;
-      font-weight: 600;
-    }
-
-    .small-label {
-      color: var(--muted);
-      font-size: 12px;
-    }
-
-    .progress-number {
-      font-family: 'Playfair Display', serif;
-      font-size: 45px;
-      margin-bottom: 5px;
-    }
-
-    .progress-track {
-      height: 7px;
-      background: #eeeee9;
-      border-radius: 10px;
-      margin: 20px 0;
-      overflow: hidden;
-    }
-
-    .progress-fill {
-      height: 100%;
-      width: 0%;
-      background: var(--green-dark);
-      border-radius: 10px;
-      transition: width .4s;
-    }
-
-    .calendar {
-      display: grid;
-      grid-template-columns: repeat(7, 1fr);
-      gap: 8px;
-    }
-
-    .day {
-      aspect-ratio: 1;
-      border: 1px solid var(--border);
-      border-radius: 10px;
-      background: white;
-      color: var(--dark);
-      cursor: pointer;
-      font-family: inherit;
-      font-size: 13px;
-      transition: .2s;
-    }
-
-    .day:hover {
-      border-color: var(--green-dark);
-    }
-
-    .day.selected {
-      background: var(--dark);
-      color: white;
-      border-color: var(--dark);
-    }
-
-    .day.completed {
-      background: var(--green);
-      border-color: var(--green);
-      color: var(--dark);
-      font-weight: 700;
-    }
-
-    .day.selected.completed {
-      background: var(--green-dark);
-      color: white;
-    }
-
-    .workout-section {
-      margin-top: 45px;
-    }
-
-    .section-heading {
-      display: flex;
-      justify-content: space-between;
-      align-items: end;
-      margin-bottom: 22px;
-    }
-
-    .section-heading h2 {
-      font-family: 'Playfair Display', serif;
-      font-size: 35px;
-      font-weight: 500;
-    }
-
-    .workout-layout {
-      display: grid;
-      grid-template-columns: 1fr 320px;
-      gap: 25px;
-    }
-
-    .workout-card {
-      background: white;
-      border-radius: 20px;
-      overflow: hidden;
-    }
-
-    .workout-image {
-      height: 230px;
-      background:
-        linear-gradient(0deg, rgba(20,28,20,.5), transparent),
-        url("https://images.unsplash.com/photo-1517836357463-d25dfeac3438?auto=format&fit=crop&w=1200&q=85")
-        center 40% / cover;
-      display: flex;
-      align-items: end;
-      padding: 25px;
-      color: white;
-    }
-
-    .workout-image h3 {
-      font-family: 'Playfair Display', serif;
-      font-size: 32px;
-      font-weight: 500;
-    }
-
-    .exercise-list {
-      padding: 10px 25px 25px;
-    }
-
-    .exercise {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 18px 0;
-      border-bottom: 1px solid var(--border);
-      gap: 15px;
-    }
-
-    .exercise:last-child {
-      border-bottom: none;
-    }
-
-    .exercise-name {
-      font-weight: 600;
-      font-size: 14px;
-    }
-
-    .exercise-detail {
-      font-size: 12px;
-      color: var(--muted);
-      margin-top: 5px;
-    }
-
-    .exercise-number {
-      color: var(--green-dark);
-      font-size: 12px;
-      font-weight: 700;
-    }
-
-    .timer-card {
-      background: var(--dark);
-      color: white;
-      border-radius: 20px;
-      padding: 30px;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-    }
-
-    .timer-card h3 {
-      font-family: 'Playfair Display', serif;
-      font-size: 27px;
-      font-weight: 500;
-    }
-
-    .timer {
-      font-size: 58px;
-      font-weight: 500;
-      letter-spacing: -2px;
-      text-align: center;
-      margin: 30px 0;
-      font-variant-numeric: tabular-nums;
-    }
-
-    .timer-buttons {
-      display: flex;
-      gap: 10px;
-    }
-
-    .timer-buttons button {
-      flex: 1;
-      padding: 12px;
-      border-radius: 25px;
-      border: 1px solid #555b53;
-      background: transparent;
-      color: white;
-      cursor: pointer;
-      font-family: inherit;
-    }
-
-    .timer-buttons .timer-start {
-      background: var(--green);
-      color: var(--dark);
-      border-color: var(--green);
-      font-weight: 700;
-    }
-
-    .complete-btn {
-      width: 100%;
-      margin-top: 20px;
-      padding: 15px;
-      border: none;
-      border-radius: 30px;
-      background: var(--green);
-      color: var(--dark);
-      font-weight: 700;
-      cursor: pointer;
-      font-family: inherit;
-    }
-
-    .complete-btn:disabled {
-      opacity: .6;
-      cursor: default;
-    }
-
-    footer {
-      text-align: center;
-      padding: 50px 20px;
-      color: var(--muted);
-      font-size: 12px;
-      letter-spacing: 1px;
-    }
-
-    @media (max-width: 850px) {
-      .dashboard,
-      .workout-layout {
-        grid-template-columns: 1fr;
-      }
-
-      .hero {
-        padding: 35px 25px;
-        min-height: 400px;
-      }
-
-      main {
-        padding: 25px 5%;
-      }
-
-      .timer-card {
-        min-height: 300px;
-      }
-
-      .section-heading h2 {
-        font-size: 29px;
-      }
-    }
-
-    @media (max-width: 480px) {
-      header {
-        padding: 20px 5%;
-      }
-
-      .header-tag {
-        font-size: 10px;
-      }
-
-      .panel {
-        padding: 20px;
-      }
-
-      .calendar {
-        gap: 5px;
-      }
-
-      .day {
-        border-radius: 7px;
-        font-size: 12px;
-      }
-
-      .hero {
-        border-radius: 18px;
-      }
-    }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>30 Days Strong | Home Workout</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@500;600;700&display=swap" rel="stylesheet">
+
+<style>
+:root {
+  --bg: #f5f3ee;
+  --dark: #20251f;
+  --green: #c5d8b8;
+  --green-dark: #526b4c;
+  --muted: #85877f;
+  --white: #ffffff;
+  --border: #e5e3dc;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background: var(--bg);
+  color: var(--dark);
+  font-family: 'DM Sans', sans-serif;
+}
+
+header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 24px 7%;
+  border-bottom: 1px solid var(--border);
+}
+
+.logo {
+  font-weight: 700;
+  letter-spacing: 2px;
+  font-size: 14px;
+}
+
+.logo span {
+  color: var(--green-dark);
+}
+
+.header-tag {
+  color: var(--muted);
+  font-size: 11px;
+  letter-spacing: 1px;
+}
+
+main {
+  max-width: 1250px;
+  margin: auto;
+  padding: 40px 7%;
+}
+
+.hero {
+  min-height: 380px;
+  border-radius: 24px;
+  overflow: hidden;
+  position: relative;
+  color: white;
+  padding: 55px;
+  display: flex;
+  align-items: center;
+  background:
+    linear-gradient(90deg, rgba(20,28,20,.88), rgba(20,28,20,.15)),
+    url("https://images.unsplash.com/photo-1518611012118-696072aa579a?auto=format&fit=crop&w=1600&q=85")
+    center 45% / cover;
+}
+
+.hero-content {
+  max-width: 520px;
+}
+
+.eyebrow {
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  font-size: 11px;
+  font-weight: 700;
+  margin-bottom: 18px;
+  color: var(--green-dark);
+}
+
+.hero .eyebrow {
+  color: var(--green);
+}
+
+h1 {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(42px, 6vw, 72px);
+  line-height: 1.05;
+  font-weight: 500;
+  margin-bottom: 20px;
+}
+
+.hero p {
+  color: #e0e4dc;
+  font-size: 15px;
+  line-height: 1.8;
+  max-width: 390px;
+}
+
+.hero-bottom {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  margin-top: 30px;
+}
+
+.primary-btn {
+  background: var(--green);
+  color: var(--dark);
+  border: none;
+  padding: 14px 22px;
+  border-radius: 30px;
+  font-weight: 700;
+  cursor: pointer;
+  font-family: inherit;
+  transition: .2s;
+}
+
+.primary-btn:hover {
+  background: white;
+  transform: translateY(-2px);
+}
+
+.hero-note {
+  font-size: 12px;
+  color: #d9ded5;
+}
+
+.dashboard {
+  display: grid;
+  grid-template-columns: 1.2fr 1fr;
+  gap: 25px;
+  margin-top: 30px;
+}
+
+.panel {
+  background: var(--white);
+  border-radius: 20px;
+  padding: 28px;
+}
+
+.panel-heading {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 25px;
+}
+
+.panel-heading h2 {
+  font-size: 17px;
+  font-weight: 600;
+}
+
+.small-label {
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.progress-number {
+  font-family: 'Playfair Display', serif;
+  font-size: 45px;
+  margin-bottom: 5px;
+}
+
+.progress-track {
+  height: 7px;
+  background: #eeeee9;
+  border-radius: 10px;
+  margin: 20px 0;
+  overflow: hidden;
+}
+
+.progress-fill {
+  height: 100%;
+  width: 0%;
+  background: var(--green-dark);
+  border-radius: 10px;
+  transition: width .4s;
+}
+
+.calendar {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 8px;
+}
+
+.day {
+  aspect-ratio: 1;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: white;
+  color: var(--dark);
+  cursor: pointer;
+  font-family: inherit;
+  font-size: 13px;
+  transition: .2s;
+}
+
+.day:hover {
+  border-color: var(--green-dark);
+}
+
+.day.selected {
+  background: var(--dark);
+  color: white;
+  border-color: var(--dark);
+}
+
+.day.completed {
+  background: var(--green);
+  border-color: var(--green);
+  color: var(--dark);
+  font-weight: 700;
+}
+
+.day.selected.completed {
+  background: var(--green-dark);
+  color: white;
+}
+
+.workout-section {
+  margin-top: 45px;
+  scroll-margin-top: 25px;
+}
+
+.section-heading {
+  display: flex;
+  justify-content: space-between;
+  align-items: end;
+  margin-bottom: 22px;
+}
+
+.section-heading h2 {
+  font-family: 'Playfair Display', serif;
+  font-size: 35px;
+  font-weight: 500;
+}
+
+.workout-layout {
+  display: grid;
+  grid-template-columns: 1fr 310px;
+  gap: 25px;
+}
+
+.workout-card {
+  background: white;
+  border-radius: 20px;
+  overflow: hidden;
+}
+
+.demo-stage {
+  height: 300px;
+  position: relative;
+  overflow: hidden;
+  background: #e8e9df;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.demo-label {
+  position: absolute;
+  top: 20px;
+  left: 22px;
+  z-index: 2;
+  background: rgba(255,255,255,.75);
+  padding: 8px 13px;
+  border-radius: 20px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 1px;
+}
+
+.demo-stage svg {
+  width: 100%;
+  height: 100%;
+  max-width: 450px;
+}
+
+.demo-floor {
+  stroke: #c7c9bd;
+  stroke-width: 3;
+}
+
+.figure {
+  stroke: #526b4c;
+  stroke-width: 14;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  fill: none;
+}
+
+.figure-head {
+  fill: #526b4c;
+}
+
+.figure-group {
+  transform-origin: 200px 220px;
+  animation: bodyMove 2.4s ease-in-out infinite;
+}
+
+.arm-left,
+.arm-right,
+.leg-left,
+.leg-right {
+  transform-box: view-box;
+  transform-origin: center;
+  animation: limbMove 2.4s ease-in-out infinite;
+}
+
+.demo-stage[data-exercise="squat"] .figure-group {
+  animation-name: squatMove;
+}
+
+.demo-stage[data-exercise="pushup"] .figure-group {
+  animation-name: pushupMove;
+}
+
+.demo-stage[data-exercise="bridge"] .figure-group {
+  animation-name: bridgeMove;
+}
+
+.demo-stage[data-exercise="plank"] .figure-group {
+  animation: none;
+}
+
+.demo-stage[data-exercise="lunge"] .figure-group {
+  animation-name: lungeMove;
+}
+
+.demo-stage[data-exercise="mountain"] .figure-group {
+  animation-name: mountainMove;
+}
+
+.demo-stage[data-exercise="deadbug"] .figure-group {
+  animation-name: deadbugMove;
+}
+
+.demo-stage[data-exercise="row"] .figure-group {
+  animation-name: rowMove;
+}
+
+@keyframes squatMove {
+  0%, 100% { transform: translateY(0) scaleY(1); }
+  50% { transform: translateY(35px) scaleY(.88); }
+}
+
+@keyframes pushupMove {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(20px); }
+}
+
+@keyframes bridgeMove {
+  0%, 100% { transform: translateY(15px) rotate(0deg); }
+  50% { transform: translateY(-25px) rotate(-4deg); }
+}
+
+@keyframes lungeMove {
+  0%, 100% { transform: translateY(0) rotate(0deg); }
+  50% { transform: translateY(20px) rotate(5deg); }
+}
+
+@keyframes mountainMove {
+  0%, 100% { transform: translateY(0) rotate(0deg); }
+  50% { transform: translateY(8px) rotate(-5deg); }
+}
+
+@keyframes deadbugMove {
+  0%, 100% { transform: rotate(0deg); }
+  50% { transform: rotate(-8deg); }
+}
+
+@keyframes rowMove {
+  0%, 100% { transform: translateY(0) rotate(0deg); }
+  50% { transform: translateY(-10px) rotate(8deg); }
+}
+
+.exercise-list {
+  padding: 10px 25px 25px;
+}
+
+.exercise {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 18px 0;
+  border-bottom: 1px solid var(--border);
+  gap: 15px;
+}
+
+.exercise:last-child {
+  border-bottom: none;
+}
+
+.exercise-name {
+  font-weight: 600;
+  font-size: 14px;
+}
+
+.exercise-detail {
+  font-size: 12px;
+  color: var(--muted);
+  margin-top: 5px;
+}
+
+.exercise-number {
+  color: var(--green-dark);
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.exercise-select {
+  border: none;
+  background: transparent;
+  text-align: left;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  cursor: pointer;
+  font-family: inherit;
+}
+
+.exercise-select.active .exercise-name {
+  color: var(--green-dark);
+}
+
+.exercise-select.active .exercise-number::after {
+  content: " ▶";
+}
+
+.timer-card {
+  background: var(--dark);
+  color: white;
+  border-radius: 20px;
+  padding: 30px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.timer-card h3 {
+  font-family: 'Playfair Display', serif;
+  font-size: 27px;
+  font-weight: 500;
+}
+
+.timer {
+  font-size: 58px;
+  font-weight: 500;
+  letter-spacing: -2px;
+  text-align: center;
+  margin: 30px 0;
+  font-variant-numeric: tabular-nums;
+}
+
+.timer-buttons {
+  display: flex;
+  gap: 10px;
+}
+
+.timer-buttons button {
+  flex: 1;
+  padding: 12px;
+  border-radius: 25px;
+  border: 1px solid #555b53;
+  background: transparent;
+  color: white;
+  cursor: pointer;
+  font-family: inherit;
+}
+
+.timer-buttons .timer-start {
+  background: var(--green);
+  color: var(--dark);
+  border-color: var(--green);
+  font-weight: 700;
+}
+
+.complete-btn {
+  width: 100%;
+  margin-top: 20px;
+  padding: 15px;
+  border: none;
+  border-radius: 30px;
+  background: var(--green);
+  color: var(--dark);
+  font-weight: 700;
+  cursor: pointer;
+  font-family: inherit;
+}
+
+.complete-btn:disabled {
+  opacity: .6;
+  cursor: default;
+}
+
+footer {
+  text-align: center;
+  padding: 50px 20px;
+  color: var(--muted);
+  font-size: 12px;
+  letter-spacing: 1px;
+}
+
+@media (max-width: 850px) {
+  .dashboard,
+  .workout-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .hero {
+    padding: 35px 25px;
+    min-height: 400px;
+  }
+
+  main {
+    padding: 25px 5%;
+  }
+
+  .timer-card {
+    min-height: 300px;
+  }
+
+  .section-heading h2 {
+    font-size: 29px;
+  }
+}
+
+@media (max-width: 480px) {
+  header {
+    padding: 20px 5%;
+  }
+
+  .header-tag {
+    font-size: 9px;
+  }
+
+  .panel {
+    padding: 20px;
+  }
+
+  .calendar {
+    gap: 5px;
+  }
+
+  .day {
+    border-radius: 7px;
+    font-size: 12px;
+  }
+
+  .hero {
+    border-radius: 18px;
+  }
+
+  .demo-stage {
+    height: 240px;
+  }
+}
+</style>
 </head>
 
 <body>
 
-  <header>
-    <div class="logo">30 DAYS <span>STRONG</span></div>
-    <div class="header-tag">YOUR PERSONAL FITNESS JOURNEY</div>
-  </header>
+<header>
+  <div class="logo">30 DAYS <span>STRONG</span></div>
+  <div class="header-tag">YOUR PERSONAL FITNESS JOURNEY</div>
+</header>
 
-  <main>
+<main>
 
-    <section class="hero">
-      <div class="hero-content">
-        <div class="eyebrow">Your 30-day challenge</div>
-        <h1>Build strength.<br>Feel powerful.</h1>
-        <p>
-          A little progress every day adds up to something extraordinary.
-          Your journey starts here.
-        </p>
-        <div class="hero-bottom">
-          <button class="primary-btn" onclick="scrollToWorkout()">
-            Start today's workout →
-          </button>
-          <span class="hero-note">30 days · At home</span>
-        </div>
+<section class="hero">
+  <div class="hero-content">
+    <div class="eyebrow">Your 30-day challenge</div>
+    <h1>Build strength.<br>Feel powerful.</h1>
+    <p>
+      A little progress every day adds up to something extraordinary.
+      Your journey starts here.
+    </p>
+    <div class="hero-bottom">
+      <button class="primary-btn" onclick="scrollToWorkout()">
+        Start today's workout →
+      </button>
+      <span class="hero-note">30 days · At home</span>
+    </div>
+  </div>
+</section>
+
+<section class="dashboard">
+
+  <div class="panel">
+    <div class="panel-heading">
+      <h2>Your progress</h2>
+      <span class="small-label" id="progress-label">0 / 30 days</span>
+    </div>
+
+    <div class="progress-number" id="progress-number">0%</div>
+    <div class="small-label">Consistency is your superpower.</div>
+
+    <div class="progress-track">
+      <div class="progress-fill" id="progress-fill"></div>
+    </div>
+
+    <div class="small-label">Choose a day to view your workout.</div>
+  </div>
+
+  <div class="panel">
+    <div class="panel-heading">
+      <h2>Workout calendar</h2>
+      <span class="small-label">30 DAYS</span>
+    </div>
+
+    <div class="calendar" id="calendar"></div>
+  </div>
+
+</section>
+
+<section class="workout-section" id="workout">
+
+  <div class="section-heading">
+    <div>
+      <div class="eyebrow">Your daily movement</div>
+      <h2 id="workout-heading">Day 01</h2>
+    </div>
+    <span class="small-label" id="workout-duration">30 MIN</span>
+  </div>
+
+  <div class="workout-layout">
+
+    <div class="workout-card">
+
+      <div class="demo-stage" id="demo-stage" data-exercise="squat">
+
+        <div class="demo-label">MOVEMENT DEMO</div>
+
+        <!-- Animated exercise illustration -->
+        <svg viewBox="0 0 400 300" role="img" aria-label="Animated exercise demonstration">
+
+          <line x1="35" y1="255" x2="365" y2="255" class="demo-floor"/>
+
+          <g class="figure-group">
+
+            <!-- Head -->
+            <circle cx="200" cy="65" r="25" class="figure-head"/>
+
+            <!-- Torso -->
+            <path d="M200 95 L200 165" class="figure"/>
+
+            <!-- Arms -->
+            <path d="M200 110 L155 145 L130 190" class="figure arm-left"/>
+            <path d="M200 110 L245 145 L270 190" class="figure arm-right"/>
+
+            <!-- Legs -->
+            <path d="M200 165 L165 210 L150 250" class="figure leg-left"/>
+            <path d="M200 165 L235 210 L250 250" class="figure leg-right"/>
+
+          </g>
+
+        </svg>
+
       </div>
-    </section>
 
-    <section class="dashboard">
+      <div class="exercise-list" id="exercise-list"></div>
 
-      <div class="panel">
-        <div class="panel-heading">
-          <h2>Your progress</h2>
-          <span class="small-label" id="progress-label">0 / 30 days</span>
-        </div>
+    </div>
 
-        <div class="progress-number" id="progress-number">0%</div>
-        <div class="small-label">Consistency is your superpower.</div>
+    <div class="timer-card">
 
-        <div class="progress-track">
-          <div class="progress-fill" id="progress-fill"></div>
-        </div>
-
-        <div class="small-label">Choose a day to view your workout.</div>
+      <div>
+        <div class="eyebrow">Your workout companion</div>
+        <h3>Stay focused.<br>One rep at a time.</h3>
       </div>
 
-      <div class="panel">
-        <div class="panel-heading">
-          <h2>Workout calendar</h2>
-          <span class="small-label">30 DAYS</span>
+      <div>
+        <div class="timer" id="timer">00:45</div>
+
+        <div class="timer-buttons">
+          <button class="timer-start" id="start-timer">Start</button>
+          <button id="reset-timer">Reset</button>
         </div>
 
-        <div class="calendar" id="calendar"></div>
+        <button class="complete-btn" id="complete-btn">
+          Mark day complete ✓
+        </button>
       </div>
 
-    </section>
+    </div>
 
-    <section class="workout-section" id="workout">
+  </div>
 
-      <div class="section-heading">
-        <div>
-          <div class="eyebrow" style="color:var(--green-dark)">
-            Your daily movement
-          </div>
-          <h2 id="workout-heading">Day 01</h2>
-        </div>
-        <span class="small-label" id="workout-duration">30 MIN</span>
-      </div>
+</section>
 
-      <div class="workout-layout">
+</main>
 
-        <div class="workout-card">
-          <div class="workout-image">
-            <h3 id="workout-title">Full Body Strength</h3>
-          </div>
+<footer>
+  MADE FOR YOURSELF · ONE DAY AT A TIME
+</footer>
 
-          <div class="exercise-list" id="exercise-list"></div>
-        </div>
+<script>
+const workouts = [
+  {
+    title: "Full Body Strength",
+    duration: "30 MIN",
+    exercises: [
+      { name: "Squats", detail: "3 sets × 12 reps", type: "squat" },
+      { name: "Push-ups", detail: "3 sets × 10 reps", type: "pushup" },
+      { name: "Glute bridges", detail: "3 sets × 15 reps", type: "bridge" },
+      { name: "Plank", detail: "3 sets × 30 seconds", type: "plank" },
+      { name: "Reverse lunges", detail: "3 sets × 10 each leg", type: "lunge" }
+    ]
+  },
+  {
+    title: "Lower Body",
+    duration: "30 MIN",
+    exercises: [
+      { name: "Goblet squats", detail: "3 sets × 12 reps", type: "squat" },
+      { name: "Romanian deadlifts", detail: "3 sets × 12 reps", type: "row" },
+      { name: "Reverse lunges", detail: "3 sets × 10 each leg", type: "lunge" },
+      { name: "Glute bridges", detail: "3 sets × 15 reps", type: "bridge" },
+      { name: "Calf raises", detail: "3 sets × 20 reps", type: "squat" }
+    ]
+  },
+  {
+    title: "Core & Cardio",
+    duration: "25 MIN",
+    exercises: [
+      { name: "Mountain climbers", detail: "3 sets × 30 seconds", type: "mountain" },
+      { name: "Dead bugs", detail: "3 sets × 12 reps", type: "deadbug" },
+      { name: "Bicycle crunches", detail: "3 sets × 20 reps", type: "deadbug" },
+      { name: "Plank", detail: "3 sets × 30 seconds", type: "plank" },
+      { name: "Jumping jacks", detail: "3 sets × 45 seconds", type: "mountain" }
+    ]
+  },
+  {
+    title: "Upper Body",
+    duration: "30 MIN",
+    exercises: [
+      { name: "Push-ups", detail: "3 sets × 10 reps", type: "pushup" },
+      { name: "Dumbbell rows", detail: "3 sets × 12 reps", type: "row" },
+      { name: "Shoulder press", detail: "3 sets × 12 reps", type: "row" },
+      { name: "Bicep curls", detail: "3 sets × 12 reps", type: "row" },
+      { name: "Tricep extensions", detail: "3 sets × 12 reps", type: "row" }
+    ]
+  },
+  {
+    title: "Active Recovery",
+    duration: "20 MIN",
+    exercises: [
+      { name: "Cat-cow stretch", detail: "2 minutes", type: "bridge" },
+      { name: "Hip flexor stretch", detail: "1 minute each side", type: "lunge" },
+      { name: "Hamstring stretch", detail: "1 minute each side", type: "lunge" },
+      { name: "Child's pose", detail: "2 minutes", type: "plank" },
+      { name: "Easy walking", detail: "10 minutes", type: "mountain" }
+    ]
+  }
+];
 
-        <div class="timer-card">
-          <div>
-            <div class="eyebrow">Your workout companion</div>
-            <h3>Stay focused.<br>One rep at a time.</h3>
-          </div>
+let selectedDay = 1;
+let selectedExercise = 0;
 
-          <div>
-            <div class="timer" id="timer">00:45</div>
+let completedDays = JSON.parse(
+  localStorage.getItem("completedDays") || "[]"
+);
 
-            <div class="timer-buttons">
-              <button class="timer-start" id="start-timer">Start</button>
-              <button id="reset-timer">Reset</button>
-            </div>
+let timeLeft = 45;
+let timerInterval = null;
 
-            <button class="complete-btn" id="complete-btn">
-              Mark day complete ✓
-            </button>
-          </div>
-        </div>
+const calendar = document.getElementById("calendar");
+const exerciseList = document.getElementById("exercise-list");
+const demoStage = document.getElementById("demo-stage");
 
-      </div>
-    </section>
+function createCalendar() {
+  calendar.innerHTML = "";
 
-  </main>
+  for (let day = 1; day <= 30; day++) {
+    const button = document.createElement("button");
 
-  <footer>
-    MADE FOR YOURSELF · ONE DAY AT A TIME
-  </footer>
+    button.className = "day";
+    button.textContent = day;
 
-  <script>
-    const workouts = [
-      {
-        title: "Full Body Strength",
-        duration: "30 MIN",
-        exercises: [
-          ["Squats", "3 sets × 12 reps"],
-          ["Push-ups", "3 sets × 10 reps"],
-          ["Glute bridges", "3 sets × 15 reps"],
-          ["Plank", "3 sets × 30 seconds"],
-          ["Reverse lunges", "3 sets × 10 each leg"]
-        ]
-      },
-      {
-        title: "Lower Body",
-        duration: "30 MIN",
-        exercises: [
-          ["Goblet squats", "3 sets × 12 reps"],
-          ["Romanian deadlifts", "3 sets × 12 reps"],
-          ["Reverse lunges", "3 sets × 10 each leg"],
-          ["Glute bridges", "3 sets × 15 reps"],
-          ["Calf raises", "3 sets × 20 reps"]
-        ]
-      },
-      {
-        title: "Core & Cardio",
-        duration: "25 MIN",
-        exercises: [
-          ["Mountain climbers", "3 sets × 30 seconds"],
-          ["Dead bugs", "3 sets × 12 reps"],
-          ["Bicycle crunches", "3 sets × 20 reps"],
-          ["Plank", "3 sets × 30 seconds"],
-          ["Jumping jacks", "3 sets × 45 seconds"]
-        ]
-      },
-      {
-        title: "Upper Body",
-        duration: "30 MIN",
-        exercises: [
-          ["Push-ups", "3 sets × 10 reps"],
-          ["Dumbbell rows", "3 sets × 12 reps"],
-          ["Shoulder press", "3 sets × 12 reps"],
-          ["Bicep curls", "3 sets × 12 reps"],
-          ["Tricep extensions", "3 sets × 12 reps"]
-        ]
-      },
-      {
-        title: "Active Recovery",
-        duration: "20 MIN",
-        exercises: [
-          ["Cat-cow stretch", "2 minutes"],
-          ["Hip flexor stretch", "1 minute each side"],
-          ["Hamstring stretch", "1 minute each side"],
-          ["Child's pose", "2 minutes"],
-          ["Easy walking", "10 minutes"]
-        ]
-      }
-    ];
-
-    let selectedDay = 1;
-    let completedDays = JSON.parse(
-      localStorage.getItem("completedDays") || "[]"
-    );
-
-    let timeLeft = 45;
-    let timerInterval = null;
-
-    const calendar = document.getElementById("calendar");
-
-    function createCalendar() {
-      calendar.innerHTML = "";
-
-      for (let day = 1; day <= 30; day++) {
-        const button = document.createElement("button");
-
-        button.className = "day";
-        button.textContent = day;
-
-        if (day === selectedDay) {
-          button.classList.add("selected");
-        }
-
-        if (completedDays.includes(day)) {
-          button.classList.add("completed");
-        }
-
-        button.addEventListener("click", () => {
-          selectedDay = day;
-          stopTimer();
-          resetTimer();
-          renderWorkout();
-          createCalendar();
-        });
-
-        calendar.appendChild(button);
-      }
+    if (day === selectedDay) {
+      button.classList.add("selected");
     }
 
-    function getWorkout(day) {
-      // Recovery days: 5, 10, 15, 20, 25, 30
-      if (day % 5 === 0) {
-        return workouts[4];
-      }
-
-      const workoutIndex = (day - 1) % 4;
-      return workouts[workoutIndex];
+    if (completedDays.includes(day)) {
+      button.classList.add("completed");
     }
 
-    function renderWorkout() {
-      const workout = getWorkout(selectedDay);
+    button.addEventListener("click", () => {
+      selectedDay = day;
+      selectedExercise = 0;
 
-      document.getElementById("workout-heading").textContent =
-        "Day " + String(selectedDay).padStart(2, "0");
-
-      document.getElementById("workout-title").textContent =
-        workout.title;
-
-      document.getElementById("workout-duration").textContent =
-        workout.duration;
-
-      const list = document.getElementById("exercise-list");
-      list.innerHTML = "";
-
-      workout.exercises.forEach((exercise, index) => {
-        const item = document.createElement("div");
-        item.className = "exercise";
-
-        item.innerHTML = `
-          <div>
-            <div class="exercise-name">${exercise[0]}</div>
-            <div class="exercise-detail">${exercise[1]}</div>
-          </div>
-          <div class="exercise-number">
-            ${String(index + 1).padStart(2, "0")}
-          </div>
-        `;
-
-        list.appendChild(item);
-      });
-
-      const completeButton = document.getElementById("complete-btn");
-
-      if (completedDays.includes(selectedDay)) {
-        completeButton.textContent = "Day completed ✓";
-        completeButton.disabled = true;
-      } else {
-        completeButton.textContent = "Mark day complete ✓";
-        completeButton.disabled = false;
-      }
-
-      updateProgress();
-    }
-
-    function updateProgress() {
-      const count = completedDays.length;
-      const percentage = Math.round((count / 30) * 100);
-
-      document.getElementById("progress-number").textContent =
-        percentage + "%";
-
-      document.getElementById("progress-label").textContent =
-        count + " / 30 days";
-
-      document.getElementById("progress-fill").style.width =
-        percentage + "%";
-    }
-
-    document.getElementById("complete-btn").addEventListener("click", () => {
-      if (!completedDays.includes(selectedDay)) {
-        completedDays.push(selectedDay);
-        completedDays.sort((a, b) => a - b);
-
-        localStorage.setItem(
-          "completedDays",
-          JSON.stringify(completedDays)
-        );
-
-        createCalendar();
-        renderWorkout();
-      }
-    });
-
-    function updateTimerDisplay() {
-      const minutes = Math.floor(timeLeft / 60);
-      const seconds = timeLeft % 60;
-
-      document.getElementById("timer").textContent =
-        String(minutes).padStart(2, "0") + ":" +
-        String(seconds).padStart(2, "0");
-    }
-
-    function stopTimer() {
-      clearInterval(timerInterval);
-      timerInterval = null;
-      document.getElementById("start-timer").textContent = "Start";
-    }
-
-    function resetTimer() {
-      timeLeft = 45;
-      updateTimerDisplay();
-    }
-
-    document.getElementById("start-timer").addEventListener("click", () => {
-      if (timerInterval) {
-        stopTimer();
-        return;
-      }
-
-      document.getElementById("start-timer").textContent = "Pause";
-
-      timerInterval = setInterval(() => {
-        if (timeLeft > 0) {
-          timeLeft--;
-          updateTimerDisplay();
-        } else {
-          stopTimer();
-          alert("Time is up! Take a breath and keep going.");
-        }
-      }, 1000);
-    });
-
-    document.getElementById("reset-timer").addEventListener("click", () => {
       stopTimer();
       resetTimer();
+
+      renderWorkout();
+      createCalendar();
     });
 
-    function scrollToWorkout() {
-      document.getElementById("workout").scrollIntoView({
-        behavior: "smooth"
-      });
+    calendar.appendChild(button);
+  }
+}
+
+function getWorkout(day) {
+  // Recovery days: 5, 10, 15, 20, 25 and 30
+  if (day % 5 === 0) {
+    return workouts[4];
+  }
+
+  return workouts[(day - 1) % 4];
+}
+
+function renderWorkout() {
+  const workout = getWorkout(selectedDay);
+
+  document.getElementById("workout-heading").textContent =
+    "Day " + String(selectedDay).padStart(2, "0");
+
+  document.getElementById("workout-duration").textContent =
+    workout.duration;
+
+  exerciseList.innerHTML = "";
+
+  workout.exercises.forEach((exercise, index) => {
+    const item = document.createElement("div");
+    item.className = "exercise";
+
+    const button = document.createElement("button");
+    button.className = "exercise-select";
+
+    if (index === selectedExercise) {
+      button.classList.add("active");
     }
+
+    button.innerHTML = `
+      <div>
+        <div class="exercise-name">${exercise.name}</div>
+        <div class="exercise-detail">${exercise.detail}</div>
+      </div>
+      <div class="exercise-number">
+        ${String(index + 1).padStart(2, "0")}
+      </div>
+    `;
+
+    button.addEventListener("click", () => {
+      selectedExercise = index;
+      renderWorkout();
+    });
+
+    item.appendChild(button);
+    exerciseList.appendChild(item);
+  });
+
+  updateDemo();
+
+  const completeButton = document.getElementById("complete-btn");
+
+  if (completedDays.includes(selectedDay)) {
+    completeButton.textContent = "Day completed ✓";
+    completeButton.disabled = true;
+  } else {
+    completeButton.textContent = "Mark day complete ✓";
+    completeButton.disabled = false;
+  }
+
+  updateProgress();
+}
+
+function updateDemo() {
+  const workout = getWorkout(selectedDay);
+  const exercise = workout.exercises[selectedExercise];
+
+  demoStage.dataset.exercise = exercise.type;
+  demoStage.setAttribute(
+    "aria-label",
+    "Animated demonstration: " + exercise.name
+  );
+}
+
+function updateProgress() {
+  const count = completedDays.length;
+  const percentage = Math.round((count / 30) * 100);
+
+  document.getElementById("progress-number").textContent =
+    percentage + "%";
+
+  document.getElementById("progress-label").textContent =
+    count + " / 30 days";
+
+  document.getElementById("progress-fill").style.width =
+    percentage + "%";
+}
+
+document.getElementById("complete-btn").addEventListener("click", () => {
+  if (!completedDays.includes(selectedDay)) {
+    completedDays.push(selectedDay);
+    completedDays.sort((a, b) => a - b);
+
+    localStorage.setItem(
+      "completedDays",
+      JSON.stringify(completedDays)
+    );
 
     createCalendar();
     renderWorkout();
-    updateTimerDisplay();
-  </script>
+  }
+});
+
+function updateTimerDisplay() {
+  const minutes = Math.floor(timeLeft / 60);
+  const seconds = timeLeft % 60;
+
+  document.getElementById("timer").textContent =
+    String(minutes).padStart(2, "0") + ":" +
+    String(seconds).padStart(2, "0");
+}
+
+function stopTimer() {
+  clearInterval(timerInterval);
+  timerInterval = null;
+
+  document.getElementById("start-timer").textContent = "Start";
+}
+
+function resetTimer() {
+  timeLeft = 45;
+  updateTimerDisplay();
+}
+
+document.getElementById("start-timer").addEventListener("click", () => {
+  if (timerInterval) {
+    stopTimer();
+    return;
+  }
+
+  document.getElementById("start-timer").textContent = "Pause";
+
+  timerInterval = setInterval(() => {
+    if (timeLeft > 0) {
+      timeLeft--;
+      updateTimerDisplay();
+    } else {
+      stopTimer();
+      alert("Time is up! Take a breath and keep going.");
+    }
+  }, 1000);
+});
+
+document.getElementById("reset-timer").addEventListener("click", () => {
+  stopTimer();
+  resetTimer();
+});
+
+function scrollToWorkout() {
+  document.getElementById("workout").scrollIntoView({
+    behavior: "smooth"
+  });
+}
+
+createCalendar();
+renderWorkout();
+updateTimerDisplay();
+</script>
 
 </body>
 </html>
