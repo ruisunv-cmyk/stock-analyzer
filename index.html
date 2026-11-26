@@ -3,99 +3,84 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Auditline — Internal Audit Manager</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@600;700&family=Figtree:wght@400;500;600&display=swap" rel="stylesheet">
+<title>Auditline</title>
 <style>
-:root{
-  color-scheme:light;box-sizing:border-box;
-  --bg:#edf1f4;--surf:#fff;--ink:#14202b;--mute:#5c6b78;--line:#dbe2e8;
-  --brand:#0f5c63;--soft:#d9eded;--on:#fff;
-  --crit:#b3261e;--high:#d9731a;--med:#b8920f;--low:#2f8a63;--ok:#2f8a63;
-  --shadow:0 1px 2px rgba(20,32,43,.06),0 6px 20px -8px rgba(20,32,43,.12)
-}
-@media(prefers-color-scheme:dark){:root:not([data-theme="light"]){
-  color-scheme:dark;--bg:#0d1418;--surf:#151f25;--ink:#e6edf1;--mute:#93a3ae;
-  --line:#26343d;--brand:#4fb3ba;--soft:#173a3e;--on:#071418;
-  --crit:#ff7b72;--high:#f0a050;--med:#e3c14d;--low:#5fcf9d;--ok:#5fcf9d;
-  --shadow:0 1px 2px rgba(0,0,0,.4)
-}}
-*,*::before,*::after{box-sizing:inherit}
-body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.5 Figtree,system-ui,-apple-system,"Segoe UI",sans-serif}
-h1,h2,h3{font-family:"Bricolage Grotesque",Figtree,system-ui,sans-serif;margin:0;letter-spacing:-.01em}
+:root{color-scheme:light;--bg:#edf1f4;--surf:#fff;--ink:#14202b;--mute:#5c6b78;--line:#dbe2e8;--brand:#0f5c63;--soft:#d9eded;--on:#fff;--crit:#b3261e;--high:#d9731a;--med:#b8920f;--low:#2f8a63;--ok:#2f8a63}
+@media(prefers-color-scheme:dark){:root{--bg:#0d1418;--surf:#151f25;--ink:#e6edf1;--mute:#93a3ae;--line:#26343d;--brand:#4fb3ba;--soft:#173a3e;--on:#071418;--crit:#ff7b72;--high:#f0a050;--med:#e3c14d;--low:#5fcf9d;--ok:#5fcf9d}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.5 system-ui,-apple-system,"Segoe UI",sans-serif}
 button,input,select,textarea{font:inherit;color:inherit}
 button{cursor:pointer}
-:focus-visible{outline:2px solid var(--brand);outline-offset:2px}
-.app{display:grid;grid-template-columns:232px 1fr;min-height:100vh}
-aside{background:var(--surf);border-right:1px solid var(--line);padding:22px 14px;position:sticky;top:0;height:100vh;display:flex;flex-direction:column;gap:6px}
-.logo{display:flex;align-items:center;gap:10px;padding:0 10px 18px;font:700 20px "Bricolage Grotesque",sans-serif}
-.logo i{width:26px;height:26px;border-radius:8px;background:var(--brand);display:grid;place-items:center}
-.logo i::after{content:"";width:10px;height:10px;border:2.5px solid var(--on);border-radius:50%;border-right-color:transparent;transform:rotate(-30deg)}
-nav a{display:flex;justify-content:space-between;align-items:center;padding:9px 12px;border-radius:10px;color:var(--mute);text-decoration:none;font-weight:500}
+.app{display:grid;grid-template-columns:220px 1fr;min-height:100vh}
+aside{background:var(--surf);border-right:1px solid var(--line);padding:20px 12px;display:flex;flex-direction:column;gap:4px}
+.logo{font-weight:700;font-size:19px;padding:0 10px 16px;color:var(--brand)}
+nav a{display:flex;justify-content:space-between;padding:9px 12px;border-radius:8px;color:var(--mute);text-decoration:none;font-weight:500}
 nav a:hover{background:var(--bg)}nav a.on{background:var(--soft);color:var(--brand);font-weight:600}
 nav small{background:var(--bg);border-radius:20px;padding:0 8px;font-size:12px}
+nav a.on small{background:rgba(255,255,255,.5)}
 .spacer{flex:1}
-.ghost{background:none;border:1px solid var(--line);border-radius:10px;padding:8px 12px;color:var(--mute);margin-top:6px;width:100%;text-align:left}
-main{padding:28px clamp(16px,3vw,40px) 60px;max-width:1320px;width:100%}
-.head{display:flex;justify-content:space-between;align-items:flex-end;gap:16px;flex-wrap:wrap;margin-bottom:22px}
-.head h1{font-size:28px}.head p{margin:2px 0 0;color:var(--mute);max-width:640px}
+.ghost{background:none;border:1px solid var(--line);border-radius:8px;padding:7px 10px;color:var(--mute);margin-top:6px;text-align:left;font-size:13px}
+.ghost:hover{background:var(--bg)}
+main{padding:24px clamp(14px,3vw,36px) 60px;max-width:1320px;width:100%}
+.head{display:flex;justify-content:space-between;align-items:flex-end;gap:16px;flex-wrap:wrap;margin-bottom:20px}
+.head h1{font-size:26px;margin:0}
+.head p{margin:2px 0 0;color:var(--mute);max-width:620px}
 .btns{display:flex;gap:8px;flex-wrap:wrap}
-.btn{background:var(--brand);color:var(--on);border:0;border-radius:10px;padding:9px 15px;font-weight:600}
+.btn{background:var(--brand);color:var(--on);border:0;border-radius:8px;padding:8px 14px;font-weight:600}
 .btn:hover{filter:brightness(1.08)}
 .btn.sec{background:var(--surf);color:var(--ink);border:1px solid var(--line)}
-.card{background:var(--surf);border:1px solid var(--line);border-radius:16px;padding:18px;box-shadow:var(--shadow)}
-.card h2{font-size:17px;margin-bottom:14px}
-.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:14px;margin-bottom:14px}
-.kpi b{display:block;font:700 32px/1.1 "Bricolage Grotesque",sans-serif}
+.card{background:var(--surf);border:1px solid var(--line);border-radius:14px;padding:16px}
+.card h2{font-size:16px;margin:0 0 12px}
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px;margin-bottom:12px}
+.kpi b{display:block;font-size:30px;font-weight:700;line-height:1.1}
 .kpi span,.sub{color:var(--mute);font-size:13px}.sub{display:block}
 .kpi.warn b{color:var(--crit)}
-.grid2{display:grid;grid-template-columns:1.3fr 1fr;gap:14px;margin-top:14px}
-.pill{display:inline-block;padding:2px 10px;border-radius:20px;font-size:12px;font-weight:600;border:1px solid currentColor;white-space:nowrap}
+.grid2{display:grid;grid-template-columns:1.3fr 1fr;gap:12px;margin-top:12px}
+.pill{display:inline-block;padding:2px 9px;border-radius:20px;font-size:12px;font-weight:600;border:1px solid currentColor;white-space:nowrap}
 .High{color:var(--high)}.Medium{color:var(--med)}.Low{color:var(--low)}
 .Open{color:var(--high)}.InProgress{color:var(--med)}.Closed{color:var(--ok)}
 .over{color:var(--crit);font-weight:600}
-.item{display:flex;justify-content:space-between;gap:10px;padding:10px 0;border-top:1px solid var(--line);align-items:center;flex-wrap:wrap}.item:first-of-type{border-top:0}
-.tools{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:14px;align-items:center}
-input,select,textarea{background:var(--surf);border:1px solid var(--line);border-radius:10px;padding:9px 12px;width:100%}
-textarea{resize:vertical}.tools input{max-width:280px}.tools select{max-width:200px}
+.item{display:flex;justify-content:space-between;gap:10px;padding:9px 0;border-top:1px solid var(--line);align-items:center;flex-wrap:wrap}.item:first-of-type{border-top:0}
+.tools{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px;align-items:center}
+input,select,textarea{background:var(--surf);border:1px solid var(--line);border-radius:8px;padding:8px 11px;width:100%}
+textarea{resize:vertical;font-family:monospace;font-size:12px}.tools input{max-width:260px}.tools select{max-width:180px}
 .tbl{overflow-x:auto;padding:0}
-table{border-collapse:collapse;width:100%;min-width:820px}
-th{text-align:left;font-weight:600;font-size:12.5px;color:var(--mute);padding:12px 14px;border-bottom:1px solid var(--line);white-space:nowrap}
-td{padding:12px 14px;border-top:1px solid var(--line);vertical-align:top;font-size:14px}
+table{border-collapse:collapse;width:100%;min-width:800px}
+th{text-align:left;font-weight:600;font-size:12px;color:var(--mute);padding:10px 12px;border-bottom:1px solid var(--line);white-space:nowrap}
+td{padding:10px 12px;border-top:1px solid var(--line);vertical-align:top;font-size:13.5px}
 tr.click{cursor:pointer}tr.click:hover td{background:var(--bg)}
-.stat{background:var(--bg);border-radius:20px;padding:3px 12px;font-size:12px;white-space:nowrap}
-.empty{padding:40px;text-align:center;color:var(--mute)}
-dialog{border:1px solid var(--line);border-radius:18px;background:var(--surf);color:var(--ink);padding:24px;width:min(620px,94vw);max-height:90vh;overflow:auto;box-shadow:0 30px 80px -20px rgba(0,0,0,.5)}
-dialog::backdrop{background:rgba(10,18,24,.55)}dialog h2{margin-bottom:14px}
-.f{display:grid;grid-template-columns:1fr 1fr;gap:12px}
-.f label{display:flex;flex-direction:column;gap:4px;font-size:13px;color:var(--mute)}.f .w{grid-column:1/-1}
-.acts{display:flex;gap:10px;justify-content:flex-end;margin-top:18px;position:sticky;bottom:0;background:var(--surf);padding-top:12px}
-.toast{position:fixed;left:50%;bottom:20px;transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:10px 18px;border-radius:12px;font-size:14px;opacity:0;pointer-events:none;transition:opacity .2s;z-index:100}
+.stat{background:var(--bg);border-radius:20px;padding:3px 10px;font-size:12px;white-space:nowrap}
+.empty{padding:36px;text-align:center;color:var(--mute)}
+dialog{border:1px solid var(--line);border-radius:16px;background:var(--surf);color:var(--ink);padding:22px;width:min(600px,94vw);max-height:90vh;overflow:auto}
+dialog::backdrop{background:rgba(10,18,24,.55)}dialog h2{margin:0 0 12px}
+.f{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.f label{display:flex;flex-direction:column;gap:4px;font-size:12.5px;color:var(--mute)}.f .w{grid-column:1/-1}
+.acts{display:flex;gap:8px;justify-content:flex-end;margin-top:16px;padding-top:10px;border-top:1px solid var(--line)}
+.toast{position:fixed;left:50%;bottom:20px;transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:10px 16px;border-radius:10px;font-size:13px;opacity:0;pointer-events:none;transition:opacity .2s;z-index:100}
 .toast.show{opacity:1}
-.b{display:flex;align-items:center;gap:10px;margin:9px 0;font-size:13px}
-.b .n{width:180px;flex:none;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.b .t{flex:1;height:10px;background:var(--bg);border-radius:6px;overflow:hidden}.b .t i{display:block;height:100%}
+.b{display:flex;align-items:center;gap:10px;margin:8px 0;font-size:13px}
+.b .n{width:170px;flex:none;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.b .t{flex:1;height:9px;background:var(--bg);border-radius:5px;overflow:hidden}.b .t i{display:block;height:100%}
 .mini{font-size:12px;color:var(--mute)}
-.import-hint{background:var(--soft);border-radius:10px;padding:10px 14px;font-size:13px;color:var(--brand);margin-bottom:12px}
-@media(max-width:860px){.app{grid-template-columns:1fr}
-aside{position:sticky;height:auto;flex-direction:row;align-items:center;padding:10px 12px;z-index:5;overflow-x:auto;gap:8px}
-.logo{padding:0 8px 0 0}.logo span,.spacer,aside .ghost{display:none}nav{display:flex;gap:4px;white-space:nowrap}nav small{display:none}
+.import-hint{background:var(--soft);border-radius:8px;padding:10px 12px;font-size:13px;color:var(--brand);margin-bottom:10px}
+@media(max-width:800px){.app{grid-template-columns:1fr}
+aside{position:sticky;top:0;flex-direction:row;align-items:center;padding:10px;overflow-x:auto;z-index:5}
+.logo{padding:0 8px 0 0}.logo span,.spacer,.ghost{display:none}nav{display:flex;gap:4px;white-space:nowrap}nav small{display:none}
 .grid2{grid-template-columns:1fr}.f{grid-template-columns:1fr}}
-@media print{@page{margin:14mm}aside,.btns,.tools,.toast,.import-hint{display:none!important}
-.app{display:block}main{padding:0;max-width:none}body{background:#fff}.card{box-shadow:none;break-inside:avoid}.pb{break-after:page}.tbl{overflow:visible}table{min-width:0}}
+@media print{aside,.btns,.tools,.toast{display:none!important}.app{display:block}main{padding:0;max-width:none}body{background:#fff}.card{border:0}.tbl{overflow:visible}table{min-width:0}}
 </style>
 </head>
 <body>
 <div class="app">
-<aside>
-  <div class="logo"><i></i><span>Auditline</span></div>
-  <nav id="nav"></nav>
-  <div class="spacer"></div>
-  <button class="ghost" id="import-btn">Import from Excel</button>
-  <button class="ghost" id="settings">Settings</button>
-  <button class="ghost" id="reset">Reset data</button>
-</aside>
-<main id="main"></main>
+  <aside>
+    <div class="logo">Auditline</div>
+    <nav id="nav"></nav>
+    <div class="spacer"></div>
+    <button class="ghost" id="import-btn">Import from Excel</button>
+    <button class="ghost" id="settings">Settings</button>
+    <button class="ghost" id="reset">Reset</button>
+  </aside>
+  <main id="main"></main>
 </div>
 <dialog id="dlg"></dialog>
 <div class="toast" id="toast"></div>
@@ -104,17 +89,10 @@ aside{position:sticky;height:auto;flex-direction:row;align-items:center;padding:
 (function(){
 "use strict";
 
-/* ============================================================
-   CONSTANTS
-   ============================================================ */
 var KEY = "auditline-v1";
 var SEV = ["High","Medium","Low"];
 var FST = ["Open","In Progress","Closed"];
 
-/* ============================================================
-   SAMPLE DATA — real rows from your workbook (5 findings,
-   3 engagements, 5 entities). Full data: use Import.
-   ============================================================ */
 function seed(){
   return {
     meta:{orgName:"Tecan Group",currentUser:"Internal Audit"},
@@ -127,73 +105,77 @@ function seed(){
     ],
     eng:[
       {id:1,lastAudited:"2025",entityCode:"0105",entity:"T-CH",start:"2026-04-13",end:"2026-04-30",area1:"Indirect Expenses",area2:"Balance Sheet Review",area3:"Credit Management",location:"CH",status:"Planned",report:""},
-      {id:2,lastAudited:"2025",entityCode:"0140",entity:"T-US",start:"2026-07-20",end:"2026-07-24",area1:"Indirect Expenses",area2:"Order Entry & Sales Forecasting",area3:"Instrument Warranty Replacement",location:"Raleigh",status:"Planned",report:"Draft sent"},
-      {id:3,lastAudited:"2024",entityCode:"0170",entity:"T-UK",start:"2026-03-11",end:"2026-03-13",area1:"Indirect Expenses",area2:"Order Entry & Sales Forecasting",area3:"Instrument Warranty Replacement",location:"London",status:"Report Final",report:"Draft, CFO, Group, Audit Com., EY"}
+      {id:2,lastAudited:"2025",entityCode:"0140",entity:"T-US",start:"2026-07-20",end:"2026-07-24",area1:"Indirect Expenses",area2:"Order Entry & Sales",area3:"Warranty Replacement",location:"Raleigh",status:"Planned",report:"Draft sent"},
+      {id:3,lastAudited:"2024",entityCode:"0170",entity:"T-UK",start:"2026-03-11",end:"2026-03-13",area1:"Indirect Expenses",area2:"Order Entry & Sales",area3:"Warranty Replacement",location:"London",status:"Report Final",report:"Draft, CFO, Group, Audit Com., EY"}
     ],
     fnd:[
       {id:1,year:2025,entity:"T-UK",area:"Segregation of Duties (SoD)",name:"Segregation of Duties – PO & Goods Receipt",finding:"Several occurrences where the same user created a PO and performed the goods receipt.",severity:"Medium",action:"",auditee:"Paul Noble, T-UK",due:"2025-02-28",status:"Closed"},
       {id:2,year:2025,entity:"T-CH",area:"Financial Reporting",name:"Goods received not invoiced",finding:"Over 4000 uncleared positions from 2014–2023, ~CHF 1m balance. Repeat finding.",severity:"High",action:"",auditee:"Patrick Bieri, T-TR",due:"2025-06-30",status:"Closed"},
-      {id:3,year:2025,entity:"T-TR",area:"Delegation of Authority (DoA)",name:"End-of-Life Scrapping",finding:"CHF 98k of scrapping not approved in accordance with DoA. M9/M10 milestones skipped.",severity:"High",action:"",auditee:"Rafaela Truffer, T-TR",due:"2025-06-30",status:"Closed"},
-      {id:4,year:2025,entity:"T-US",area:"Financial Reporting",name:"Unreported Sales Tax",finding:"Sales tax collected but not reported/paid in some jurisdictions. Amounts <10k USD.",severity:"High",action:"",auditee:"Joe Fischer, T-US",due:"2025-06-30",status:"Closed"},
-      {id:5,year:2025,entity:"T-CN",area:"Financial Reporting",name:"Missing Revenue Recognition Control",finding:"T-117 revenue recognition control for complex instruments not performed.",severity:"Medium",action:"",auditee:"Cathy Chen, T-CN",due:"2025-06-30",status:"Closed"}
+      {id:3,year:2025,entity:"T-TR",area:"Delegation of Authority (DoA)",name:"End-of-Life Scrapping",finding:"CHF 98k of scrapping not approved in accordance with DoA.",severity:"High",action:"",auditee:"Rafaela Truffer, T-TR",due:"2025-06-30",status:"Closed"},
+      {id:4,year:2025,entity:"T-US",area:"Financial Reporting",name:"Unreported Sales Tax",finding:"Sales tax collected but not reported/paid in some jurisdictions.",severity:"High",action:"",auditee:"Joe Fischer, T-US",due:"2025-06-30",status:"Closed"},
+      {id:5,year:2025,entity:"T-CN",area:"Financial Reporting",name:"Missing Revenue Recognition Control",finding:"T-117 revenue recognition control not performed.",severity:"Medium",action:"",auditee:"Cathy Chen, T-CN",due:"2025-06-30",status:"Closed"}
     ]
   };
 }
 
-/* ============================================================
-   STATE
-   ============================================================ */
 var S;
 try { S = JSON.parse(localStorage.getItem(KEY)); } catch(e) {}
 if (!S || !Array.isArray(S.fnd)) S = seed();
 
-function save(){ try { localStorage.setItem(KEY, JSON.stringify(S)); } catch(e){} }
+function save(){
+  try { localStorage.setItem(KEY, JSON.stringify(S)); } catch(e){}
+}
 
-/* ============================================================
-   HELPERS
-   ============================================================ */
 function $(s,r){ return (r||document).querySelector(s); }
+
 function esc(t){
   return String(t==null?"":t).replace(/[&<>"']/g, function(c){
     return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c];
   });
 }
+
 function parseDate(s){
   if(!s) return null;
   if(s instanceof Date) return s;
   var str = String(s).trim();
-  // ISO date
   var m = str.match(/^(\d{4})-(\d{2})-(\d{2})/);
   if(m) return new Date(+m[1], +m[2]-1, +m[3]);
-  // dd.mm.yyyy or dd/mm/yyyy
   m = str.match(/^(\d{1,2})[\.\/](\d{1,2})[\.\/](\d{4})/);
   if(m) return new Date(+m[3], +m[2]-1, +m[1]);
   var d = new Date(str);
-  return isNaN(d) ? null : d;
+  return isNaN(d.getTime()) ? null : d;
 }
+
 var TODAY = new Date(); TODAY.setHours(0,0,0,0);
+
 function iso(d){
   return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0");
 }
+
 function fmt(s){
   var d = parseDate(s);
   return d ? d.toLocaleDateString("en-GB",{day:"numeric",month:"short",year:"numeric"}) : "–";
 }
+
 function nid(arr){
   return arr.reduce(function(m,x){ return Math.max(m, x.id||0); }, 0) + 1;
 }
+
 function toast(m){
   var t = $("#toast");
+  if(!t) return;
   t.textContent = m;
   t.classList.add("show");
   clearTimeout(toast.t);
   toast.t = setTimeout(function(){ t.classList.remove("show"); }, 2600);
 }
+
 function isOverdue(f){
   if(f.status === "Closed") return false;
   var d = parseDate(f.due);
-  return d && d < TODAY;
+  return !!(d && d < TODAY);
 }
+
 function normStatus(v){
   if(!v) return "Open";
   var s = String(v).trim().toLowerCase();
@@ -202,6 +184,7 @@ function normStatus(v){
   if(s.indexOf("in") === 0 || s === "ongoing" || s.indexOf("progress") !== -1) return "In Progress";
   return "Open";
 }
+
 function normSev(v){
   if(!v) return "Medium";
   var s = String(v).trim().toLowerCase();
@@ -209,60 +192,56 @@ function normSev(v){
   if(s === "low") return "Low";
   return "Medium";
 }
+
 function sevClass(s){ return s === "High" ? "High" : s === "Low" ? "Low" : "Medium"; }
 function statClass(s){ return s === "Closed" ? "Closed" : s === "In Progress" ? "InProgress" : "Open"; }
 
-/* ============================================================
-   STATS
-   ============================================================ */
 function stats(){
   var open = S.fnd.filter(function(f){ return f.status !== "Closed"; });
   var od = open.filter(isOverdue);
   var hi = open.filter(function(f){ return f.severity === "High"; }).length;
-  var ent = {};
-  S.fnd.forEach(function(f){ ent[f.entity] = 1; });
-  return {
-    open: open, od: od, hi: hi, total: S.fnd.length,
-    entities: Object.keys(ent).length
-  };
+  var entSet = {};
+  S.fnd.forEach(function(f){ if(f.entity) entSet[f.entity] = 1; });
+  return { open: open, od: od, hi: hi, total: S.fnd.length, entities: Object.keys(entSet).length };
 }
 
-/* ============================================================
-   VIEWS
-   ============================================================ */
 var view = "dashboard";
 var filt = { year:"All", entity:"All", sev:"All", status:"All", q:"" };
 
 var VIEWS = {
-  dashboard: ["Dashboard", function(){ return dash(); }],
-  findings: ["Findings", function(){ return fnds(); }],
-  engagements: ["Engagement tracker", function(){ return engs(); }],
-  entities: ["Entities", function(){ return ents(); }],
-  reports: ["Reports", function(){ return reps(); }]
+  dashboard: ["Dashboard", dash],
+  findings: ["Findings", fnds],
+  engagements: ["Engagement tracker", engs],
+  entities: ["Entities", ents],
+  reports: ["Reports", reps]
 };
 
-function pageHead(title, sub, extra){
-  return '<div class="head"><div><h1>'+title+'</h1><p>'+sub+'</p></div><div class="btns">'+(extra||"")+'</div></div>';
+function pageHead(title, subtitle, extra){
+  return '<div class="head"><div><h1>'+title+'</h1><p>'+subtitle+'</p></div><div class="btns">'+(extra||"")+'</div></div>';
 }
+
 function kpi(v, l, warn){
   return '<div class="card kpi'+(warn?' warn':'')+'"><b>'+v+'</b><span>'+l+'</span></div>';
 }
+
 function subline(a, b){
   return '<b>'+esc(a)+'</b><span class="sub">'+esc(b)+'</span>';
 }
+
 function table(headers, rows, emptyMsg){
   var head = '<tr>'+headers.map(function(h){ return '<th>'+h+'</th>'; }).join('')+'</tr>';
   var body = rows.length ? rows.join('') : '<tr><td colspan="'+headers.length+'" class="empty">'+emptyMsg+'</td></tr>';
   return '<div class="card tbl"><table><thead>'+head+'</thead><tbody>'+body+'</tbody></table></div>';
 }
+
 function row(editKey, cells){
   return '<tr class="click" data-ed="'+editKey+'" tabindex="0">'+cells.map(function(c){ return '<td>'+c+'</td>'; }).join('')+'</tr>';
 }
+
 function bars(list){
   var max = Math.max.apply(null, [1].concat(list.map(function(x){ return x[1]; })));
   return list.map(function(x){
-    return '<div class="b"><span class="n" title="'+esc(x[0])+'">'+esc(x[0])+
-      '</span><div class="t"><i style="width:'+(x[1]/max*100)+'%;background:'+x[2]+'"></i></div><b>'+x[1]+'</b></div>';
+    return '<div class="b"><span class="n" title="'+esc(x[0])+'">'+esc(x[0])+'</span><div class="t"><i style="width:'+(x[1]/max*100)+'%;background:'+x[2]+'"></i></div><b>'+x[1]+'</b></div>';
   }).join('');
 }
 
@@ -277,12 +256,12 @@ function dash(){
       ({Open:"var(--high)","In Progress":"var(--med)",Closed:"var(--ok)"})[v]];
   });
   var yearSet = {};
-  S.fnd.forEach(function(f){ yearSet[f.year] = 1; });
+  S.fnd.forEach(function(f){ if(f.year) yearSet[f.year] = 1; });
   var byYear = Object.keys(yearSet).sort().map(function(y){
     return [String(y), S.fnd.filter(function(f){ return f.year == y; }).length, "var(--brand)"];
   });
   var entCount = {};
-  S.fnd.forEach(function(f){ entCount[f.entity] = (entCount[f.entity]||0) + 1; });
+  S.fnd.forEach(function(f){ if(f.entity) entCount[f.entity] = (entCount[f.entity]||0) + 1; });
   var byEntity = Object.keys(entCount).map(function(k){ return [k, entCount[k], "var(--brand)"]; })
     .sort(function(a,b){ return b[1]-a[1]; }).slice(0, 8);
   var overdue = S.fnd.filter(isOverdue)
@@ -313,7 +292,7 @@ function dash(){
       '<div class="card"><h2>Findings by year</h2>'+bars(byYear)+'</div>'+
       '<div class="card"><h2>Top entities by findings</h2>'+bars(byEntity)+'</div>'+
     '</div>'+
-    '<div class="card" style="margin-top:14px"><h2>Overdue actions</h2>'+overdueHTML+'</div>';
+    '<div class="card" style="margin-top:12px"><h2>Overdue actions</h2>'+overdueHTML+'</div>';
 }
 
 function fnds(){
@@ -338,12 +317,12 @@ function fnds(){
   });
 
   var yearSet = {}, entSet = {};
-  S.fnd.forEach(function(f){ yearSet[f.year] = 1; entSet[f.entity] = 1; });
+  S.fnd.forEach(function(f){ if(f.year) yearSet[f.year] = 1; if(f.entity) entSet[f.entity] = 1; });
   var years = Object.keys(yearSet).sort().reverse();
   var entities = Object.keys(entSet).sort();
 
   var toolBar = '<div class="tools">'+
-    '<input id="q" type="search" placeholder="Search findings, auditee, entity" value="'+esc(filt.q)+'">'+
+    '<input id="q" type="search" placeholder="Search..." value="'+esc(filt.q)+'">'+
     '<select id="f-year"><option value="All">All years</option>'+
       years.map(function(y){ return '<option '+(filt.year==y?'selected':'')+'>'+y+'</option>'; }).join('')+
     '</select>'+
@@ -370,7 +349,7 @@ function fnds(){
     ]);
   });
 
-  return pageHead("Findings register", "Every finding with owner, due date, and status. Click a row to edit.",
+  return pageHead("Findings register", "Every finding with owner, due date, and status.",
     '<button class="btn sec" data-act="csv">Export CSV</button><button class="btn" data-new="fnd">New finding</button>')+
     toolBar+
     table(["Year","Entity","Finding","Severity","Auditee","Due","Status"], rows, "No findings match.");
@@ -382,9 +361,10 @@ function engs(){
   });
   var rows = list.map(function(e){
     var n = S.fnd.filter(function(f){ return f.entity === e.entity; }).length;
-    var area = e.area1 + (e.area2?" · "+e.area2:"") + (e.area3?" · "+e.area3:"");
+    var area = [e.area1, e.area2, e.area3].filter(Boolean).join(" · ");
+    var entObj = S.ent.find(function(x){ return x.short === e.entity; });
     return row("eng:"+e.id, [
-      subline(e.entity, (S.ent.find(function(x){return x.short===e.entity;})||{}).name || ""),
+      subline(e.entity, entObj ? entObj.name : ""),
       esc(e.entityCode||""),
       fmt(e.start)+" – "+fmt(e.end),
       esc(area),
@@ -411,29 +391,24 @@ function ents(){
 
 function reps(){
   var entSet = {}, yearSet = {};
-  S.fnd.forEach(function(f){ entSet[f.entity] = 1; yearSet[f.year] = 1; });
+  S.fnd.forEach(function(f){ if(f.entity) entSet[f.entity] = 1; if(f.year) yearSet[f.year] = 1; });
   var entities = Object.keys(entSet).sort();
   var years = Object.keys(yearSet).sort().reverse();
   return pageHead("Reports", "Print a findings report per entity or per year.",
-    '<button class="btn sec" data-act="print-ent">Print entity report</button>'+
-    '<button class="btn sec" data-act="print-year">Print year report</button>')+
+    '<button class="btn sec" data-act="print-ent">Print entity</button>'+
+    '<button class="btn sec" data-act="print-year">Print year</button>')+
     '<div class="card"><h2>Entity report</h2><div class="tools">'+
-      '<select id="rep-ent"><option value="">— choose entity —</option>'+
+      '<select id="rep-ent"><option value="">— choose —</option>'+
         entities.map(function(e){ return '<option>'+esc(e)+'</option>'; }).join('')+
-      '</select></div>'+
-      '<p class="sub">Select an entity, then click "Print entity report". The browser print dialog lets you save as PDF.</p>'+
+      '</select></div><p class="sub">Pick an entity, then click "Print entity". Save as PDF from the browser dialog.</p>'+
     '</div>'+
-    '<div class="card" style="margin-top:14px"><h2>Year report</h2><div class="tools">'+
-      '<select id="rep-year"><option value="">— choose year —</option>'+
+    '<div class="card" style="margin-top:12px"><h2>Year report</h2><div class="tools">'+
+      '<select id="rep-year"><option value="">— choose —</option>'+
         years.map(function(y){ return '<option>'+y+'</option>'; }).join('')+
-      '</select></div>'+
-      '<p class="sub">Select a year, then click "Print year report".</p>'+
+      '</select></div><p class="sub">Pick a year, then click "Print year".</p>'+
     '</div>';
 }
 
-/* ============================================================
-   PRINT
-   ============================================================ */
 function doPrint(kind){
   var sel = $(kind === "ent" ? "#rep-ent" : "#rep-year");
   var val = sel ? sel.value : "";
@@ -441,7 +416,6 @@ function doPrint(kind){
   var rows = S.fnd.filter(function(f){
     return kind === "ent" ? f.entity === val : f.year == val;
   });
-  var title = kind === "ent" ? ("Findings — "+val) : ("Findings — "+val);
   var main = $("#main");
   var prev = main.innerHTML;
 
@@ -457,8 +431,7 @@ function doPrint(kind){
     '</tr>';
   }).join('') || '<tr><td colspan="7" class="empty">No findings.</td></tr>';
 
-  main.innerHTML = '<div class="pb"><h1>'+esc(title)+'</h1>'+
-    '<p class="sub">Generated '+fmt(iso(TODAY))+' · '+rows.length+' findings</p></div>'+
+  main.innerHTML = '<h1>Findings — '+esc(val)+'</h1><p class="sub">Generated '+fmt(iso(TODAY))+' · '+rows.length+' findings</p>'+
     '<div class="card tbl"><table><thead><tr>'+
       '<th>Year</th><th>Entity</th><th>Finding</th><th>Severity</th><th>Auditee</th><th>Due</th><th>Status</th>'+
     '</tr></thead><tbody>'+body+'</tbody></table></div>';
@@ -471,23 +444,19 @@ function doPrint(kind){
   }, 150);
 }
 
-/* ============================================================
-   IMPORT
-   ============================================================ */
 function openImport(){
   var dlg = $("#dlg");
   dlg.innerHTML = '<h2>Import from Excel</h2>'+
-    '<div class="import-hint">Copy rows from your Excel sheet (including headers), paste below, then choose the sheet type. Column names are matched loosely.</div>'+
+    '<div class="import-hint">Copy rows from your Excel sheet (including headers), paste below.</div>'+
     '<label style="display:flex;flex-direction:column;gap:6px;font-size:13px;color:var(--mute)">Sheet type'+
       '<select id="imp-kind">'+
-        '<option value="fnd">Findings (Audit Findings Tracker)</option>'+
-        '<option value="eng">Engagements (Audit Engagement Tracker)</option>'+
-        '<option value="ent">Entities (Audit Areas &amp; Entities)</option>'+
+        '<option value="fnd">Findings</option>'+
+        '<option value="eng">Engagements</option>'+
+        '<option value="ent">Entities</option>'+
       '</select>'+
     '</label>'+
     '<label style="display:flex;flex-direction:column;gap:6px;font-size:13px;color:var(--mute);margin-top:10px">Paste rows'+
-      '<textarea id="imp-text" rows="12" style="font-family:monospace;font-size:12px" '+
-      'placeholder="YEAR&#9;ENTITY&#9;AUDIT AREA&#9;NAME&#9;FINDINGS&#9;SEVERITY&#9;AGREED ACTIONS&#9;RESPONSIBLE AUDITEE&#9;TARGET DATE&#9;STATUS"></textarea>'+
+      '<textarea id="imp-text" rows="12" placeholder="Paste here (Ctrl+V)"></textarea>'+
     '</label>'+
     '<div class="acts"><button class="btn sec" id="imp-x">Cancel</button><button class="btn" id="imp-go">Import</button></div>';
   $("#imp-x", dlg).onclick = function(){ dlg.close(); };
@@ -503,7 +472,7 @@ function openImport(){
       toast("Imported "+count+" rows");
     } catch(err) {
       console.error(err);
-      toast("Import failed — check console");
+      toast("Import failed: "+err.message);
     }
   };
   dlg.showModal();
@@ -515,7 +484,6 @@ function splitRows(text){
     if(l.indexOf("\t") !== -1){
       return l.split("\t").map(function(c){ return c.trim(); });
     }
-    // CSV fallback
     var out = [], cur = "", inQ = false;
     for(var i=0;i<l.length;i++){
       var c = l[i];
@@ -534,9 +502,7 @@ function splitRows(text){
 }
 
 function normaliseHeader(h){
-  return String(h||"").toLowerCase()
-    .replace(/[^a-z0-9]+/g,"_")
-    .replace(/^_|_$/g,"");
+  return String(h||"").toLowerCase().replace(/[^a-z0-9]+/g,"_").replace(/^_|_$/g,"");
 }
 
 function importText(kind, text){
@@ -554,26 +520,20 @@ function importText(kind, text){
     }
     return -1;
   }
-  function val(r, i){
-    return i >= 0 && i < r.length ? r[i] : "";
-  }
+  function val(r, i){ return i >= 0 && i < r.length ? r[i] : ""; }
 
   if(kind === "fnd"){
-    var cYear = idx("year"),
-        cEnt = idx("entity"),
-        cArea = idx("audit_area","area"),
-        cName = idx("name","finding_name","title"),
-        cFind = idx("findings","finding_description","description"),
-        cSev = idx("severity"),
-        cAct = idx("agreed_actions","action","recommendation"),
+    var cYear = idx("year"), cEnt = idx("entity"), cArea = idx("audit_area","area"),
+        cName = idx("name","title"), cFind = idx("findings","description"),
+        cSev = idx("severity"), cAct = idx("agreed_actions","action","recommendation"),
         cAud = idx("responsible_auditee","auditee","owner"),
-        cDue = idx("target_date","due","due_date"),
-        cSt = idx("status");
+        cDue = idx("target_date","due"), cSt = idx("status");
 
     var added = 0;
     data.forEach(function(r){
       var name = val(r, cName) || val(r, cFind);
       if(!name) return;
+      var dueDate = parseDate(val(r, cDue));
       var f = {
         id: nid(S.fnd),
         year: parseInt(val(r, cYear), 10) || new Date().getFullYear(),
@@ -584,11 +544,10 @@ function importText(kind, text){
         severity: normSev(val(r, cSev)),
         action: val(r, cAct) || "",
         auditee: val(r, cAud) || "",
-        due: parseDate(val(r, cDue)) ? iso(parseDate(val(r, cDue))) : "",
+        due: dueDate ? iso(dueDate) : "",
         status: normStatus(val(r, cSt))
       };
       S.fnd.push(f);
-      // auto-add entity
       if(f.entity && !S.ent.some(function(e){ return e.short === f.entity; })){
         S.ent.push({id:nid(S.ent), code:"", name:f.entity, short:f.entity});
       }
@@ -598,30 +557,25 @@ function importText(kind, text){
   }
 
   if(kind === "eng"){
-    var eLast = idx("last_audited","last"),
-        eCode = idx("entity_code","code"),
-        eEnt = idx("entity"),
-        eStart = idx("planned_start","start"),
+    var eLast = idx("last_audited","last"), eCode = idx("entity_code","code"),
+        eEnt = idx("entity"), eStart = idx("planned_start","start"),
         eEnd = idx("planned_end","end"),
-        eOnSite = idx("on_site","onsite"),
-        eA1 = idx("area_1","area1"),
-        eA2 = idx("area_2","area2"),
-        eA3 = idx("area_3","area3"),
-        eLoc = idx("location"),
-        eSt = idx("status"),
-        eRep = idx("report","draft_report","comments");
+        eA1 = idx("area_1","area1"), eA2 = idx("area_2","area2"), eA3 = idx("area_3","area3"),
+        eLoc = idx("location"), eSt = idx("status"), eRep = idx("report","draft","comments");
 
     var addedE = 0;
     data.forEach(function(r){
       var ent = val(r, eEnt);
       if(!ent) return;
+      var startD = parseDate(val(r, eStart));
+      var endD = parseDate(val(r, eEnd));
       S.eng.push({
         id: nid(S.eng),
         lastAudited: val(r, eLast) || "",
         entityCode: val(r, eCode) || "",
         entity: ent,
-        start: parseDate(val(r, eStart)) ? iso(parseDate(val(r, eStart))) : "",
-        end: parseDate(val(r, eEnd)) ? iso(parseDate(val(r, eEnd))) : "",
+        start: startD ? iso(startD) : "",
+        end: endD ? iso(endD) : "",
         area1: val(r, eA1) || "",
         area2: val(r, eA2) || "",
         area3: val(r, eA3) || "",
@@ -638,8 +592,7 @@ function importText(kind, text){
   }
 
   if(kind === "ent"){
-    var nCode = idx("code"),
-        nName = idx("entities","entity","name");
+    var nCode = idx("code"), nName = idx("entities","entity","name");
     var addedN = 0;
     data.forEach(function(r){
       var code = val(r, nCode), name = val(r, nName);
@@ -654,9 +607,6 @@ function importText(kind, text){
   throw new Error("Unknown sheet type");
 }
 
-/* ============================================================
-   EDIT DIALOGS
-   ============================================================ */
 var FORMS = {
   fnd: {
     title: "finding",
@@ -703,17 +653,9 @@ var FORMS = {
 };
 
 var DEFAULTS = {
-  fnd: function(){
-    return {year:new Date().getFullYear(), entity:"", area:"", name:"", finding:"",
-      severity:"Medium", action:"", auditee:"", due:"", status:"Open"};
-  },
-  eng: function(){
-    return {entity:"", entityCode:"", lastAudited:"", start:iso(TODAY), end:iso(TODAY),
-      location:"", status:"Planned", area1:"", area2:"", area3:"", report:""};
-  },
-  ent: function(){
-    return {code:"", name:"", short:""};
-  }
+  fnd: function(){ return {year:new Date().getFullYear(), entity:"", area:"", name:"", finding:"", severity:"Medium", action:"", auditee:"", due:"", status:"Open"}; },
+  eng: function(){ return {entity:"", entityCode:"", lastAudited:"", start:iso(TODAY), end:iso(TODAY), location:"", status:"Planned", area1:"", area2:"", area3:"", report:""}; },
+  ent: function(){ return {code:"", name:"", short:""}; }
 };
 
 function openForm(kind, id){
@@ -736,7 +678,8 @@ function openForm(kind, id){
     } else if(type === "area"){
       ctrl = '<textarea data-k="'+key+'" rows="3">'+esc(v)+'</textarea>';
     } else {
-      ctrl = '<input data-k="'+key+'" type="'+(type==="num"?"number":type==="date"?"date":"text")+'" value="'+esc(v)+'">';
+      var inputType = type === "num" ? "number" : type === "date" ? "date" : "text";
+      ctrl = '<input data-k="'+key+'" type="'+inputType+'" value="'+esc(v)+'">';
     }
     return '<label class="'+(wide?'w':'')+'">'+label+ctrl+'</label>';
   }).join('');
@@ -770,7 +713,6 @@ function openForm(kind, id){
       if(type === "num") v = v === "" ? "" : +v;
       updated[key] = v;
     });
-    // required check (first field)
     var first = form.fields[0][0];
     if(!String(updated[first]||"").trim()){
       toast("Please fill in "+form.fields[0][1]);
@@ -789,19 +731,13 @@ function openForm(kind, id){
   if(firstInput) firstInput.focus();
 }
 
-/* ============================================================
-   EXPORT
-   ============================================================ */
 function exportCSV(){
   var rows = [["Year","Entity","Audit area","Finding","Severity","Auditee","Due","Status","Agreed actions"]];
   S.fnd.forEach(function(f){
-    rows.push([f.year, f.entity, f.area||"", f.name||"", f.severity||"",
-      f.auditee||"", f.due||"", f.status||"", f.action||""]);
+    rows.push([f.year, f.entity, f.area||"", f.name||"", f.severity||"", f.auditee||"", f.due||"", f.status||"", f.action||""]);
   });
   var csv = rows.map(function(r){
-    return r.map(function(c){
-      return '"'+String(c==null?"":c).replace(/"/g,'""')+'"';
-    }).join(',');
+    return r.map(function(c){ return '"'+String(c==null?"":c).replace(/"/g,'""')+'"'; }).join(',');
   }).join('\n');
   download(new Blob([csv],{type:"text/csv"}), "findings-"+iso(TODAY)+".csv");
 }
@@ -814,14 +750,11 @@ function download(blob, name){
   setTimeout(function(){ URL.revokeObjectURL(url); }, 1000);
 }
 
-/* ============================================================
-   SETTINGS / RESET
-   ============================================================ */
 function openSettings(){
   var dlg = $("#dlg");
   dlg.innerHTML = '<h2>Settings</h2>'+
     '<div class="f">'+
-      '<label class="w">Organisation name<input id="set-org" value="'+esc(S.meta.orgName||"")+'"></label>'+
+      '<label class="w">Organisation<input id="set-org" value="'+esc(S.meta.orgName||"")+'"></label>'+
       '<label class="w">Current user<input id="set-user" value="'+esc(S.meta.currentUser||"")+'"></label>'+
     '</div>'+
     '<div class="acts"><button class="btn sec" id="x">Cancel</button><button class="btn" id="ok">Save</button></div>';
@@ -835,16 +768,13 @@ function openSettings(){
 }
 
 function resetAll(){
-  if(!confirm("Replace all data with the small sample set?\n\nExport your current data to CSV first if you need it.")) return;
+  if(!confirm("Replace all data with the sample set?\n\nExport CSV first if you need your data.")) return;
   S = seed();
   save(); render(); toast("Sample data restored");
 }
 
-/* ============================================================
-   RENDER
-   ============================================================ */
 function render(){
-  var hash = location.hash.replace("#","") || "dashboard";
+  var hash = (location.hash || "").replace("#","") || "dashboard";
   view = VIEWS[hash] ? hash : "dashboard";
 
   var nav = $("#nav");
@@ -858,7 +788,6 @@ function render(){
 
   $("#main").innerHTML = VIEWS[view][1]();
 
-  // live search
   var q = $("#q");
   if(q){
     q.addEventListener("input", function(){
@@ -869,7 +798,6 @@ function render(){
       if(nq){ nq.focus(); nq.setSelectionRange(start, start); }
     });
   }
-  // filters
   bindFilter("#f-year", "year");
   bindFilter("#f-ent", "entity");
   bindFilter("#f-sev", "sev");
@@ -885,9 +813,6 @@ function bindFilter(sel, key){
   });
 }
 
-/* ============================================================
-   EVENTS
-   ============================================================ */
 document.addEventListener("click", function(ev){
   var t = ev.target.closest("[data-ed],[data-new],[data-act]");
   if(!t) return;
@@ -905,7 +830,7 @@ document.addEventListener("click", function(ev){
 });
 
 document.addEventListener("keydown", function(ev){
-  if(ev.key === "Enter" && ev.target.matches && ev.target.matches("tr.click")){
+  if(ev.key === "Enter" && ev.target && ev.target.matches && ev.target.matches("tr.click")){
     ev.target.click();
   }
 });
@@ -916,10 +841,13 @@ $("#reset").onclick = resetAll;
 
 window.addEventListener("hashchange", render);
 
-/* ============================================================
-   START
-   ============================================================ */
-render();
+try {
+  render();
+} catch(err) {
+  console.error("Render error:", err);
+  document.getElementById("main").innerHTML =
+    '<div style="padding:40px;font-family:system-ui"><h2 style="color:#b3261e">Something failed to render</h2><p>'+String(err.message)+'</p><p style="color:#666">Open DevTools (F12) → Console and share the red error.</p><button onclick="localStorage.removeItem(\'auditline-v1\');location.reload()" style="padding:10px 16px;margin-top:12px;border:1px solid #ccc;border-radius:6px;background:#fff;cursor:pointer">Reset stored data and reload</button></div>';
+}
 
 })();
 </script>
