@@ -1,814 +1,780 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>30-Day Home Fitness — No Equipment Needed</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
-<style>
-:root{
-  --bg:#f5f2eb;
-  --paper:#ffffff;
-  --ink:#1a1a1a;
-  --muted:#6b6b6b;
-  --line:#e0dbd0;
-  --accent:#c45d3e;
-  --accent-soft:#f4e4dd;
-  --green:#4a7c59;
-  --green-soft:#e2ede5;
-  --blue:#3a6b8a;
-  --blue-soft:#e0ecf2;
-  --amber:#b8892e;
-  --amber-soft:#f5edd9;
-  --ease:cubic-bezier(.16,1,.3,1);
-}
-*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-html{scroll-behavior:smooth}
-body{
-  background:var(--bg);
-  color:var(--ink);
-  font-family:'Inter',system-ui,sans-serif;
-  line-height:1.6;
-  -webkit-font-smoothing:antialiased;
-  padding-bottom:80px;
-}
-h1,h2,h3,h4{font-family:'Fraunces',Georgia,serif;font-weight:600;line-height:1.2}
-a{color:var(--accent);text-decoration:none}
-a:hover{text-decoration:underline}
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>30 Days Strong</title>
 
-/* ============ HERO ============ */
-.hero{
-  background:linear-gradient(135deg,#2a2622 0%,#1a1815 100%);
-  color:#f5f2eb;
-  padding:80px 24px 100px;
-  text-align:center;
-  position:relative;
-  overflow:hidden;
-}
-.hero::before{
-  content:"";position:absolute;inset:0;
-  background-image:
-    radial-gradient(circle at 20% 30%,rgba(196,93,62,.15) 0%,transparent 40%),
-    radial-gradient(circle at 80% 70%,rgba(74,124,89,.1) 0%,transparent 40%);
-  pointer-events:none;
-}
-.hero-content{position:relative;z-index:1;max-width:720px;margin:0 auto}
-.hero-badge{
-  display:inline-block;
-  font-size:10px;letter-spacing:.3em;text-transform:uppercase;
-  color:#c45d3e;border:1px solid rgba(196,93,62,.5);
-  padding:6px 16px;border-radius:100px;margin-bottom:24px;
-}
-.hero h1{font-size:clamp(36px,7vw,56px);margin-bottom:16px;color:#fff}
-.hero h1 em{color:#c45d3e;font-style:normal}
-.hero p{font-size:17px;color:rgba(245,242,235,.7);max-width:520px;margin:0 auto;font-weight:400}
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@500;600;700&display=swap');
 
-/* ============ CONTAINER ============ */
-.container{max-width:1000px;margin:0 auto;padding:0 20px}
+    :root {
+      --bg: #f5f3ee;
+      --dark: #20251f;
+      --green: #c5d8b8;
+      --green-dark: #526b4c;
+      --muted: #85877f;
+      --white: #ffffff;
+      --border: #e5e3dc;
+    }
 
-/* ============ NAV TABS ============ */
-.tabs{
-  display:flex;gap:4px;flex-wrap:wrap;
-  background:var(--paper);border:1px solid var(--line);
-  border-radius:14px;padding:6px;
-  margin-top:-40px;position:relative;z-index:2;
-  box-shadow:0 8px 30px -10px rgba(0,0,0,.1);
-}
-.tab{
-  flex:1;min-width:100px;
-  padding:12px 16px;
-  background:transparent;border:none;border-radius:10px;
-  font-family:inherit;font-size:12px;font-weight:600;
-  letter-spacing:.05em;text-transform:uppercase;
-  color:var(--muted);cursor:pointer;
-  transition:all .3s var(--ease);
-}
-.tab:hover{color:var(--ink);background:var(--bg)}
-.tab.active{background:var(--ink);color:#fff}
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
 
-/* ============ SECTIONS ============ */
-.section{display:none;margin-top:32px}
-.section.active{display:block;animation:fadeIn .5s var(--ease)}
-@keyframes fadeIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+    body {
+      background: var(--bg);
+      color: var(--dark);
+      font-family: 'DM Sans', sans-serif;
+    }
 
-.section-head{
-  display:flex;justify-content:space-between;align-items:flex-end;
-  flex-wrap:wrap;gap:12px;margin-bottom:24px;
-}
-.section-head h2{font-size:28px}
-.section-head p{color:var(--muted);font-size:14px;max-width:500px}
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 25px 7%;
+      border-bottom: 1px solid var(--border);
+    }
 
-/* ============ EXERCISE GRID ============ */
-.exercise-grid{
-  display:grid;
-  grid-template-columns:repeat(auto-fill,minmax(280px,1fr));
-  gap:16px;
-}
-.exercise-card{
-  background:var(--paper);
-  border:1px solid var(--line);
-  border-radius:16px;
-  padding:20px;
-  transition:all .3s var(--ease);
-  cursor:pointer;
-}
-.exercise-card:hover{
-  border-color:var(--accent);
-  box-shadow:0 8px 30px -10px rgba(196,93,62,.15);
-  transform:translateY(-2px);
-}
-.exercise-card .cat-tag{
-  display:inline-block;
-  font-size:9px;letter-spacing:.2em;text-transform:uppercase;
-  font-weight:600;padding:3px 10px;border-radius:100px;
-  margin-bottom:10px;
-}
-.cat-push{background:var(--blue-soft);color:var(--blue)}
-.cat-pull{background:var(--green-soft);color:var(--green)}
-.cat-legs{background:var(--amber-soft);color:var(--amber)}
-.cat-core{background:var(--accent-soft);color:var(--accent)}
-.cat-cardio{background:#f0e8f0;color:#7a4a8a}
+    .logo {
+      font-weight: 700;
+      letter-spacing: 2px;
+      font-size: 14px;
+    }
 
-.exercise-card h3{font-size:18px;margin-bottom:6px}
-.exercise-card .desc{font-size:13px;color:var(--muted);margin-bottom:12px;line-height:1.5}
-.exercise-card .meta{
-  display:flex;gap:16px;font-size:11px;color:var(--muted);
-  padding-top:12px;border-top:1px solid var(--line);
-}
-.exercise-card .meta span strong{color:var(--ink);font-weight:600}
+    .logo span {
+      color: var(--green-dark);
+    }
 
-/* ============ PLAN ============ */
-.plan-week{
-  background:var(--paper);
-  border:1px solid var(--line);
-  border-radius:16px;
-  margin-bottom:20px;
-  overflow:hidden;
-}
-.plan-week-head{
-  padding:20px 24px;
-  background:linear-gradient(135deg,#faf8f4,#f5f2eb);
-  border-bottom:1px solid var(--line);
-  display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;
-}
-.plan-week-head h3{font-size:20px}
-.plan-week-head .week-badge{
-  font-size:10px;letter-spacing:.2em;text-transform:uppercase;
-  font-weight:600;color:var(--accent);
-  background:var(--accent-soft);padding:4px 12px;border-radius:100px;
-}
-.plan-week-body{padding:20px 24px}
-.day-row{
-  display:grid;
-  grid-template-columns:80px 1fr;
-  gap:16px;
-  padding:14px 0;
-  border-bottom:1px solid var(--line);
-  align-items:start;
-}
-.day-row:last-child{border-bottom:none}
-.day-label{
-  font-size:11px;font-weight:600;letter-spacing:.1em;
-  text-transform:uppercase;color:var(--muted);
-  padding-top:2px;
-}
-.day-label.rest{color:var(--green)}
-.day-content{font-size:14px;line-height:1.6}
-.day-content strong{font-weight:600}
-.day-content .sets{color:var(--muted);font-size:12px;margin-top:2px}
+    .header-tag {
+      font-size: 12px;
+      color: var(--muted);
+      letter-spacing: 1px;
+    }
 
-/* ============ FORM GUIDE ============ */
-.form-grid{
-  display:grid;
-  grid-template-columns:repeat(auto-fill,minmax(300px,1fr));
-  gap:16px;
-}
-.form-card{
-  background:var(--paper);
-  border:1px solid var(--line);
-  border-radius:16px;
-  padding:20px;
-}
-.form-card h3{font-size:17px;margin-bottom:10px;color:var(--accent)}
-.form-card ul{list-style:none;padding:0}
-.form-card li{
-  font-size:13px;color:var(--muted);padding:5px 0 5px 18px;
-  position:relative;line-height:1.5;
-}
-.form-card li::before{
-  content:"✓";position:absolute;left:0;color:var(--green);font-weight:600;
-}
-.form-card li.warn::before{content:"✗";color:var(--accent)}
+    main {
+      max-width: 1250px;
+      margin: auto;
+      padding: 45px 7%;
+    }
 
-/* ============ TRACKER ============ */
-.tracker-grid{
-  display:grid;
-  grid-template-columns:repeat(auto-fit,minmax(200px,1fr));
-  gap:16px;margin-bottom:24px;
-}
-.tracker-card{
-  background:var(--paper);
-  border:1px solid var(--line);
-  border-radius:16px;
-  padding:20px;
-  text-align:center;
-}
-.tracker-card .num{
-  font-family:'Fraunces',serif;
-  font-size:40px;font-weight:700;color:var(--accent);
-  line-height:1;
-}
-.tracker-card .lbl{font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-top:4px}
+    .hero {
+      min-height: 360px;
+      border-radius: 24px;
+      overflow: hidden;
+      position: relative;
+      color: white;
+      padding: 55px;
+      display: flex;
+      align-items: center;
+      background:
+        linear-gradient(90deg, rgba(20,28,20,.88), rgba(20,28,20,.15)),
+        url("https://images.unsplash.com/photo-1518611012118-696072aa579a?auto=format&fit=crop&w=1600&q=85")
+        center 45% / cover;
+    }
 
-.checklist{
-  background:var(--paper);
-  border:1px solid var(--line);
-  border-radius:16px;
-  padding:24px;
-}
-.checklist h3{font-size:18px;margin-bottom:16px}
-.check-item{
-  display:flex;align-items:center;gap:12px;
-  padding:12px 0;border-bottom:1px solid var(--line);
-  cursor:pointer;transition:opacity .2s;
-}
-.check-item:last-child{border-bottom:none}
-.check-item:hover{opacity:.7}
-.check-item input[type="checkbox"]{
-  appearance:none;
-  width:22px;height:22px;
-  border:2px solid var(--line);
-  border-radius:6px;
-  cursor:pointer;
-  position:relative;
-  flex-shrink:0;
-  transition:all .2s var(--ease);
-}
-.check-item input[type="checkbox"]:checked{
-  background:var(--accent);
-  border-color:var(--accent);
-}
-.check-item input[type="checkbox"]:checked::after{
-  content:"✓";
-  position:absolute;
-  inset:0;
-  display:flex;align-items:center;justify-content:center;
-  color:#fff;font-size:14px;font-weight:700;
-}
-.check-item label{
-  font-size:14px;cursor:pointer;flex:1;
-}
-.check-item input:checked + label{
-  text-decoration:line-through;
-  color:var(--muted);
-}
+    .hero-content {
+      max-width: 520px;
+    }
 
-/* ============ FOOTER ============ */
-.footer{
-  text-align:center;padding:60px 20px 20px;
-  color:var(--muted);font-size:12px;
-  max-width:1000px;margin:0 auto;
-}
-.footer p{margin-bottom:8px}
+    .eyebrow {
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      font-size: 11px;
+      font-weight: 700;
+      margin-bottom: 20px;
+      color: var(--green);
+    }
 
-/* ============ RESPONSIVE ============ */
-@media(max-width:600px){
-  .hero{padding:60px 20px 80px}
-  .tab{font-size:10px;padding:10px 8px;min-width:auto}
-  .exercise-grid{grid-template-columns:1fr}
-  .day-row{grid-template-columns:60px 1fr;gap:10px}
-  .form-grid{grid-template-columns:1fr}
-}
-</style>
+    h1 {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(42px, 6vw, 72px);
+      line-height: 1.05;
+      font-weight: 500;
+      margin-bottom: 20px;
+    }
+
+    .hero p {
+      color: #e0e4dc;
+      font-size: 15px;
+      line-height: 1.8;
+      max-width: 390px;
+    }
+
+    .hero-bottom {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      margin-top: 30px;
+    }
+
+    .primary-btn {
+      background: var(--green);
+      color: var(--dark);
+      border: none;
+      padding: 14px 22px;
+      border-radius: 30px;
+      font-weight: 700;
+      cursor: pointer;
+      font-family: inherit;
+      transition: .2s;
+    }
+
+    .primary-btn:hover {
+      background: white;
+      transform: translateY(-2px);
+    }
+
+    .hero-note {
+      font-size: 12px;
+      color: #d9ded5;
+    }
+
+    .dashboard {
+      display: grid;
+      grid-template-columns: 1.2fr 1fr;
+      gap: 25px;
+      margin-top: 35px;
+    }
+
+    .panel {
+      background: var(--white);
+      border-radius: 20px;
+      padding: 28px;
+    }
+
+    .panel-heading {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 25px;
+    }
+
+    .panel-heading h2 {
+      font-size: 17px;
+      font-weight: 600;
+    }
+
+    .small-label {
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .progress-number {
+      font-family: 'Playfair Display', serif;
+      font-size: 45px;
+      margin-bottom: 5px;
+    }
+
+    .progress-track {
+      height: 7px;
+      background: #eeeee9;
+      border-radius: 10px;
+      margin: 20px 0;
+      overflow: hidden;
+    }
+
+    .progress-fill {
+      height: 100%;
+      width: 0%;
+      background: var(--green-dark);
+      border-radius: 10px;
+      transition: width .4s;
+    }
+
+    .calendar {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 8px;
+    }
+
+    .day {
+      aspect-ratio: 1;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      background: white;
+      color: var(--dark);
+      cursor: pointer;
+      font-family: inherit;
+      font-size: 13px;
+      transition: .2s;
+    }
+
+    .day:hover {
+      border-color: var(--green-dark);
+    }
+
+    .day.selected {
+      background: var(--dark);
+      color: white;
+      border-color: var(--dark);
+    }
+
+    .day.completed {
+      background: var(--green);
+      border-color: var(--green);
+      color: var(--dark);
+      font-weight: 700;
+    }
+
+    .day.selected.completed {
+      background: var(--green-dark);
+      color: white;
+    }
+
+    .workout-section {
+      margin-top: 45px;
+    }
+
+    .section-heading {
+      display: flex;
+      justify-content: space-between;
+      align-items: end;
+      margin-bottom: 22px;
+    }
+
+    .section-heading h2 {
+      font-family: 'Playfair Display', serif;
+      font-size: 35px;
+      font-weight: 500;
+    }
+
+    .workout-layout {
+      display: grid;
+      grid-template-columns: 1fr 320px;
+      gap: 25px;
+    }
+
+    .workout-card {
+      background: white;
+      border-radius: 20px;
+      overflow: hidden;
+    }
+
+    .workout-image {
+      height: 230px;
+      background:
+        linear-gradient(0deg, rgba(20,28,20,.5), transparent),
+        url("https://images.unsplash.com/photo-1517836357463-d25dfeac3438?auto=format&fit=crop&w=1200&q=85")
+        center 40% / cover;
+      display: flex;
+      align-items: end;
+      padding: 25px;
+      color: white;
+    }
+
+    .workout-image h3 {
+      font-family: 'Playfair Display', serif;
+      font-size: 32px;
+      font-weight: 500;
+    }
+
+    .exercise-list {
+      padding: 10px 25px 25px;
+    }
+
+    .exercise {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 18px 0;
+      border-bottom: 1px solid var(--border);
+      gap: 15px;
+    }
+
+    .exercise:last-child {
+      border-bottom: none;
+    }
+
+    .exercise-name {
+      font-weight: 600;
+      font-size: 14px;
+    }
+
+    .exercise-detail {
+      font-size: 12px;
+      color: var(--muted);
+      margin-top: 5px;
+    }
+
+    .exercise-number {
+      color: var(--green-dark);
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    .timer-card {
+      background: var(--dark);
+      color: white;
+      border-radius: 20px;
+      padding: 30px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .timer-card h3 {
+      font-family: 'Playfair Display', serif;
+      font-size: 27px;
+      font-weight: 500;
+    }
+
+    .timer {
+      font-size: 58px;
+      font-weight: 500;
+      letter-spacing: -2px;
+      text-align: center;
+      margin: 30px 0;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .timer-buttons {
+      display: flex;
+      gap: 10px;
+    }
+
+    .timer-buttons button {
+      flex: 1;
+      padding: 12px;
+      border-radius: 25px;
+      border: 1px solid #555b53;
+      background: transparent;
+      color: white;
+      cursor: pointer;
+      font-family: inherit;
+    }
+
+    .timer-buttons .timer-start {
+      background: var(--green);
+      color: var(--dark);
+      border-color: var(--green);
+      font-weight: 700;
+    }
+
+    .complete-btn {
+      width: 100%;
+      margin-top: 20px;
+      padding: 15px;
+      border: none;
+      border-radius: 30px;
+      background: var(--green);
+      color: var(--dark);
+      font-weight: 700;
+      cursor: pointer;
+      font-family: inherit;
+    }
+
+    .complete-btn:disabled {
+      opacity: .6;
+      cursor: default;
+    }
+
+    footer {
+      text-align: center;
+      padding: 50px 20px;
+      color: var(--muted);
+      font-size: 12px;
+      letter-spacing: 1px;
+    }
+
+    @media (max-width: 850px) {
+      .dashboard,
+      .workout-layout {
+        grid-template-columns: 1fr;
+      }
+
+      .hero {
+        padding: 35px 25px;
+        min-height: 400px;
+      }
+
+      main {
+        padding: 25px 5%;
+      }
+
+      .timer-card {
+        min-height: 300px;
+      }
+
+      .section-heading h2 {
+        font-size: 29px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      header {
+        padding: 20px 5%;
+      }
+
+      .header-tag {
+        font-size: 10px;
+      }
+
+      .panel {
+        padding: 20px;
+      }
+
+      .calendar {
+        gap: 5px;
+      }
+
+      .day {
+        border-radius: 7px;
+        font-size: 12px;
+      }
+
+      .hero {
+        border-radius: 18px;
+      }
+    }
+  </style>
 </head>
+
 <body>
 
-<!-- HERO -->
-<div class="hero">
-  <div class="hero-content">
-    <div class="hero-badge">No equipment · No gym · Just you</div>
-    <h1>30 Days to <em>Fitter</em></h1>
-    <p>Every exercise you need, structured into a plan you can actually follow. Start where you are. Progress every week.</p>
-  </div>
-</div>
+  <header>
+    <div class="logo">30 DAYS <span>STRONG</span></div>
+    <div class="header-tag">YOUR PERSONAL FITNESS JOURNEY</div>
+  </header>
 
-<div class="container">
+  <main>
 
-  <!-- NAV TABS -->
-  <div class="tabs" id="tabs">
-    <button class="tab active" data-tab="exercises">Exercises</button>
-    <button class="tab" data-tab="plan">The Plan</button>
-    <button class="tab" data-tab="form">Form Guide</button>
-    <button class="tab" data-tab="tracker">Tracker</button>
-  </div>
-
-  <!-- ============ EXERCISES ============ -->
-  <div class="section active" id="exercises">
-    <div class="section-head">
-      <h2>Every Exercise You Need</h2>
-      <p>Six movement patterns. Scale each one up or down to match your level.</p>
-    </div>
-
-    <div class="exercise-grid">
-
-      <!-- PUSH -->
-      <div class="exercise-card">
-        <span class="cat-tag cat-push">Push</span>
-        <h3>Push-Up</h3>
-        <p class="desc">Chest, shoulders, triceps, core. The foundation of upper-body strength.</p>
-        <div class="meta">
-          <span>Beginner: <strong>Incline / Knee</strong></span>
-          <span>Progression: <strong>Slow tempo</strong></span>
+    <section class="hero">
+      <div class="hero-content">
+        <div class="eyebrow">Your 30-day challenge</div>
+        <h1>Build strength.<br>Feel powerful.</h1>
+        <p>
+          A little progress every day adds up to something extraordinary.
+          Your journey starts here.
+        </p>
+        <div class="hero-bottom">
+          <button class="primary-btn" onclick="scrollToWorkout()">
+            Start today's workout →
+          </button>
+          <span class="hero-note">30 days · At home</span>
         </div>
       </div>
+    </section>
 
-      <div class="exercise-card">
-        <span class="cat-tag cat-push">Push</span>
-        <h3>Pike Push-Up</h3>
-        <p class="desc">Shoulder-focused push variation. Hips high, head toward the floor.</p>
-        <div class="meta">
-          <span>Beginner: <strong>Dolphin push-up</strong></span>
-          <span>Progression: <strong>Elevated feet</strong></span>
+    <section class="dashboard">
+
+      <div class="panel">
+        <div class="panel-heading">
+          <h2>Your progress</h2>
+          <span class="small-label" id="progress-label">0 / 30 days</span>
         </div>
+
+        <div class="progress-number" id="progress-number">0%</div>
+        <div class="small-label">Consistency is your superpower.</div>
+
+        <div class="progress-track">
+          <div class="progress-fill" id="progress-fill"></div>
+        </div>
+
+        <div class="small-label">Choose a day to view your workout.</div>
       </div>
 
-      <!-- PULL -->
-      <div class="exercise-card">
-        <span class="cat-tag cat-pull">Pull</span>
-        <h3>Deadhang</h3>
-        <p class="desc">Hang from a sturdy bar. Builds grip and back strength—the first step to a pull-up.</p>
-        <div class="meta">
-          <span>Beginner: <strong>10–20 sec</strong></span>
-          <span>Goal: <strong>30+ sec</strong></span>
+      <div class="panel">
+        <div class="panel-heading">
+          <h2>Workout calendar</h2>
+          <span class="small-label">30 DAYS</span>
         </div>
+
+        <div class="calendar" id="calendar"></div>
       </div>
 
-      <div class="exercise-card">
-        <span class="cat-tag cat-pull">Pull</span>
-        <h3>Inverted Row</h3>
-        <p class="desc">Use a sturdy table edge or low bar. Pull your chest toward the surface.</p>
-        <div class="meta">
-          <span>Beginner: <strong>High bar</strong></span>
-          <span>Progression: <strong>Lower bar</strong></span>
+    </section>
+
+    <section class="workout-section" id="workout">
+
+      <div class="section-heading">
+        <div>
+          <div class="eyebrow" style="color:var(--green-dark)">
+            Your daily movement
+          </div>
+          <h2 id="workout-heading">Day 01</h2>
         </div>
+        <span class="small-label" id="workout-duration">30 MIN</span>
       </div>
 
-      <!-- LEGS -->
-      <div class="exercise-card">
-        <span class="cat-tag cat-legs">Legs</span>
-        <h3>Bodyweight Squat</h3>
-        <p class="desc">Quads, glutes, hamstrings, calves. Sit hips back and down, chest tall.</p>
-        <div class="meta">
-          <span>Beginner: <strong>Sit-to-stand</strong></span>
-          <span>Progression: <strong>Slow tempo / Jump</strong></span>
+      <div class="workout-layout">
+
+        <div class="workout-card">
+          <div class="workout-image">
+            <h3 id="workout-title">Full Body Strength</h3>
+          </div>
+
+          <div class="exercise-list" id="exercise-list"></div>
         </div>
+
+        <div class="timer-card">
+          <div>
+            <div class="eyebrow">Your workout companion</div>
+            <h3>Stay focused.<br>One rep at a time.</h3>
+          </div>
+
+          <div>
+            <div class="timer" id="timer">00:45</div>
+
+            <div class="timer-buttons">
+              <button class="timer-start" id="start-timer">Start</button>
+              <button id="reset-timer">Reset</button>
+            </div>
+
+            <button class="complete-btn" id="complete-btn">
+              Mark day complete ✓
+            </button>
+          </div>
+        </div>
+
       </div>
+    </section>
 
-      <div class="exercise-card">
-        <span class="cat-tag cat-legs">Legs</span>
-        <h3>Reverse Lunge</h3>
-        <p class="desc">Glutes, quads, balance. Step back, bend both knees, push through front leg.</p>
-        <div class="meta">
-          <span>Beginner: <strong>Hold wall</strong></span>
-          <span>Progression: <strong>Walking lunge</strong></span>
-        </div>
-      </div>
+  </main>
 
-      <div class="exercise-card">
-        <span class="cat-tag cat-legs">Legs</span>
-        <h3>Glute Bridge</h3>
-        <p class="desc">Glutes, hamstrings, lower back. Lie on back, drive hips up, squeeze at top.</p>
-        <div class="meta">
-          <span>Beginner: <strong>Two-leg</strong></span>
-          <span>Progression: <strong>Single-leg</strong></span>
-        </div>
-      </div>
+  <footer>
+    MADE FOR YOURSELF · ONE DAY AT A TIME
+  </footer>
 
-      <div class="exercise-card">
-        <span class="cat-tag cat-legs">Legs</span>
-        <h3>Calf Raise</h3>
-        <p class="desc">Calves. Stand tall, rise onto toes, pause, lower slowly.</p>
-        <div class="meta">
-          <span>Beginner: <strong>Both legs</strong></span>
-          <span>Progression: <strong>Single-leg</strong></span>
-        </div>
-      </div>
+  <script>
+    const workouts = [
+      {
+        title: "Full Body Strength",
+        duration: "30 MIN",
+        exercises: [
+          ["Squats", "3 sets × 12 reps"],
+          ["Push-ups", "3 sets × 10 reps"],
+          ["Glute bridges", "3 sets × 15 reps"],
+          ["Plank", "3 sets × 30 seconds"],
+          ["Reverse lunges", "3 sets × 10 each leg"]
+        ]
+      },
+      {
+        title: "Lower Body",
+        duration: "30 MIN",
+        exercises: [
+          ["Goblet squats", "3 sets × 12 reps"],
+          ["Romanian deadlifts", "3 sets × 12 reps"],
+          ["Reverse lunges", "3 sets × 10 each leg"],
+          ["Glute bridges", "3 sets × 15 reps"],
+          ["Calf raises", "3 sets × 20 reps"]
+        ]
+      },
+      {
+        title: "Core & Cardio",
+        duration: "25 MIN",
+        exercises: [
+          ["Mountain climbers", "3 sets × 30 seconds"],
+          ["Dead bugs", "3 sets × 12 reps"],
+          ["Bicycle crunches", "3 sets × 20 reps"],
+          ["Plank", "3 sets × 30 seconds"],
+          ["Jumping jacks", "3 sets × 45 seconds"]
+        ]
+      },
+      {
+        title: "Upper Body",
+        duration: "30 MIN",
+        exercises: [
+          ["Push-ups", "3 sets × 10 reps"],
+          ["Dumbbell rows", "3 sets × 12 reps"],
+          ["Shoulder press", "3 sets × 12 reps"],
+          ["Bicep curls", "3 sets × 12 reps"],
+          ["Tricep extensions", "3 sets × 12 reps"]
+        ]
+      },
+      {
+        title: "Active Recovery",
+        duration: "20 MIN",
+        exercises: [
+          ["Cat-cow stretch", "2 minutes"],
+          ["Hip flexor stretch", "1 minute each side"],
+          ["Hamstring stretch", "1 minute each side"],
+          ["Child's pose", "2 minutes"],
+          ["Easy walking", "10 minutes"]
+        ]
+      }
+    ];
 
-      <!-- CORE -->
-      <div class="exercise-card">
-        <span class="cat-tag cat-core">Core</span>
-        <h3>Plank</h3>
-        <p class="desc">Deep core, shoulders. Forearms down, body in a straight line from head to heels.</p>
-        <div class="meta">
-          <span>Beginner: <strong>Knees down</strong></span>
-          <span>Progression: <strong>Longer hold</strong></span>
-        </div>
-      </div>
+    let selectedDay = 1;
+    let completedDays = JSON.parse(
+      localStorage.getItem("completedDays") || "[]"
+    );
 
-      <div class="exercise-card">
-        <span class="cat-tag cat-core">Core</span>
-        <h3>Dead Bug</h3>
-        <p class="desc">Deep core stability. Lie on back, extend opposite arm and leg, return.</p>
-        <div class="meta">
-          <span>Beginner: <strong>6 reps/side</strong></span>
-          <span>Progression: <strong>8+ reps/side</strong></span>
-        </div>
-      </div>
+    let timeLeft = 45;
+    let timerInterval = null;
 
-      <!-- CARDIO -->
-      <div class="exercise-card">
-        <span class="cat-tag cat-cardio">Cardio</span>
-        <h3>Mountain Climbers</h3>
-        <p class="desc">Core and cardio. From plank, drive knees toward chest alternately.</p>
-        <div class="meta">
-          <span>Beginner: <strong>Slow pace</strong></span>
-          <span>Progression: <strong>Fast intervals</strong></span>
-        </div>
-      </div>
+    const calendar = document.getElementById("calendar");
 
-      <div class="exercise-card">
-        <span class="cat-tag cat-cardio">Cardio</span>
-        <h3>Brisk Walking</h3>
-        <p class="desc">The most underrated fat-loss tool. 30–40 minutes, outdoors or marching in place.</p>
-        <div class="meta">
-          <span>Frequency: <strong>2–3x/week</strong></span>
-          <span>Duration: <strong>30–40 min</strong></span>
-        </div>
-      </div>
+    function createCalendar() {
+      calendar.innerHTML = "";
 
-    </div>
-  </div>
+      for (let day = 1; day <= 30; day++) {
+        const button = document.createElement("button");
 
-  <!-- ============ PLAN ============ -->
-  <div class="section" id="plan">
-    <div class="section-head">
-      <h2>The 30-Day Plan</h2>
-      <p>Three strength days per week. Walking on off days. Rest when you need it.</p>
-    </div>
+        button.className = "day";
+        button.textContent = day;
 
-    <!-- WEEK 1 -->
-    <div class="plan-week">
-      <div class="plan-week-head">
-        <h3>Week 1 — Learn the Movements</h3>
-        <span class="week-badge">2 sets · 90s rest</span>
-      </div>
-      <div class="plan-week-body">
-        <div class="day-row">
-          <div class="day-label">Mon</div>
-          <div class="day-content"><strong>Full Body A</strong><div class="sets">Squat 2×8 · Incline Push-Up 2×6 · Glute Bridge 2×10 · Dead Bug 2×6/side · Plank 2×20s</div></div>
-        </div>
-        <div class="day-row">
-          <div class="day-label rest">Tue</div>
-          <div class="day-content"><strong>Walk 20–30 min</strong><div class="sets">Easy pace. Just move.</div></div>
-        </div>
-        <div class="day-row">
-          <div class="day-label">Wed</div>
-          <div class="day-content"><strong>Full Body B</strong><div class="sets">Reverse Lunge 2×6/leg · Pike Push-Up 2×3 · Glute Bridge 2×10 · Dead Bug 2×6/side · Calf Raise 2×12</div></div>
-        </div>
-        <div class="day-row">
-          <div class="day-label rest">Thu</div>
-          <div class="day-content"><strong>Rest or Walk</strong><div class="sets">Listen to your body.</div></div>
-        </div>
-        <div class="day-row">
-          <div class="day-label">Fri</div>
-          <div class="day-content"><strong>Full Body A</strong><div class="sets">Same as Monday. Focus on form.</div></div>
-        </div>
-        <div class="day-row">
-          <div class="day-label rest">Sat</div>
-          <div class="day-content"><strong>Optional Walk</strong><div class="sets">30 min if you feel good.</div></div>
-        </div>
-        <div class="day-row">
-          <div class="day-label rest">Sun</div>
-          <div class="day-content"><strong>Rest</strong><div class="sets">Recovery is training.</div></div>
-        </div>
-      </div>
-    </div>
+        if (day === selectedDay) {
+          button.classList.add("selected");
+        }
 
-    <!-- WEEK 2 -->
-    <div class="plan-week">
-      <div class="plan-week-head">
-        <h3>Week 2 — Add Volume</h3>
-        <span class="week-badge">3 sets · 75s rest</span>
-      </div>
-      <div class="plan-week-body">
-        <div class="day-row">
-          <div class="day-label">Mon</div>
-          <div class="day-content"><strong>Full Body A</strong><div class="sets">Squat 3×8 · Incline Push-Up 3×6 · Glute Bridge 3×10 · Dead Bug 3×6/side · Plank 3×25s</div></div>
-        </div>
-        <div class="day-row">
-          <div class="day-label rest">Tue</div>
-          <div class="day-content"><strong>Walk 25–35 min</strong><div class="sets">Slightly faster than last week.</div></div>
-        </div>
-        <div class="day-row">
-          <div class="day-label">Wed</div>
-          <div class="day-content"><strong>Full Body B</strong><div class="sets">Reverse Lunge 3×6/leg · Pike Push-Up 3×4 · Glute Bridge 3×10 · Dead Bug 3×6/side · Calf Raise 3×12</div></div>
-        </div>
-        <div class="day-row">
-          <div class="day-label rest">Thu</div>
-          <div class="day-content"><strong>Rest or Walk</strong><div class="sets">Optional.</div></div>
-        </div>
-        <div class="day-row">
-          <div class="day-label">Fri</div>
-          <div class="day-content"><strong>Full Body A</strong><div class="sets">Same as Monday.</div></div>
-        </div>
-        <div class="day-row">
-          <div class="day-label rest">Sat</div>
-          <div class="day-content"><strong>Optional Walk</strong><div class="sets">30 min.</div></div>
-        </div>
-        <div class="day-row">
-          <div class="day-label rest">Sun</div>
-          <div class="day-content"><strong>Rest</strong><div class="sets">Fully rest.</div></div>
-        </div>
-      </div>
-    </div>
+        if (completedDays.includes(day)) {
+          button.classList.add("completed");
+        }
 
-    <!-- WEEK 3 -->
-    <div class="plan-week">
-      <div class="plan-week-head">
-        <h3>Week 3 — Slow Down, Get Stronger</h3>
-        <span class="week-badge">3 sets · 3s down · 4 days</span>
-      </div>
-      <div class="plan-week-body">
-        <div class="day-row">
-          <div class="day-label">Mon</div>
-          <div class="day-content"><strong>Full Body A</strong><div class="sets">Squat 3×10 (3s down) · Incline Push-Up 3×8 (3s down) · Glute Bridge 3×12 (2s pause top) · Dead Bug 3×8/side</div></div>
-        </div>
-        <div class="day-row">
-          <div class="day-label rest">Tue</div>
-          <div class="day-content"><strong>Walk 30 min</strong><div class="sets">Active recovery.</div></div>
-        </div>
-        <div class="day-row">
-          <div class="day-label">Wed</div>
-          <div class="day-content"><strong>Full Body B</strong><div class="sets">Reverse Lunge 3×8/leg (3s down) · Pike Push-Up 3×5 · Calf Raise 3×15 (2s pause top) · Plank 3×30s</div></div>
-        </div>
-        <div class="day-row">
-          <div class="day-label rest">Thu</div>
-          <div class="day-content"><strong>Rest</strong><div class="sets">Recovery.</div></div>
-        </div>
-        <div class="day-row">
-          <div class="day-label">Fri</div>
-          <div class="day-content"><strong>Full Body A</strong><div class="sets">Same as Monday.</div></div>
-        </div>
-        <div class="day-row">
-          <div class="day-label">Sat</div>
-          <div class="day-content"><strong>Full Body B</strong><div class="sets">Same as Wednesday.</div></div>
-        </div>
-        <div class="day-row">
-          <div class="day-label rest">Sun</div>
-          <div class="day-content"><strong>Rest</strong><div class="sets">You earned it.</div></div>
-        </div>
-      </div>
-    </div>
+        button.addEventListener("click", () => {
+          selectedDay = day;
+          stopTimer();
+          resetTimer();
+          renderWorkout();
+          createCalendar();
+        });
 
-    <!-- WEEK 4 -->
-    <div class="plan-week">
-      <div class="plan-week-head">
-        <h3>Week 4 — Push Further</h3>
-        <span class="week-badge">4 sets · Add reps</span>
-      </div>
-      <div class="plan-week-body">
-        <div class="day-row">
-          <div class="day-label">Mon</div>
-          <div class="day-content"><strong>Full Body A</strong><div class="sets">Squat 4×10 · Push-Up (full or incline) 4×8 · Glute Bridge 4×12 · Dead Bug 4×8/side · Plank 4×35s</div></div>
-        </div>
-        <div class="day-row">
-          <div class="day-label rest">Tue</div>
-          <div class="day-content"><strong>Walk 30–40 min</strong><div class="sets">Push the pace a little.</div></div>
-        </div>
-        <div class="day-row">
-          <div class="day-label">Wed</div>
-          <div class="day-content"><strong>Full Body B</strong><div class="sets">Reverse Lunge 4×8/leg · Pike Push-Up 4×6 · Calf Raise 4×15 · Mountain Climbers 4×20s</div></div>
-        </div>
-        <div class="day-row">
-          <div class="day-label rest">Thu</div>
-          <div class="day-content"><strong>Rest or Walk</strong><div class="sets">Optional.</div></div>
-        </div>
-        <div class="day-row">
-          <div class="day-label">Fri</div>
-          <div class="day-content"><strong>Full Body A</strong><div class="sets">Same as Monday.</div></div>
-        </div>
-        <div class="day-row">
-          <div class="day-label">Sat</div>
-          <div class="day-content"><strong>Full Body B</strong><div class="sets">Same as Wednesday.</div></div>
-        </div>
-        <div class="day-row">
-          <div class="day-label rest">Sun</div>
-          <div class="day-content"><strong>Rest</strong><div class="sets">Reflect on how far you've come.</div></div>
-        </div>
-      </div>
-    </div>
+        calendar.appendChild(button);
+      }
+    }
 
-    <p style="color:var(--muted);font-size:13px;margin-top:16px;text-align:center">
-      If soreness lasts more than 48 hours, repeat the previous week before progressing. No penalty for going slower.
-    </p>
-  </div>
+    function getWorkout(day) {
+      // Recovery days: 5, 10, 15, 20, 25, 30
+      if (day % 5 === 0) {
+        return workouts[4];
+      }
 
-  <!-- ============ FORM GUIDE ============ -->
-  <div class="section" id="form">
-    <div class="section-head">
-      <h2>Form Guide</h2>
-      <p>Good form makes the exercise work. Bad form makes it hurt.</p>
-    </div>
+      const workoutIndex = (day - 1) % 4;
+      return workouts[workoutIndex];
+    }
 
-    <div class="form-grid">
-      <div class="form-card">
-        <h3>Push-Up</h3>
-        <ul>
-          <li>Hands slightly wider than shoulders</li>
-          <li>Body in a straight line — no sagging hips</li>
-          <li>Lower until chest nearly touches floor</li>
-          <li>Elbows at ~45° from body, not flared out</li>
-          <li class="warn">Don't let your head drop or hips pike up</li>
-        </ul>
-      </div>
+    function renderWorkout() {
+      const workout = getWorkout(selectedDay);
 
-      <div class="form-card">
-        <h3>Squat</h3>
-        <ul>
-          <li>Feet shoulder-width, toes slightly out</li>
-          <li>Sit hips back and down, chest tall</li>
-          <li>Knees track over toes</li>
-          <li>Go as low as comfortable — parallel is a goal, not a requirement</li>
-          <li class="warn">Don't let knees cave inward or heels lift</li>
-        </ul>
-      </div>
+      document.getElementById("workout-heading").textContent =
+        "Day " + String(selectedDay).padStart(2, "0");
 
-      <div class="form-card">
-        <h3>Plank</h3>
-        <ul>
-          <li>Elbows directly under shoulders</li>
-          <li>Body straight from head to heels</li>
-          <li>Squeeze glutes and brace core</li>
-          <li>Breathe steadily — don't hold your breath</li>
-          <li class="warn">Don't let hips sag or pike up</li>
-        </ul>
-      </div>
+      document.getElementById("workout-title").textContent =
+        workout.title;
 
-      <div class="form-card">
-        <h3>Reverse Lunge</h3>
-        <ul>
-          <li>Step back, not forward (easier on knees)</li>
-          <li>Both knees bend to ~90°</li>
-          <li>Front knee stays over front foot</li>
-          <li>Push through front heel to return</li>
-          <li class="warn">Don't let front knee drift past toes</li>
-        </ul>
-      </div>
+      document.getElementById("workout-duration").textContent =
+        workout.duration;
 
-      <div class="form-card">
-        <h3>Glute Bridge</h3>
-        <ul>
-          <li>Lie on back, knees bent, feet flat</li>
-          <li>Drive hips up by squeezing glutes</li>
-          <li>Body straight from shoulders to knees at top</li>
-          <li>Lower slowly, don't drop</li>
-          <li class="warn">Don't arch your lower back at the top</li>
-        </ul>
-      </div>
+      const list = document.getElementById("exercise-list");
+      list.innerHTML = "";
 
-      <div class="form-card">
-        <h3>Dead Bug</h3>
-        <ul>
-          <li>Lie on back, arms up, knees bent 90°</li>
-          <li>Press lower back into the floor</li>
-          <li>Extend opposite arm and leg slowly</li>
-          <li>Return with control, switch sides</li>
-          <li class="warn">Don't let your lower back lift off the floor</li>
-        </ul>
-      </div>
-    </div>
-  </div>
+      workout.exercises.forEach((exercise, index) => {
+        const item = document.createElement("div");
+        item.className = "exercise";
 
-  <!-- ============ TRACKER ============ -->
-  <div class="section" id="tracker">
-    <div class="section-head">
-      <h2>Your Tracker</h2>
-      <p>Check off each day. Watch the streak grow.</p>
-    </div>
+        item.innerHTML = `
+          <div>
+            <div class="exercise-name">${exercise[0]}</div>
+            <div class="exercise-detail">${exercise[1]}</div>
+          </div>
+          <div class="exercise-number">
+            ${String(index + 1).padStart(2, "0")}
+          </div>
+        `;
 
-    <div class="tracker-grid">
-      <div class="tracker-card">
-        <div class="num" id="streakNum">0</div>
-        <div class="lbl">Day Streak</div>
-      </div>
-      <div class="tracker-card">
-        <div class="num" id="completedNum">0</div>
-        <div class="lbl">Days Completed</div>
-      </div>
-      <div class="tracker-card">
-        <div class="num" id="percentNum">0%</div>
-        <div class="lbl">30-Day Progress</div>
-      </div>
-    </div>
-
-    <div class="checklist" id="checklist">
-      <h3>30-Day Checklist</h3>
-      <!-- Filled by JS -->
-    </div>
-  </div>
-
-</div>
-
-<div class="footer">
-  <p><strong>Remember:</strong> Consistency beats intensity. A 20-minute session you actually do is better than a 60-minute session you skip.</p>
-  <p>This is a general fitness guide. If you have injuries or health concerns, consult a professional before starting.</p>
-</div>
-
-<script>
-(function(){
-  "use strict";
-
-  // ============================================================
-  // TABS
-  // ============================================================
-  const tabs = document.querySelectorAll(".tab");
-  const sections = document.querySelectorAll(".section");
-
-  tabs.forEach(tab => {
-    tab.addEventListener("click", () => {
-      tabs.forEach(t => t.classList.remove("active"));
-      sections.forEach(s => s.classList.remove("active"));
-      tab.classList.add("active");
-      document.getElementById(tab.dataset.tab).classList.add("active");
-    });
-  });
-
-  // ============================================================
-  // CHECKLIST
-  // ============================================================
-  const checklist = document.getElementById("checklist");
-  const STORAGE_KEY = "homefitness_30day_v1";
-
-  let checked = {};
-  try {
-    checked = JSON.parse(localStorage.getItem(STORAGE_KEY)) || {};
-  } catch(e) { checked = {}; }
-
-  function saveChecked(){
-    try { localStorage.setItem(STORAGE_KEY, JSON.stringify(checked)); } catch(e){}
-  }
-
-  function renderChecklist(){
-    // Keep the heading
-    const heading = checklist.querySelector("h3");
-    checklist.innerHTML = "";
-    checklist.appendChild(heading);
-
-    for (let day = 1; day <= 30; day++){
-      const item = document.createElement("div");
-      item.className = "check-item";
-      const cb = document.createElement("input");
-      cb.type = "checkbox";
-      cb.id = "day-" + day;
-      cb.checked = !!checked[day];
-      const label = document.createElement("label");
-      label.htmlFor = "day-" + day;
-      label.textContent = "Day " + day;
-
-      cb.addEventListener("change", () => {
-        checked[day] = cb.checked;
-        saveChecked();
-        updateStats();
+        list.appendChild(item);
       });
 
-      item.appendChild(cb);
-      item.appendChild(label);
-      checklist.appendChild(item);
-    }
-  }
+      const completeButton = document.getElementById("complete-btn");
 
-  function updateStats(){
-    const completed = Object.values(checked).filter(Boolean).length;
-    document.getElementById("completedNum").textContent = completed;
-    document.getElementById("percentNum").textContent = Math.round(completed / 30 * 100) + "%";
+      if (completedDays.includes(selectedDay)) {
+        completeButton.textContent = "Day completed ✓";
+        completeButton.disabled = true;
+      } else {
+        completeButton.textContent = "Mark day complete ✓";
+        completeButton.disabled = false;
+      }
 
-    // Calculate streak (consecutive days from today backwards)
-    let streak = 0;
-    const today = new Date();
-    for (let i = 0; i < 30; i++){
-      const d = new Date(today);
-      d.setDate(d.getDate() - i);
-      // Use day-of-month as a proxy for "day N" — simple but works for a 30-day tracker
-      // Better: assume user starts Day 1 whenever they check it
-      // For simplicity, streak = highest consecutive checked day from 1
+      updateProgress();
     }
 
-    // Simpler streak: count consecutive checked days starting from Day 1
-    let s = 0;
-    for (let day = 1; day <= 30; day++){
-      if (checked[day]) s++;
-      else break;
+    function updateProgress() {
+      const count = completedDays.length;
+      const percentage = Math.round((count / 30) * 100);
+
+      document.getElementById("progress-number").textContent =
+        percentage + "%";
+
+      document.getElementById("progress-label").textContent =
+        count + " / 30 days";
+
+      document.getElementById("progress-fill").style.width =
+        percentage + "%";
     }
-    document.getElementById("streakNum").textContent = s;
-  }
 
-  renderChecklist();
-  updateStats();
+    document.getElementById("complete-btn").addEventListener("click", () => {
+      if (!completedDays.includes(selectedDay)) {
+        completedDays.push(selectedDay);
+        completedDays.sort((a, b) => a - b);
 
-})();
-</script>
+        localStorage.setItem(
+          "completedDays",
+          JSON.stringify(completedDays)
+        );
+
+        createCalendar();
+        renderWorkout();
+      }
+    });
+
+    function updateTimerDisplay() {
+      const minutes = Math.floor(timeLeft / 60);
+      const seconds = timeLeft % 60;
+
+      document.getElementById("timer").textContent =
+        String(minutes).padStart(2, "0") + ":" +
+        String(seconds).padStart(2, "0");
+    }
+
+    function stopTimer() {
+      clearInterval(timerInterval);
+      timerInterval = null;
+      document.getElementById("start-timer").textContent = "Start";
+    }
+
+    function resetTimer() {
+      timeLeft = 45;
+      updateTimerDisplay();
+    }
+
+    document.getElementById("start-timer").addEventListener("click", () => {
+      if (timerInterval) {
+        stopTimer();
+        return;
+      }
+
+      document.getElementById("start-timer").textContent = "Pause";
+
+      timerInterval = setInterval(() => {
+        if (timeLeft > 0) {
+          timeLeft--;
+          updateTimerDisplay();
+        } else {
+          stopTimer();
+          alert("Time is up! Take a breath and keep going.");
+        }
+      }, 1000);
+    });
+
+    document.getElementById("reset-timer").addEventListener("click", () => {
+      stopTimer();
+      resetTimer();
+    });
+
+    function scrollToWorkout() {
+      document.getElementById("workout").scrollIntoView({
+        behavior: "smooth"
+      });
+    }
+
+    createCalendar();
+    renderWorkout();
+    updateTimerDisplay();
+  </script>
 
 </body>
 </html>
