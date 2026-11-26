@@ -5,14 +5,14 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>NEPTUNE — Your Personal Universe</title>
+
 <style>
 :root {
-  --blue: #83caff;
-  --cyan: #6ce8ff;
+  --blue: #8bd5ff;
+  --cyan: #75f2ff;
   --text: #edf6ff;
   --muted: #9aafc9;
-  --glass: rgba(16, 34, 65, .48);
-  --border: rgba(160, 207, 255, .18);
+  --border: rgba(160,207,255,.2);
 }
 
 * { box-sizing: border-box; }
@@ -22,115 +22,202 @@ body {
   min-height: 100vh;
   font-family: Inter, "Segoe UI", sans-serif;
   color: var(--text);
-  background:
-    radial-gradient(ellipse at 15% 15%, #173d70 0%, transparent 45%),
-    radial-gradient(ellipse at 85% 75%, #152b60 0%, transparent 45%),
-    linear-gradient(135deg, #030817, #07152e 55%, #050b1b);
+  background: #020612;
   overflow-x: hidden;
 }
 
-#universe {
+/* ===== COSMIC BACKGROUND ===== */
+
+#universe,
+#nebula-canvas,
+#dust-canvas {
   position: fixed;
   inset: 0;
   width: 100%;
   height: 100%;
   pointer-events: none;
-  z-index: 0;
 }
 
-#cursor-glow {
+#nebula-canvas { z-index: -5; }
+#universe { z-index: -3; }
+#dust-canvas { z-index: -2; }
+
+.space-base {
   position: fixed;
-  width: 360px;
-  height: 360px;
-  border-radius: 50%;
-  pointer-events: none;
-  z-index: 0;
-  background: radial-gradient(circle, rgba(76, 169, 255, .12), transparent 68%);
-  transform: translate(-50%, -50%);
-  left: 50%;
-  top: 50%;
-  transition: opacity .3s;
+  inset: 0;
+  z-index: -8;
+  background:
+    radial-gradient(ellipse at 50% 50%, #102b55 0%, transparent 55%),
+    radial-gradient(ellipse at 10% 10%, #101c48 0%, transparent 45%),
+    radial-gradient(ellipse at 90% 80%, #102c54 0%, transparent 50%),
+    #020612;
 }
 
-.aurora {
+.nebula {
   position: fixed;
   inset: -30%;
-  z-index: 0;
+  z-index: -7;
   pointer-events: none;
+  filter: blur(75px);
+  opacity: .7;
+  animation: nebulaDrift 35s ease-in-out infinite alternate;
   background:
-    radial-gradient(ellipse at 25% 40%, rgba(37, 120, 255, .13), transparent 38%),
-    radial-gradient(ellipse at 75% 55%, rgba(0, 225, 255, .10), transparent 40%),
-    radial-gradient(ellipse at 50% 80%, rgba(126, 72, 255, .10), transparent 35%);
-  filter: blur(55px);
-  animation: aurora 18s ease-in-out infinite alternate;
+    radial-gradient(ellipse at 20% 30%, rgba(30,100,220,.32), transparent 35%),
+    radial-gradient(ellipse at 75% 25%, rgba(0,220,255,.19), transparent 32%),
+    radial-gradient(ellipse at 60% 70%, rgba(110,55,220,.24), transparent 38%),
+    radial-gradient(ellipse at 25% 85%, rgba(30,180,210,.16), transparent 30%);
 }
 
-@keyframes aurora {
-  from { transform: translate(-3%, -2%) rotate(0deg) scale(1); }
-  to { transform: translate(3%, 3%) rotate(8deg) scale(1.12); }
+.nebula.two {
+  opacity: .45;
+  filter: blur(100px);
+  animation: nebulaDrift2 48s ease-in-out infinite alternate;
+  background:
+    radial-gradient(ellipse at 70% 40%, rgba(0,100,255,.28), transparent 36%),
+    radial-gradient(ellipse at 30% 60%, rgba(0,255,220,.13), transparent 40%),
+    radial-gradient(ellipse at 85% 85%, rgba(150,60,255,.2), transparent 30%);
 }
+
+@keyframes nebulaDrift {
+  0% { transform: translate(-5%, -3%) rotate(0deg) scale(1); }
+  50% { transform: translate(4%, 2%) rotate(8deg) scale(1.1); }
+  100% { transform: translate(2%, -5%) rotate(-5deg) scale(1.18); }
+}
+
+@keyframes nebulaDrift2 {
+  from { transform: translate(4%, 2%) rotate(-8deg) scale(1); }
+  to { transform: translate(-5%, -3%) rotate(12deg) scale(1.2); }
+}
+
+/* Glowing atmospheric waves */
+
+.energy-wave {
+  position: fixed;
+  width: 130vw;
+  height: 45vw;
+  min-height: 350px;
+  left: -15vw;
+  border-radius: 50%;
+  border-top: 1px solid rgba(90,205,255,.13);
+  border-bottom: 1px solid rgba(120,100,255,.08);
+  pointer-events: none;
+  z-index: -4;
+  filter: blur(2px);
+  animation: waveFloat 22s ease-in-out infinite alternate;
+}
+
+.energy-wave.one { top: 8%; transform: rotate(-18deg); }
+.energy-wave.two {
+  top: 38%;
+  transform: rotate(16deg);
+  border-color: rgba(0,230,255,.11);
+  animation-delay: -8s;
+}
+.energy-wave.three {
+  top: 65%;
+  transform: rotate(-12deg);
+  border-color: rgba(160,100,255,.13);
+  animation-delay: -14s;
+}
+
+@keyframes waveFloat {
+  from { translate: -3% -10px; scale: 1; }
+  to { translate: 3% 20px; scale: 1.08; }
+}
+
+/* Distant planets */
 
 .planet {
   position: fixed;
-  width: 310px;
-  height: 310px;
   border-radius: 50%;
-  right: -115px;
-  top: 100px;
-  z-index: 0;
   pointer-events: none;
-  background:
-    radial-gradient(ellipse at 35% 30%, rgba(190, 239, 255, .9), transparent 8%),
-    radial-gradient(ellipse at 38% 35%, #4e9cd9, #174b91 42%, #071b4a 72%);
-  box-shadow:
-    inset -35px -20px 65px rgba(0,0,30,.75),
-    inset 15px 10px 30px rgba(150,220,255,.35),
-    0 0 65px rgba(54, 153, 255, .24);
-  opacity: .34;
-  animation: planetFloat 12s ease-in-out infinite;
+  z-index: -1;
 }
 
-.planet::before {
+.planet.neptune {
+  width: 360px;
+  height: 360px;
+  right: -100px;
+  top: 8%;
+  opacity: .45;
+  background:
+    radial-gradient(ellipse at 30% 25%, rgba(190,240,255,.95), transparent 7%),
+    radial-gradient(ellipse at 35% 35%, #6bc4ff, #205caa 38%, #091b53 75%);
+  box-shadow:
+    inset -45px -20px 75px rgba(0,0,30,.85),
+    inset 15px 10px 35px rgba(180,230,255,.4),
+    0 0 90px rgba(42,150,255,.35);
+  animation: planetFloat 15s ease-in-out infinite;
+}
+
+.planet.neptune::before {
   content: "";
   position: absolute;
-  inset: 25% -20%;
-  border: 2px solid rgba(130, 205, 255, .28);
+  inset: 25% -25%;
+  border: 2px solid rgba(130,205,255,.35);
   border-radius: 50%;
-  transform: rotate(-22deg) scaleY(.28);
-  box-shadow: 0 0 18px rgba(100, 190, 255, .18);
+  transform: rotate(-25deg) scaleY(.32);
+  box-shadow: 0 0 20px rgba(100,190,255,.25);
 }
 
-.planet::after {
+.planet.moon {
+  width: 75px;
+  height: 75px;
+  left: 8%;
+  top: 30%;
+  opacity: .48;
+  background: radial-gradient(circle at 30% 25%, #c3d6e9, #425c7d 65%, #111d36);
+  box-shadow: 0 0 35px rgba(100,160,220,.2);
+  animation: moonFloat 19s ease-in-out infinite;
+}
+
+.planet.moon::after {
   content: "";
   position: absolute;
   inset: 0;
   border-radius: 50%;
-  background: repeating-linear-gradient(
-    170deg,
-    transparent 0 19px,
-    rgba(130, 215, 255, .12) 20px 22px,
-    transparent 23px 35px
-  );
-  opacity: .45;
+  background: radial-gradient(circle at 65% 60%, rgba(0,0,0,.4), transparent 55%);
 }
 
 @keyframes planetFloat {
-  0%, 100% { transform: translateY(0) rotate(-5deg); }
-  50% { transform: translateY(22px) rotate(4deg); }
+  0%,100% { transform: translateY(0) rotate(-5deg); }
+  50% { transform: translateY(25px) rotate(5deg); }
 }
+
+@keyframes moonFloat {
+  0%,100% { transform: translateY(0); }
+  50% { transform: translateY(-30px); }
+}
+
+/* Cursor aura */
+
+#cursor-glow {
+  position: fixed;
+  width: 420px;
+  height: 420px;
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 0;
+  background: radial-gradient(circle, rgba(65,160,255,.13), transparent 68%);
+  transform: translate(-50%,-50%);
+  left: 50%;
+  top: 50%;
+}
+
+/* ===== MAIN CONTENT ===== */
 
 .app {
   position: relative;
-  z-index: 1;
+  z-index: 2;
   width: min(1180px, 92%);
-  margin: 0 auto;
+  margin: auto;
   padding: 55px 0 65px;
 }
 
 header {
   display: flex;
-  align-items: center;
   justify-content: space-between;
+  align-items: center;
   margin-bottom: 42px;
   gap: 20px;
 }
@@ -140,30 +227,29 @@ header {
   letter-spacing: 5px;
   color: var(--blue);
   font-weight: 700;
+  text-shadow: 0 0 18px rgba(100,190,255,.7);
 }
 
-.brand span {
-  color: white;
-  opacity: .8;
-}
+.brand span { color: white; }
 
 .header-note {
-  font-size: 11px;
-  letter-spacing: 2px;
+  font-size: 10px;
+  letter-spacing: 3px;
   color: var(--muted);
 }
 
 .hero {
   margin-bottom: 34px;
-  animation: fadeUp .8s ease both;
+  animation: fadeUp 1s ease both;
 }
 
 .eyebrow {
   color: var(--cyan);
-  letter-spacing: 4px;
+  letter-spacing: 5px;
   font-size: 10px;
   font-weight: 700;
-  margin-bottom: 13px;
+  margin-bottom: 14px;
+  text-shadow: 0 0 15px rgba(90,230,255,.7);
 }
 
 h1 {
@@ -172,12 +258,13 @@ h1 {
   letter-spacing: -3px;
   margin: 0;
   font-weight: 300;
-  text-shadow: 0 0 35px rgba(103, 186, 255, .22);
+  text-shadow: 0 0 40px rgba(103,186,255,.3);
 }
 
 h1 strong {
   font-weight: 700;
   color: #9ed8ff;
+  text-shadow: 0 0 35px rgba(70,160,255,.5);
 }
 
 .subtitle {
@@ -187,36 +274,42 @@ h1 strong {
   margin-top: 17px;
 }
 
+/* Glass panels */
+
 .glass {
-  background: linear-gradient(135deg, rgba(29, 57, 94, .55), rgba(8, 22, 48, .52));
+  background: linear-gradient(135deg, rgba(22,49,88,.62), rgba(5,16,39,.7));
   border: 1px solid var(--border);
-  backdrop-filter: blur(22px);
-  -webkit-backdrop-filter: blur(22px);
-  box-shadow: 0 20px 60px rgba(0,0,0,.22), inset 0 1px rgba(255,255,255,.06);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  box-shadow:
+    0 20px 60px rgba(0,0,0,.28),
+    inset 0 1px rgba(255,255,255,.08),
+    0 0 35px rgba(60,140,255,.05);
   border-radius: 22px;
-  transition: border-color .3s, box-shadow .3s, transform .3s;
+  transition: border-color .35s, box-shadow .35s, transform .35s;
 }
 
 .glass:hover {
-  border-color: rgba(127, 205, 255, .34);
-  box-shadow: 0 22px 65px rgba(0,0,0,.3), 0 0 30px rgba(58, 151, 255, .07);
+  border-color: rgba(127,205,255,.42);
+  box-shadow:
+    0 25px 70px rgba(0,0,0,.34),
+    0 0 35px rgba(58,151,255,.12),
+    inset 0 1px rgba(255,255,255,.1);
 }
 
 .dashboard {
   display: grid;
-  grid-template-columns: minmax(0, 1.55fr) minmax(280px, .8fr);
+  grid-template-columns: minmax(0,1.55fr) minmax(280px,.8fr);
   gap: 20px;
-  animation: fadeUp 1s ease .12s both;
+  animation: fadeUp 1.1s ease .15s both;
 }
 
-.calendar-panel {
-  padding: 27px;
-}
+.calendar-panel { padding: 27px; }
 
 .calendar-top {
   display: flex;
-  align-items: center;
   justify-content: space-between;
+  align-items: center;
   gap: 12px;
   margin-bottom: 27px;
 }
@@ -224,22 +317,16 @@ h1 strong {
 .month-label {
   font-size: 23px;
   font-weight: 500;
-  letter-spacing: -.5px;
 }
 
-.month-label span {
-  color: #8dcfff;
-}
+.month-label span { color: #8dcfff; }
 
-.nav-buttons {
-  display: flex;
-  gap: 8px;
-}
+.nav-buttons { display: flex; gap: 8px; }
 
 .nav-btn, .today-btn {
   border: 1px solid var(--border);
   color: var(--text);
-  background: rgba(120, 180, 255, .08);
+  background: rgba(120,180,255,.08);
   border-radius: 10px;
   padding: 9px 13px;
   cursor: pointer;
@@ -247,20 +334,18 @@ h1 strong {
 }
 
 .nav-btn:hover, .today-btn:hover {
-  background: rgba(103, 190, 255, .2);
-  border-color: rgba(125, 208, 255, .55);
-  box-shadow: 0 0 16px rgba(80, 170, 255, .15);
+  background: rgba(103,190,255,.22);
+  border-color: rgba(125,208,255,.6);
+  box-shadow: 0 0 20px rgba(80,170,255,.2);
 }
 
 .weekdays, .days-grid {
   display: grid;
-  grid-template-columns: repeat(7, 1fr);
+  grid-template-columns: repeat(7,1fr);
   gap: 7px;
 }
 
-.weekdays {
-  margin-bottom: 10px;
-}
+.weekdays { margin-bottom: 10px; }
 
 .weekdays div {
   color: #7895b7;
@@ -274,54 +359,50 @@ h1 strong {
   min-height: 66px;
   position: relative;
   border: 1px solid transparent;
-  background: rgba(125, 170, 230, .045);
+  background: rgba(125,170,230,.045);
   border-radius: 12px;
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: flex-start;
   padding: 11px 4px 7px;
   cursor: pointer;
-  transition: .22s ease;
+  transition: .25s;
   overflow: hidden;
+  color: white;
 }
 
 .day::after {
   content: "";
   position: absolute;
   top: -50%;
-  left: -80%;
+  left: -100%;
   width: 50%;
   height: 200%;
   transform: rotate(25deg);
-  background: linear-gradient(90deg, transparent, rgba(255,255,255,.12), transparent);
-  transition: left .5s;
+  background: linear-gradient(90deg,transparent,rgba(255,255,255,.15),transparent);
+  transition: left .6s;
 }
 
-.day:hover::after { left: 130%; }
+.day:hover::after { left: 150%; }
 
 .day:hover {
-  background: rgba(83, 160, 255, .14);
-  border-color: rgba(133, 205, 255, .35);
+  background: rgba(83,160,255,.17);
+  border-color: rgba(133,205,255,.4);
   transform: translateY(-3px);
-  box-shadow: 0 7px 22px rgba(0,0,0,.15), 0 0 15px rgba(74, 166, 255, .12);
+  box-shadow: 0 0 22px rgba(74,166,255,.17);
 }
 
 .day.empty {
   background: transparent;
-  cursor: default;
   pointer-events: none;
 }
 
-.day-number {
-  font-size: 13px;
-  color: #dcecff;
-}
+.day-number { font-size: 13px; color: #dcecff; }
 
 .day.today {
-  border-color: rgba(99, 205, 255, .7);
-  background: rgba(57, 150, 255, .17);
-  box-shadow: inset 0 0 18px rgba(65, 170, 255, .08);
+  border-color: rgba(99,205,255,.75);
+  background: rgba(57,150,255,.19);
+  box-shadow: 0 0 20px rgba(65,170,255,.14);
 }
 
 .day.today .day-number {
@@ -330,9 +411,9 @@ h1 strong {
 }
 
 .day.selected {
-  background: linear-gradient(145deg, rgba(72, 166, 255, .35), rgba(60, 100, 210, .2));
+  background: linear-gradient(145deg,rgba(72,166,255,.4),rgba(60,100,210,.23));
   border-color: #83caff;
-  box-shadow: 0 0 20px rgba(72, 166, 255, .22);
+  box-shadow: 0 0 25px rgba(72,166,255,.28);
 }
 
 .event-dots {
@@ -345,7 +426,7 @@ h1 strong {
   width: 5px;
   height: 5px;
   border-radius: 50%;
-  box-shadow: 0 0 7px currentColor;
+  box-shadow: 0 0 8px currentColor;
 }
 
 .calendar-footer {
@@ -377,7 +458,6 @@ h1 strong {
 
 .selected-date {
   font-size: 25px;
-  font-weight: 400;
   margin-bottom: 5px;
 }
 
@@ -399,8 +479,8 @@ h1 strong {
   display: flex;
   align-items: center;
   gap: 10px;
-  background: rgba(130, 180, 255, .07);
-  border: 1px solid rgba(150, 200, 255, .08);
+  background: rgba(130,180,255,.07);
+  border: 1px solid rgba(150,200,255,.08);
   border-radius: 11px;
   padding: 11px;
   animation: fadeUp .3s ease both;
@@ -432,7 +512,6 @@ h1 strong {
   color: #7892b0;
   cursor: pointer;
   font-size: 17px;
-  padding: 3px 6px;
 }
 
 .delete-event:hover { color: #ff8fa4; }
@@ -453,8 +532,8 @@ h1 strong {
 
 input, select {
   width: 100%;
-  background: rgba(3, 14, 34, .5);
-  border: 1px solid rgba(150, 200, 255, .16);
+  background: rgba(3,14,34,.65);
+  border: 1px solid rgba(150,200,255,.18);
   color: white;
   padding: 12px;
   border-radius: 10px;
@@ -464,19 +543,19 @@ input, select {
 }
 
 input:focus, select:focus {
-  border-color: rgba(110, 200, 255, .65);
-  box-shadow: 0 0 15px rgba(90, 180, 255, .1);
+  border-color: rgba(110,200,255,.7);
+  box-shadow: 0 0 18px rgba(90,180,255,.14);
 }
 
 input::placeholder { color: #7189a7; }
-select option { background: #102443; color: white; }
+select option { background: #102443; }
 
 .add-btn {
   border: 0;
   border-radius: 10px;
   padding: 12px;
   color: #06172b;
-  background: linear-gradient(110deg, #8edaff, #6caeff);
+  background: linear-gradient(110deg,#8edaff,#6caeff);
   font-weight: 700;
   font-size: 11px;
   letter-spacing: 1px;
@@ -486,7 +565,7 @@ select option { background: #102443; color: white; }
 
 .add-btn:hover {
   transform: translateY(-2px);
-  box-shadow: 0 7px 22px rgba(85, 174, 255, .28);
+  box-shadow: 0 7px 25px rgba(85,174,255,.35);
 }
 
 .quote-panel {
@@ -519,105 +598,115 @@ footer {
   to { opacity: 1; transform: translateY(0); }
 }
 
-@media (max-width: 760px) {
+@media (max-width:760px) {
   .app { padding-top: 30px; }
   .dashboard { grid-template-columns: 1fr; }
   .calendar-panel { padding: 17px; }
   .day { min-height: 54px; padding-top: 9px; }
-  .day-number { font-size: 12px; }
-  .planet { width: 210px; height: 210px; right: -110px; top: 80px; }
+  .planet.neptune { width: 220px; height: 220px; right: -110px; top: 80px; }
   .header-note { display: none; }
   h1 { letter-spacing: -2px; }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  *, *::before, *::after {
+  *,*::before,*::after {
     animation-duration: .01ms !important;
     animation-iteration-count: 1 !important;
     transition-duration: .01ms !important;
-    scroll-behavior: auto !important;
   }
 }
 </style>
 </head>
+
 <body>
 
+<div class="space-base"></div>
+<div class="nebula"></div>
+<div class="nebula two"></div>
+<div class="energy-wave one"></div>
+<div class="energy-wave two"></div>
+<div class="energy-wave three"></div>
+<div class="planet neptune"></div>
+<div class="planet moon"></div>
+
+<canvas id="nebula-canvas"></canvas>
 <canvas id="universe"></canvas>
+<canvas id="dust-canvas"></canvas>
 <div id="cursor-glow"></div>
-<div class="aurora"></div>
-<div class="planet"></div>
 
 <div class="app">
-  <header>
-    <div class="brand">✦ <span>NEPTUNE</span></div>
-    <div class="header-note">A QUIET PLACE IN THE UNIVERSE</div>
-  </header>
+<header>
+  <div class="brand">✦ <span>NEPTUNE</span></div>
+  <div class="header-note">A QUIET PLACE IN THE UNIVERSE</div>
+</header>
 
-  <section class="hero">
-    <div class="eyebrow">YOUR SPACE · YOUR TIME</div>
-    <h1>YOUR PERSONAL<br><strong>UNIVERSE.</strong></h1>
-    <div class="subtitle">A little space to organise your life.</div>
+<section class="hero">
+  <div class="eyebrow">YOUR SPACE · YOUR TIME</div>
+  <h1>YOUR PERSONAL<br><strong>UNIVERSE.</strong></h1>
+  <div class="subtitle">A little space to organise your life.</div>
+</section>
+
+<main class="dashboard">
+<section class="glass calendar-panel">
+  <div class="calendar-top">
+    <div class="month-label" id="month-label"></div>
+    <div class="nav-buttons">
+      <button class="nav-btn" id="prev-month" aria-label="Previous month">←</button>
+      <button class="nav-btn" id="next-month" aria-label="Next month">→</button>
+    </div>
+  </div>
+
+  <div class="weekdays">
+    <div>MON</div><div>TUE</div><div>WED</div>
+    <div>THU</div><div>FRI</div><div>SAT</div><div>SUN</div>
+  </div>
+
+  <div class="days-grid" id="days-grid"></div>
+
+  <div class="calendar-footer">
+    <span>✦ SELECT A DATE TO EXPLORE</span>
+    <button class="today-btn" id="today-btn">Today ↗</button>
+  </div>
+</section>
+
+<aside class="sidebar">
+  <section class="glass side-panel">
+    <div class="section-kicker">✦ YOUR SCHEDULE</div>
+    <div class="selected-date" id="selected-date"></div>
+    <div class="selected-subtitle" id="selected-subtitle"></div>
+    <div class="event-list" id="event-list"></div>
+
+    <form class="add-form" id="event-form">
+      <input id="event-title" type="text" placeholder="What’s happening?" maxlength="70" required>
+      <select id="event-category">
+        <option value="Personal">Personal</option>
+        <option value="Work">Work</option>
+        <option value="Health">Health</option>
+        <option value="Travel">Travel</option>
+        <option value="Social">Social</option>
+        <option value="Other">Other</option>
+      </select>
+      <button class="add-btn" type="submit">+ ADD TO MY UNIVERSE</button>
+    </form>
   </section>
 
-  <main class="dashboard">
-    <section class="glass calendar-panel">
-      <div class="calendar-top">
-        <div class="month-label" id="month-label"></div>
-        <div class="nav-buttons">
-          <button class="nav-btn" id="prev-month" aria-label="Previous month">←</button>
-          <button class="nav-btn" id="next-month" aria-label="Next month">→</button>
-        </div>
-      </div>
+  <section class="glass quote-panel">
+    “Somewhere, something incredible is waiting to be known.”
+    <span>— CARL SAGAN</span>
+  </section>
+</aside>
+</main>
 
-      <div class="weekdays">
-        <div>MON</div><div>TUE</div><div>WED</div>
-        <div>THU</div><div>FRI</div><div>SAT</div><div>SUN</div>
-      </div>
-
-      <div class="days-grid" id="days-grid"></div>
-
-      <div class="calendar-footer">
-        <span>✦ SELECT A DATE TO EXPLORE</span>
-        <button class="today-btn" id="today-btn">Today ↗</button>
-      </div>
-    </section>
-
-    <aside class="sidebar">
-      <section class="glass side-panel">
-        <div class="section-kicker">✦ YOUR SCHEDULE</div>
-        <div class="selected-date" id="selected-date"></div>
-        <div class="selected-subtitle" id="selected-subtitle"></div>
-        <div class="event-list" id="event-list"></div>
-
-        <form class="add-form" id="event-form">
-          <input id="event-title" type="text" placeholder="What’s happening?" maxlength="70" required>
-          <select id="event-category">
-            <option value="Personal">Personal</option>
-            <option value="Work">Work</option>
-            <option value="Health">Health</option>
-            <option value="Travel">Travel</option>
-            <option value="Social">Social</option>
-            <option value="Other">Other</option>
-          </select>
-          <button class="add-btn" type="submit">+ ADD TO MY UNIVERSE</button>
-        </form>
-      </section>
-
-      <section class="glass quote-panel">
-        “Somewhere, something incredible is waiting to be known.”
-        <span>— CARL SAGAN</span>
-      </section>
-    </aside>
-  </main>
-
-  <footer>MADE OF STARDUST · BUILT FOR YOUR JOURNEY</footer>
+<footer>MADE OF STARDUST · BUILT FOR YOUR JOURNEY</footer>
 </div>
 
 <script>
+/* ===== CALENDAR ===== */
+
 const today = new Date();
 let currentYear = today.getFullYear();
 let currentMonth = today.getMonth();
-let selectedDate = new Date(today.getFullYear(), today.getMonth(), today.getDate());
+let selectedDate = new Date(today.getFullYear(),today.getMonth(),today.getDate());
 
 const STORAGE_KEY = "neptune-events";
 
@@ -630,33 +719,33 @@ try {
 }
 
 const categoryColors = {
-  Personal: "#a78bfa",
-  Work: "#63baff",
-  Health: "#66e0c0",
-  Travel: "#ffbd75",
-  Social: "#ff91bd",
-  Other: "#b3c8e8"
+  Personal:"#a78bfa",
+  Work:"#63baff",
+  Health:"#66e0c0",
+  Travel:"#ffbd75",
+  Social:"#ff91bd",
+  Other:"#b3c8e8"
 };
 
 const monthNames = [
-  "January", "February", "March", "April", "May", "June",
-  "July", "August", "September", "October", "November", "December"
+  "January","February","March","April","May","June",
+  "July","August","September","October","November","December"
 ];
 
 const weekdayNames = [
-  "Sunday", "Monday", "Tuesday", "Wednesday",
-  "Thursday", "Friday", "Saturday"
+  "Sunday","Monday","Tuesday","Wednesday",
+  "Thursday","Friday","Saturday"
 ];
 
 function dateKey(date) {
   const y = date.getFullYear();
-  const m = String(date.getMonth() + 1).padStart(2, "0");
-  const d = String(date.getDate()).padStart(2, "0");
+  const m = String(date.getMonth()+1).padStart(2,"0");
+  const d = String(date.getDate()).padStart(2,"0");
   return `${y}-${m}-${d}`;
 }
 
 function saveEvents() {
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(events));
+  localStorage.setItem(STORAGE_KEY,JSON.stringify(events));
 }
 
 function renderCalendar() {
@@ -666,26 +755,26 @@ function renderCalendar() {
   document.getElementById("month-label").innerHTML =
     `${monthNames[currentMonth]} <span>${currentYear}</span>`;
 
-  const firstDay = new Date(currentYear, currentMonth, 1);
-  const daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate();
-  const mondayOffset = (firstDay.getDay() + 6) % 7;
+  const firstDay = new Date(currentYear,currentMonth,1);
+  const daysInMonth = new Date(currentYear,currentMonth+1,0).getDate();
+  const offset = (firstDay.getDay()+6)%7;
 
-  for (let i = 0; i < mondayOffset; i++) {
+  for (let i=0;i<offset;i++) {
     const empty = document.createElement("div");
     empty.className = "day empty";
     grid.appendChild(empty);
   }
 
-  for (let day = 1; day <= daysInMonth; day++) {
-    const date = new Date(currentYear, currentMonth, day);
+  for (let day=1;day<=daysInMonth;day++) {
+    const date = new Date(currentYear,currentMonth,day);
     const key = dateKey(date);
     const cell = document.createElement("button");
     cell.type = "button";
     cell.className = "day";
-    cell.setAttribute("aria-label", date.toDateString());
+    cell.setAttribute("aria-label",date.toDateString());
 
-    if (dateKey(date) === dateKey(today)) cell.classList.add("today");
-    if (key === dateKey(selectedDate)) cell.classList.add("selected");
+    if (key===dateKey(today)) cell.classList.add("today");
+    if (key===dateKey(selectedDate)) cell.classList.add("selected");
 
     const number = document.createElement("span");
     number.className = "day-number";
@@ -695,7 +784,7 @@ function renderCalendar() {
     const dots = document.createElement("div");
     dots.className = "event-dots";
 
-    (events[key] || []).slice(0, 4).forEach(event => {
+    (events[key]||[]).slice(0,4).forEach(event => {
       const dot = document.createElement("span");
       dot.className = "event-dot";
       dot.style.background = categoryColors[event.category] || categoryColors.Other;
@@ -703,14 +792,11 @@ function renderCalendar() {
     });
 
     cell.appendChild(dots);
-    cell.addEventListener("click", () => {
+
+    cell.addEventListener("click",() => {
       selectedDate = date;
       renderCalendar();
       renderEvents();
-      cell.animate(
-        [{ transform: "scale(.94)" }, { transform: "scale(1)" }],
-        { duration: 220, easing: "ease-out" }
-      );
     });
 
     grid.appendChild(cell);
@@ -719,7 +805,7 @@ function renderCalendar() {
 
 function renderEvents() {
   const key = dateKey(selectedDate);
-  const dayEvents = events[key] || [];
+  const dayEvents = events[key]||[];
 
   document.getElementById("selected-date").textContent =
     `${selectedDate.getDate()} ${monthNames[selectedDate.getMonth()]}`;
@@ -730,7 +816,7 @@ function renderEvents() {
   const list = document.getElementById("event-list");
   list.innerHTML = "";
 
-  if (dayEvents.length === 0) {
+  if (!dayEvents.length) {
     const empty = document.createElement("div");
     empty.className = "empty-state";
     empty.textContent = "Nothing planned for this day yet. Make some space for something wonderful.";
@@ -738,13 +824,13 @@ function renderEvents() {
     return;
   }
 
-  dayEvents.forEach((event, index) => {
+  dayEvents.forEach((event,index) => {
     const item = document.createElement("div");
     item.className = "event-item";
 
     const color = document.createElement("div");
     color.className = "event-color";
-    color.style.background = categoryColors[event.category] || categoryColors.Other;
+    color.style.background = categoryColors[event.category]||categoryColors.Other;
 
     const info = document.createElement("div");
     info.className = "event-info";
@@ -757,168 +843,266 @@ function renderEvents() {
     category.className = "event-category";
     category.textContent = event.category;
 
-    info.append(title, category);
+    info.append(title,category);
 
     const remove = document.createElement("button");
     remove.className = "delete-event";
     remove.type = "button";
     remove.textContent = "×";
-    remove.setAttribute("aria-label", "Delete event");
+    remove.setAttribute("aria-label","Delete event");
 
-    remove.addEventListener("click", () => {
-      events[key].splice(index, 1);
-      if (events[key].length === 0) delete events[key];
+    remove.addEventListener("click",() => {
+      events[key].splice(index,1);
+      if (!events[key].length) delete events[key];
       saveEvents();
       renderCalendar();
       renderEvents();
     });
 
-    item.append(color, info, remove);
+    item.append(color,info,remove);
     list.appendChild(item);
   });
 }
 
-document.getElementById("prev-month").addEventListener("click", () => {
+document.getElementById("prev-month").addEventListener("click",() => {
   currentMonth--;
-  if (currentMonth < 0) {
-    currentMonth = 11;
-    currentYear--;
-  }
+  if (currentMonth<0) { currentMonth=11; currentYear--; }
   renderCalendar();
 });
 
-document.getElementById("next-month").addEventListener("click", () => {
+document.getElementById("next-month").addEventListener("click",() => {
   currentMonth++;
-  if (currentMonth > 11) {
-    currentMonth = 0;
-    currentYear++;
-  }
+  if (currentMonth>11) { currentMonth=0; currentYear++; }
   renderCalendar();
 });
 
-document.getElementById("today-btn").addEventListener("click", () => {
-  currentYear = today.getFullYear();
-  currentMonth = today.getMonth();
-  selectedDate = new Date(today.getFullYear(), today.getMonth(), today.getDate());
+document.getElementById("today-btn").addEventListener("click",() => {
+  currentYear=today.getFullYear();
+  currentMonth=today.getMonth();
+  selectedDate=new Date(today.getFullYear(),today.getMonth(),today.getDate());
   renderCalendar();
   renderEvents();
 });
 
-document.getElementById("event-form").addEventListener("submit", event => {
+document.getElementById("event-form").addEventListener("submit",event => {
   event.preventDefault();
 
-  const titleInput = document.getElementById("event-title");
-  const title = titleInput.value.trim();
+  const input = document.getElementById("event-title");
+  const title = input.value.trim();
   const category = document.getElementById("event-category").value;
 
   if (!title) return;
 
   const key = dateKey(selectedDate);
-  if (!events[key]) events[key] = [];
+  if (!events[key]) events[key]=[];
 
-  events[key].push({ title, category });
+  events[key].push({title,category});
   saveEvents();
-
-  titleInput.value = "";
+  input.value="";
   renderCalendar();
   renderEvents();
 });
 
-// Animated starfield
-const canvas = document.getElementById("universe");
-const ctx = canvas.getContext("2d");
+/* ===== STARFIELD ===== */
+
+const starCanvas = document.getElementById("universe");
+const starCtx = starCanvas.getContext("2d");
 let stars = [];
 let shootingStars = [];
-let width = 0;
-let height = 0;
+let W=0,H=0,DPR=1;
 
-function resizeUniverse() {
-  const ratio = Math.min(window.devicePixelRatio || 1, 2);
-  width = window.innerWidth;
-  height = window.innerHeight;
+function resizeCanvas(canvas,ctx) {
+  DPR=Math.min(window.devicePixelRatio||1,2);
+  W=window.innerWidth;
+  H=window.innerHeight;
+  canvas.width=W*DPR;
+  canvas.height=H*DPR;
+  canvas.style.width=W+"px";
+  canvas.style.height=H+"px";
+  ctx.setTransform(DPR,0,0,DPR,0,0);
+}
 
-  canvas.width = Math.floor(width * ratio);
-  canvas.height = Math.floor(height * ratio);
-  canvas.style.width = width + "px";
-  canvas.style.height = height + "px";
-  ctx.setTransform(ratio, 0, 0, ratio, 0, 0);
-
-  const count = Math.min(170, Math.floor(width * height / 8500));
-  stars = Array.from({ length: count }, () => ({
-    x: Math.random() * width,
-    y: Math.random() * height,
-    radius: Math.random() * 1.4 + .2,
-    alpha: Math.random() * .7 + .2,
-    speed: Math.random() * .012 + .003,
-    phase: Math.random() * Math.PI * 2
+function makeStars() {
+  const count=Math.min(420,Math.floor(W*H/2500));
+  stars=Array.from({length:count},()=>({
+    x:Math.random()*W,
+    y:Math.random()*H,
+    r:Math.random()*1.6+.2,
+    a:Math.random()*.8+.15,
+    speed:Math.random()*.02+.003,
+    phase:Math.random()*Math.PI*2,
+    drift:(Math.random()-.5)*.12
   }));
 }
 
-function createShootingStar() {
+function addShootingStar() {
   shootingStars.push({
-    x: Math.random() * width * .8,
-    y: Math.random() * height * .45,
-    length: Math.random() * 100 + 55,
-    speed: Math.random() * 7 + 6,
-    life: 1
+    x:Math.random()*W*.9,
+    y:Math.random()*H*.6,
+    length:Math.random()*150+70,
+    speed:Math.random()*9+7,
+    life:1,
+    width:Math.random()*1.5+1
   });
 }
 
-function animateUniverse() {
-  ctx.clearRect(0, 0, width, height);
+function animateStars() {
+  starCtx.clearRect(0,0,W,H);
+  const t=performance.now()*.001;
 
-  const time = performance.now() * .001;
-
-  stars.forEach(star => {
-    const glow = .35 + .65 * Math.abs(Math.sin(time * star.speed * 10 + star.phase));
-    ctx.beginPath();
-    ctx.arc(star.x, star.y, star.radius, 0, Math.PI * 2);
-    ctx.fillStyle = `rgba(190,225,255,${star.alpha * glow})`;
-    ctx.fill();
+  stars.forEach(s=>{
+    const twinkle=.25+.75*Math.abs(Math.sin(t*s.speed*10+s.phase));
+    starCtx.beginPath();
+    starCtx.arc(s.x,s.y,s.r,0,Math.PI*2);
+    starCtx.fillStyle=`rgba(210,235,255,${s.a*twinkle})`;
+    starCtx.fill();
+    s.x+=s.drift;
+    if (s.x<0) s.x=W;
+    if (s.x>W) s.x=0;
   });
 
-  shootingStars = shootingStars.filter(star => star.life > 0);
+  shootingStars=shootingStars.filter(s=>s.life>0);
 
-  shootingStars.forEach(star => {
-    const gradient = ctx.createLinearGradient(
-      star.x, star.y,
-      star.x - star.length, star.y - star.length * .35
+  shootingStars.forEach(s=>{
+    const gradient=starCtx.createLinearGradient(
+      s.x,s.y,s.x-s.length,s.y-s.length*.4
     );
-    gradient.addColorStop(0, "rgba(180,235,255,0.9)");
-    gradient.addColorStop(1, "rgba(120,190,255,0)");
+    gradient.addColorStop(0,"rgba(220,250,255,1)");
+    gradient.addColorStop(.25,"rgba(120,220,255,.65)");
+    gradient.addColorStop(1,"rgba(100,150,255,0)");
 
-    ctx.beginPath();
-    ctx.moveTo(star.x, star.y);
-    ctx.lineTo(star.x - star.length, star.y - star.length * .35);
-    ctx.strokeStyle = gradient;
-    ctx.lineWidth = 2;
-    ctx.stroke();
+    starCtx.beginPath();
+    starCtx.moveTo(s.x,s.y);
+    starCtx.lineTo(s.x-s.length,s.y-s.length*.4);
+    starCtx.strokeStyle=gradient;
+    starCtx.lineWidth=s.width;
+    starCtx.stroke();
 
-    star.x += star.speed;
-    star.y += star.speed * .35;
-    star.life -= .018;
+    s.x+=s.speed;
+    s.y+=s.speed*.4;
+    s.life-=.012;
   });
 
-  requestAnimationFrame(animateUniverse);
+  requestAnimationFrame(animateStars);
 }
 
-window.addEventListener("resize", resizeUniverse);
-resizeUniverse();
-animateUniverse();
+/* ===== COSMIC NEBULA CLOUDS ===== */
+
+const nebulaCanvas=document.getElementById("nebula-canvas");
+const nebulaCtx=nebulaCanvas.getContext("2d");
+let clouds=[];
+
+function makeClouds() {
+  clouds=Array.from({length:22},()=>({
+    x:Math.random()*W,
+    y:Math.random()*H,
+    radius:Math.random()*180+100,
+    hue:[190,205,220,250,270][Math.floor(Math.random()*5)],
+    alpha:Math.random()*.035+.012,
+    speed:(Math.random()-.5)*.13,
+    phase:Math.random()*6.28
+  }));
+}
+
+function animateNebula() {
+  nebulaCtx.clearRect(0,0,W,H);
+  const t=performance.now()*.00015;
+
+  clouds.forEach(c=>{
+    const x=c.x+Math.sin(t+c.phase)*55;
+    const y=c.y+Math.cos(t*.8+c.phase)*35;
+    const gradient=nebulaCtx.createRadialGradient(x,y,0,x,y,c.radius);
+
+    gradient.addColorStop(0,`hsla(${c.hue},100%,65%,${c.alpha})`);
+    gradient.addColorStop(1,`hsla(${c.hue},100%,50%,0)`);
+
+    nebulaCtx.fillStyle=gradient;
+    nebulaCtx.beginPath();
+    nebulaCtx.arc(x,y,c.radius,0,Math.PI*2);
+    nebulaCtx.fill();
+
+    c.x+=c.speed;
+    if (c.x<-c.radius) c.x=W+c.radius;
+    if (c.x>W+c.radius) c.x=-c.radius;
+  });
+
+  requestAnimationFrame(animateNebula);
+}
+
+/* ===== FLOATING COSMIC DUST ===== */
+
+const dustCanvas=document.getElementById("dust-canvas");
+const dustCtx=dustCanvas.getContext("2d");
+let dust=[];
+
+function makeDust() {
+  dust=Array.from({length:100},()=>({
+    x:Math.random()*W,
+    y:Math.random()*H,
+    r:Math.random()*2+.4,
+    vx:(Math.random()-.5)*.25,
+    vy:-Math.random()*.3-.04,
+    alpha:Math.random()*.5+.1,
+    phase:Math.random()*6.28
+  }));
+}
+
+function animateDust() {
+  dustCtx.clearRect(0,0,W,H);
+  const t=performance.now()*.001;
+
+  dust.forEach(p=>{
+    p.x+=p.vx+Math.sin(t+p.phase)*.12;
+    p.y+=p.vy;
+
+    if (p.y<-10) { p.y=H+10; p.x=Math.random()*W; }
+    if (p.x<0) p.x=W;
+    if (p.x>W) p.x=0;
+
+    dustCtx.beginPath();
+    dustCtx.arc(p.x,p.y,p.r,0,Math.PI*2);
+    dustCtx.fillStyle=`rgba(115,210,255,${p.alpha})`;
+    dustCtx.shadowBlur=12;
+    dustCtx.shadowColor="rgba(70,190,255,.8)";
+    dustCtx.fill();
+    dustCtx.shadowBlur=0;
+  });
+
+  requestAnimationFrame(animateDust);
+}
+
+/* ===== POINTER GLOW ===== */
+
+const cursorGlow=document.getElementById("cursor-glow");
+
+window.addEventListener("pointermove",e=>{
+  cursorGlow.style.left=e.clientX+"px";
+  cursorGlow.style.top=e.clientY+"px";
+});
+
+/* ===== START ===== */
+
+function resizeAll() {
+  resizeCanvas(starCanvas,starCtx);
+  resizeCanvas(nebulaCanvas,nebulaCtx);
+  resizeCanvas(dustCanvas,dustCtx);
+  makeStars();
+  makeClouds();
+  makeDust();
+}
+
+window.addEventListener("resize",resizeAll);
+
+resizeAll();
+animateStars();
+animateNebula();
+animateDust();
 
 function scheduleShootingStar() {
-  if (!document.hidden && Math.random() > .25) createShootingStar();
-  setTimeout(scheduleShootingStar, Math.random() * 5000 + 2500);
+  if (!document.hidden && Math.random()>.15) addShootingStar();
+  setTimeout(scheduleShootingStar,Math.random()*2500+1200);
 }
 scheduleShootingStar();
-
-// Cursor light effect
-const cursorGlow = document.getElementById("cursor-glow");
-
-window.addEventListener("pointermove", event => {
-  cursorGlow.style.left = event.clientX + "px";
-  cursorGlow.style.top = event.clientY + "px";
-});
 
 renderCalendar();
 renderEvents();
