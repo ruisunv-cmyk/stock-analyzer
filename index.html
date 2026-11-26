@@ -35,7 +35,7 @@ nav a{display:flex;justify-content:space-between;align-items:center;padding:9px 
 nav a:hover{background:var(--bg)}nav a.on{background:var(--soft);color:var(--brand);font-weight:600}
 nav small{background:var(--bg);border-radius:20px;padding:0 8px;font-size:12px}
 .spacer{flex:1}
-.ghost{background:none;border:1px solid var(--line);border-radius:10px;padding:8px 12px;color:var(--mute)}
+.ghost{background:none;border:1px solid var(--line);border-radius:10px;padding:8px 12px;color:var(--mute);margin-top:6px}
 main{padding:28px clamp(16px,3vw,40px) 60px;max-width:1320px;width:100%}
 .head{display:flex;justify-content:space-between;align-items:flex-end;gap:16px;flex-wrap:wrap;margin-bottom:22px}
 .head h1{font-size:28px}.head p{margin:2px 0 0;color:var(--mute);max-width:640px}
@@ -59,7 +59,7 @@ main{padding:28px clamp(16px,3vw,40px) 60px;max-width:1320px;width:100%}
 .item{display:flex;justify-content:space-between;gap:10px;padding:10px 0;border-top:1px solid var(--line);align-items:center}.item:first-of-type{border-top:0}
 .tools{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:14px;align-items:center}
 input,select,textarea{background:var(--surf);border:1px solid var(--line);border-radius:10px;padding:9px 12px;width:100%}
-textarea{resize:vertical}.tools input{max-width:280px}.tools select{max-width:180px}
+textarea{resize:vertical}.tools input{max-width:280px}.tools select{max-width:200px}
 .chip{background:var(--surf);border:1px solid var(--line);border-radius:20px;padding:6px 14px;color:var(--mute)}
 .chip.on{background:var(--brand);color:var(--on);border-color:var(--brand)}
 .tbl{overflow-x:auto;padding:0}
@@ -69,25 +69,24 @@ td{padding:12px 14px;border-top:1px solid var(--line);vertical-align:top;font-si
 tr.click{cursor:pointer}tr.click:hover td{background:var(--bg)}
 .stat{background:var(--bg);border-radius:20px;padding:3px 12px;font-size:12px;white-space:nowrap}
 .empty{padding:40px;text-align:center;color:var(--mute)}
-.board{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
-.tk{border:1px solid var(--line);border-radius:12px;padding:12px;margin-bottom:10px;background:var(--surf);cursor:pointer;display:flex;flex-direction:column;gap:6px;align-items:flex-start}
-dialog{border:1px solid var(--line);border-radius:18px;background:var(--surf);color:var(--ink);padding:24px;width:min(560px,94vw);max-height:90vh;overflow:auto;box-shadow:0 30px 80px -20px rgba(0,0,0,.5)}
+dialog{border:1px solid var(--line);border-radius:18px;background:var(--surf);color:var(--ink);padding:24px;width:min(600px,94vw);max-height:90vh;overflow:auto;box-shadow:0 30px 80px -20px rgba(0,0,0,.5)}
 dialog::backdrop{background:rgba(10,18,24,.55)}dialog h2{margin-bottom:14px}
 .f{display:grid;grid-template-columns:1fr 1fr;gap:12px}
 .f label{display:flex;flex-direction:column;gap:4px;font-size:13px;color:var(--mute)}.f .w{grid-column:1/-1}
 .acts{display:flex;gap:10px;justify-content:flex-end;margin-top:18px;position:sticky;bottom:0;background:var(--surf);padding-top:12px}
-.toast{position:fixed;left:50%;bottom:20px;transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:10px 18px;border-radius:12px;font-size:14px;opacity:0;pointer-events:none;transition:opacity .2s}
+.toast{position:fixed;left:50%;bottom:20px;transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:10px 18px;border-radius:12px;font-size:14px;opacity:0;pointer-events:none;transition:opacity .2s;z-index:100}
 .toast.show{opacity:1}
 .b{display:flex;align-items:center;gap:10px;margin:9px 0;font-size:13px}
-.b .n{width:150px;flex:none;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.b .n{width:180px;flex:none;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .b .t{flex:1;height:10px;background:var(--bg);border-radius:6px;overflow:hidden}.b .t i{display:block;height:100%}
 .mini{font-size:12px;color:var(--mute)}
+.import-hint{background:var(--soft);border-radius:10px;padding:10px 14px;font-size:13px;color:var(--brand);margin-bottom:12px}
 @media(max-width:960px){.grid3{grid-template-columns:1fr}}
 @media(max-width:860px){.app{grid-template-columns:1fr}
 aside{position:sticky;height:auto;flex-direction:row;align-items:center;padding:10px 12px;z-index:5;overflow-x:auto}
 .logo{padding:0 8px 0 0}.logo span,.spacer,aside .ghost{display:none}nav{display:flex;gap:4px;white-space:nowrap}nav small{display:none}
-.grid2,.board{grid-template-columns:1fr}}
-@media print{@page{margin:14mm}aside,.btns,.tools,.toast{display:none!important}
+.grid2{grid-template-columns:1fr}}
+@media print{@page{margin:14mm}aside,.btns,.tools,.toast,.import-hint{display:none!important}
 .app{display:block}main{padding:0;max-width:none}body{background:#fff}.card{box-shadow:none;break-inside:avoid}.pb{break-after:page}.tbl{overflow:visible}table{min-width:0}}
 </style>
 </head>
@@ -97,6 +96,7 @@ aside{position:sticky;height:auto;flex-direction:row;align-items:center;padding:
   <div class="logo"><i></i><span>Auditline</span></div>
   <nav id="nav"></nav>
   <div class="spacer"></div>
+  <button class="ghost" id="import-btn">Import from Excel</button>
   <button class="ghost" id="settings">Settings</button>
   <button class="ghost" id="reset">Reset data</button>
 </aside>
@@ -109,103 +109,254 @@ aside{position:sticky;height:auto;flex-direction:row;align-items:center;padding:
 (()=>{
 "use strict";
 
-/* ============================================================
-   Constants matching the company workbook
-   ============================================================ */
 const KEY="auditline-tecan-v1";
 const SEV=["High","Medium","Low"];
 const FST=["Open","In Progress","Closed"];
 const EST=["Planned","In Progress","Report Draft","Report Final","Overdue"];
 const AREAS=[
-  "Delegation of Authority (DoA)",
-  "Financial Reporting",
-  "Inventory Management",
-  "Receivable and payable (incl. IC)",
-  "IT Asset Management & Data Security",
-  "Segregation of Duties (SoD)",
-  "Security & Administrative Oversight",
-  "Human Resources",
-  "Procurement Contracts",
-  "Order Entry & Sales Forecasting",
-  "Pricing",
-  "Credit Management & Customer Payment Terms"
+  "Delegation of Authority (DoA)","Financial Reporting","Inventory Management",
+  "Receivable and payable (incl. IC)","IT Asset Management & Data Security",
+  "Segregation of Duties (SoD)","Security & Administrative Oversight",
+  "Human Resources","Procurement Contracts","Order Entry & Sales Forecasting",
+  "Pricing","Credit Management & Customer Payment Terms","Indirect Expenses",
+  "Balance Sheet Review","Demo & Service Inventory","Instrument Warranty Replacement Process"
 ];
 
-/* ============================================================
-   Seed: transcribed from your workbook
-   Entities (Sheet 2), Engagements (Sheet 3), Findings (Sheet 1)
-   ============================================================ */
+// Compact seed — 5 findings, 3 engagements, 5 entities. Real data via Import.
 const seed=()=>({
-meta:{
-  orgName:"Tecan Group",
-  currentUser:"Internal Audit",
-  lastUpdated:new Date().toISOString()
-},
+meta:{orgName:"Tecan Group",currentUser:"Internal Audit",lastUpdated:new Date().toISOString()},
 ent:[
   {id:1,code:"105",name:"Tecan Schweiz AG",short:"T-CH"},
-  {id:2,code:"110",name:"Tecan Austria GmbH",short:"T-AT"},
-  {id:3,code:"140",name:"Tecan US Inc.",short:"T-US"},
-  {id:4,code:"150",name:"Tecan Deutschland GmbH",short:"T-DE"},
-  {id:5,code:"160",name:"Tecan Japan Ltd.",short:"T-JP"},
-  {id:6,code:"170",name:"Tecan UK Ltd.",short:"T-UK"},
-  {id:7,code:"180",name:"Tecan France S.A.",short:"T-FR"},
-  {id:8,code:"190",name:"Tecan Italia S.r.l",short:"T-IT"},
-  {id:9,code:"200",name:"Tecan Asia (PTe) Ltd.",short:"T-AS"},
-  {id:10,code:"240",name:"Tecan Benelux BV. BE/NL",short:"T-BE"},
-  {id:11,code:"250",name:"Tecan Munich GmbH",short:"T-MU"},
-  {id:12,code:"260",name:"Tecan Landesholding GmbH",short:"T-LH"},
-  {id:13,code:"280",name:"Tecan Trading AG",short:"T-TR"},
-  {id:14,code:"300",name:"Tecan Sales Switzerland",short:"T-SCH"},
-  {id:15,code:"310",name:"Tecan Sales Austria GmbH",short:"T-SAT"},
-  {id:16,code:"320",name:"Tecan Software C.C. GmbH",short:"T-SW"},
-  {id:17,code:"330",name:"Tecan Nordic AB",short:"T-NO"},
-  {id:18,code:"335",name:"Tecan Denmark A/S",short:"T-DK"},
-  {id:19,code:"340",name:"Tecan Sales International",short:"T-SAI"},
-  {id:20,code:"350",name:"Tecan Iberica Instr. S.L.",short:"T-IB"},
-  {id:21,code:"360",name:"Tecan China",short:"T-CN"},
-  {id:22,code:"370",name:"Tecan Australia Pty Ltd",short:"T-AUS"},
-  {id:23,code:"660",name:"IBL International GmbH",short:"T-IBL"},
-  {id:24,code:"700",name:"Tecan SP, Inc.",short:"T-SP"},
-  {id:25,code:"720",name:"Tecan Genomics, Inc.",short:"T-GEN"},
-  {id:26,code:"730",name:"Tecan Precision Machining MH, Inc.",short:"T-PMM"},
-  {id:27,code:"740",name:"Tecan Precision Machining VN Co. Ltd",short:"T-PMV"},
-  {id:28,code:"755",name:"Tecan CDMO Solutions MH, Corp.",short:"T-CDMM"},
-  {id:29,code:"760",name:"Tecan CDMO Solutions PN Sdn. Bhd.",short:"T-CDMP"},
-  {id:30,code:"910",name:"Tecan Corporate Accounts",short:"T-CA"},
-  {id:31,code:"920",name:"Tecan Schweiz PB",short:"T-TR-PB"}
+  {id:2,code:"140",name:"Tecan US Inc.",short:"T-US"},
+  {id:3,code:"170",name:"Tecan UK Ltd.",short:"T-UK"},
+  {id:4,code:"280",name:"Tecan Trading AG",short:"T-TR"},
+  {id:5,code:"360",name:"Tecan China",short:"T-CN"}
 ],
 eng:[
-  {id:1,lastAudited:"2024",entityCode:"0240/0245",entity:"T-BE",start:"2026-02-11",end:"2026-02-13",onSite:"",area1:"Indirect Expenses",area2:"Order Entry & Sales Forecasting",area3:"Instrument Warranty Replacement Process",location:"Brussels",status:"Report Final",draft:"x",cfo:"x",group:"x",audcom:"x",ey:"x",comments:""},
-  {id:2,lastAudited:"2024",entityCode:"0180",entity:"T-FR",start:"2026-03-11",end:"2026-03-13",onSite:"",area1:"Indirect Expenses",area2:"Order Entry & Sales Forecasting",area3:"Instrument Warranty Replacement Process",location:"Lyon",status:"Report Final",draft:"x",cfo:"x",group:"x",audcom:"x",ey:"x",comments:""},
-  {id:3,lastAudited:"2024",entityCode:"0150",entity:"T-DE",start:"2026-03-16",end:"2026-03-18",onSite:"",area1:"Indirect Expenses",area2:"Order Entry & Sales Forecasting",area3:"Instrument Warranty Replacement Process",location:"Crailsheim",status:"Report Final",draft:"x",cfo:"x",group:"x",audcom:"x",ey:"x",comments:""},
-  {id:4,lastAudited:"2025",entityCode:"0105",entity:"T-CH",start:"2026-04-13",end:"2026-04-30",onSite:"",area1:"Indirect Expenses",area2:"Balance Sheet Review",area3:"Credit Management & Customer Payment Terms",location:"CH",status:"Planned",draft:"",cfo:"",group:"",audcom:"",ey:"",comments:""},
-  {id:5,lastAudited:"2025",entityCode:"0280",entity:"T-TR",start:"2026-04-13",end:"2026-04-30",onSite:"",area1:"Indirect Expenses",area2:"Pricing",area3:"Credit Management & Customer Payment Terms",location:"CH",status:"Planned",draft:"",cfo:"",group:"",audcom:"",ey:"",comments:"Trade compliance -> new head"},
-  {id:6,lastAudited:"2025",entityCode:"360",entity:"T-CN",start:"2026-04-13",end:"2026-04-17",onSite:"",area1:"Indirect Expenses",area2:"Order Entry & Sales Forecasting",area3:"Sales Contracts & Margin Review",location:"Shanghai",status:"Report Final",draft:"x",cfo:"x",group:"x",audcom:"x",ey:"x",comments:""},
-  {id:7,lastAudited:"2024",entityCode:"0370",entity:"T-AUS",start:"2026-05-11",end:"2026-05-22",onSite:"",area1:"Indirect Expenses",area2:"Order Entry & Sales Forecasting",area3:"Instrument Warranty Replacement Process",location:"Melbourne",status:"Planned",draft:"x",cfo:"",group:"",audcom:"",ey:"",comments:""},
-  {id:8,lastAudited:"2024",entityCode:"0740",entity:"T-PMV",start:"2026-06-01",end:"2026-06-05",onSite:"",area1:"Indirect Expenses",area2:"Pricing (ILP & 3rd Party)",area3:"Credit Management & Customer Payment Terms",location:"Ho Chi Minh",status:"Planned",draft:"x",cfo:"",group:"",audcom:"",ey:"",comments:""},
-  {id:9,lastAudited:"2024",entityCode:"0330/0335",entity:"T-NO",start:"2026-06-08",end:"2026-06-19",onSite:"",area1:"Indirect Expenses",area2:"Order Entry & Sales Forecasting",area3:"Instrument Warranty Replacement Process",location:"Stockholm",status:"Planned",draft:"x",cfo:"x",group:"x",audcom:"",ey:"",comments:""},
-  {id:10,lastAudited:"2025",entityCode:"0140",entity:"T-US",start:"2026-07-20",end:"2026-07-24",onSite:"",area1:"Indirect Expenses",area2:"Order Entry & Sales Forecasting",area3:"Instrument Warranty Replacement Process",location:"Raleigh",status:"Planned",draft:"x",cfo:"",group:"",audcom:"",ey:"",comments:""},
-  {id:11,lastAudited:"2024",entityCode:"0160",entity:"T-JP",start:"2026-08-10",end:"2026-08-21",onSite:"",area1:"Indirect Expenses",area2:"Order Entry & Sales Forecasting",area3:"Instrument Warranty Replacement Process",location:"Tokyo",status:"Planned",draft:"x",cfo:"",group:"",audcom:"",ey:"",comments:""},
-  {id:12,lastAudited:"2025",entityCode:"0755",entity:"T-CDMM",start:"2026-10-12",end:"2026-10-23",onSite:"",area1:"Indirect Expenses",area2:"Demo & Service Inventory",area3:"Credit Management & Customer Payment Terms",location:"San Jose",status:"Planned",draft:"",cfo:"",group:"",audcom:"",ey:"",comments:""},
-  {id:13,lastAudited:"2025",entityCode:"0760",entity:"T-CDMP",start:"2026-11-09",end:"2026-11-20",onSite:"",area1:"Indirect Expenses",area2:"Inventory",area3:"Procurement Contracts",location:"Penang",status:"Planned",draft:"",cfo:"",group:"",audcom:"",ey:"",comments:""}
+  {id:1,lastAudited:"2025",entityCode:"0105",entity:"T-CH",start:"2026-04-13",end:"2026-04-30",onSite:"",area1:"Indirect Expenses",area2:"Balance Sheet Review",area3:"Credit Management & Customer Payment Terms",location:"CH",status:"Planned",draft:"",cfo:"",group:"",audcom:"",ey:"",comments:""},
+  {id:2,lastAudited:"2025",entityCode:"0140",entity:"T-US",start:"2026-07-20",end:"2026-07-24",onSite:"",area1:"Indirect Expenses",area2:"Order Entry & Sales Forecasting",area3:"Instrument Warranty Replacement Process",location:"Raleigh",status:"Planned",draft:"x",cfo:"",group:"",audcom:"",ey:"",comments:""},
+  {id:3,lastAudited:"2024",entityCode:"0170",entity:"T-UK",start:"2026-03-11",end:"2026-03-13",onSite:"",area1:"Indirect Expenses",area2:"Order Entry & Sales Forecasting",area3:"Instrument Warranty Replacement Process",location:"London",status:"Report Final",draft:"x",cfo:"x",group:"x",audcom:"x",ey:"x",comments:""}
 ],
 fnd:[
-  {id:1,year:2025,entity:"T-UK",area:"Segregation of Duties (SoD)",name:"Segregation of Duties – Purchase Order & Goods Receipt",finding:"During 2024, several occurrences were identified where the same user created a purchase order and performed the goods receipt for the same order.",assessment:"",severity:"Medium",action:"",auditee:"Paul Noble, Sr. UK Service and Support Manager & Commercial Service Manager, T-UK",due:"2025-02-28",status:"Closed"},
-  {id:2,year:2025,entity:"T-UK",area:"Financial Reporting",name:"Inventory Count Difference",finding:"The inventory count difference from November 2024 was approved as a net figure, resulting in the missing MB level approval required by the DoA. The DoA requires inventory count differences to be considered as gross difference values and the result of GBP 49k exceeds the CHF 50k limit for MB approval.",assessment:"",severity:"Low",action:"",auditee:"Agnes Grau, Head of Finance & Controlling Europe, T-TR",due:"2025-03-21",status:"Closed"},
-  {id:3,year:2025,entity:"T-UK",area:"Financial Reporting",name:"Holiday Accrual",finding:"The ending balance for holiday accrual in December 2024 was missing the reversal of the balance from 2023. This causes an over-accrual compared to payroll records of GBP 23k.",assessment:"",severity:"Medium",action:"",auditee:"Kristina Gurung, Legal Entity Controller, T-UK",due:"2025-03-31",status:"Closed"},
-  {id:4,year:2025,entity:"T-UK",area:"Financial Reporting",name:"Operations SlowMover Approval",finding:"T-UK has a process in place for the quarterly approval of Operations as confirmation of their review of the SlowMover report. The ICS requires this control frequency to be performed monthly.",assessment:"",severity:"Low",action:"",auditee:"Kristina Gurung, Legal Entity Controller, T-UK",due:"2025-03-31",status:"Closed"},
-  {id:5,year:2025,entity:"T-UK",area:"Financial Reporting",name:"Incorrect VAT postings & Reconciliation",finding:"Erroneous VAT postings from August 2024 are causing unexplainable balance sheet entries that remain in the ending balance in December 2024. The errors are caused by the execution of month-end VAT processes twice. These additional postings result in a gross total balance sheet misstatement of GBP 337k. This entry has no income statement impact.",assessment:"",severity:"High",action:"",auditee:"Kristina Gurung, Legal Entity Controller, T-UK",due:"2025-03-31",status:"Closed"},
-  {id:6,year:2025,entity:"T-UK",area:"Financial Reporting",name:"Bonus Accrual",finding:"The ending balance for bonus accrual in December 2024 was a debit balance of GBP 37k. The error was caused by the final adjustment posting being posted twice.",assessment:"",severity:"Medium",action:"",auditee:"Kristina Gurung, Legal Entity Controller, T-UK",due:"2025-03-31",status:"Closed"},
-  {id:7,year:2025,entity:"T-UK",area:"Financial Reporting",name:"Three-Way Match",finding:"The required 3-way match control, T-104, was not performed at any point during the period of review.",assessment:"",severity:"Low",action:"",auditee:"Kristina Gurung, Legal Entity Controller, T-UK",due:"2025-03-31",status:"Closed"},
-  {id:8,year:2025,entity:"T-UK",area:"Segregation of Duties (SoD)",name:"Update Bank Authorizations",finding:"The audit found that the local bank signature card still contained three employees who had left the company several years ago. The local team was aware of the issue and was already actively working with the bank to resolve it when the audit started.",assessment:"",severity:"High",action:"",auditee:"Kristina Gurung, Legal Entity Controller, T-UK",due:"2025-03-31",status:"Closed"},
-  {id:9,year:2025,entity:"T-UK",area:"Financial Reporting",name:"External Service Costs",finding:"Two invoices booked as external service costs were identified as material purchases for inventory. The invoices clearly referred to a purchase order that was missing invoice posting in SAP. The products were purchased for integration in a complex system sale to a customer.",assessment:"",severity:"Low",action:"",auditee:"Kristina Gurung, Legal Entity Controller, T-UK",due:"2025-03-31",status:"Closed"},
-  {id:10,year:2025,entity:"T-CH",area:"Financial Reporting",name:"Financial Reporting – Goods received not invoiced",finding:"The goods received not invoiced account contains over 4000 uncleared positions from the years 2014 to 2023. At the time of the audit, these positions total an uncleared balance of nearly CHF 1m. This is a repeat finding from the past several internal audits. The quarterly control performed for this account has not lead to any action.",assessment:"",severity:"High",action:"",auditee:"Patrick Bieri, Head Accounting Switzerland, T-TR",due:"2025-06-30",status:"Closed"},
-  {id:11,year:2025,entity:"T-CH",area:"Segregation of Duties (SoD)",name:"Segregation of Duties – Purchase Order & Goods Receipt",finding:"During 2024, several occurrences were identified where the same user created a purchase order and performed the goods receipt for the same order.",assessment:"",severity:"Medium",action:"",auditee:"Frank Flammer, Head Supply Management, T-CH",due:"2025-04-03",status:"Closed"},
-  {id:12,year:2025,entity:"T-CH",area:"Security & Administrative Oversight",name:"Security and Administrative Oversight – Administration Access Rights",finding:"The roles assigned to several employees grant broad access to sensitive financial and operational processes, including accounts payable/receivable, general ledger, procurement, inventory management, and asset maintenance. Additionally, several roles related to Segregation of Duties (SoD), such as automatic payments, credit management, and transaction reversals, could create potential conflicts of interest. At the time of the audit it's not clearly defined who should perform the required quarterly internal control for access rights.",assessment:"",severity:"High",action:"",auditee:"Julien Hug, Head Finance & Controlling Global Operations, T-TR",due:"2025-09-30",status:"Closed"},
-  {id:13,year:2025,entity:"T-TR",area:"Delegation of Authority (DoA)",name:"Delegation of Authority – End-of-Life Scrapping",finding:"The audit discovered CHF 98k of scrapping that was not approved in accordance with the delegation of authority. The scrap originated from an end-of-life decision for the D300 product. The end-of-life decision was also made without the required M9 and M10 milestone meeting and management presentations.",assessment:"",severity:"High",action:"",auditee:"Rafaela Truffer, Associate Product Manager, T-TR",due:"2025-06-30",status:"Closed"},
-  {id:14,year:2025,entity:"T-TR",area:"Segregation of Duties (SoD)",name:"Segregation of Duties – Purchase Order & Goods Receipt",finding:"During 2024, several occurrences were identified where the same user created a purchase order and performed the goods receipt for the same order.",assessment:"",severity:"Medium",action:"",auditee:"Katharina Basan, Head Consumables SCM, T-TR",due:"2025-06-30",status:"Closed"},
-  {id:15,year:2025,entity:"T-TR",area:"Delegation of Authority (DoA)",name:"Delegation of Authority – Quality Scrapping",finding:"The audit discovered CHF 131k of MCA384 scrapping that was not approved in accordance with the delegation of authority. The scrap originated directly from incoming quality inspection that deemed the product unusable and scrapped without approval.",assessment:"",severity:"Medium",action:"",auditee:"Julien Hug, Head Finance & Controlling Global Operations, T-TR",due:"2025-06-30",status:"Closed"},
-  {id:16,year:2025,entity:"T-SAS",area:"Receivable and payable (incl. IC)",name:"Receivables & Payables – Missing Risk Category for Credit Management",finding:"A total of 222 customers, 20 of which had activity in 2024 or 2025, are missing a risk category setting in SAP. The risk category setting is required in order to enable credit management functionality in SAP.",assessment:"",severity:"High",action:"",auditee:"Agnes Grau, Head of Finance & Controlling Europe, T-TR",due:"2025-06-30",status:"Closed"},
-  {id:17,year:2025,entity:"T-SAS",area:"Financial Reporting",name:"Financial Reporting – Goods Under Installation",finding:"The goods under installation account held uncleared positions totaling CHF 358k from 2023 that originated from a goods return. The postings were not matched with the expected customer credit for returns that should follow a goods return.",assessment:"",severity:"Medium",action:"",auditee:"Agnes Grau, Head of Finance & Controlling Europe, T-TR",due:"2025-06-30",status:"Closed"},
-  {id:18,year:2025,entity:"T-SAS",area:"Inventory Management",name:"Inventory Management – DEMO Instruments held as inventory",finding:"Internal audit identified two MagicPrep systems on sales employee consignment inventory. The systems were received in 2022 and 2023 and have been confirmed with customer operations to be in use as demo instruments. The instruments are currently valued at CHF 49k but should have a depreciated value of CHF 11k.",assessment:"",severity:"Medium",action:"",auditee:"Michaela Frueck-Pfanz, Head Operations DACH, T-DE",due:"2025-06-30",status:"Closed"},
-  {id:19,year:2025,entity:"T-SAS",area:"Receivable and payable (incl. IC)",name:"Receivables & Payables – Negative Credit Exposure",finding:"A total of 105 customers were identified to have a negative (net) credit exposure at the time of the audit. This is caused by an SAP error of unknown origin and must be manually corrected on a regular basis by IT resources.",assessment:"",severity:"High",action:"",auditee:"Agnes Grau, Head of Finance & Controlling Europe, T
+  {id:1,year:2025,entity:"T-UK",area:"Segregation of Duties (SoD)",name:"Segregation of Duties – PO & Goods Receipt",finding:"Several occurrences where the same user created a PO and performed the goods receipt.",assessment:"",severity:"Medium",action:"",auditee:"Paul Noble, T-UK",due:"2025-02-28",status:"Closed"},
+  {id:2,year:2025,entity:"T-CH",area:"Financial Reporting",name:"Goods received not invoiced",finding:"Over 4000 uncleared positions from 2014–2023, ~CHF 1m balance. Repeat finding.",assessment:"",severity:"High",action:"",auditee:"Patrick Bieri, T-TR",due:"2025-06-30",status:"Closed"},
+  {id:3,year:2025,entity:"T-TR",area:"Delegation of Authority (DoA)",name:"End-of-Life Scrapping",finding:"CHF 98k of scrapping not approved in accordance with DoA. M9/M10 milestones skipped.",assessment:"",severity:"High",action:"",auditee:"Rafaela Truffer, T-TR",due:"2025-06-30",status:"Closed"},
+  {id:4,year:2025,entity:"T-US",area:"Financial Reporting",name:"Unreported Sales Tax",finding:"Sales tax collected but not reported/paid in some jurisdictions. Amounts <10k USD.",assessment:"",severity:"High",action:"",auditee:"Joe Fischer, T-US",due:"2025-06-30",status:"Closed"},
+  {id:5,year:2025,entity:"T-CN",area:"Financial Reporting",name:"Missing Revenue Recognition Control",finding:"T-117 revenue recognition control for complex instruments not performed.",assessment:"",severity:"Medium",action:"",auditee:"Cathy Chen, T-CN",due:"2025-06-30",status:"Closed"}
+]});
+
+let S;
+try{S=JSON.parse(localStorage.getItem(KEY))}catch(e){}
+if(!S||!Array.isArray(S.fnd))S=seed();
+const save=()=>{try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}};
+
+const $=(s,r)=>(r||document).querySelector(s);
+const esc=t=>String(t??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const d=s=>new Date(s+"T00:00:00");
+const TODAY=new Date();TODAY.setHours(0,0,0,0);
+const iso=x=>x.getFullYear()+"-"+String(x.getMonth()+1).padStart(2,"0")+"-"+String(x.getDate()).padStart(2,"0");
+const fmt=s=>s?d(s).toLocaleDateString("en-GB",{day:"numeric",month:"short",year:"numeric"}):"–";
+const nid=a=>a.reduce((m,x)=>Math.max(m,x.id),0)+1;
+const toast=m=>{const t=$("#toast");t.textContent=m;t.classList.add("show");clearTimeout(toast.t);toast.t=setTimeout(()=>t.classList.remove("show"),2600)};
+const over=f=>f.status!=="Closed"&&f.due&&d(f.due)<TODAY;
+const age=f=>{if(!f.due)return 0;return Math.max(0,Math.round((TODAY-d(f.due))/864e5))};
+const sevClass=s=>({High:"High",Medium:"Medium",Low:"Low"}[s]||"Medium");
+const statClass=s=>({Open:"Open","In Progress":"InProgress",Closed:"Closed"}[s]||"Open");
+
+// Normalise free-text status to one of FST
+const normStatus=v=>{
+  if(!v)return "Open";
+  const s=String(v).trim().toLowerCase();
+  if(s==="closed")return "Closed";
+  if(s==="open")return "Open";
+  if(s.startsWith("in")||s==="ongoing"||s.includes("progress"))return "In Progress";
+  if(s==="yes")return "Closed";
+  return "Open";
+};
+
+// Normalise free-text severity
+const normSev=v=>{
+  if(!v)return "Medium";
+  const s=String(v).trim().toLowerCase();
+  if(s==="high"||s==="critical")return "High";
+  if(s==="low")return "Low";
+  return "Medium";
+};
+
+function stats(){
+  const open=S.fnd.filter(f=>f.status!=="Closed");
+  const od=open.filter(over);
+  const hi=open.filter(f=>f.severity==="High").length;
+  const entitiesTouched=new Set(S.fnd.map(f=>f.entity)).size;
+  return{open,od,hi,total:S.fnd.length,entitiesTouched};
+}
+
+let view="dashboard";
+let filt={year:"All",entity:"All",sev:"All",status:"All",q:""};
+
+const V={
+  dashboard:["Dashboard",()=>dash()],
+  findings:["Findings",()=>fnds()],
+  engagements:["Engagement tracker",()=>engs()],
+  entities:["Entities",()=>ents()],
+  reports:["Reports",()=>reps()]
+};
+
+const head=(t,s,extra="")=>`<div class="head"><div><h1>${t}</h1><p>${s}</p></div><div class="btns">${extra}</div></div>`;
+const kpi=(v,l,w)=>`<div class="card kpi${w?" warn":""}"><b>${v}</b><span>${l}</span></div>`;
+const sub=(a,b)=>`<b>${esc(a)}</b><span class="sub">${esc(b)}</span>`;
+const tr=(ed,c)=>`<tr class="click" data-ed="${ed}" tabindex="0">${c.map(x=>`<td>${x}</td>`).join("")}</tr>`;
+const tbl=(h,r,m)=>`<div class="card tbl"><table><thead><tr>${h.map(x=>`<th>${x}</th>`).join("")}</tr></thead><tbody>${r.join("")||`<tr><td colspan="${h.length}" class="empty">${m}</td></tr>`}</tbody></table></div>`;
+const bars=a=>{const m=Math.max(1,...a.map(x=>x[1]));return a.map(([l,v,c])=>`<div class="b"><span class="n" title="${esc(l)}">${esc(l)}</span><div class="t"><i style="width:${v/m*100}%;background:${c}"></i></div><b>${v}</b></div>`).join("")};
+
+const entByShort=sh=>S.ent.find(e=>e.short===sh);
+
+function dash(){
+  const s=stats();
+  const bySev=SEV.map(v=>[v,s.open.filter(f=>f.severity===v).length,({High:"var(--high)",Medium:"var(--med)",Low:"var(--low)"})[v]]);
+  const byStat=FST.map(v=>[v,S.fnd.filter(f=>f.status===v).length,({Open:"var(--high)","In Progress":"var(--med)",Closed:"var(--ok)"})[v]]);
+  const byYear=[...new Set(S.fnd.map(f=>f.year))].sort().map(y=>[String(y),S.fnd.filter(f=>f.year==y).length,"var(--brand)"]);
+  const byEntity=Object.entries(S.fnd.reduce((a,f)=>{a[f.entity]=(a[f.entity]||0)+1;return a},{})).sort((a,b)=>b[1]-a[1]).slice(0,8).map(([k,v])=>[k,v,"var(--brand)"]);
+  const overdue=S.fnd.filter(over).sort((a,b)=>d(a.due)-d(b.due)).slice(0,8);
+
+  return head("Dashboard","Audit findings, engagements, and entities at a glance.",
+    `<button class="btn sec" data-act="xlsx">Export Excel</button><button class="btn" data-new="fnd">New finding</button>`)+
+  `<div class="kpis">${kpi(S.fnd.length,"Total findings")}${kpi(s.open.length,"Open findings")}${kpi(s.hi,"High severity open",s.hi)}${kpi(s.od.length,"Overdue actions",s.od.length)}${kpi(s.entitiesTouched,"Entities with findings")}${kpi(S.eng.length,"Engagements")}</div>
+   <div class="grid2">
+     <div class="card"><h2>Open findings by severity</h2>${bars(bySev)}</div>
+     <div class="card"><h2>Findings by status</h2>${bars(byStat)}</div>
+   </div>
+   <div class="grid2">
+     <div class="card"><h2>Findings by year</h2>${bars(byYear)}</div>
+     <div class="card"><h2>Top entities by findings</h2>${bars(byEntity)}</div>
+   </div>
+   <div class="card" style="margin-top:14px"><h2>Overdue actions</h2>
+     ${overdue.map(f=>`<div class="item"><div>${sub(f.name,f.entity+" · "+f.auditee)}</div><span class="pill ${sevClass(f.severity)}">${f.severity}</span><span class="pill ${statClass(f.status)}">${f.status}</span><span class="over">${fmt(f.due)}</span></div>`).join("")||'<div class="empty">Nothing overdue.</div>'}
+   </div>`;
+}
+
+function fnds(){
+  const q=filt.q.toLowerCase();
+  const list=S.fnd.filter(f=>
+    (filt.year==="All"||String(f.year)===filt.year)&&
+    (filt.entity==="All"||f.entity===filt.entity)&&
+    (filt.sev==="All"||f.severity===filt.sev)&&
+    (filt.status==="All"||f.status===filt.status)&&
+    (!q||((f.name||"")+(f.finding||"")+(f.auditee||"")+(f.entity||"")).toLowerCase().includes(q))
+  ).sort((a,b)=>(a.status==="Closed")-(b.status==="Closed")||SEV.indexOf(a.severity)-SEV.indexOf(b.severity)||(d(a.due)-d(b.due)));
+
+  const years=[...new Set(S.fnd.map(f=>f.year))].sort().reverse();
+  const entities=[...new Set(S.fnd.map(f=>f.entity))].sort();
+
+  return head("Findings register","Every finding with owner, due date, and status. Click a row to edit.",
+    `<button class="btn sec" data-act="csv">Export CSV</button><button class="btn" data-new="fnd">New finding</button>`)+
+  `<div class="tools">
+    <input id="q" type="search" placeholder="Search findings, auditee, entity" value="${esc(filt.q)}">
+    <select id="f-year"><option value="All">All years</option>${years.map(y=>`<option ${filt.year==y?"selected":""}>${y}</option>`).join("")}</select>
+    <select id="f-ent"><option value="All">All entities</option>${entities.map(e=>`<option ${filt.entity===e?"selected":""}>${e}</option>`).join("")}</select>
+    <select id="f-sev"><option value="All">All severities</option>${SEV.map(s=>`<option ${filt.sev===s?"selected":""}>${s}</option>`).join("")}</select>
+    <select id="f-st"><option value="All">All statuses</option>${FST.map(s=>`<option ${filt.status===s?"selected":""}>${s}</option>`).join("")}</select>
+  </div>`+
+  tbl(["Year","Entity","Finding","Severity","Auditee","Due","Status"],list.map(f=>tr("fnd:"+f.id,[
+    f.year,esc(f.entity),sub(f.name,f.finding?f.finding.slice(0,80)+(f.finding.length>80?"…":""):""),
+    `<span class="pill ${sevClass(f.severity)}">${f.severity}</span>`,
+    esc(f.auditee||"—"),
+    `<span class="${over(f)?"over":""}">${fmt(f.due)}</span>`,
+    `<span class="pill ${statClass(f.status)}">${f.status}</span>`
+  ])),"No findings match.");
+}
+
+function engs(){
+  const list=[...S.eng].sort((a,b)=>d(a.start)-d(b.start));
+  return head("Engagement tracker","2026 audit plan — status and report milestones.",
+    `<button class="btn sec" data-act="xlsx">Export Excel</button><button class="btn" data-new="eng">New engagement</button>`)+
+  tbl(["Entity","Code","Window","Area","Location","Status","Report"],list.map(e=>{
+    const findingCount=S.fnd.filter(f=>f.entity===e.entity).length;
+    const reports=[["draft","Draft"],["cfo","CFO"],["group","Group"],["audcom","Audit Com."],["ey","EY"]]
+      .filter(([k])=>e[k]).map(([,l])=>l).join(", ")||"—";
+    return tr("eng:"+e.id,[
+      sub(e.entity,entByShort(e.entity)?.name||""),
+      esc(e.entityCode),
+      fmt(e.start)+" – "+fmt(e.end),
+      esc(e.area1+(e.area2?" · "+e.area2:"")+(e.area3?" · "+e.area3:"")),
+      esc(e.location),
+      `<span class="stat">${esc(e.status)}</span> <span class="mini">${findingCount} findings</span>`,
+      `<span class="mini">${esc(reports)}</span>`
+    ]);
+  }),"No engagements yet.");
+}
+
+function ents(){
+  const withF=S.ent.map(e=>({e,n:S.fnd.filter(f=>f.entity===e.short).length,open:S.fnd.filter(f=>f.entity===e.short&&f.status!=="Closed").length}));
+  return head("Entities","Audit universe with finding counts.","<button class=\"btn\" data-new=\"ent\">New entity</button>")+
+  tbl(["Code","Entity","Short","Findings","Open"],withF.map(({e,n,open})=>tr("ent:"+e.id,[e.code,esc(e.name),esc(e.short),n,open])),"No entities yet.");
+}
+
+function reps(){
+  const entities=[...new Set(S.fnd.map(f=>f.entity))].sort();
+  const years=[...new Set(S.fnd.map(f=>f.year))].sort().reverse();
+  return head("Reports","Print a findings report per entity or per year.",
+    `<button class="btn sec" data-act="print-ent">Print entity report</button><button class="btn sec" data-act="print-year">Print year report</button>`)+
+  `<div class="card"><h2>Entity report</h2>
+     <div class="tools"><select id="rep-ent"><option value="">— choose entity —</option>${entities.map(e=>`<option>${e}</option>`).join("")}</select></div>
+     <p class="sub">Select an entity, then click "Print entity report". The browser print dialog lets you save as PDF.</p>
+   </div>
+   <div class="card" style="margin-top:14px"><h2>Year report</h2>
+     <div class="tools"><select id="rep-year"><option value="">— choose year —</option>${years.map(y=>`<option>${y}</option>`).join("")}</select></div>
+     <p class="sub">Select a year, then click "Print year report".</p>
+   </div>`;
+}
+
+function doPrint(kind){
+  const val=$(kind==="ent"?"#rep-ent":"#rep-year").value;
+  if(!val){toast("Choose a "+kind+" first");return}
+  const rows=S.fnd.filter(f=>kind==="ent"?f.entity===val:f.year==val);
+  const title=kind==="ent"?`Findings — ${val}`:`Findings — ${val}`;
+  const main=$("#main");
+  const prev=main.innerHTML;
+  main.innerHTML=`<div class="pb"><h1>${esc(title)}</h1><p class="sub">Generated ${fmt(iso(TODAY))} · ${rows.length} findings</p></div>`+
+    tbl(["Year","Entity","Finding","Severity","Auditee","Due","Status"],rows.map(f=>`<tr>${[
+      f.year,esc(f.entity),sub(f.name,f.finding),
+      `<span class="pill ${sevClass(f.severity)}">${f.severity}</span>`,
+      esc(f.auditee),fmt(f.due),
+      `<span class="pill ${statClass(f.status)}">${f.status}</span>`
+    ].map(x=>`<td>${x}</td>`).join("")}</tr>`),"No findings.");
+  const restore=()=>{main.innerHTML=prev;render()};
+  addEventListener("afterprint",restore,{once:true});
+  setTimeout(()=>{print();setTimeout(()=>{main.innerHTML=prev;render()},800)},150);
+}
+
+// ---------- Import ----------
+function openImport(){
+  const dlg=$("#dlg");
+  dlg.innerHTML=`<h2>Import from Excel</h2>
+    <div class="import-hint">Copy rows from your Excel sheet (including headers), paste below, then choose which sheet it is. Column names are matched loosely.</div>
+    <label style="display:flex;flex-direction:column;gap:6px;font-size:13px;color:var(--mute)">Sheet type
+      <select id="imp-kind">
+        <option value="fnd">Findings (Audit Findings Tracker)</option>
+        <option value="eng">Engagements (Audit Engagement Tracker)</option>
+        <option value="ent">Entities (Audit Areas &amp; Entities)</option>
+      </select>
+    </label>
+    <label style="display:flex;flex-direction:column;gap:6px;font-size:13px;color:var(--mute);margin-top:10px">Paste rows
+      <textarea id="imp-text" rows="10" placeholder="YEAR&#9;ENTITY&#9;AUDIT AREA&#9;NAME&#9;FINDINGS&#9;ASSESSMENT&#9;SEVERITY&#9;AGREED ACTIONS&#9;RESPONSIBLE AUDITEE&#9;TARGET DATE&#9;STATUS" style="font-family:monospace;font-size:12px"></textarea>
+    </label>
+    <div class="acts"><button class="btn sec" id="imp-x">Cancel</button><button class="btn" id="imp-go">Import</button></div>`;
+  $("#imp-x",dlg).onclick=()=>dlg.close();
+  $("#imp-go",dlg).onclick=()=>{
+    const kind=$("#imp-kind",dlg).value;
+    const text=$("#imp-text",dlg).value.trim();
+    if(!text){toast("Nothing to import");return}
+    try{
+      const count=importText(kind,text);
+      dlg.close();
+      save();render();
+      toast(`Imported ${count} rows`);
+    }catch(err){console.error(err);toast("Import failed — see console")}
+  };
+  dlg.showModal();
+}
+
+// split a pasted table — supports tab (Excel) or comma (CSV)
+function splitRows(text){
+  const lines=
