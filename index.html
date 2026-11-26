@@ -5,21 +5,22 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>30 Days Strong | Home Workout</title>
+<title>NEPTUNE — Personal Calendar</title>
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
 <style>
 :root {
-  --bg: #f5f3ee;
-  --dark: #20251f;
-  --green: #c5d8b8;
-  --green-dark: #526b4c;
-  --muted: #85877f;
-  --white: #ffffff;
-  --border: #e5e3dc;
+  --bg: #050b19;
+  --panel: rgba(15, 28, 55, 0.58);
+  --panel-light: rgba(32, 54, 91, 0.42);
+  --border: rgba(155, 195, 255, 0.13);
+  --text: #eef5ff;
+  --muted: #8194b7;
+  --blue: #79baff;
+  --cyan: #80f0ed;
+  --purple: #a8a0ff;
 }
 
 * {
@@ -29,546 +30,649 @@
 }
 
 body {
-  background: var(--bg);
-  color: var(--dark);
-  font-family: 'DM Sans', sans-serif;
-}
-
-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 24px 7%;
-  border-bottom: 1px solid var(--border);
-}
-
-.logo {
-  font-weight: 700;
-  letter-spacing: 2px;
-  font-size: 14px;
-}
-
-.logo span {
-  color: var(--green-dark);
-}
-
-.header-tag {
-  color: var(--muted);
-  font-size: 11px;
-  letter-spacing: 1px;
-}
-
-main {
-  max-width: 1250px;
-  margin: auto;
-  padding: 40px 7%;
-}
-
-.hero {
-  min-height: 380px;
-  border-radius: 24px;
-  overflow: hidden;
-  position: relative;
-  color: white;
-  padding: 55px;
-  display: flex;
-  align-items: center;
+  min-height: 100vh;
   background:
-    linear-gradient(90deg, rgba(20,28,20,.88), rgba(20,28,20,.15)),
-    url("https://images.unsplash.com/photo-1518611012118-696072aa579a?auto=format&fit=crop&w=1600&q=85")
-    center 45% / cover;
+    radial-gradient(ellipse at 80% 10%, #172c54 0%, transparent 40%),
+    radial-gradient(ellipse at 10% 90%, #101e43 0%, transparent 45%),
+    var(--bg);
+  color: var(--text);
+  font-family: 'DM Sans', sans-serif;
+  overflow-x: hidden;
 }
 
-.hero-content {
-  max-width: 520px;
+button, input {
+  font: inherit;
 }
 
-.eyebrow {
-  text-transform: uppercase;
-  letter-spacing: 2px;
-  font-size: 11px;
-  font-weight: 700;
-  margin-bottom: 18px;
-  color: var(--green-dark);
+button {
+  cursor: pointer;
 }
 
-.hero .eyebrow {
-  color: var(--green);
+.background-stars {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: -1;
+  opacity: .7;
+  background-image:
+    radial-gradient(1px 1px at 10% 20%, white 50%, transparent),
+    radial-gradient(1px 1px at 40% 70%, #8bcaff 50%, transparent),
+    radial-gradient(2px 2px at 70% 30%, white 50%, transparent),
+    radial-gradient(1px 1px at 90% 80%, #8bcaff 50%, transparent),
+    radial-gradient(1px 1px at 25% 90%, white 50%, transparent),
+    radial-gradient(1px 1px at 60% 50%, #8bcaff 50%, transparent);
+  background-size: 330px 330px;
+  animation: starsDrift 90s linear infinite;
 }
 
-h1 {
-  font-family: 'Playfair Display', serif;
-  font-size: clamp(42px, 6vw, 72px);
-  line-height: 1.05;
-  font-weight: 500;
-  margin-bottom: 20px;
+@keyframes starsDrift {
+  from { transform: translateY(0); }
+  to { transform: translateY(-330px); }
 }
 
-.hero p {
-  color: #e0e4dc;
+.planet {
+  position: fixed;
+  width: 440px;
+  height: 440px;
+  right: -100px;
+  top: 80px;
+  border-radius: 50%;
+  z-index: -1;
+  opacity: .55;
+  background:
+    radial-gradient(ellipse at 35% 30%, rgba(151, 219, 255, .95), transparent 12%),
+    radial-gradient(ellipse at 40% 40%, #438bc7 0%, #164b91 35%, #0c2456 65%, #050b19 100%);
+  box-shadow:
+    inset -45px -35px 90px rgba(0, 0, 0, .7),
+    0 0 100px rgba(57, 137, 255, .18);
+  filter: blur(.2px);
+  animation: planetFloat 12s ease-in-out infinite;
+}
+
+.planet::before {
+  content: "";
+  position: absolute;
+  inset: 20% -20%;
+  border: 2px solid rgba(132, 217, 255, .25);
+  border-radius: 50%;
+  transform: rotate(-20deg) scaleY(.28);
+  box-shadow: 0 0 20px rgba(115, 200, 255, .15);
+}
+
+.planet::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background:
+    repeating-linear-gradient(
+      170deg,
+      transparent 0 20px,
+      rgba(145, 220, 255, .08) 22px 25px,
+      transparent 27px 40px
+    );
+  mix-blend-mode: screen;
+}
+
+@keyframes planetFloat {
+  0%, 100% { transform: translateY(0) rotate(0deg); }
+  50% { transform: translateY(-20px) rotate(3deg); }
+}
+
+.app {
+  max-width: 1450px;
+  margin: auto;
+  padding: 35px 5%;
+}
+
+.topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 55px;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 13px;
+}
+
+.brand-symbol {
+  width: 37px;
+  height: 37px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #8de6ff, #4a8cff 55%, #8c7cff);
+  box-shadow: 0 0 25px rgba(88, 165, 255, .4);
+  position: relative;
+}
+
+.brand-symbol::after {
+  content: "";
+  position: absolute;
+  inset: 8px;
+  border: 1px solid rgba(255,255,255,.65);
+  border-radius: 50%;
+}
+
+.brand-name {
+  font-family: 'Manrope', sans-serif;
   font-size: 15px;
-  line-height: 1.8;
-  max-width: 390px;
+  font-weight: 800;
+  letter-spacing: 4px;
 }
 
-.hero-bottom {
+.brand-sub {
+  color: var(--muted);
+  font-size: 10px;
+  letter-spacing: 2px;
+  margin-top: 3px;
+}
+
+.top-right {
   display: flex;
   align-items: center;
   gap: 15px;
-  margin-top: 30px;
+  color: var(--muted);
+  font-size: 12px;
 }
 
-.primary-btn {
-  background: var(--green);
-  color: var(--dark);
-  border: none;
-  padding: 14px 22px;
-  border-radius: 30px;
-  font-weight: 700;
-  cursor: pointer;
-  font-family: inherit;
+.status-dot {
+  display: inline-block;
+  width: 6px;
+  height: 6px;
+  background: var(--cyan);
+  border-radius: 50%;
+  margin-right: 7px;
+  box-shadow: 0 0 10px var(--cyan);
+}
+
+.hero {
+  display: flex;
+  align-items: end;
+  justify-content: space-between;
+  gap: 30px;
+  margin-bottom: 35px;
+}
+
+.eyebrow {
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 3px;
+  color: var(--cyan);
+  margin-bottom: 18px;
+}
+
+.hero h1 {
+  font-family: 'Manrope', sans-serif;
+  font-size: clamp(38px, 5vw, 66px);
+  font-weight: 600;
+  letter-spacing: -3px;
+  line-height: 1.1;
+}
+
+.hero h1 span {
+  color: #8bbdff;
+  background: linear-gradient(90deg, #9de9ff, #8baaff, #b7a5ff);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.hero-description {
+  color: var(--muted);
+  font-size: 14px;
+  margin-top: 15px;
+  line-height: 1.8;
+}
+
+.hero-date {
+  text-align: right;
+  padding-bottom: 8px;
+}
+
+.hero-date .day-number {
+  font-family: 'Manrope', sans-serif;
+  font-size: 48px;
+  font-weight: 600;
+  letter-spacing: -2px;
+}
+
+.hero-date .day-label {
+  color: var(--muted);
+  font-size: 11px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+}
+
+.layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1.65fr) minmax(280px, .85fr);
+  gap: 22px;
+}
+
+.glass {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 24px;
+  backdrop-filter: blur(25px);
+  -webkit-backdrop-filter: blur(25px);
+  box-shadow: 0 25px 80px rgba(0, 0, 0, .15);
+}
+
+.calendar-panel {
+  padding: 30px;
+}
+
+.calendar-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 28px;
+}
+
+.month-title {
+  font-family: 'Manrope', sans-serif;
+  font-size: 24px;
+  font-weight: 600;
+  letter-spacing: -.8px;
+}
+
+.month-controls {
+  display: flex;
+  gap: 8px;
+}
+
+.icon-button {
+  width: 38px;
+  height: 38px;
+  border: 1px solid var(--border);
+  background: rgba(255,255,255,.04);
+  color: var(--text);
+  border-radius: 12px;
   transition: .2s;
 }
 
-.primary-btn:hover {
-  background: white;
+.icon-button:hover {
+  background: rgba(125, 183, 255, .15);
+  border-color: rgba(125, 183, 255, .4);
+}
+
+.weekdays,
+.calendar-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+}
+
+.weekdays {
+  margin-bottom: 10px;
+}
+
+.weekdays div {
+  text-align: center;
+  color: #7187ad;
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  padding: 12px 0;
+}
+
+.calendar-grid {
+  gap: 7px;
+}
+
+.calendar-day {
+  min-height: 82px;
+  position: relative;
+  border: 1px solid transparent;
+  border-radius: 15px;
+  background: rgba(255,255,255,.025);
+  color: var(--text);
+  padding: 12px 10px;
+  text-align: left;
+  transition: .2s;
+}
+
+.calendar-day:hover {
+  background: rgba(110, 170, 255, .1);
+  border-color: rgba(110, 170, 255, .25);
   transform: translateY(-2px);
 }
 
-.hero-note {
-  font-size: 12px;
-  color: #d9ded5;
+.calendar-day.other-month {
+  opacity: .25;
 }
 
-.dashboard {
-  display: grid;
-  grid-template-columns: 1.2fr 1fr;
-  gap: 25px;
-  margin-top: 30px;
+.calendar-day.today {
+  border-color: rgba(128, 240, 237, .6);
+  background: rgba(128, 240, 237, .07);
 }
 
-.panel {
-  background: var(--white);
-  border-radius: 20px;
+.calendar-day.selected {
+  background: linear-gradient(145deg, rgba(98, 164, 255, .25), rgba(125, 115, 255, .13));
+  border-color: rgba(142, 194, 255, .65);
+  box-shadow: inset 0 0 20px rgba(88, 160, 255, .06);
+}
+
+.date-number {
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.today .date-number {
+  color: var(--cyan);
+}
+
+.event-dots {
+  display: flex;
+  gap: 4px;
+  margin-top: 12px;
+  flex-wrap: wrap;
+}
+
+.event-dot {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--blue);
+  box-shadow: 0 0 8px rgba(121, 186, 255, .5);
+}
+
+.event-dot.purple {
+  background: var(--purple);
+}
+
+.event-dot.cyan {
+  background: var(--cyan);
+}
+
+.sidebar {
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+}
+
+.selected-panel {
   padding: 28px;
+  flex: 1;
 }
 
 .panel-heading {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 25px;
+  margin-bottom: 22px;
 }
 
 .panel-heading h2 {
+  font-family: 'Manrope', sans-serif;
   font-size: 17px;
   font-weight: 600;
 }
 
-.small-label {
-  color: var(--muted);
+.selected-date {
   font-size: 12px;
+  color: var(--muted);
 }
 
-.progress-number {
-  font-family: 'Playfair Display', serif;
-  font-size: 45px;
+.event-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.event-card {
+  display: flex;
+  gap: 13px;
+  padding: 15px;
+  background: rgba(255,255,255,.035);
+  border: 1px solid rgba(255,255,255,.06);
+  border-radius: 15px;
+  animation: fadeIn .3s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.event-color {
+  width: 3px;
+  border-radius: 5px;
+  background: var(--blue);
+  flex-shrink: 0;
+}
+
+.event-color.purple {
+  background: var(--purple);
+}
+
+.event-color.cyan {
+  background: var(--cyan);
+}
+
+.event-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.event-time {
+  font-size: 10px;
+  color: var(--muted);
   margin-bottom: 5px;
 }
 
-.progress-track {
-  height: 7px;
-  background: #eeeee9;
-  border-radius: 10px;
-  margin: 20px 0;
-  overflow: hidden;
-}
-
-.progress-fill {
-  height: 100%;
-  width: 0%;
-  background: var(--green-dark);
-  border-radius: 10px;
-  transition: width .4s;
-}
-
-.calendar {
-  display: grid;
-  grid-template-columns: repeat(7, 1fr);
-  gap: 8px;
-}
-
-.day {
-  aspect-ratio: 1;
-  border: 1px solid var(--border);
-  border-radius: 10px;
-  background: white;
-  color: var(--dark);
-  cursor: pointer;
-  font-family: inherit;
+.event-title {
   font-size: 13px;
+  font-weight: 600;
+  word-break: break-word;
+}
+
+.delete-event {
+  border: none;
+  background: transparent;
+  color: #7384a2;
+  font-size: 17px;
+  align-self: start;
+  padding: 0 3px;
+}
+
+.delete-event:hover {
+  color: #ff8fba;
+}
+
+.empty-state {
+  text-align: center;
+  padding: 35px 10px;
+  color: var(--muted);
+}
+
+.empty-icon {
+  font-size: 28px;
+  margin-bottom: 12px;
+  opacity: .6;
+}
+
+.empty-state p {
+  font-size: 12px;
+  line-height: 1.8;
+}
+
+.add-panel {
+  padding: 25px;
+}
+
+.add-panel h2 {
+  font-family: 'Manrope', sans-serif;
+  font-size: 17px;
+  font-weight: 600;
+  margin-bottom: 20px;
+}
+
+.form-label {
+  display: block;
+  font-size: 10px;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  margin-bottom: 8px;
+}
+
+.form-group {
+  margin-bottom: 15px;
+}
+
+.form-input {
+  width: 100%;
+  padding: 13px 14px;
+  background: rgba(2, 8, 22, .45);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  color: var(--text);
+  outline: none;
+  font-size: 12px;
   transition: .2s;
 }
 
-.day:hover {
-  border-color: var(--green-dark);
+.form-input:focus {
+  border-color: rgba(121, 186, 255, .6);
+  box-shadow: 0 0 0 3px rgba(121, 186, 255, .06);
 }
 
-.day.selected {
-  background: var(--dark);
-  color: white;
-  border-color: var(--dark);
+.form-input::-webkit-calendar-picker-indicator {
+  filter: invert(1);
+  opacity: .5;
 }
 
-.day.completed {
-  background: var(--green);
-  border-color: var(--green);
-  color: var(--dark);
-  font-weight: 700;
-}
-
-.day.selected.completed {
-  background: var(--green-dark);
-  color: white;
-}
-
-.workout-section {
-  margin-top: 45px;
-  scroll-margin-top: 25px;
-}
-
-.section-heading {
-  display: flex;
-  justify-content: space-between;
-  align-items: end;
-  margin-bottom: 22px;
-}
-
-.section-heading h2 {
-  font-family: 'Playfair Display', serif;
-  font-size: 35px;
-  font-weight: 500;
-}
-
-.workout-layout {
+.form-row {
   display: grid;
-  grid-template-columns: 1fr 310px;
-  gap: 25px;
-}
-
-.workout-card {
-  background: white;
-  border-radius: 20px;
-  overflow: hidden;
-}
-
-.demo-stage {
-  height: 300px;
-  position: relative;
-  overflow: hidden;
-  background: #e8e9df;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.demo-label {
-  position: absolute;
-  top: 20px;
-  left: 22px;
-  z-index: 2;
-  background: rgba(255,255,255,.75);
-  padding: 8px 13px;
-  border-radius: 20px;
-  font-size: 11px;
-  font-weight: 700;
-  letter-spacing: 1px;
-}
-
-.demo-stage svg {
-  width: 100%;
-  height: 100%;
-  max-width: 450px;
-}
-
-.demo-floor {
-  stroke: #c7c9bd;
-  stroke-width: 3;
-}
-
-.figure {
-  stroke: #526b4c;
-  stroke-width: 14;
-  stroke-linecap: round;
-  stroke-linejoin: round;
-  fill: none;
-}
-
-.figure-head {
-  fill: #526b4c;
-}
-
-.figure-group {
-  transform-origin: 200px 220px;
-  animation: bodyMove 2.4s ease-in-out infinite;
-}
-
-.arm-left,
-.arm-right,
-.leg-left,
-.leg-right {
-  transform-box: view-box;
-  transform-origin: center;
-  animation: limbMove 2.4s ease-in-out infinite;
-}
-
-.demo-stage[data-exercise="squat"] .figure-group {
-  animation-name: squatMove;
-}
-
-.demo-stage[data-exercise="pushup"] .figure-group {
-  animation-name: pushupMove;
-}
-
-.demo-stage[data-exercise="bridge"] .figure-group {
-  animation-name: bridgeMove;
-}
-
-.demo-stage[data-exercise="plank"] .figure-group {
-  animation: none;
-}
-
-.demo-stage[data-exercise="lunge"] .figure-group {
-  animation-name: lungeMove;
-}
-
-.demo-stage[data-exercise="mountain"] .figure-group {
-  animation-name: mountainMove;
-}
-
-.demo-stage[data-exercise="deadbug"] .figure-group {
-  animation-name: deadbugMove;
-}
-
-.demo-stage[data-exercise="row"] .figure-group {
-  animation-name: rowMove;
-}
-
-@keyframes squatMove {
-  0%, 100% { transform: translateY(0) scaleY(1); }
-  50% { transform: translateY(35px) scaleY(.88); }
-}
-
-@keyframes pushupMove {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(20px); }
-}
-
-@keyframes bridgeMove {
-  0%, 100% { transform: translateY(15px) rotate(0deg); }
-  50% { transform: translateY(-25px) rotate(-4deg); }
-}
-
-@keyframes lungeMove {
-  0%, 100% { transform: translateY(0) rotate(0deg); }
-  50% { transform: translateY(20px) rotate(5deg); }
-}
-
-@keyframes mountainMove {
-  0%, 100% { transform: translateY(0) rotate(0deg); }
-  50% { transform: translateY(8px) rotate(-5deg); }
-}
-
-@keyframes deadbugMove {
-  0%, 100% { transform: rotate(0deg); }
-  50% { transform: rotate(-8deg); }
-}
-
-@keyframes rowMove {
-  0%, 100% { transform: translateY(0) rotate(0deg); }
-  50% { transform: translateY(-10px) rotate(8deg); }
-}
-
-.exercise-list {
-  padding: 10px 25px 25px;
-}
-
-.exercise {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 18px 0;
-  border-bottom: 1px solid var(--border);
-  gap: 15px;
-}
-
-.exercise:last-child {
-  border-bottom: none;
-}
-
-.exercise-name {
-  font-weight: 600;
-  font-size: 14px;
-}
-
-.exercise-detail {
-  font-size: 12px;
-  color: var(--muted);
-  margin-top: 5px;
-}
-
-.exercise-number {
-  color: var(--green-dark);
-  font-size: 12px;
-  font-weight: 700;
-}
-
-.exercise-select {
-  border: none;
-  background: transparent;
-  text-align: left;
-  width: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  cursor: pointer;
-  font-family: inherit;
-}
-
-.exercise-select.active .exercise-name {
-  color: var(--green-dark);
-}
-
-.exercise-select.active .exercise-number::after {
-  content: " ▶";
-}
-
-.timer-card {
-  background: var(--dark);
-  color: white;
-  border-radius: 20px;
-  padding: 30px;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-}
-
-.timer-card h3 {
-  font-family: 'Playfair Display', serif;
-  font-size: 27px;
-  font-weight: 500;
-}
-
-.timer {
-  font-size: 58px;
-  font-weight: 500;
-  letter-spacing: -2px;
-  text-align: center;
-  margin: 30px 0;
-  font-variant-numeric: tabular-nums;
-}
-
-.timer-buttons {
-  display: flex;
+  grid-template-columns: 1fr 1fr;
   gap: 10px;
 }
 
-.timer-buttons button {
-  flex: 1;
-  padding: 12px;
-  border-radius: 25px;
-  border: 1px solid #555b53;
-  background: transparent;
-  color: white;
-  cursor: pointer;
-  font-family: inherit;
-}
-
-.timer-buttons .timer-start {
-  background: var(--green);
-  color: var(--dark);
-  border-color: var(--green);
-  font-weight: 700;
-}
-
-.complete-btn {
+.add-button {
   width: 100%;
-  margin-top: 20px;
-  padding: 15px;
   border: none;
-  border-radius: 30px;
-  background: var(--green);
-  color: var(--dark);
-  font-weight: 700;
-  cursor: pointer;
-  font-family: inherit;
-}
-
-.complete-btn:disabled {
-  opacity: .6;
-  cursor: default;
-}
-
-footer {
-  text-align: center;
-  padding: 50px 20px;
-  color: var(--muted);
+  border-radius: 13px;
+  padding: 14px;
+  background: linear-gradient(110deg, #9de9ff, #8baaff 60%, #a8a0ff);
+  color: #091326;
   font-size: 12px;
-  letter-spacing: 1px;
+  font-weight: 700;
+  transition: .2s;
 }
 
-@media (max-width: 850px) {
-  .dashboard,
-  .workout-layout {
+.add-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 25px rgba(105, 160, 255, .2);
+}
+
+.bottom-note {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  color: #637698;
+  font-size: 10px;
+  letter-spacing: 1px;
+  padding: 25px 5px;
+}
+
+.bottom-note span {
+  color: #8baaff;
+}
+
+@media (max-width: 1050px) {
+  .layout {
     grid-template-columns: 1fr;
   }
 
-  .hero {
-    padding: 35px 25px;
-    min-height: 400px;
+  .sidebar {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
   }
 
-  main {
-    padding: 25px 5%;
-  }
-
-  .timer-card {
-    min-height: 300px;
-  }
-
-  .section-heading h2 {
-    font-size: 29px;
+  .planet {
+    width: 350px;
+    height: 350px;
+    right: -130px;
   }
 }
 
-@media (max-width: 480px) {
-  header {
-    padding: 20px 5%;
+@media (max-width: 650px) {
+  .app {
+    padding: 25px 4%;
   }
 
-  .header-tag {
-    font-size: 9px;
+  .topbar {
+    margin-bottom: 40px;
   }
 
-  .panel {
-    padding: 20px;
-  }
-
-  .calendar {
-    gap: 5px;
-  }
-
-  .day {
-    border-radius: 7px;
-    font-size: 12px;
+  .top-right {
+    font-size: 10px;
   }
 
   .hero {
-    border-radius: 18px;
+    align-items: start;
+    flex-direction: column;
+    gap: 20px;
+    margin-bottom: 25px;
   }
 
-  .demo-stage {
-    height: 240px;
+  .hero h1 {
+    font-size: 43px;
+  }
+
+  .hero-date {
+    text-align: left;
+    display: flex;
+    align-items: baseline;
+    gap: 10px;
+  }
+
+  .hero-date .day-number {
+    font-size: 30px;
+  }
+
+  .calendar-panel {
+    padding: 18px;
+  }
+
+  .month-title {
+    font-size: 20px;
+  }
+
+  .calendar-grid {
+    gap: 4px;
+  }
+
+  .calendar-day {
+    min-height: 55px;
+    padding: 8px 5px;
+    border-radius: 10px;
+  }
+
+  .event-dots {
+    margin-top: 7px;
+  }
+
+  .weekdays div {
+    font-size: 9px;
+  }
+
+  .sidebar {
+    grid-template-columns: 1fr;
+  }
+
+  .planet {
+    width: 270px;
+    height: 270px;
+    right: -140px;
+    top: 170px;
+    opacity: .35;
+  }
+
+  .bottom-note {
+    font-size: 8px;
   }
 }
 </style>
@@ -576,404 +680,458 @@ footer {
 
 <body>
 
-<header>
-  <div class="logo">30 DAYS <span>STRONG</span></div>
-  <div class="header-tag">YOUR PERSONAL FITNESS JOURNEY</div>
-</header>
+<div class="background-stars"></div>
+<div class="planet"></div>
 
-<main>
+<div class="app">
 
-<section class="hero">
-  <div class="hero-content">
-    <div class="eyebrow">Your 30-day challenge</div>
-    <h1>Build strength.<br>Feel powerful.</h1>
-    <p>
-      A little progress every day adds up to something extraordinary.
-      Your journey starts here.
-    </p>
-    <div class="hero-bottom">
-      <button class="primary-btn" onclick="scrollToWorkout()">
-        Start today's workout →
-      </button>
-      <span class="hero-note">30 days · At home</span>
-    </div>
-  </div>
-</section>
-
-<section class="dashboard">
-
-  <div class="panel">
-    <div class="panel-heading">
-      <h2>Your progress</h2>
-      <span class="small-label" id="progress-label">0 / 30 days</span>
+  <header class="topbar">
+    <div class="brand">
+      <div class="brand-symbol"></div>
+      <div>
+        <div class="brand-name">NEPTUNE</div>
+        <div class="brand-sub">YOUR PERSONAL UNIVERSE</div>
+      </div>
     </div>
 
-    <div class="progress-number" id="progress-number">0%</div>
-    <div class="small-label">Consistency is your superpower.</div>
-
-    <div class="progress-track">
-      <div class="progress-fill" id="progress-fill"></div>
+    <div class="top-right">
+      <span><span class="status-dot"></span>YOUR SPACE</span>
     </div>
+  </header>
 
-    <div class="small-label">Choose a day to view your workout.</div>
-  </div>
-
-  <div class="panel">
-    <div class="panel-heading">
-      <h2>Workout calendar</h2>
-      <span class="small-label">30 DAYS</span>
-    </div>
-
-    <div class="calendar" id="calendar"></div>
-  </div>
-
-</section>
-
-<section class="workout-section" id="workout">
-
-  <div class="section-heading">
+  <section class="hero">
     <div>
-      <div class="eyebrow">Your daily movement</div>
-      <h2 id="workout-heading">Day 01</h2>
-    </div>
-    <span class="small-label" id="workout-duration">30 MIN</span>
-  </div>
-
-  <div class="workout-layout">
-
-    <div class="workout-card">
-
-      <div class="demo-stage" id="demo-stage" data-exercise="squat">
-
-        <div class="demo-label">MOVEMENT DEMO</div>
-
-        <!-- Animated exercise illustration -->
-        <svg viewBox="0 0 400 300" role="img" aria-label="Animated exercise demonstration">
-
-          <line x1="35" y1="255" x2="365" y2="255" class="demo-floor"/>
-
-          <g class="figure-group">
-
-            <!-- Head -->
-            <circle cx="200" cy="65" r="25" class="figure-head"/>
-
-            <!-- Torso -->
-            <path d="M200 95 L200 165" class="figure"/>
-
-            <!-- Arms -->
-            <path d="M200 110 L155 145 L130 190" class="figure arm-left"/>
-            <path d="M200 110 L245 145 L270 190" class="figure arm-right"/>
-
-            <!-- Legs -->
-            <path d="M200 165 L165 210 L150 250" class="figure leg-left"/>
-            <path d="M200 165 L235 210 L250 250" class="figure leg-right"/>
-
-          </g>
-
-        </svg>
-
-      </div>
-
-      <div class="exercise-list" id="exercise-list"></div>
-
+      <div class="eyebrow">A little universe of your own</div>
+      <h1>Make space<br>for <span>your life.</span></h1>
+      <p class="hero-description">
+        Your days, your dreams, your own rhythm.<br>
+        Everything important, beautifully in orbit.
+      </p>
     </div>
 
-    <div class="timer-card">
+    <div class="hero-date">
+      <div class="day-number" id="today-number">--</div>
+      <div class="day-label" id="today-label">TODAY</div>
+    </div>
+  </section>
 
-      <div>
-        <div class="eyebrow">Your workout companion</div>
-        <h3>Stay focused.<br>One rep at a time.</h3>
+  <div class="layout">
+
+    <section class="glass calendar-panel">
+
+      <div class="calendar-top">
+        <div class="month-title" id="month-title">Month 2026</div>
+
+        <div class="month-controls">
+          <button class="icon-button" id="prev-month" aria-label="Previous month">‹</button>
+          <button class="icon-button" id="today-button" aria-label="Go to today">⌂</button>
+          <button class="icon-button" id="next-month" aria-label="Next month">›</button>
+        </div>
       </div>
 
-      <div>
-        <div class="timer" id="timer">00:45</div>
+      <div class="weekdays">
+        <div>Mon</div>
+        <div>Tue</div>
+        <div>Wed</div>
+        <div>Thu</div>
+        <div>Fri</div>
+        <div>Sat</div>
+        <div>Sun</div>
+      </div>
 
-        <div class="timer-buttons">
-          <button class="timer-start" id="start-timer">Start</button>
-          <button id="reset-timer">Reset</button>
+      <div class="calendar-grid" id="calendar-grid"></div>
+
+    </section>
+
+    <aside class="sidebar">
+
+      <section class="glass selected-panel">
+
+        <div class="panel-heading">
+          <h2>Your plans</h2>
+          <span class="selected-date" id="selected-date-label"></span>
         </div>
 
-        <button class="complete-btn" id="complete-btn">
-          Mark day complete ✓
-        </button>
-      </div>
+        <div class="event-list" id="event-list"></div>
 
-    </div>
+      </section>
+
+      <section class="glass add-panel">
+
+        <h2>Add to your universe</h2>
+
+        <form id="event-form">
+
+          <div class="form-group">
+            <label class="form-label" for="event-title">Event name</label>
+            <input
+              class="form-input"
+              id="event-title"
+              type="text"
+              placeholder="A moment for yourself..."
+              maxlength="80"
+              required
+            >
+          </div>
+
+          <div class="form-row">
+
+            <div class="form-group">
+              <label class="form-label" for="event-date">Date</label>
+              <input
+                class="form-input"
+                id="event-date"
+                type="date"
+                required
+              >
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="event-time">Time</label>
+              <input
+                class="form-input"
+                id="event-time"
+                type="time"
+                value="09:00"
+                required
+              >
+            </div>
+
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="event-color">Atmosphere</label>
+            <select class="form-input" id="event-color">
+              <option value="blue">Ocean blue</option>
+              <option value="purple">Cosmic violet</option>
+              <option value="cyan">Aurora aqua</option>
+            </select>
+          </div>
+
+          <button class="add-button" type="submit">
+            + Create event
+          </button>
+
+        </form>
+
+      </section>
+
+    </aside>
 
   </div>
 
-</section>
+  <footer class="bottom-note">
+    <div>NEPTUNE © <span id="year"></span></div>
+    <div>DESIGNED FOR YOUR OWN ORBIT</div>
+  </footer>
 
-</main>
-
-<footer>
-  MADE FOR YOURSELF · ONE DAY AT A TIME
-</footer>
+</div>
 
 <script>
-const workouts = [
-  {
-    title: "Full Body Strength",
-    duration: "30 MIN",
-    exercises: [
-      { name: "Squats", detail: "3 sets × 12 reps", type: "squat" },
-      { name: "Push-ups", detail: "3 sets × 10 reps", type: "pushup" },
-      { name: "Glute bridges", detail: "3 sets × 15 reps", type: "bridge" },
-      { name: "Plank", detail: "3 sets × 30 seconds", type: "plank" },
-      { name: "Reverse lunges", detail: "3 sets × 10 each leg", type: "lunge" }
-    ]
-  },
-  {
-    title: "Lower Body",
-    duration: "30 MIN",
-    exercises: [
-      { name: "Goblet squats", detail: "3 sets × 12 reps", type: "squat" },
-      { name: "Romanian deadlifts", detail: "3 sets × 12 reps", type: "row" },
-      { name: "Reverse lunges", detail: "3 sets × 10 each leg", type: "lunge" },
-      { name: "Glute bridges", detail: "3 sets × 15 reps", type: "bridge" },
-      { name: "Calf raises", detail: "3 sets × 20 reps", type: "squat" }
-    ]
-  },
-  {
-    title: "Core & Cardio",
-    duration: "25 MIN",
-    exercises: [
-      { name: "Mountain climbers", detail: "3 sets × 30 seconds", type: "mountain" },
-      { name: "Dead bugs", detail: "3 sets × 12 reps", type: "deadbug" },
-      { name: "Bicycle crunches", detail: "3 sets × 20 reps", type: "deadbug" },
-      { name: "Plank", detail: "3 sets × 30 seconds", type: "plank" },
-      { name: "Jumping jacks", detail: "3 sets × 45 seconds", type: "mountain" }
-    ]
-  },
-  {
-    title: "Upper Body",
-    duration: "30 MIN",
-    exercises: [
-      { name: "Push-ups", detail: "3 sets × 10 reps", type: "pushup" },
-      { name: "Dumbbell rows", detail: "3 sets × 12 reps", type: "row" },
-      { name: "Shoulder press", detail: "3 sets × 12 reps", type: "row" },
-      { name: "Bicep curls", detail: "3 sets × 12 reps", type: "row" },
-      { name: "Tricep extensions", detail: "3 sets × 12 reps", type: "row" }
-    ]
-  },
-  {
-    title: "Active Recovery",
-    duration: "20 MIN",
-    exercises: [
-      { name: "Cat-cow stretch", detail: "2 minutes", type: "bridge" },
-      { name: "Hip flexor stretch", detail: "1 minute each side", type: "lunge" },
-      { name: "Hamstring stretch", detail: "1 minute each side", type: "lunge" },
-      { name: "Child's pose", detail: "2 minutes", type: "plank" },
-      { name: "Easy walking", detail: "10 minutes", type: "mountain" }
-    ]
-  }
-];
+const calendarGrid = document.getElementById("calendar-grid");
+const monthTitle = document.getElementById("month-title");
+const eventList = document.getElementById("event-list");
 
-let selectedDay = 1;
-let selectedExercise = 0;
+const today = new Date();
 
-let completedDays = JSON.parse(
-  localStorage.getItem("completedDays") || "[]"
+let currentYear = today.getFullYear();
+let currentMonth = today.getMonth();
+
+let selectedDate = formatDate(today);
+
+let events = JSON.parse(
+  localStorage.getItem("neptune-events") || "[]"
 );
 
-let timeLeft = 45;
-let timerInterval = null;
+function formatDate(date) {
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, "0");
+  const day = String(date.getDate()).padStart(2, "0");
 
-const calendar = document.getElementById("calendar");
-const exerciseList = document.getElementById("exercise-list");
-const demoStage = document.getElementById("demo-stage");
+  return `${year}-${month}-${day}`;
+}
 
-function createCalendar() {
-  calendar.innerHTML = "";
+function getDateFromString(dateString) {
+  const [year, month, day] = dateString.split("-").map(Number);
+  return new Date(year, month - 1, day);
+}
 
-  for (let day = 1; day <= 30; day++) {
+function saveEvents() {
+  localStorage.setItem("neptune-events", JSON.stringify(events));
+}
+
+function renderCalendar() {
+  calendarGrid.innerHTML = "";
+
+  const firstDay = new Date(currentYear, currentMonth, 1);
+  const lastDay = new Date(currentYear, currentMonth + 1, 0);
+
+  const monthName = firstDay.toLocaleDateString("en", {
+    month: "long"
+  });
+
+  monthTitle.textContent = `${monthName} ${currentYear}`;
+
+  // Monday-based calendar
+  let startDay = firstDay.getDay();
+  startDay = startDay === 0 ? 6 : startDay - 1;
+
+  const totalDays = lastDay.getDate();
+
+  const previousMonthLastDay = new Date(
+    currentYear,
+    currentMonth,
+    0
+  ).getDate();
+
+  const totalCells = Math.ceil((startDay + totalDays) / 7) * 7;
+
+  for (let i = 0; i < totalCells; i++) {
+    let dateNumber;
+    let dateObject;
+    let otherMonth = false;
+
+    if (i < startDay) {
+      dateNumber = previousMonthLastDay - startDay + i + 1;
+
+      dateObject = new Date(
+        currentYear,
+        currentMonth - 1,
+        dateNumber
+      );
+
+      otherMonth = true;
+
+    } else if (i >= startDay + totalDays) {
+      dateNumber = i - startDay - totalDays + 1;
+
+      dateObject = new Date(
+        currentYear,
+        currentMonth + 1,
+        dateNumber
+      );
+
+      otherMonth = true;
+
+    } else {
+      dateNumber = i - startDay + 1;
+
+      dateObject = new Date(
+        currentYear,
+        currentMonth,
+        dateNumber
+      );
+    }
+
+    const dateString = formatDate(dateObject);
+
     const button = document.createElement("button");
+    button.className = "calendar-day";
 
-    button.className = "day";
-    button.textContent = day;
+    if (otherMonth) {
+      button.classList.add("other-month");
+    }
 
-    if (day === selectedDay) {
+    if (dateString === formatDate(today)) {
+      button.classList.add("today");
+    }
+
+    if (dateString === selectedDate) {
       button.classList.add("selected");
     }
 
-    if (completedDays.includes(day)) {
-      button.classList.add("completed");
-    }
+    const number = document.createElement("div");
+    number.className = "date-number";
+    number.textContent = dateNumber;
 
-    button.addEventListener("click", () => {
-      selectedDay = day;
-      selectedExercise = 0;
+    button.appendChild(number);
 
-      stopTimer();
-      resetTimer();
-
-      renderWorkout();
-      createCalendar();
-    });
-
-    calendar.appendChild(button);
-  }
-}
-
-function getWorkout(day) {
-  // Recovery days: 5, 10, 15, 20, 25 and 30
-  if (day % 5 === 0) {
-    return workouts[4];
-  }
-
-  return workouts[(day - 1) % 4];
-}
-
-function renderWorkout() {
-  const workout = getWorkout(selectedDay);
-
-  document.getElementById("workout-heading").textContent =
-    "Day " + String(selectedDay).padStart(2, "0");
-
-  document.getElementById("workout-duration").textContent =
-    workout.duration;
-
-  exerciseList.innerHTML = "";
-
-  workout.exercises.forEach((exercise, index) => {
-    const item = document.createElement("div");
-    item.className = "exercise";
-
-    const button = document.createElement("button");
-    button.className = "exercise-select";
-
-    if (index === selectedExercise) {
-      button.classList.add("active");
-    }
-
-    button.innerHTML = `
-      <div>
-        <div class="exercise-name">${exercise.name}</div>
-        <div class="exercise-detail">${exercise.detail}</div>
-      </div>
-      <div class="exercise-number">
-        ${String(index + 1).padStart(2, "0")}
-      </div>
-    `;
-
-    button.addEventListener("click", () => {
-      selectedExercise = index;
-      renderWorkout();
-    });
-
-    item.appendChild(button);
-    exerciseList.appendChild(item);
-  });
-
-  updateDemo();
-
-  const completeButton = document.getElementById("complete-btn");
-
-  if (completedDays.includes(selectedDay)) {
-    completeButton.textContent = "Day completed ✓";
-    completeButton.disabled = true;
-  } else {
-    completeButton.textContent = "Mark day complete ✓";
-    completeButton.disabled = false;
-  }
-
-  updateProgress();
-}
-
-function updateDemo() {
-  const workout = getWorkout(selectedDay);
-  const exercise = workout.exercises[selectedExercise];
-
-  demoStage.dataset.exercise = exercise.type;
-  demoStage.setAttribute(
-    "aria-label",
-    "Animated demonstration: " + exercise.name
-  );
-}
-
-function updateProgress() {
-  const count = completedDays.length;
-  const percentage = Math.round((count / 30) * 100);
-
-  document.getElementById("progress-number").textContent =
-    percentage + "%";
-
-  document.getElementById("progress-label").textContent =
-    count + " / 30 days";
-
-  document.getElementById("progress-fill").style.width =
-    percentage + "%";
-}
-
-document.getElementById("complete-btn").addEventListener("click", () => {
-  if (!completedDays.includes(selectedDay)) {
-    completedDays.push(selectedDay);
-    completedDays.sort((a, b) => a - b);
-
-    localStorage.setItem(
-      "completedDays",
-      JSON.stringify(completedDays)
+    const dayEvents = events.filter(
+      event => event.date === dateString
     );
 
-    createCalendar();
-    renderWorkout();
+    if (dayEvents.length > 0) {
+      const dots = document.createElement("div");
+      dots.className = "event-dots";
+
+      dayEvents.slice(0, 3).forEach(event => {
+        const dot = document.createElement("span");
+        dot.className = "event-dot " + event.color;
+        dots.appendChild(dot);
+      });
+
+      button.appendChild(dots);
+    }
+
+    button.addEventListener("click", () => {
+      selectedDate = dateString;
+
+      if (otherMonth) {
+        currentYear = dateObject.getFullYear();
+        currentMonth = dateObject.getMonth();
+      }
+
+      renderCalendar();
+      renderEvents();
+    });
+
+    calendarGrid.appendChild(button);
   }
-});
-
-function updateTimerDisplay() {
-  const minutes = Math.floor(timeLeft / 60);
-  const seconds = timeLeft % 60;
-
-  document.getElementById("timer").textContent =
-    String(minutes).padStart(2, "0") + ":" +
-    String(seconds).padStart(2, "0");
 }
 
-function stopTimer() {
-  clearInterval(timerInterval);
-  timerInterval = null;
+function renderEvents() {
+  eventList.innerHTML = "";
 
-  document.getElementById("start-timer").textContent = "Start";
-}
+  const dateObject = getDateFromString(selectedDate);
 
-function resetTimer() {
-  timeLeft = 45;
-  updateTimerDisplay();
-}
+  document.getElementById("selected-date-label").textContent =
+    dateObject.toLocaleDateString("en", {
+      month: "short",
+      day: "numeric"
+    });
 
-document.getElementById("start-timer").addEventListener("click", () => {
-  if (timerInterval) {
-    stopTimer();
+  const dayEvents = events
+    .filter(event => event.date === selectedDate)
+    .sort((a, b) => a.time.localeCompare(b.time));
+
+  if (dayEvents.length === 0) {
+    const empty = document.createElement("div");
+    empty.className = "empty-state";
+
+    empty.innerHTML = `
+      <div class="empty-icon">✧</div>
+      <p>No plans in orbit yet.<br>Make this day your own.</p>
+    `;
+
+    eventList.appendChild(empty);
     return;
   }
 
-  document.getElementById("start-timer").textContent = "Pause";
+  dayEvents.forEach(event => {
+    const card = document.createElement("div");
+    card.className = "event-card";
 
-  timerInterval = setInterval(() => {
-    if (timeLeft > 0) {
-      timeLeft--;
-      updateTimerDisplay();
-    } else {
-      stopTimer();
-      alert("Time is up! Take a breath and keep going.");
-    }
-  }, 1000);
-});
+    const color = document.createElement("div");
+    color.className = "event-color " + event.color;
 
-document.getElementById("reset-timer").addEventListener("click", () => {
-  stopTimer();
-  resetTimer();
-});
+    const info = document.createElement("div");
+    info.className = "event-info";
 
-function scrollToWorkout() {
-  document.getElementById("workout").scrollIntoView({
-    behavior: "smooth"
+    const time = document.createElement("div");
+    time.className = "event-time";
+    time.textContent = event.time;
+
+    const title = document.createElement("div");
+    title.className = "event-title";
+    title.textContent = event.title;
+
+    info.appendChild(time);
+    info.appendChild(title);
+
+    const deleteButton = document.createElement("button");
+    deleteButton.className = "delete-event";
+    deleteButton.textContent = "×";
+    deleteButton.setAttribute("aria-label", "Delete event");
+
+    deleteButton.addEventListener("click", () => {
+      events = events.filter(item => item.id !== event.id);
+
+      saveEvents();
+      renderCalendar();
+      renderEvents();
+    });
+
+    card.appendChild(color);
+    card.appendChild(info);
+    card.appendChild(deleteButton);
+
+    eventList.appendChild(card);
   });
 }
 
-createCalendar();
-renderWorkout();
-updateTimerDisplay();
+document.getElementById("event-form").addEventListener("submit", event => {
+  event.preventDefault();
+
+  const title = document.getElementById("event-title").value.trim();
+  const date = document.getElementById("event-date").value;
+  const time = document.getElementById("event-time").value;
+  const color = document.getElementById("event-color").value;
+
+  if (!title || !date || !time) {
+    return;
+  }
+
+  const newEvent = {
+    id: Date.now(),
+    title,
+    date,
+    time,
+    color
+  };
+
+  events.push(newEvent);
+
+  saveEvents();
+
+  selectedDate = date;
+
+  const dateObject = getDateFromString(date);
+  currentYear = dateObject.getFullYear();
+  currentMonth = dateObject.getMonth();
+
+  document.getElementById("event-title").value = "";
+
+  renderCalendar();
+  renderEvents();
+});
+
+document.getElementById("prev-month").addEventListener("click", () => {
+  currentMonth--;
+
+  if (currentMonth < 0) {
+    currentMonth = 11;
+    currentYear--;
+  }
+
+  renderCalendar();
+});
+
+document.getElementById("next-month").addEventListener("click", () => {
+  currentMonth++;
+
+  if (currentMonth > 11) {
+    currentMonth = 0;
+    currentYear++;
+  }
+
+  renderCalendar();
+});
+
+document.getElementById("today-button").addEventListener("click", () => {
+  currentYear = today.getFullYear();
+  currentMonth = today.getMonth();
+  selectedDate = formatDate(today);
+
+  renderCalendar();
+  renderEvents();
+});
+
+document.getElementById("today-number").textContent =
+  today.toLocaleDateString("en", { day: "2-digit" });
+
+document.getElementById("today-label").textContent =
+  today.toLocaleDateString("en", {
+    weekday: "long",
+    month: "long"
+  });
+
+document.getElementById("year").textContent =
+  today.getFullYear();
+
+document.getElementById("event-date").value = selectedDate;
+
+renderCalendar();
+renderEvents();
 </script>
 
 </body>
