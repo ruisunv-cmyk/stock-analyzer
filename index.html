@@ -3,853 +3,437 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Auditline</title>
+<title>STILL — Architecture Studio</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,400;9..144,500&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
-:root{color-scheme:light;--bg:#edf1f4;--surf:#fff;--ink:#14202b;--mute:#5c6b78;--line:#dbe2e8;--brand:#0f5c63;--soft:#d9eded;--on:#fff;--crit:#b3261e;--high:#d9731a;--med:#b8920f;--low:#2f8a63;--ok:#2f8a63}
-@media(prefers-color-scheme:dark){:root{--bg:#0d1418;--surf:#151f25;--ink:#e6edf1;--mute:#93a3ae;--line:#26343d;--brand:#4fb3ba;--soft:#173a3e;--on:#071418;--crit:#ff7b72;--high:#f0a050;--med:#e3c14d;--low:#5fcf9d;--ok:#5fcf9d}}
-*{box-sizing:border-box}
-body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.5 system-ui,-apple-system,"Segoe UI",sans-serif}
-button,input,select,textarea{font:inherit;color:inherit}
-button{cursor:pointer}
-.app{display:grid;grid-template-columns:220px 1fr;min-height:100vh}
-aside{background:var(--surf);border-right:1px solid var(--line);padding:20px 12px;display:flex;flex-direction:column;gap:4px}
-.logo{font-weight:700;font-size:19px;padding:0 10px 16px;color:var(--brand)}
-nav a{display:flex;justify-content:space-between;padding:9px 12px;border-radius:8px;color:var(--mute);text-decoration:none;font-weight:500}
-nav a:hover{background:var(--bg)}nav a.on{background:var(--soft);color:var(--brand);font-weight:600}
-nav small{background:var(--bg);border-radius:20px;padding:0 8px;font-size:12px}
-nav a.on small{background:rgba(255,255,255,.5)}
-.spacer{flex:1}
-.ghost{background:none;border:1px solid var(--line);border-radius:8px;padding:7px 10px;color:var(--mute);margin-top:6px;text-align:left;font-size:13px}
-.ghost:hover{background:var(--bg)}
-main{padding:24px clamp(14px,3vw,36px) 60px;max-width:1320px;width:100%}
-.head{display:flex;justify-content:space-between;align-items:flex-end;gap:16px;flex-wrap:wrap;margin-bottom:20px}
-.head h1{font-size:26px;margin:0}
-.head p{margin:2px 0 0;color:var(--mute);max-width:620px}
-.btns{display:flex;gap:8px;flex-wrap:wrap}
-.btn{background:var(--brand);color:var(--on);border:0;border-radius:8px;padding:8px 14px;font-weight:600}
-.btn:hover{filter:brightness(1.08)}
-.btn.sec{background:var(--surf);color:var(--ink);border:1px solid var(--line)}
-.card{background:var(--surf);border:1px solid var(--line);border-radius:14px;padding:16px}
-.card h2{font-size:16px;margin:0 0 12px}
-.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px;margin-bottom:12px}
-.kpi b{display:block;font-size:30px;font-weight:700;line-height:1.1}
-.kpi span,.sub{color:var(--mute);font-size:13px}.sub{display:block}
-.kpi.warn b{color:var(--crit)}
-.grid2{display:grid;grid-template-columns:1.3fr 1fr;gap:12px;margin-top:12px}
-.pill{display:inline-block;padding:2px 9px;border-radius:20px;font-size:12px;font-weight:600;border:1px solid currentColor;white-space:nowrap}
-.High{color:var(--high)}.Medium{color:var(--med)}.Low{color:var(--low)}
-.Open{color:var(--high)}.InProgress{color:var(--med)}.Closed{color:var(--ok)}
-.over{color:var(--crit);font-weight:600}
-.item{display:flex;justify-content:space-between;gap:10px;padding:9px 0;border-top:1px solid var(--line);align-items:center;flex-wrap:wrap}.item:first-of-type{border-top:0}
-.tools{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px;align-items:center}
-input,select,textarea{background:var(--surf);border:1px solid var(--line);border-radius:8px;padding:8px 11px;width:100%}
-textarea{resize:vertical;font-family:monospace;font-size:12px}.tools input{max-width:260px}.tools select{max-width:180px}
-.tbl{overflow-x:auto;padding:0}
-table{border-collapse:collapse;width:100%;min-width:800px}
-th{text-align:left;font-weight:600;font-size:12px;color:var(--mute);padding:10px 12px;border-bottom:1px solid var(--line);white-space:nowrap}
-td{padding:10px 12px;border-top:1px solid var(--line);vertical-align:top;font-size:13.5px}
-tr.click{cursor:pointer}tr.click:hover td{background:var(--bg)}
-.stat{background:var(--bg);border-radius:20px;padding:3px 10px;font-size:12px;white-space:nowrap}
-.empty{padding:36px;text-align:center;color:var(--mute)}
-dialog{border:1px solid var(--line);border-radius:16px;background:var(--surf);color:var(--ink);padding:22px;width:min(600px,94vw);max-height:90vh;overflow:auto}
-dialog::backdrop{background:rgba(10,18,24,.55)}dialog h2{margin:0 0 12px}
-.f{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-.f label{display:flex;flex-direction:column;gap:4px;font-size:12.5px;color:var(--mute)}.f .w{grid-column:1/-1}
-.acts{display:flex;gap:8px;justify-content:flex-end;margin-top:16px;padding-top:10px;border-top:1px solid var(--line)}
-.toast{position:fixed;left:50%;bottom:20px;transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:10px 16px;border-radius:10px;font-size:13px;opacity:0;pointer-events:none;transition:opacity .2s;z-index:100}
-.toast.show{opacity:1}
-.b{display:flex;align-items:center;gap:10px;margin:8px 0;font-size:13px}
-.b .n{width:170px;flex:none;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.b .t{flex:1;height:9px;background:var(--bg);border-radius:5px;overflow:hidden}.b .t i{display:block;height:100%}
-.mini{font-size:12px;color:var(--mute)}
-.import-hint{background:var(--soft);border-radius:8px;padding:10px 12px;font-size:13px;color:var(--brand);margin-bottom:10px}
-@media(max-width:800px){.app{grid-template-columns:1fr}
-aside{position:sticky;top:0;flex-direction:row;align-items:center;padding:10px;overflow-x:auto;z-index:5}
-.logo{padding:0 8px 0 0}.logo span,.spacer,.ghost{display:none}nav{display:flex;gap:4px;white-space:nowrap}nav small{display:none}
-.grid2{grid-template-columns:1fr}.f{grid-template-columns:1fr}}
-@media print{aside,.btns,.tools,.toast{display:none!important}.app{display:block}main{padding:0;max-width:none}body{background:#fff}.card{border:0}.tbl{overflow:visible}table{min-width:0}}
+:root{
+  --bone:#f2ede4;
+  --ink:#1c1a17;
+  --clay:#b8927a;
+  --stone:#8a8478;
+  --line:#d8d1c3;
+  --ease:cubic-bezier(.16,1,.3,1);
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{
+  background:var(--bone);
+  color:var(--ink);
+  font-family:'Inter',system-ui,sans-serif;
+  font-weight:300;
+  line-height:1.6;
+  overflow-x:hidden;
+  -webkit-font-smoothing:antialiased;
+}
+h1,h2,h3{font-family:'Fraunces',Georgia,serif;font-weight:300;letter-spacing:-.02em;line-height:1.05}
+
+/* grain overlay */
+body::before{
+  content:"";position:fixed;inset:0;pointer-events:none;z-index:9999;
+  opacity:.035;mix-blend-mode:multiply;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+/* ---------- NAV ---------- */
+nav{
+  position:fixed;top:0;left:0;right:0;z-index:100;
+  display:flex;justify-content:space-between;align-items:center;
+  padding:28px 48px;
+  mix-blend-mode:difference;
+  color:#fff;
+  transition:padding .4s var(--ease);
+}
+nav.scrolled{padding:18px 48px}
+nav .logo{font-family:'Fraunces',serif;font-size:20px;letter-spacing:.02em}
+nav .logo span{font-style:italic;font-weight:300}
+nav ul{display:flex;gap:36px;list-style:none}
+nav a{
+  color:inherit;text-decoration:none;font-size:13px;
+  letter-spacing:.12em;text-transform:uppercase;font-weight:400;
+  position:relative;padding:4px 0;
+}
+nav a::after{
+  content:"";position:absolute;left:0;right:0;bottom:0;height:1px;
+  background:currentColor;transform:scaleX(0);transform-origin:right;
+  transition:transform .5s var(--ease);
+}
+nav a:hover::after{transform:scaleX(1);transform-origin:left}
+
+/* ---------- HERO ---------- */
+.hero{
+  min-height:100vh;
+  display:grid;
+  grid-template-rows:1fr auto;
+  padding:0;
+  position:relative;
+  overflow:hidden;
+}
+.hero-visual{
+  position:relative;
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  min-height:85vh;
+}
+.hero-visual::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  background:radial-gradient(ellipse at 70% 40%, rgba(184,146,122,.15), transparent 60%);
+  pointer-events:none;
+}
+.hero-copy{
+  display:flex;flex-direction:column;justify-content:flex-end;
+  padding:0 8vw 8vh 8vw;
+  position:relative;z-index:2;
+}
+.hero-copy .eyebrow{
+  font-size:12px;letter-spacing:.25em;text-transform:uppercase;
+  color:var(--clay);margin-bottom:28px;
+  display:flex;align-items:center;gap:12px;
+}
+.hero-copy .eyebrow::before{content:"";width:32px;height:1px;background:var(--clay)}
+.hero-copy h1{
+  font-size:clamp(48px,7vw,104px);
+  margin-bottom:28px;
+}
+.hero-copy h1 em{font-style:italic;color:var(--clay)}
+.hero-copy p{
+  font-size:16px;max-width:380px;color:var(--stone);
+  margin-bottom:40px;
+}
+.hero-copy .meta{
+  display:flex;gap:32px;font-size:12px;letter-spacing:.15em;text-transform:uppercase;
+  color:var(--stone);padding-top:24px;border-top:1px solid var(--line);
+}
+.hero-copy .meta span strong{display:block;color:var(--ink);font-weight:400;margin-top:4px;font-size:13px;letter-spacing:0}
+
+/* abstract sculpture */
+.sculpture{
+  position:relative;
+  display:flex;align-items:center;justify-content:center;
+  padding:8vh 4vw;
+}
+.sculpture svg{width:100%;max-width:520px;height:auto;overflow:visible}
+.sculpture .ring{
+  transform-origin:center;
+  animation:spin 40s linear infinite;
+}
+.sculpture .ring2{animation:spin 60s linear infinite reverse}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* ---------- SECTION BASE ---------- */
+section{padding:140px 8vw;position:relative}
+.section-head{
+  display:grid;grid-template-columns:auto 1fr;gap:40px;
+  align-items:end;margin-bottom:80px;padding-bottom:32px;
+  border-bottom:1px solid var(--line);
+}
+.section-head .num{
+  font-family:'Fraunces',serif;font-size:14px;color:var(--clay);
+  font-style:italic;
+}
+.section-head h2{font-size:clamp(36px,5vw,64px);max-width:720px}
+
+/* ---------- PROJECTS ---------- */
+.projects{display:grid;grid-template-columns:1fr 1fr;gap:80px 60px}
+.project{
+  cursor:pointer;
+  position:relative;
+}
+.project .frame{
+  aspect-ratio:4/5;
+  overflow:hidden;
+  position:relative;
+  background:var(--line);
+}
+.project .frame::after{
+  content:"";position:absolute;inset:0;
+  background:linear-gradient(180deg,transparent 60%,rgba(28,26,23,.5));
+  opacity:0;transition:opacity .6s var(--ease);
+}
+.project:hover .frame::after{opacity:1}
+.project .frame > div{
+  position:absolute;inset:0;
+  transition:transform 1.2s var(--ease);
+}
+.project:hover .frame > div{transform:scale(1.05)}
+.project .frame .view{
+  position:absolute;bottom:24px;left:24px;color:#fff;z-index:2;
+  font-size:12px;letter-spacing:.2em;text-transform:uppercase;
+  opacity:0;transform:translateY(8px);
+  transition:all .5s var(--ease) .1s;
+}
+.project:hover .frame .view{opacity:1;transform:translateY(0)}
+
+/* hand-built SVG-ish visuals via CSS */
+.art-1{background:linear-gradient(135deg,#c9b9a2 0%,#8a7a62 100%)}
+.art-2{background:linear-gradient(160deg,#5c5346 0%,#2b2823 100%)}
+.art-3{background:linear-gradient(200deg,#e0d5c2 0%,#b8927a 100%)}
+.art-4{background:linear-gradient(120deg,#7a7264 0%,#3d3830 100%)}
+.art-1::before,.art-2::before,.art-3::before,.art-4::before{
+  content:"";position:absolute;inset:0;
+  background-image:
+    linear-gradient(90deg, transparent 49.5%, rgba(255,255,255,.12) 49.5%, rgba(255,255,255,.12) 50.5%, transparent 50.5%),
+    linear-gradient(0deg, transparent 49.5%, rgba(255,255,255,.08) 49.5%, rgba(255,255,255,.08) 50.5%, transparent 50.5%);
+  mix-blend-mode:overlay;
+}
+.art-2::before{background-image:
+  radial-gradient(circle at 30% 30%, rgba(255,255,255,.15), transparent 40%),
+  linear-gradient(180deg,transparent,rgba(0,0,0,.3));}
+.art-3::before{background-image:
+  repeating-linear-gradient(45deg,rgba(255,255,255,.06) 0 2px,transparent 2px 40px);}
+
+.project .info{
+  display:flex;justify-content:space-between;align-items:baseline;
+  margin-top:24px;padding-bottom:16px;border-bottom:1px solid var(--line);
+}
+.project .info h3{font-size:24px}
+.project .info .year{font-size:12px;color:var(--stone);letter-spacing:.1em}
+.project .loc{font-size:13px;color:var(--stone);margin-top:6px}
+
+/* ---------- PHILOSOPHY ---------- */
+.philosophy{
+  background:var(--ink);color:var(--bone);
+  padding:160px 8vw;
+}
+.philosophy .quote{
+  font-family:'Fraunces',serif;font-size:clamp(28px,4.5vw,56px);
+  line-height:1.2;max-width:1000px;margin:0 auto;text-align:center;
+  font-style:italic;font-weight:300;
+}
+.philosophy .quote em{color:var(--clay);font-style:italic}
+.philosophy .attribution{
+  text-align:center;margin-top:48px;font-size:12px;
+  letter-spacing:.25em;text-transform:uppercase;color:var(--stone);
+}
+
+/* ---------- STATS STRIP ---------- */
+.stats{
+  display:grid;grid-template-columns:repeat(4,1fr);
+  gap:1px;background:var(--line);
+  padding:0;margin:0;
+}
+.stats > div{
+  background:var(--bone);padding:64px 40px;text-align:center;
+}
+.stats .n{font-family:'Fraunces',serif;font-size:64px;line-height:1;color:var(--ink);display:block}
+.stats .n em{font-style:italic;color:var(--clay);font-size:.5em;vertical-align:super;margin-left:4px}
+.stats .l{font-size:12px;letter-spacing:.2em;text-transform:uppercase;color:var(--stone);margin-top:16px}
+
+/* ---------- CONTACT ---------- */
+.contact{
+  padding:180px 8vw;text-align:center;
+  border-top:1px solid var(--line);
+}
+.contact .eyebrow{
+  font-size:12px;letter-spacing:.25em;text-transform:uppercase;color:var(--clay);
+  margin-bottom:32px;
+}
+.contact h2{
+  font-size:clamp(48px,8vw,120px);line-height:1;margin-bottom:48px;
+}
+.contact h2 em{font-style:italic;color:var(--clay)}
+.contact a.btn{
+  display:inline-flex;align-items:center;gap:16px;
+  background:var(--ink);color:var(--bone);
+  padding:20px 40px;border-radius:100px;
+  font-size:13px;letter-spacing:.15em;text-transform:uppercase;
+  text-decoration:none;font-weight:400;
+  transition:all .5s var(--ease);
+}
+.contact a.btn:hover{background:var(--clay);transform:translateY(-2px)}
+.contact a.btn::after{content:"→";transition:transform .5s var(--ease)}
+.contact a.btn:hover::after{transform:translateX(4px)}
+
+/* ---------- FOOTER ---------- */
+footer{
+  padding:40px 48px;display:flex;justify-content:space-between;align-items:center;
+  font-size:12px;letter-spacing:.15em;text-transform:uppercase;color:var(--stone);
+  border-top:1px solid var(--line);
+}
+footer .links{display:flex;gap:28px}
+footer a{color:inherit;text-decoration:none;transition:color .3s}
+footer a:hover{color:var(--ink)}
+
+/* ---------- REVEAL ---------- */
+.reveal{opacity:0;transform:translateY(30px);transition:opacity 1s var(--ease),transform 1s var(--ease)}
+.reveal.in{opacity:1;transform:none}
+
+/* ---------- RESPONSIVE ---------- */
+@media(max-width:900px){
+  nav{padding:20px 24px}
+  nav ul{gap:20px}
+  nav a{font-size:11px}
+  .hero-visual{grid-template-columns:1fr;min-height:auto}
+  .hero-copy{padding:140px 24px 60px}
+  .sculpture{padding:0 24px 60px}
+  section{padding:90px 24px}
+  .projects{grid-template-columns:1fr;gap:60px}
+  .stats{grid-template-columns:1fr 1fr}
+  .stats > div{padding:40px 20px}
+  .stats .n{font-size:44px}
+  .section-head{grid-template-columns:1fr;gap:16px;margin-bottom:48px}
+  .philosophy{padding:100px 24px}
+  .contact{padding:100px 24px}
+  footer{flex-direction:column;gap:16px;padding:32px 24px;text-align:center}
+}
 </style>
 </head>
 <body>
-<div class="app">
-  <aside>
-    <div class="logo">Auditline</div>
-    <nav id="nav"></nav>
-    <div class="spacer"></div>
-    <button class="ghost" id="import-btn">Import from Excel</button>
-    <button class="ghost" id="settings">Settings</button>
-    <button class="ghost" id="reset">Reset</button>
-  </aside>
-  <main id="main"></main>
-</div>
-<dialog id="dlg"></dialog>
-<div class="toast" id="toast"></div>
+
+<nav id="nav">
+  <div class="logo">STILL<span>&nbsp;Studio</span></div>
+  <ul>
+    <li><a href="#work">Work</a></li>
+    <li><a href="#philosophy">Philosophy</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+</nav>
+
+<!-- ============ HERO ============ -->
+<section class="hero">
+  <div class="hero-visual">
+    <div class="hero-copy">
+      <div class="eyebrow">Est. 2014 — Lisbon</div>
+      <h1>Buildings<br>that <em>breathe</em>.</h1>
+      <p>We design architecture that begins with silence — with the shape a room makes of the light before anyone enters it.</p>
+      <div class="meta">
+        <span>Practice<strong>STILL Studio</strong></span>
+        <span>Discipline<strong>Architecture</strong></span>
+        <span>Founded<strong>2014</strong></span>
+      </div>
+    </div>
+    <div class="sculpture">
+      <svg viewBox="0 0 400 500" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <linearGradient id="g1" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0%" stop-color="#b8927a" stop-opacity=".9"/>
+            <stop offset="100%" stop-color="#8a8478" stop-opacity=".3"/>
+          </linearGradient>
+          <linearGradient id="g2" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#8a8478" stop-opacity=".4"/>
+            <stop offset="100%" stop-color="#b8927a" stop-opacity=".8"/>
+          </linearGradient>
+        </defs>
+        <g class="ring">
+          <ellipse cx="200" cy="250" rx="140" ry="60" fill="none" stroke="url(#g1)" stroke-width="1.2"/>
+        </g>
+        <g class="ring ring2">
+          <ellipse cx="200" cy="250" rx="60" ry="140" fill="none" stroke="url(#g2)" stroke-width="1.2"/>
+        </g>
+        <circle cx="200" cy="250" r="4" fill="#b8927a"/>
+        <line x1="200" y1="110" x2="200" y2="390" stroke="#8a8478" stroke-opacity=".3" stroke-width="1"/>
+        <line x1="60" y1="250" x2="340" y2="250" stroke="#8a8478" stroke-opacity=".3" stroke-width="1"/>
+        <circle cx="200" cy="250" r="90" fill="none" stroke="#8a8478" stroke-opacity=".15" stroke-width="1"/>
+      </svg>
+    </div>
+  </div>
+</section>
+
+<!-- ============ WORK ============ -->
+<section id="work">
+  <div class="section-head reveal">
+    <span class="num">01 — Selected Work</span>
+    <h2>Projects shaped by <em style="font-style:italic;color:var(--clay)">patience</em>.</h2>
+  </div>
+
+  <div class="projects">
+    <article class="project reveal">
+      <div class="frame">
+        <div class="art-1"></div>
+        <span class="view">View Project</span>
+      </div>
+      <div class="info"><h3>Casa Atlântica</h3><span class="year">2023</span></div>
+      <div class="loc">Private residence — Comporta, Portugal</div>
+    </article>
+
+    <article class="project reveal">
+      <div class="frame">
+        <div class="art-2"></div>
+        <span class="view">View Project</span>
+      </div>
+      <div class="info"><h3>The Quiet Museum</h3><span class="year">2022</span></div>
+      <div class="loc">Cultural institution — Porto</div>
+    </article>
+
+    <article class="project reveal">
+      <div class="frame">
+        <div class="art-3"></div>
+        <span class="view">View Project</span>
+      </div>
+      <div class="info"><h3>Fieldnotes Pavilion</h3><span class="year">2021</span></div>
+      <div class="loc">Public pavilion — Sintra</div>
+    </article>
+
+    <article class="project reveal">
+      <div class="frame">
+        <div class="art-4"></div>
+        <span class="view">View Project</span>
+      </div>
+      <div class="info"><h3>Stone &amp; Light House</h3><span class="year">2020</span></div>
+      <div class="loc">Retreat — Alentejo</div>
+    </article>
+  </div>
+</section>
+
+<!-- ============ PHILOSOPHY ============ -->
+<section class="philosophy" id="philosophy">
+  <div class="quote reveal">
+    “A room is not <em>finished</em> when there is nothing<br>left to add, but when there is nothing<br>left that asks to be <em>removed</em>.”
+  </div>
+  <div class="attribution reveal">— Studio principle</div>
+</section>
+
+<!-- ============ STATS ============ -->
+<section class="stats">
+  <div><span class="n">24</span><div class="l">Built Works</div></div>
+  <div><span class="n">11</span><div class="l">Countries</div></div>
+  <div><span class="n">4<em>×</em></span><div class="l">Awards</div></div>
+  <div><span class="n">10</span><div class="l">Years Practice</div></div>
+</section>
+
+<!-- ============ CONTACT ============ -->
+<section class="contact" id="contact">
+  <div class="eyebrow reveal">Let’s build something quiet</div>
+  <h2 class="reveal">Start a <em>conversation</em>.</h2>
+  <a href="mailto:hello@still.studio" class="btn reveal">hello@still.studio</a>
+</section>
+
+<footer>
+  <div>© STILL Studio, 2024</div>
+  <div class="links">
+    <a href="#">Instagram</a>
+    <a href="#">Journal</a>
+    <a href="#">Lisbon, PT</a>
+  </div>
+</footer>
 
 <script>
-(function(){
-"use strict";
-
-var KEY = "auditline-v1";
-var SEV = ["High","Medium","Low"];
-var FST = ["Open","In Progress","Closed"];
-
-function seed(){
-  return {
-    meta:{orgName:"Tecan Group",currentUser:"Internal Audit"},
-    ent:[
-      {id:1,code:"105",name:"Tecan Schweiz AG",short:"T-CH"},
-      {id:2,code:"140",name:"Tecan US Inc.",short:"T-US"},
-      {id:3,code:"170",name:"Tecan UK Ltd.",short:"T-UK"},
-      {id:4,code:"280",name:"Tecan Trading AG",short:"T-TR"},
-      {id:5,code:"360",name:"Tecan China",short:"T-CN"}
-    ],
-    eng:[
-      {id:1,lastAudited:"2025",entityCode:"0105",entity:"T-CH",start:"2026-04-13",end:"2026-04-30",area1:"Indirect Expenses",area2:"Balance Sheet Review",area3:"Credit Management",location:"CH",status:"Planned",report:""},
-      {id:2,lastAudited:"2025",entityCode:"0140",entity:"T-US",start:"2026-07-20",end:"2026-07-24",area1:"Indirect Expenses",area2:"Order Entry & Sales",area3:"Warranty Replacement",location:"Raleigh",status:"Planned",report:"Draft sent"},
-      {id:3,lastAudited:"2024",entityCode:"0170",entity:"T-UK",start:"2026-03-11",end:"2026-03-13",area1:"Indirect Expenses",area2:"Order Entry & Sales",area3:"Warranty Replacement",location:"London",status:"Report Final",report:"Draft, CFO, Group, Audit Com., EY"}
-    ],
-    fnd:[
-      {id:1,year:2025,entity:"T-UK",area:"Segregation of Duties (SoD)",name:"Segregation of Duties – PO & Goods Receipt",finding:"Several occurrences where the same user created a PO and performed the goods receipt.",severity:"Medium",action:"",auditee:"Paul Noble, T-UK",due:"2025-02-28",status:"Closed"},
-      {id:2,year:2025,entity:"T-CH",area:"Financial Reporting",name:"Goods received not invoiced",finding:"Over 4000 uncleared positions from 2014–2023, ~CHF 1m balance. Repeat finding.",severity:"High",action:"",auditee:"Patrick Bieri, T-TR",due:"2025-06-30",status:"Closed"},
-      {id:3,year:2025,entity:"T-TR",area:"Delegation of Authority (DoA)",name:"End-of-Life Scrapping",finding:"CHF 98k of scrapping not approved in accordance with DoA.",severity:"High",action:"",auditee:"Rafaela Truffer, T-TR",due:"2025-06-30",status:"Closed"},
-      {id:4,year:2025,entity:"T-US",area:"Financial Reporting",name:"Unreported Sales Tax",finding:"Sales tax collected but not reported/paid in some jurisdictions.",severity:"High",action:"",auditee:"Joe Fischer, T-US",due:"2025-06-30",status:"Closed"},
-      {id:5,year:2025,entity:"T-CN",area:"Financial Reporting",name:"Missing Revenue Recognition Control",finding:"T-117 revenue recognition control not performed.",severity:"Medium",action:"",auditee:"Cathy Chen, T-CN",due:"2025-06-30",status:"Closed"}
-    ]
-  };
-}
-
-var S;
-try { S = JSON.parse(localStorage.getItem(KEY)); } catch(e) {}
-if (!S || !Array.isArray(S.fnd)) S = seed();
-
-function save(){
-  try { localStorage.setItem(KEY, JSON.stringify(S)); } catch(e){}
-}
-
-function $(s,r){ return (r||document).querySelector(s); }
-
-function esc(t){
-  return String(t==null?"":t).replace(/[&<>"']/g, function(c){
-    return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c];
-  });
-}
-
-function parseDate(s){
-  if(!s) return null;
-  if(s instanceof Date) return s;
-  var str = String(s).trim();
-  var m = str.match(/^(\d{4})-(\d{2})-(\d{2})/);
-  if(m) return new Date(+m[1], +m[2]-1, +m[3]);
-  m = str.match(/^(\d{1,2})[\.\/](\d{1,2})[\.\/](\d{4})/);
-  if(m) return new Date(+m[3], +m[2]-1, +m[1]);
-  var d = new Date(str);
-  return isNaN(d.getTime()) ? null : d;
-}
-
-var TODAY = new Date(); TODAY.setHours(0,0,0,0);
-
-function iso(d){
-  return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0");
-}
-
-function fmt(s){
-  var d = parseDate(s);
-  return d ? d.toLocaleDateString("en-GB",{day:"numeric",month:"short",year:"numeric"}) : "–";
-}
-
-function nid(arr){
-  return arr.reduce(function(m,x){ return Math.max(m, x.id||0); }, 0) + 1;
-}
-
-function toast(m){
-  var t = $("#toast");
-  if(!t) return;
-  t.textContent = m;
-  t.classList.add("show");
-  clearTimeout(toast.t);
-  toast.t = setTimeout(function(){ t.classList.remove("show"); }, 2600);
-}
-
-function isOverdue(f){
-  if(f.status === "Closed") return false;
-  var d = parseDate(f.due);
-  return !!(d && d < TODAY);
-}
-
-function normStatus(v){
-  if(!v) return "Open";
-  var s = String(v).trim().toLowerCase();
-  if(s === "closed" || s === "close" || s === "yes") return "Closed";
-  if(s === "open") return "Open";
-  if(s.indexOf("in") === 0 || s === "ongoing" || s.indexOf("progress") !== -1) return "In Progress";
-  return "Open";
-}
-
-function normSev(v){
-  if(!v) return "Medium";
-  var s = String(v).trim().toLowerCase();
-  if(s === "high" || s === "critical") return "High";
-  if(s === "low") return "Low";
-  return "Medium";
-}
-
-function sevClass(s){ return s === "High" ? "High" : s === "Low" ? "Low" : "Medium"; }
-function statClass(s){ return s === "Closed" ? "Closed" : s === "In Progress" ? "InProgress" : "Open"; }
-
-function stats(){
-  var open = S.fnd.filter(function(f){ return f.status !== "Closed"; });
-  var od = open.filter(isOverdue);
-  var hi = open.filter(function(f){ return f.severity === "High"; }).length;
-  var entSet = {};
-  S.fnd.forEach(function(f){ if(f.entity) entSet[f.entity] = 1; });
-  return { open: open, od: od, hi: hi, total: S.fnd.length, entities: Object.keys(entSet).length };
-}
-
-var view = "dashboard";
-var filt = { year:"All", entity:"All", sev:"All", status:"All", q:"" };
-
-var VIEWS = {
-  dashboard: ["Dashboard", dash],
-  findings: ["Findings", fnds],
-  engagements: ["Engagement tracker", engs],
-  entities: ["Entities", ents],
-  reports: ["Reports", reps]
-};
-
-function pageHead(title, subtitle, extra){
-  return '<div class="head"><div><h1>'+title+'</h1><p>'+subtitle+'</p></div><div class="btns">'+(extra||"")+'</div></div>';
-}
-
-function kpi(v, l, warn){
-  return '<div class="card kpi'+(warn?' warn':'')+'"><b>'+v+'</b><span>'+l+'</span></div>';
-}
-
-function subline(a, b){
-  return '<b>'+esc(a)+'</b><span class="sub">'+esc(b)+'</span>';
-}
-
-function table(headers, rows, emptyMsg){
-  var head = '<tr>'+headers.map(function(h){ return '<th>'+h+'</th>'; }).join('')+'</tr>';
-  var body = rows.length ? rows.join('') : '<tr><td colspan="'+headers.length+'" class="empty">'+emptyMsg+'</td></tr>';
-  return '<div class="card tbl"><table><thead>'+head+'</thead><tbody>'+body+'</tbody></table></div>';
-}
-
-function row(editKey, cells){
-  return '<tr class="click" data-ed="'+editKey+'" tabindex="0">'+cells.map(function(c){ return '<td>'+c+'</td>'; }).join('')+'</tr>';
-}
-
-function bars(list){
-  var max = Math.max.apply(null, [1].concat(list.map(function(x){ return x[1]; })));
-  return list.map(function(x){
-    return '<div class="b"><span class="n" title="'+esc(x[0])+'">'+esc(x[0])+'</span><div class="t"><i style="width:'+(x[1]/max*100)+'%;background:'+x[2]+'"></i></div><b>'+x[1]+'</b></div>';
-  }).join('');
-}
-
-function dash(){
-  var s = stats();
-  var bySev = SEV.map(function(v){
-    return [v, s.open.filter(function(f){ return f.severity === v; }).length,
-      ({High:"var(--high)",Medium:"var(--med)",Low:"var(--low)"})[v]];
-  });
-  var byStat = FST.map(function(v){
-    return [v, S.fnd.filter(function(f){ return f.status === v; }).length,
-      ({Open:"var(--high)","In Progress":"var(--med)",Closed:"var(--ok)"})[v]];
-  });
-  var yearSet = {};
-  S.fnd.forEach(function(f){ if(f.year) yearSet[f.year] = 1; });
-  var byYear = Object.keys(yearSet).sort().map(function(y){
-    return [String(y), S.fnd.filter(function(f){ return f.year == y; }).length, "var(--brand)"];
-  });
-  var entCount = {};
-  S.fnd.forEach(function(f){ if(f.entity) entCount[f.entity] = (entCount[f.entity]||0) + 1; });
-  var byEntity = Object.keys(entCount).map(function(k){ return [k, entCount[k], "var(--brand)"]; })
-    .sort(function(a,b){ return b[1]-a[1]; }).slice(0, 8);
-  var overdue = S.fnd.filter(isOverdue)
-    .sort(function(a,b){ return (parseDate(a.due)||0) - (parseDate(b.due)||0); }).slice(0, 8);
-
-  var overdueHTML = overdue.map(function(f){
-    return '<div class="item"><div>'+subline(f.name, f.entity+' · '+(f.auditee||''))+'</div>'+
-      '<span class="pill '+sevClass(f.severity)+'">'+f.severity+'</span>'+
-      '<span class="pill '+statClass(f.status)+'">'+f.status+'</span>'+
-      '<span class="over">'+fmt(f.due)+'</span></div>';
-  }).join('') || '<div class="empty">Nothing overdue.</div>';
-
-  return pageHead("Dashboard", "Audit findings, engagements, and entities at a glance.",
-    '<button class="btn sec" data-act="csv">Export CSV</button><button class="btn" data-new="fnd">New finding</button>')+
-    '<div class="kpis">'+
-      kpi(S.fnd.length, "Total findings")+
-      kpi(s.open.length, "Open findings")+
-      kpi(s.hi, "High severity open", s.hi)+
-      kpi(s.od.length, "Overdue actions", s.od.length)+
-      kpi(s.entities, "Entities with findings")+
-      kpi(S.eng.length, "Engagements")+
-    '</div>'+
-    '<div class="grid2">'+
-      '<div class="card"><h2>Open findings by severity</h2>'+bars(bySev)+'</div>'+
-      '<div class="card"><h2>Findings by status</h2>'+bars(byStat)+'</div>'+
-    '</div>'+
-    '<div class="grid2">'+
-      '<div class="card"><h2>Findings by year</h2>'+bars(byYear)+'</div>'+
-      '<div class="card"><h2>Top entities by findings</h2>'+bars(byEntity)+'</div>'+
-    '</div>'+
-    '<div class="card" style="margin-top:12px"><h2>Overdue actions</h2>'+overdueHTML+'</div>';
-}
-
-function fnds(){
-  var q = filt.q.toLowerCase();
-  var list = S.fnd.filter(function(f){
-    if(filt.year !== "All" && String(f.year) !== filt.year) return false;
-    if(filt.entity !== "All" && f.entity !== filt.entity) return false;
-    if(filt.sev !== "All" && f.severity !== filt.sev) return false;
-    if(filt.status !== "All" && f.status !== filt.status) return false;
-    if(q){
-      var hay = ((f.name||"")+(f.finding||"")+(f.auditee||"")+(f.entity||"")).toLowerCase();
-      if(hay.indexOf(q) === -1) return false;
-    }
-    return true;
-  }).sort(function(a,b){
-    var ca = a.status === "Closed" ? 1 : 0;
-    var cb = b.status === "Closed" ? 1 : 0;
-    if(ca !== cb) return ca - cb;
-    var sa = SEV.indexOf(a.severity), sb = SEV.indexOf(b.severity);
-    if(sa !== sb) return sa - sb;
-    return (parseDate(a.due)||0) - (parseDate(b.due)||0);
-  });
-
-  var yearSet = {}, entSet = {};
-  S.fnd.forEach(function(f){ if(f.year) yearSet[f.year] = 1; if(f.entity) entSet[f.entity] = 1; });
-  var years = Object.keys(yearSet).sort().reverse();
-  var entities = Object.keys(entSet).sort();
-
-  var toolBar = '<div class="tools">'+
-    '<input id="q" type="search" placeholder="Search..." value="'+esc(filt.q)+'">'+
-    '<select id="f-year"><option value="All">All years</option>'+
-      years.map(function(y){ return '<option '+(filt.year==y?'selected':'')+'>'+y+'</option>'; }).join('')+
-    '</select>'+
-    '<select id="f-ent"><option value="All">All entities</option>'+
-      entities.map(function(e){ return '<option '+(filt.entity===e?'selected':'')+'>'+esc(e)+'</option>'; }).join('')+
-    '</select>'+
-    '<select id="f-sev"><option value="All">All severities</option>'+
-      SEV.map(function(s){ return '<option '+(filt.sev===s?'selected':'')+'>'+s+'</option>'; }).join('')+
-    '</select>'+
-    '<select id="f-st"><option value="All">All statuses</option>'+
-      FST.map(function(s){ return '<option '+(filt.status===s?'selected':'')+'>'+s+'</option>'; }).join('')+
-    '</select>'+
-  '</div>';
-
-  var rows = list.map(function(f){
-    return row("fnd:"+f.id, [
-      f.year,
-      esc(f.entity),
-      subline(f.name, f.finding && f.finding.length > 80 ? f.finding.slice(0,80)+"…" : (f.finding||"")),
-      '<span class="pill '+sevClass(f.severity)+'">'+f.severity+'</span>',
-      esc(f.auditee||"—"),
-      '<span class="'+(isOverdue(f)?"over":"")+'">'+fmt(f.due)+'</span>',
-      '<span class="pill '+statClass(f.status)+'">'+f.status+'</span>'
-    ]);
-  });
-
-  return pageHead("Findings register", "Every finding with owner, due date, and status.",
-    '<button class="btn sec" data-act="csv">Export CSV</button><button class="btn" data-new="fnd">New finding</button>')+
-    toolBar+
-    table(["Year","Entity","Finding","Severity","Auditee","Due","Status"], rows, "No findings match.");
-}
-
-function engs(){
-  var list = S.eng.slice().sort(function(a,b){
-    return (parseDate(a.start)||0) - (parseDate(b.start)||0);
-  });
-  var rows = list.map(function(e){
-    var n = S.fnd.filter(function(f){ return f.entity === e.entity; }).length;
-    var area = [e.area1, e.area2, e.area3].filter(Boolean).join(" · ");
-    var entObj = S.ent.find(function(x){ return x.short === e.entity; });
-    return row("eng:"+e.id, [
-      subline(e.entity, entObj ? entObj.name : ""),
-      esc(e.entityCode||""),
-      fmt(e.start)+" – "+fmt(e.end),
-      esc(area),
-      esc(e.location||""),
-      '<span class="stat">'+esc(e.status)+'</span> <span class="mini">'+n+' findings</span>',
-      '<span class="mini">'+esc(e.report||"—")+'</span>'
-    ]);
-  });
-  return pageHead("Engagement tracker", "2026 audit plan — status and report milestones.",
-    '<button class="btn" data-new="eng">New engagement</button>')+
-    table(["Entity","Code","Window","Area","Location","Status","Report"], rows, "No engagements yet.");
-}
-
-function ents(){
-  var rows = S.ent.map(function(e){
-    var n = S.fnd.filter(function(f){ return f.entity === e.short; }).length;
-    var open = S.fnd.filter(function(f){ return f.entity === e.short && f.status !== "Closed"; }).length;
-    return row("ent:"+e.id, [e.code, esc(e.name), esc(e.short), n, open]);
-  });
-  return pageHead("Entities", "Audit universe with finding counts.",
-    '<button class="btn" data-new="ent">New entity</button>')+
-    table(["Code","Entity","Short","Findings","Open"], rows, "No entities yet.");
-}
-
-function reps(){
-  var entSet = {}, yearSet = {};
-  S.fnd.forEach(function(f){ if(f.entity) entSet[f.entity] = 1; if(f.year) yearSet[f.year] = 1; });
-  var entities = Object.keys(entSet).sort();
-  var years = Object.keys(yearSet).sort().reverse();
-  return pageHead("Reports", "Print a findings report per entity or per year.",
-    '<button class="btn sec" data-act="print-ent">Print entity</button>'+
-    '<button class="btn sec" data-act="print-year">Print year</button>')+
-    '<div class="card"><h2>Entity report</h2><div class="tools">'+
-      '<select id="rep-ent"><option value="">— choose —</option>'+
-        entities.map(function(e){ return '<option>'+esc(e)+'</option>'; }).join('')+
-      '</select></div><p class="sub">Pick an entity, then click "Print entity". Save as PDF from the browser dialog.</p>'+
-    '</div>'+
-    '<div class="card" style="margin-top:12px"><h2>Year report</h2><div class="tools">'+
-      '<select id="rep-year"><option value="">— choose —</option>'+
-        years.map(function(y){ return '<option>'+y+'</option>'; }).join('')+
-      '</select></div><p class="sub">Pick a year, then click "Print year".</p>'+
-    '</div>';
-}
-
-function doPrint(kind){
-  var sel = $(kind === "ent" ? "#rep-ent" : "#rep-year");
-  var val = sel ? sel.value : "";
-  if(!val){ toast("Choose a value first"); return; }
-  var rows = S.fnd.filter(function(f){
-    return kind === "ent" ? f.entity === val : f.year == val;
-  });
-  var main = $("#main");
-  var prev = main.innerHTML;
-
-  var body = rows.map(function(f){
-    return '<tr>'+
-      '<td>'+f.year+'</td>'+
-      '<td>'+esc(f.entity)+'</td>'+
-      '<td>'+subline(f.name, f.finding||"")+'</td>'+
-      '<td><span class="pill '+sevClass(f.severity)+'">'+f.severity+'</span></td>'+
-      '<td>'+esc(f.auditee||"")+'</td>'+
-      '<td>'+fmt(f.due)+'</td>'+
-      '<td><span class="pill '+statClass(f.status)+'">'+f.status+'</span></td>'+
-    '</tr>';
-  }).join('') || '<tr><td colspan="7" class="empty">No findings.</td></tr>';
-
-  main.innerHTML = '<h1>Findings — '+esc(val)+'</h1><p class="sub">Generated '+fmt(iso(TODAY))+' · '+rows.length+' findings</p>'+
-    '<div class="card tbl"><table><thead><tr>'+
-      '<th>Year</th><th>Entity</th><th>Finding</th><th>Severity</th><th>Auditee</th><th>Due</th><th>Status</th>'+
-    '</tr></thead><tbody>'+body+'</tbody></table></div>';
-
-  function restore(){ main.innerHTML = prev; render(); }
-  window.addEventListener("afterprint", restore, {once:true});
-  setTimeout(function(){
-    window.print();
-    setTimeout(restore, 900);
-  }, 150);
-}
-
-function openImport(){
-  var dlg = $("#dlg");
-  dlg.innerHTML = '<h2>Import from Excel</h2>'+
-    '<div class="import-hint">Copy rows from your Excel sheet (including headers), paste below.</div>'+
-    '<label style="display:flex;flex-direction:column;gap:6px;font-size:13px;color:var(--mute)">Sheet type'+
-      '<select id="imp-kind">'+
-        '<option value="fnd">Findings</option>'+
-        '<option value="eng">Engagements</option>'+
-        '<option value="ent">Entities</option>'+
-      '</select>'+
-    '</label>'+
-    '<label style="display:flex;flex-direction:column;gap:6px;font-size:13px;color:var(--mute);margin-top:10px">Paste rows'+
-      '<textarea id="imp-text" rows="12" placeholder="Paste here (Ctrl+V)"></textarea>'+
-    '</label>'+
-    '<div class="acts"><button class="btn sec" id="imp-x">Cancel</button><button class="btn" id="imp-go">Import</button></div>';
-  $("#imp-x", dlg).onclick = function(){ dlg.close(); };
-  $("#imp-go", dlg).onclick = function(){
-    var kind = $("#imp-kind", dlg).value;
-    var text = $("#imp-text", dlg).value.trim();
-    if(!text){ toast("Nothing to import"); return; }
-    try {
-      var count = importText(kind, text);
-      dlg.close();
-      save();
-      render();
-      toast("Imported "+count+" rows");
-    } catch(err) {
-      console.error(err);
-      toast("Import failed: "+err.message);
-    }
-  };
-  dlg.showModal();
-}
-
-function splitRows(text){
-  var lines = text.split(/\r?\n/).filter(function(l){ return l.trim() !== ""; });
-  return lines.map(function(l){
-    if(l.indexOf("\t") !== -1){
-      return l.split("\t").map(function(c){ return c.trim(); });
-    }
-    var out = [], cur = "", inQ = false;
-    for(var i=0;i<l.length;i++){
-      var c = l[i];
-      if(c === '"'){
-        if(inQ && l[i+1] === '"'){ cur += '"'; i++; }
-        else { inQ = !inQ; }
-      } else if(c === "," && !inQ){
-        out.push(cur); cur = "";
-      } else {
-        cur += c;
-      }
-    }
-    out.push(cur);
-    return out.map(function(x){ return x.trim(); });
-  });
-}
-
-function normaliseHeader(h){
-  return String(h||"").toLowerCase().replace(/[^a-z0-9]+/g,"_").replace(/^_|_$/g,"");
-}
-
-function importText(kind, text){
-  var rows = splitRows(text);
-  if(rows.length < 2) throw new Error("Need a header row + data");
-  var header = rows[0].map(normaliseHeader);
-  var data = rows.slice(1);
-
-  function idx(){
-    var wants = Array.prototype.slice.call(arguments);
-    for(var i=0;i<header.length;i++){
-      for(var j=0;j<wants.length;j++){
-        if(header[i] === wants[j] || header[i].indexOf(wants[j]) !== -1) return i;
-      }
-    }
-    return -1;
-  }
-  function val(r, i){ return i >= 0 && i < r.length ? r[i] : ""; }
-
-  if(kind === "fnd"){
-    var cYear = idx("year"), cEnt = idx("entity"), cArea = idx("audit_area","area"),
-        cName = idx("name","title"), cFind = idx("findings","description"),
-        cSev = idx("severity"), cAct = idx("agreed_actions","action","recommendation"),
-        cAud = idx("responsible_auditee","auditee","owner"),
-        cDue = idx("target_date","due"), cSt = idx("status");
-
-    var added = 0;
-    data.forEach(function(r){
-      var name = val(r, cName) || val(r, cFind);
-      if(!name) return;
-      var dueDate = parseDate(val(r, cDue));
-      var f = {
-        id: nid(S.fnd),
-        year: parseInt(val(r, cYear), 10) || new Date().getFullYear(),
-        entity: val(r, cEnt) || "",
-        area: val(r, cArea) || "",
-        name: name,
-        finding: val(r, cFind) || "",
-        severity: normSev(val(r, cSev)),
-        action: val(r, cAct) || "",
-        auditee: val(r, cAud) || "",
-        due: dueDate ? iso(dueDate) : "",
-        status: normStatus(val(r, cSt))
-      };
-      S.fnd.push(f);
-      if(f.entity && !S.ent.some(function(e){ return e.short === f.entity; })){
-        S.ent.push({id:nid(S.ent), code:"", name:f.entity, short:f.entity});
-      }
-      added++;
-    });
-    return added;
-  }
-
-  if(kind === "eng"){
-    var eLast = idx("last_audited","last"), eCode = idx("entity_code","code"),
-        eEnt = idx("entity"), eStart = idx("planned_start","start"),
-        eEnd = idx("planned_end","end"),
-        eA1 = idx("area_1","area1"), eA2 = idx("area_2","area2"), eA3 = idx("area_3","area3"),
-        eLoc = idx("location"), eSt = idx("status"), eRep = idx("report","draft","comments");
-
-    var addedE = 0;
-    data.forEach(function(r){
-      var ent = val(r, eEnt);
-      if(!ent) return;
-      var startD = parseDate(val(r, eStart));
-      var endD = parseDate(val(r, eEnd));
-      S.eng.push({
-        id: nid(S.eng),
-        lastAudited: val(r, eLast) || "",
-        entityCode: val(r, eCode) || "",
-        entity: ent,
-        start: startD ? iso(startD) : "",
-        end: endD ? iso(endD) : "",
-        area1: val(r, eA1) || "",
-        area2: val(r, eA2) || "",
-        area3: val(r, eA3) || "",
-        location: val(r, eLoc) || "",
-        status: val(r, eSt) || "Planned",
-        report: val(r, eRep) || ""
-      });
-      if(ent && !S.ent.some(function(e){ return e.short === ent; })){
-        S.ent.push({id:nid(S.ent), code:val(r,eCode)||"", name:ent, short:ent});
-      }
-      addedE++;
-    });
-    return addedE;
-  }
-
-  if(kind === "ent"){
-    var nCode = idx("code"), nName = idx("entities","entity","name");
-    var addedN = 0;
-    data.forEach(function(r){
-      var code = val(r, nCode), name = val(r, nName);
-      if(!name && !code) return;
-      if(name && S.ent.some(function(e){ return e.name === name; })) return;
-      S.ent.push({id:nid(S.ent), code:code||"", name:name||code, short:code||name});
-      addedN++;
-    });
-    return addedN;
-  }
-
-  throw new Error("Unknown sheet type");
-}
-
-var FORMS = {
-  fnd: {
-    title: "finding",
-    key: "fnd",
-    fields: [
-      ["name","Finding title","text",null,true],
-      ["year","Year","num"],
-      ["entity","Entity (short code)","text"],
-      ["area","Audit area","text"],
-      ["severity","Severity","sel",SEV],
-      ["status","Status","sel",FST],
-      ["auditee","Responsible auditee","text"],
-      ["due","Target date","date"],
-      ["finding","Finding description","area",null,true],
-      ["action","Agreed actions","area",null,true]
-    ]
-  },
-  eng: {
-    title: "engagement",
-    key: "eng",
-    fields: [
-      ["entity","Entity (short code)","text",null,true],
-      ["entityCode","Entity code","text"],
-      ["lastAudited","Last audited year","text"],
-      ["start","Planned start","date"],
-      ["end","Planned end","date"],
-      ["location","Location","text"],
-      ["status","Status","text"],
-      ["area1","Area 1","text"],
-      ["area2","Area 2","text"],
-      ["area3","Area 3","text"],
-      ["report","Report milestone","text"]
-    ]
-  },
-  ent: {
-    title: "entity",
-    key: "ent",
-    fields: [
-      ["code","Code","text"],
-      ["name","Entity name","text",null,true],
-      ["short","Short code","text"]
-    ]
-  }
-};
-
-var DEFAULTS = {
-  fnd: function(){ return {year:new Date().getFullYear(), entity:"", area:"", name:"", finding:"", severity:"Medium", action:"", auditee:"", due:"", status:"Open"}; },
-  eng: function(){ return {entity:"", entityCode:"", lastAudited:"", start:iso(TODAY), end:iso(TODAY), location:"", status:"Planned", area1:"", area2:"", area3:"", report:""}; },
-  ent: function(){ return {code:"", name:"", short:""}; }
-};
-
-function openForm(kind, id){
-  var form = FORMS[kind];
-  if(!form) return;
-  var list = S[form.key];
-  var cur = id ? list.find(function(x){ return x.id == id; }) : null;
-  var isNew = !cur;
-  var item = cur ? JSON.parse(JSON.stringify(cur)) : DEFAULTS[kind]();
-
-  var dlg = $("#dlg");
-  var fieldsHTML = form.fields.map(function(f){
-    var key = f[0], label = f[1], type = f[2], options = f[3], wide = f[4];
-    var v = item[key] != null ? item[key] : "";
-    var ctrl;
-    if(type === "sel"){
-      ctrl = '<select data-k="'+key+'">'+options.map(function(o){
-        return '<option '+(String(o)===String(v)?'selected':'')+'>'+esc(o)+'</option>';
-      }).join('')+'</select>';
-    } else if(type === "area"){
-      ctrl = '<textarea data-k="'+key+'" rows="3">'+esc(v)+'</textarea>';
-    } else {
-      var inputType = type === "num" ? "number" : type === "date" ? "date" : "text";
-      ctrl = '<input data-k="'+key+'" type="'+inputType+'" value="'+esc(v)+'">';
-    }
-    return '<label class="'+(wide?'w':'')+'">'+label+ctrl+'</label>';
-  }).join('');
-
-  dlg.innerHTML = '<h2>'+(isNew?'New':'Edit')+' '+form.title+'</h2>'+
-    '<div class="f">'+fieldsHTML+'</div>'+
-    '<div class="acts">'+
-      (isNew?'':'<button class="btn sec" id="del" style="margin-right:auto;color:var(--crit)">Delete</button>')+
-      '<button class="btn sec" id="x">Cancel</button>'+
-      '<button class="btn" id="ok">Save</button>'+
-    '</div>';
-
-  $("#x", dlg).onclick = function(){ dlg.close(); };
-
-  var del = $("#del", dlg);
-  if(del){
-    del.onclick = function(){
-      if(!confirm("Delete this "+form.title+"?")) return;
-      var idx = list.indexOf(cur);
-      if(idx >= 0) list.splice(idx, 1);
-      save(); dlg.close(); render(); toast("Deleted");
-    };
-  }
-
-  $("#ok", dlg).onclick = function(){
-    var updated = {};
-    form.fields.forEach(function(f){
-      var key = f[0], type = f[2];
-      var el = $('[data-k="'+key+'"]', dlg);
-      var v = el.value;
-      if(type === "num") v = v === "" ? "" : +v;
-      updated[key] = v;
-    });
-    var first = form.fields[0][0];
-    if(!String(updated[first]||"").trim()){
-      toast("Please fill in "+form.fields[0][1]);
-      return;
-    }
-    Object.assign(item, updated);
-    if(isNew){
-      item.id = nid(list);
-      list.push(item);
-    }
-    save(); dlg.close(); render(); toast("Saved");
-  };
-
-  dlg.showModal();
-  var firstInput = $("[data-k]", dlg);
-  if(firstInput) firstInput.focus();
-}
-
-function exportCSV(){
-  var rows = [["Year","Entity","Audit area","Finding","Severity","Auditee","Due","Status","Agreed actions"]];
-  S.fnd.forEach(function(f){
-    rows.push([f.year, f.entity, f.area||"", f.name||"", f.severity||"", f.auditee||"", f.due||"", f.status||"", f.action||""]);
-  });
-  var csv = rows.map(function(r){
-    return r.map(function(c){ return '"'+String(c==null?"":c).replace(/"/g,'""')+'"'; }).join(',');
-  }).join('\n');
-  download(new Blob([csv],{type:"text/csv"}), "findings-"+iso(TODAY)+".csv");
-}
-
-function download(blob, name){
-  var url = URL.createObjectURL(blob);
-  var a = document.createElement("a");
-  a.href = url; a.download = name;
-  document.body.appendChild(a); a.click(); a.remove();
-  setTimeout(function(){ URL.revokeObjectURL(url); }, 1000);
-}
-
-function openSettings(){
-  var dlg = $("#dlg");
-  dlg.innerHTML = '<h2>Settings</h2>'+
-    '<div class="f">'+
-      '<label class="w">Organisation<input id="set-org" value="'+esc(S.meta.orgName||"")+'"></label>'+
-      '<label class="w">Current user<input id="set-user" value="'+esc(S.meta.currentUser||"")+'"></label>'+
-    '</div>'+
-    '<div class="acts"><button class="btn sec" id="x">Cancel</button><button class="btn" id="ok">Save</button></div>';
-  $("#x", dlg).onclick = function(){ dlg.close(); };
-  $("#ok", dlg).onclick = function(){
-    S.meta.orgName = $("#set-org", dlg).value.trim();
-    S.meta.currentUser = $("#set-user", dlg).value.trim();
-    save(); dlg.close(); render(); toast("Settings saved");
-  };
-  dlg.showModal();
-}
-
-function resetAll(){
-  if(!confirm("Replace all data with the sample set?\n\nExport CSV first if you need your data.")) return;
-  S = seed();
-  save(); render(); toast("Sample data restored");
-}
-
-function render(){
-  var hash = (location.hash || "").replace("#","") || "dashboard";
-  view = VIEWS[hash] ? hash : "dashboard";
-
-  var nav = $("#nav");
-  var open = S.fnd.filter(function(f){ return f.status !== "Closed"; }).length;
-  var counts = {findings: open, engagements: S.eng.length, entities: S.ent.length};
-  nav.innerHTML = Object.keys(VIEWS).map(function(k){
-    var n = counts[k];
-    return '<a href="#'+k+'" class="'+(k===view?'on':'')+'">'+VIEWS[k][0]+
-      (n!=null?'<small>'+n+'</small>':'')+'</a>';
-  }).join('');
-
-  $("#main").innerHTML = VIEWS[view][1]();
-
-  var q = $("#q");
-  if(q){
-    q.addEventListener("input", function(){
-      filt.q = this.value;
-      var start = this.selectionStart;
-      render();
-      var nq = $("#q");
-      if(nq){ nq.focus(); nq.setSelectionRange(start, start); }
-    });
-  }
-  bindFilter("#f-year", "year");
-  bindFilter("#f-ent", "entity");
-  bindFilter("#f-sev", "sev");
-  bindFilter("#f-st", "status");
-}
-
-function bindFilter(sel, key){
-  var el = $(sel);
-  if(!el) return;
-  el.addEventListener("change", function(){
-    filt[key] = this.value;
-    render();
-  });
-}
-
-document.addEventListener("click", function(ev){
-  var t = ev.target.closest("[data-ed],[data-new],[data-act]");
-  if(!t) return;
-  var a = t.dataset;
-  if(a.ed){
-    var parts = a.ed.split(":");
-    openForm(parts[0], parts[1]);
-  } else if(a.new){
-    openForm(a.new, null);
-  } else if(a.act){
-    if(a.act === "csv") exportCSV();
-    else if(a.act === "print-ent") doPrint("ent");
-    else if(a.act === "print-year") doPrint("year");
-  }
+// scroll state for nav
+const nav = document.getElementById('nav');
+window.addEventListener('scroll', () => {
+  nav.classList.toggle('scrolled', window.scrollY > 40);
 });
 
-document.addEventListener("keydown", function(ev){
-  if(ev.key === "Enter" && ev.target && ev.target.matches && ev.target.matches("tr.click")){
-    ev.target.click();
-  }
+// intersection observer for reveals
+const io = new IntersectionObserver((entries) => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      e.target.classList.add('in');
+      io.unobserve(e.target);
+    }
+  });
+}, { threshold: 0.15, rootMargin: '0px 0px -60px 0px' });
+
+document.querySelectorAll('.reveal').forEach(el => io.observe(el));
+
+// stagger project reveals
+document.querySelectorAll('.project').forEach((el, i) => {
+  el.style.transitionDelay = (i * 0.12) + 's';
 });
-
-$("#import-btn").onclick = openImport;
-$("#settings").onclick = openSettings;
-$("#reset").onclick = resetAll;
-
-window.addEventListener("hashchange", render);
-
-try {
-  render();
-} catch(err) {
-  console.error("Render error:", err);
-  document.getElementById("main").innerHTML =
-    '<div style="padding:40px;font-family:system-ui"><h2 style="color:#b3261e">Something failed to render</h2><p>'+String(err.message)+'</p><p style="color:#666">Open DevTools (F12) → Console and share the red error.</p><button onclick="localStorage.removeItem(\'auditline-v1\');location.reload()" style="padding:10px 16px;margin-top:12px;border:1px solid #ccc;border-radius:6px;background:#fff;cursor:pointer">Reset stored data and reload</button></div>';
-}
-
-})();
 </script>
+
 </body>
 </html>
