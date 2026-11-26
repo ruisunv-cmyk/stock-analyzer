@@ -4,99 +4,100 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<title>NEPTUNE — Personal Calendar</title>
-
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-
+<title>NEPTUNE — Your Personal Universe</title>
 <style>
 :root {
-  --bg: #050b19;
-  --panel: rgba(15, 28, 55, 0.58);
-  --panel-light: rgba(32, 54, 91, 0.42);
-  --border: rgba(155, 195, 255, 0.13);
-  --text: #eef5ff;
-  --muted: #8194b7;
-  --blue: #79baff;
-  --cyan: #80f0ed;
-  --purple: #a8a0ff;
+  --blue: #83caff;
+  --cyan: #6ce8ff;
+  --text: #edf6ff;
+  --muted: #9aafc9;
+  --glass: rgba(16, 34, 65, .48);
+  --border: rgba(160, 207, 255, .18);
 }
 
-* {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-}
+* { box-sizing: border-box; }
 
 body {
+  margin: 0;
   min-height: 100vh;
-  background:
-    radial-gradient(ellipse at 80% 10%, #172c54 0%, transparent 40%),
-    radial-gradient(ellipse at 10% 90%, #101e43 0%, transparent 45%),
-    var(--bg);
+  font-family: Inter, "Segoe UI", sans-serif;
   color: var(--text);
-  font-family: 'DM Sans', sans-serif;
+  background:
+    radial-gradient(ellipse at 15% 15%, #173d70 0%, transparent 45%),
+    radial-gradient(ellipse at 85% 75%, #152b60 0%, transparent 45%),
+    linear-gradient(135deg, #030817, #07152e 55%, #050b1b);
   overflow-x: hidden;
 }
 
-button, input {
-  font: inherit;
-}
-
-button {
-  cursor: pointer;
-}
-
-.background-stars {
+#universe {
   position: fixed;
   inset: 0;
+  width: 100%;
+  height: 100%;
   pointer-events: none;
-  z-index: -1;
-  opacity: .7;
-  background-image:
-    radial-gradient(1px 1px at 10% 20%, white 50%, transparent),
-    radial-gradient(1px 1px at 40% 70%, #8bcaff 50%, transparent),
-    radial-gradient(2px 2px at 70% 30%, white 50%, transparent),
-    radial-gradient(1px 1px at 90% 80%, #8bcaff 50%, transparent),
-    radial-gradient(1px 1px at 25% 90%, white 50%, transparent),
-    radial-gradient(1px 1px at 60% 50%, #8bcaff 50%, transparent);
-  background-size: 330px 330px;
-  animation: starsDrift 90s linear infinite;
+  z-index: 0;
 }
 
-@keyframes starsDrift {
-  from { transform: translateY(0); }
-  to { transform: translateY(-330px); }
+#cursor-glow {
+  position: fixed;
+  width: 360px;
+  height: 360px;
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 0;
+  background: radial-gradient(circle, rgba(76, 169, 255, .12), transparent 68%);
+  transform: translate(-50%, -50%);
+  left: 50%;
+  top: 50%;
+  transition: opacity .3s;
+}
+
+.aurora {
+  position: fixed;
+  inset: -30%;
+  z-index: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(ellipse at 25% 40%, rgba(37, 120, 255, .13), transparent 38%),
+    radial-gradient(ellipse at 75% 55%, rgba(0, 225, 255, .10), transparent 40%),
+    radial-gradient(ellipse at 50% 80%, rgba(126, 72, 255, .10), transparent 35%);
+  filter: blur(55px);
+  animation: aurora 18s ease-in-out infinite alternate;
+}
+
+@keyframes aurora {
+  from { transform: translate(-3%, -2%) rotate(0deg) scale(1); }
+  to { transform: translate(3%, 3%) rotate(8deg) scale(1.12); }
 }
 
 .planet {
   position: fixed;
-  width: 440px;
-  height: 440px;
-  right: -100px;
-  top: 80px;
+  width: 310px;
+  height: 310px;
   border-radius: 50%;
-  z-index: -1;
-  opacity: .55;
+  right: -115px;
+  top: 100px;
+  z-index: 0;
+  pointer-events: none;
   background:
-    radial-gradient(ellipse at 35% 30%, rgba(151, 219, 255, .95), transparent 12%),
-    radial-gradient(ellipse at 40% 40%, #438bc7 0%, #164b91 35%, #0c2456 65%, #050b19 100%);
+    radial-gradient(ellipse at 35% 30%, rgba(190, 239, 255, .9), transparent 8%),
+    radial-gradient(ellipse at 38% 35%, #4e9cd9, #174b91 42%, #071b4a 72%);
   box-shadow:
-    inset -45px -35px 90px rgba(0, 0, 0, .7),
-    0 0 100px rgba(57, 137, 255, .18);
-  filter: blur(.2px);
+    inset -35px -20px 65px rgba(0,0,30,.75),
+    inset 15px 10px 30px rgba(150,220,255,.35),
+    0 0 65px rgba(54, 153, 255, .24);
+  opacity: .34;
   animation: planetFloat 12s ease-in-out infinite;
 }
 
 .planet::before {
   content: "";
   position: absolute;
-  inset: 20% -20%;
-  border: 2px solid rgba(132, 217, 255, .25);
+  inset: 25% -20%;
+  border: 2px solid rgba(130, 205, 255, .28);
   border-radius: 50%;
-  transform: rotate(-20deg) scaleY(.28);
-  box-shadow: 0 0 20px rgba(115, 200, 255, .15);
+  transform: rotate(-22deg) scaleY(.28);
+  box-shadow: 0 0 18px rgba(100, 190, 255, .18);
 }
 
 .planet::after {
@@ -104,204 +105,157 @@ button {
   position: absolute;
   inset: 0;
   border-radius: 50%;
-  background:
-    repeating-linear-gradient(
-      170deg,
-      transparent 0 20px,
-      rgba(145, 220, 255, .08) 22px 25px,
-      transparent 27px 40px
-    );
-  mix-blend-mode: screen;
+  background: repeating-linear-gradient(
+    170deg,
+    transparent 0 19px,
+    rgba(130, 215, 255, .12) 20px 22px,
+    transparent 23px 35px
+  );
+  opacity: .45;
 }
 
 @keyframes planetFloat {
-  0%, 100% { transform: translateY(0) rotate(0deg); }
-  50% { transform: translateY(-20px) rotate(3deg); }
+  0%, 100% { transform: translateY(0) rotate(-5deg); }
+  50% { transform: translateY(22px) rotate(4deg); }
 }
 
 .app {
-  max-width: 1450px;
-  margin: auto;
-  padding: 35px 5%;
+  position: relative;
+  z-index: 1;
+  width: min(1180px, 92%);
+  margin: 0 auto;
+  padding: 55px 0 65px;
 }
 
-.topbar {
+header {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: 55px;
+  margin-bottom: 42px;
+  gap: 20px;
 }
 
 .brand {
-  display: flex;
-  align-items: center;
-  gap: 13px;
+  font-size: 13px;
+  letter-spacing: 5px;
+  color: var(--blue);
+  font-weight: 700;
 }
 
-.brand-symbol {
-  width: 37px;
-  height: 37px;
-  border-radius: 50%;
-  background: linear-gradient(135deg, #8de6ff, #4a8cff 55%, #8c7cff);
-  box-shadow: 0 0 25px rgba(88, 165, 255, .4);
-  position: relative;
+.brand span {
+  color: white;
+  opacity: .8;
 }
 
-.brand-symbol::after {
-  content: "";
-  position: absolute;
-  inset: 8px;
-  border: 1px solid rgba(255,255,255,.65);
-  border-radius: 50%;
-}
-
-.brand-name {
-  font-family: 'Manrope', sans-serif;
-  font-size: 15px;
-  font-weight: 800;
-  letter-spacing: 4px;
-}
-
-.brand-sub {
-  color: var(--muted);
-  font-size: 10px;
+.header-note {
+  font-size: 11px;
   letter-spacing: 2px;
-  margin-top: 3px;
-}
-
-.top-right {
-  display: flex;
-  align-items: center;
-  gap: 15px;
   color: var(--muted);
-  font-size: 12px;
-}
-
-.status-dot {
-  display: inline-block;
-  width: 6px;
-  height: 6px;
-  background: var(--cyan);
-  border-radius: 50%;
-  margin-right: 7px;
-  box-shadow: 0 0 10px var(--cyan);
 }
 
 .hero {
-  display: flex;
-  align-items: end;
-  justify-content: space-between;
-  gap: 30px;
-  margin-bottom: 35px;
+  margin-bottom: 34px;
+  animation: fadeUp .8s ease both;
 }
 
 .eyebrow {
-  font-size: 10px;
-  text-transform: uppercase;
-  letter-spacing: 3px;
   color: var(--cyan);
-  margin-bottom: 18px;
+  letter-spacing: 4px;
+  font-size: 10px;
+  font-weight: 700;
+  margin-bottom: 13px;
 }
 
-.hero h1 {
-  font-family: 'Manrope', sans-serif;
-  font-size: clamp(38px, 5vw, 66px);
-  font-weight: 600;
+h1 {
+  font-size: clamp(42px, 7vw, 76px);
+  line-height: .98;
   letter-spacing: -3px;
-  line-height: 1.1;
+  margin: 0;
+  font-weight: 300;
+  text-shadow: 0 0 35px rgba(103, 186, 255, .22);
 }
 
-.hero h1 span {
-  color: #8bbdff;
-  background: linear-gradient(90deg, #9de9ff, #8baaff, #b7a5ff);
-  -webkit-background-clip: text;
-  background-clip: text;
-  -webkit-text-fill-color: transparent;
+h1 strong {
+  font-weight: 700;
+  color: #9ed8ff;
 }
 
-.hero-description {
+.subtitle {
   color: var(--muted);
-  font-size: 14px;
-  margin-top: 15px;
-  line-height: 1.8;
-}
-
-.hero-date {
-  text-align: right;
-  padding-bottom: 8px;
-}
-
-.hero-date .day-number {
-  font-family: 'Manrope', sans-serif;
-  font-size: 48px;
-  font-weight: 600;
-  letter-spacing: -2px;
-}
-
-.hero-date .day-label {
-  color: var(--muted);
-  font-size: 11px;
+  font-size: 13px;
   letter-spacing: 2px;
-  text-transform: uppercase;
-}
-
-.layout {
-  display: grid;
-  grid-template-columns: minmax(0, 1.65fr) minmax(280px, .85fr);
-  gap: 22px;
+  margin-top: 17px;
 }
 
 .glass {
-  background: var(--panel);
+  background: linear-gradient(135deg, rgba(29, 57, 94, .55), rgba(8, 22, 48, .52));
   border: 1px solid var(--border);
-  border-radius: 24px;
-  backdrop-filter: blur(25px);
-  -webkit-backdrop-filter: blur(25px);
-  box-shadow: 0 25px 80px rgba(0, 0, 0, .15);
+  backdrop-filter: blur(22px);
+  -webkit-backdrop-filter: blur(22px);
+  box-shadow: 0 20px 60px rgba(0,0,0,.22), inset 0 1px rgba(255,255,255,.06);
+  border-radius: 22px;
+  transition: border-color .3s, box-shadow .3s, transform .3s;
+}
+
+.glass:hover {
+  border-color: rgba(127, 205, 255, .34);
+  box-shadow: 0 22px 65px rgba(0,0,0,.3), 0 0 30px rgba(58, 151, 255, .07);
+}
+
+.dashboard {
+  display: grid;
+  grid-template-columns: minmax(0, 1.55fr) minmax(280px, .8fr);
+  gap: 20px;
+  animation: fadeUp 1s ease .12s both;
 }
 
 .calendar-panel {
-  padding: 30px;
+  padding: 27px;
 }
 
 .calendar-top {
   display: flex;
-  justify-content: space-between;
   align-items: center;
-  margin-bottom: 28px;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 27px;
 }
 
-.month-title {
-  font-family: 'Manrope', sans-serif;
-  font-size: 24px;
-  font-weight: 600;
-  letter-spacing: -.8px;
+.month-label {
+  font-size: 23px;
+  font-weight: 500;
+  letter-spacing: -.5px;
 }
 
-.month-controls {
+.month-label span {
+  color: #8dcfff;
+}
+
+.nav-buttons {
   display: flex;
   gap: 8px;
 }
 
-.icon-button {
-  width: 38px;
-  height: 38px;
+.nav-btn, .today-btn {
   border: 1px solid var(--border);
-  background: rgba(255,255,255,.04);
   color: var(--text);
-  border-radius: 12px;
-  transition: .2s;
+  background: rgba(120, 180, 255, .08);
+  border-radius: 10px;
+  padding: 9px 13px;
+  cursor: pointer;
+  transition: .25s;
 }
 
-.icon-button:hover {
-  background: rgba(125, 183, 255, .15);
-  border-color: rgba(125, 183, 255, .4);
+.nav-btn:hover, .today-btn:hover {
+  background: rgba(103, 190, 255, .2);
+  border-color: rgba(125, 208, 255, .55);
+  box-shadow: 0 0 16px rgba(80, 170, 255, .15);
 }
 
-.weekdays,
-.calendar-grid {
+.weekdays, .days-grid {
   display: grid;
   grid-template-columns: repeat(7, 1fr);
+  gap: 7px;
 }
 
 .weekdays {
@@ -309,830 +263,665 @@ button {
 }
 
 .weekdays div {
-  text-align: center;
-  color: #7187ad;
+  color: #7895b7;
   font-size: 10px;
-  text-transform: uppercase;
   letter-spacing: 1px;
-  padding: 12px 0;
+  text-align: center;
+  padding: 8px 0;
 }
 
-.calendar-grid {
-  gap: 7px;
-}
-
-.calendar-day {
-  min-height: 82px;
+.day {
+  min-height: 66px;
   position: relative;
   border: 1px solid transparent;
-  border-radius: 15px;
-  background: rgba(255,255,255,.025);
-  color: var(--text);
-  padding: 12px 10px;
-  text-align: left;
-  transition: .2s;
+  background: rgba(125, 170, 230, .045);
+  border-radius: 12px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  padding: 11px 4px 7px;
+  cursor: pointer;
+  transition: .22s ease;
+  overflow: hidden;
 }
 
-.calendar-day:hover {
-  background: rgba(110, 170, 255, .1);
-  border-color: rgba(110, 170, 255, .25);
-  transform: translateY(-2px);
+.day::after {
+  content: "";
+  position: absolute;
+  top: -50%;
+  left: -80%;
+  width: 50%;
+  height: 200%;
+  transform: rotate(25deg);
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,.12), transparent);
+  transition: left .5s;
 }
 
-.calendar-day.other-month {
-  opacity: .25;
+.day:hover::after { left: 130%; }
+
+.day:hover {
+  background: rgba(83, 160, 255, .14);
+  border-color: rgba(133, 205, 255, .35);
+  transform: translateY(-3px);
+  box-shadow: 0 7px 22px rgba(0,0,0,.15), 0 0 15px rgba(74, 166, 255, .12);
 }
 
-.calendar-day.today {
-  border-color: rgba(128, 240, 237, .6);
-  background: rgba(128, 240, 237, .07);
+.day.empty {
+  background: transparent;
+  cursor: default;
+  pointer-events: none;
 }
 
-.calendar-day.selected {
-  background: linear-gradient(145deg, rgba(98, 164, 255, .25), rgba(125, 115, 255, .13));
-  border-color: rgba(142, 194, 255, .65);
-  box-shadow: inset 0 0 20px rgba(88, 160, 255, .06);
-}
-
-.date-number {
+.day-number {
   font-size: 13px;
-  font-weight: 600;
+  color: #dcecff;
 }
 
-.today .date-number {
-  color: var(--cyan);
+.day.today {
+  border-color: rgba(99, 205, 255, .7);
+  background: rgba(57, 150, 255, .17);
+  box-shadow: inset 0 0 18px rgba(65, 170, 255, .08);
+}
+
+.day.today .day-number {
+  color: #a7e5ff;
+  font-weight: 700;
+}
+
+.day.selected {
+  background: linear-gradient(145deg, rgba(72, 166, 255, .35), rgba(60, 100, 210, .2));
+  border-color: #83caff;
+  box-shadow: 0 0 20px rgba(72, 166, 255, .22);
 }
 
 .event-dots {
   display: flex;
-  gap: 4px;
-  margin-top: 12px;
-  flex-wrap: wrap;
+  gap: 3px;
+  margin-top: 9px;
 }
 
 .event-dot {
   width: 5px;
   height: 5px;
   border-radius: 50%;
-  background: var(--blue);
-  box-shadow: 0 0 8px rgba(121, 186, 255, .5);
+  box-shadow: 0 0 7px currentColor;
 }
 
-.event-dot.purple {
-  background: var(--purple);
+.calendar-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 21px;
+  color: #819bb9;
+  font-size: 11px;
 }
 
-.event-dot.cyan {
-  background: var(--cyan);
-}
+.today-btn { font-size: 11px; padding: 7px 12px; }
 
 .sidebar {
   display: flex;
   flex-direction: column;
-  gap: 22px;
+  gap: 18px;
 }
 
-.selected-panel {
-  padding: 28px;
-  flex: 1;
-}
+.side-panel { padding: 23px; }
 
-.panel-heading {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 22px;
-}
-
-.panel-heading h2 {
-  font-family: 'Manrope', sans-serif;
-  font-size: 17px;
-  font-weight: 600;
+.section-kicker {
+  font-size: 10px;
+  letter-spacing: 2px;
+  color: #80caff;
+  margin-bottom: 13px;
+  font-weight: 700;
 }
 
 .selected-date {
-  font-size: 12px;
+  font-size: 25px;
+  font-weight: 400;
+  margin-bottom: 5px;
+}
+
+.selected-subtitle {
   color: var(--muted);
+  font-size: 11px;
+  margin-bottom: 20px;
 }
 
 .event-list {
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 9px;
+  max-height: 230px;
+  overflow-y: auto;
 }
 
-.event-card {
+.event-item {
   display: flex;
-  gap: 13px;
-  padding: 15px;
-  background: rgba(255,255,255,.035);
-  border: 1px solid rgba(255,255,255,.06);
-  border-radius: 15px;
-  animation: fadeIn .3s ease;
-}
-
-@keyframes fadeIn {
-  from { opacity: 0; transform: translateY(6px); }
-  to { opacity: 1; transform: translateY(0); }
+  align-items: center;
+  gap: 10px;
+  background: rgba(130, 180, 255, .07);
+  border: 1px solid rgba(150, 200, 255, .08);
+  border-radius: 11px;
+  padding: 11px;
+  animation: fadeUp .3s ease both;
 }
 
 .event-color {
-  width: 3px;
+  width: 4px;
+  height: 32px;
   border-radius: 5px;
-  background: var(--blue);
   flex-shrink: 0;
 }
 
-.event-color.purple {
-  background: var(--purple);
-}
-
-.event-color.cyan {
-  background: var(--cyan);
-}
-
-.event-info {
-  flex: 1;
-  min-width: 0;
-}
-
-.event-time {
-  font-size: 10px;
-  color: var(--muted);
-  margin-bottom: 5px;
-}
+.event-info { flex: 1; min-width: 0; }
 
 .event-title {
-  font-size: 13px;
-  font-weight: 600;
-  word-break: break-word;
+  font-size: 12px;
+  overflow-wrap: anywhere;
+}
+
+.event-category {
+  font-size: 10px;
+  color: #8ca6c5;
+  margin-top: 4px;
 }
 
 .delete-event {
-  border: none;
+  border: 0;
   background: transparent;
-  color: #7384a2;
+  color: #7892b0;
+  cursor: pointer;
   font-size: 17px;
-  align-self: start;
-  padding: 0 3px;
+  padding: 3px 6px;
 }
 
-.delete-event:hover {
-  color: #ff8fba;
-}
+.delete-event:hover { color: #ff8fa4; }
 
 .empty-state {
-  text-align: center;
-  padding: 35px 10px;
-  color: var(--muted);
-}
-
-.empty-icon {
-  font-size: 28px;
-  margin-bottom: 12px;
-  opacity: .6;
-}
-
-.empty-state p {
+  color: #7892b0;
   font-size: 12px;
-  line-height: 1.8;
+  padding: 16px 4px;
+  line-height: 1.6;
 }
 
-.add-panel {
-  padding: 25px;
-}
-
-.add-panel h2 {
-  font-family: 'Manrope', sans-serif;
-  font-size: 17px;
-  font-weight: 600;
-  margin-bottom: 20px;
-}
-
-.form-label {
-  display: block;
-  font-size: 10px;
-  color: var(--muted);
-  text-transform: uppercase;
-  letter-spacing: 1.5px;
-  margin-bottom: 8px;
-}
-
-.form-group {
-  margin-bottom: 15px;
-}
-
-.form-input {
-  width: 100%;
-  padding: 13px 14px;
-  background: rgba(2, 8, 22, .45);
-  border: 1px solid var(--border);
-  border-radius: 12px;
-  color: var(--text);
-  outline: none;
-  font-size: 12px;
-  transition: .2s;
-}
-
-.form-input:focus {
-  border-color: rgba(121, 186, 255, .6);
-  box-shadow: 0 0 0 3px rgba(121, 186, 255, .06);
-}
-
-.form-input::-webkit-calendar-picker-indicator {
-  filter: invert(1);
-  opacity: .5;
-}
-
-.form-row {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 10px;
-}
-
-.add-button {
-  width: 100%;
-  border: none;
-  border-radius: 13px;
-  padding: 14px;
-  background: linear-gradient(110deg, #9de9ff, #8baaff 60%, #a8a0ff);
-  color: #091326;
-  font-size: 12px;
-  font-weight: 700;
-  transition: .2s;
-}
-
-.add-button:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 10px 25px rgba(105, 160, 255, .2);
-}
-
-.bottom-note {
+.add-form {
   display: flex;
-  justify-content: space-between;
-  align-items: center;
-  color: #637698;
-  font-size: 10px;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 18px;
+}
+
+input, select {
+  width: 100%;
+  background: rgba(3, 14, 34, .5);
+  border: 1px solid rgba(150, 200, 255, .16);
+  color: white;
+  padding: 12px;
+  border-radius: 10px;
+  outline: none;
+  font: inherit;
+  font-size: 12px;
+}
+
+input:focus, select:focus {
+  border-color: rgba(110, 200, 255, .65);
+  box-shadow: 0 0 15px rgba(90, 180, 255, .1);
+}
+
+input::placeholder { color: #7189a7; }
+select option { background: #102443; color: white; }
+
+.add-btn {
+  border: 0;
+  border-radius: 10px;
+  padding: 12px;
+  color: #06172b;
+  background: linear-gradient(110deg, #8edaff, #6caeff);
+  font-weight: 700;
+  font-size: 11px;
   letter-spacing: 1px;
-  padding: 25px 5px;
+  cursor: pointer;
+  transition: .25s;
 }
 
-.bottom-note span {
-  color: #8baaff;
+.add-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 7px 22px rgba(85, 174, 255, .28);
 }
 
-@media (max-width: 1050px) {
-  .layout {
-    grid-template-columns: 1fr;
-  }
-
-  .sidebar {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-  }
-
-  .planet {
-    width: 350px;
-    height: 350px;
-    right: -130px;
-  }
+.quote-panel {
+  padding: 20px 23px;
+  color: #b5cce7;
+  font-size: 12px;
+  line-height: 1.7;
+  font-style: italic;
 }
 
-@media (max-width: 650px) {
-  .app {
-    padding: 25px 4%;
-  }
+.quote-panel span {
+  display: block;
+  color: #6faee2;
+  font-size: 9px;
+  letter-spacing: 2px;
+  font-style: normal;
+  margin-top: 10px;
+}
 
-  .topbar {
-    margin-bottom: 40px;
-  }
+footer {
+  text-align: center;
+  margin-top: 35px;
+  color: #536d8e;
+  font-size: 9px;
+  letter-spacing: 3px;
+}
 
-  .top-right {
-    font-size: 10px;
-  }
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(14px); }
+  to { opacity: 1; transform: translateY(0); }
+}
 
-  .hero {
-    align-items: start;
-    flex-direction: column;
-    gap: 20px;
-    margin-bottom: 25px;
-  }
+@media (max-width: 760px) {
+  .app { padding-top: 30px; }
+  .dashboard { grid-template-columns: 1fr; }
+  .calendar-panel { padding: 17px; }
+  .day { min-height: 54px; padding-top: 9px; }
+  .day-number { font-size: 12px; }
+  .planet { width: 210px; height: 210px; right: -110px; top: 80px; }
+  .header-note { display: none; }
+  h1 { letter-spacing: -2px; }
+}
 
-  .hero h1 {
-    font-size: 43px;
-  }
-
-  .hero-date {
-    text-align: left;
-    display: flex;
-    align-items: baseline;
-    gap: 10px;
-  }
-
-  .hero-date .day-number {
-    font-size: 30px;
-  }
-
-  .calendar-panel {
-    padding: 18px;
-  }
-
-  .month-title {
-    font-size: 20px;
-  }
-
-  .calendar-grid {
-    gap: 4px;
-  }
-
-  .calendar-day {
-    min-height: 55px;
-    padding: 8px 5px;
-    border-radius: 10px;
-  }
-
-  .event-dots {
-    margin-top: 7px;
-  }
-
-  .weekdays div {
-    font-size: 9px;
-  }
-
-  .sidebar {
-    grid-template-columns: 1fr;
-  }
-
-  .planet {
-    width: 270px;
-    height: 270px;
-    right: -140px;
-    top: 170px;
-    opacity: .35;
-  }
-
-  .bottom-note {
-    font-size: 8px;
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: .01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: .01ms !important;
+    scroll-behavior: auto !important;
   }
 }
 </style>
 </head>
-
 <body>
 
-<div class="background-stars"></div>
+<canvas id="universe"></canvas>
+<div id="cursor-glow"></div>
+<div class="aurora"></div>
 <div class="planet"></div>
 
 <div class="app">
-
-  <header class="topbar">
-    <div class="brand">
-      <div class="brand-symbol"></div>
-      <div>
-        <div class="brand-name">NEPTUNE</div>
-        <div class="brand-sub">YOUR PERSONAL UNIVERSE</div>
-      </div>
-    </div>
-
-    <div class="top-right">
-      <span><span class="status-dot"></span>YOUR SPACE</span>
-    </div>
+  <header>
+    <div class="brand">✦ <span>NEPTUNE</span></div>
+    <div class="header-note">A QUIET PLACE IN THE UNIVERSE</div>
   </header>
 
   <section class="hero">
-    <div>
-      <div class="eyebrow">A little universe of your own</div>
-      <h1>Make space<br>for <span>your life.</span></h1>
-      <p class="hero-description">
-        Your days, your dreams, your own rhythm.<br>
-        Everything important, beautifully in orbit.
-      </p>
-    </div>
-
-    <div class="hero-date">
-      <div class="day-number" id="today-number">--</div>
-      <div class="day-label" id="today-label">TODAY</div>
-    </div>
+    <div class="eyebrow">YOUR SPACE · YOUR TIME</div>
+    <h1>YOUR PERSONAL<br><strong>UNIVERSE.</strong></h1>
+    <div class="subtitle">A little space to organise your life.</div>
   </section>
 
-  <div class="layout">
-
+  <main class="dashboard">
     <section class="glass calendar-panel">
-
       <div class="calendar-top">
-        <div class="month-title" id="month-title">Month 2026</div>
-
-        <div class="month-controls">
-          <button class="icon-button" id="prev-month" aria-label="Previous month">‹</button>
-          <button class="icon-button" id="today-button" aria-label="Go to today">⌂</button>
-          <button class="icon-button" id="next-month" aria-label="Next month">›</button>
+        <div class="month-label" id="month-label"></div>
+        <div class="nav-buttons">
+          <button class="nav-btn" id="prev-month" aria-label="Previous month">←</button>
+          <button class="nav-btn" id="next-month" aria-label="Next month">→</button>
         </div>
       </div>
 
       <div class="weekdays">
-        <div>Mon</div>
-        <div>Tue</div>
-        <div>Wed</div>
-        <div>Thu</div>
-        <div>Fri</div>
-        <div>Sat</div>
-        <div>Sun</div>
+        <div>MON</div><div>TUE</div><div>WED</div>
+        <div>THU</div><div>FRI</div><div>SAT</div><div>SUN</div>
       </div>
 
-      <div class="calendar-grid" id="calendar-grid"></div>
+      <div class="days-grid" id="days-grid"></div>
 
+      <div class="calendar-footer">
+        <span>✦ SELECT A DATE TO EXPLORE</span>
+        <button class="today-btn" id="today-btn">Today ↗</button>
+      </div>
     </section>
 
     <aside class="sidebar">
-
-      <section class="glass selected-panel">
-
-        <div class="panel-heading">
-          <h2>Your plans</h2>
-          <span class="selected-date" id="selected-date-label"></span>
-        </div>
-
+      <section class="glass side-panel">
+        <div class="section-kicker">✦ YOUR SCHEDULE</div>
+        <div class="selected-date" id="selected-date"></div>
+        <div class="selected-subtitle" id="selected-subtitle"></div>
         <div class="event-list" id="event-list"></div>
 
-      </section>
-
-      <section class="glass add-panel">
-
-        <h2>Add to your universe</h2>
-
-        <form id="event-form">
-
-          <div class="form-group">
-            <label class="form-label" for="event-title">Event name</label>
-            <input
-              class="form-input"
-              id="event-title"
-              type="text"
-              placeholder="A moment for yourself..."
-              maxlength="80"
-              required
-            >
-          </div>
-
-          <div class="form-row">
-
-            <div class="form-group">
-              <label class="form-label" for="event-date">Date</label>
-              <input
-                class="form-input"
-                id="event-date"
-                type="date"
-                required
-              >
-            </div>
-
-            <div class="form-group">
-              <label class="form-label" for="event-time">Time</label>
-              <input
-                class="form-input"
-                id="event-time"
-                type="time"
-                value="09:00"
-                required
-              >
-            </div>
-
-          </div>
-
-          <div class="form-group">
-            <label class="form-label" for="event-color">Atmosphere</label>
-            <select class="form-input" id="event-color">
-              <option value="blue">Ocean blue</option>
-              <option value="purple">Cosmic violet</option>
-              <option value="cyan">Aurora aqua</option>
-            </select>
-          </div>
-
-          <button class="add-button" type="submit">
-            + Create event
-          </button>
-
+        <form class="add-form" id="event-form">
+          <input id="event-title" type="text" placeholder="What’s happening?" maxlength="70" required>
+          <select id="event-category">
+            <option value="Personal">Personal</option>
+            <option value="Work">Work</option>
+            <option value="Health">Health</option>
+            <option value="Travel">Travel</option>
+            <option value="Social">Social</option>
+            <option value="Other">Other</option>
+          </select>
+          <button class="add-btn" type="submit">+ ADD TO MY UNIVERSE</button>
         </form>
-
       </section>
 
+      <section class="glass quote-panel">
+        “Somewhere, something incredible is waiting to be known.”
+        <span>— CARL SAGAN</span>
+      </section>
     </aside>
+  </main>
 
-  </div>
-
-  <footer class="bottom-note">
-    <div>NEPTUNE © <span id="year"></span></div>
-    <div>DESIGNED FOR YOUR OWN ORBIT</div>
-  </footer>
-
+  <footer>MADE OF STARDUST · BUILT FOR YOUR JOURNEY</footer>
 </div>
 
 <script>
-const calendarGrid = document.getElementById("calendar-grid");
-const monthTitle = document.getElementById("month-title");
-const eventList = document.getElementById("event-list");
-
 const today = new Date();
-
 let currentYear = today.getFullYear();
 let currentMonth = today.getMonth();
+let selectedDate = new Date(today.getFullYear(), today.getMonth(), today.getDate());
 
-let selectedDate = formatDate(today);
+const STORAGE_KEY = "neptune-events";
 
-let events = JSON.parse(
-  localStorage.getItem("neptune-events") || "[]"
-);
-
-function formatDate(date) {
-  const year = date.getFullYear();
-  const month = String(date.getMonth() + 1).padStart(2, "0");
-  const day = String(date.getDate()).padStart(2, "0");
-
-  return `${year}-${month}-${day}`;
+let events = {};
+try {
+  events = JSON.parse(localStorage.getItem(STORAGE_KEY) || "{}");
+  if (!events || typeof events !== "object" || Array.isArray(events)) events = {};
+} catch {
+  events = {};
 }
 
-function getDateFromString(dateString) {
-  const [year, month, day] = dateString.split("-").map(Number);
-  return new Date(year, month - 1, day);
+const categoryColors = {
+  Personal: "#a78bfa",
+  Work: "#63baff",
+  Health: "#66e0c0",
+  Travel: "#ffbd75",
+  Social: "#ff91bd",
+  Other: "#b3c8e8"
+};
+
+const monthNames = [
+  "January", "February", "March", "April", "May", "June",
+  "July", "August", "September", "October", "November", "December"
+];
+
+const weekdayNames = [
+  "Sunday", "Monday", "Tuesday", "Wednesday",
+  "Thursday", "Friday", "Saturday"
+];
+
+function dateKey(date) {
+  const y = date.getFullYear();
+  const m = String(date.getMonth() + 1).padStart(2, "0");
+  const d = String(date.getDate()).padStart(2, "0");
+  return `${y}-${m}-${d}`;
 }
 
 function saveEvents() {
-  localStorage.setItem("neptune-events", JSON.stringify(events));
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(events));
 }
 
 function renderCalendar() {
-  calendarGrid.innerHTML = "";
+  const grid = document.getElementById("days-grid");
+  grid.innerHTML = "";
+
+  document.getElementById("month-label").innerHTML =
+    `${monthNames[currentMonth]} <span>${currentYear}</span>`;
 
   const firstDay = new Date(currentYear, currentMonth, 1);
-  const lastDay = new Date(currentYear, currentMonth + 1, 0);
+  const daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate();
+  const mondayOffset = (firstDay.getDay() + 6) % 7;
 
-  const monthName = firstDay.toLocaleDateString("en", {
-    month: "long"
-  });
+  for (let i = 0; i < mondayOffset; i++) {
+    const empty = document.createElement("div");
+    empty.className = "day empty";
+    grid.appendChild(empty);
+  }
 
-  monthTitle.textContent = `${monthName} ${currentYear}`;
+  for (let day = 1; day <= daysInMonth; day++) {
+    const date = new Date(currentYear, currentMonth, day);
+    const key = dateKey(date);
+    const cell = document.createElement("button");
+    cell.type = "button";
+    cell.className = "day";
+    cell.setAttribute("aria-label", date.toDateString());
 
-  // Monday-based calendar
-  let startDay = firstDay.getDay();
-  startDay = startDay === 0 ? 6 : startDay - 1;
+    if (dateKey(date) === dateKey(today)) cell.classList.add("today");
+    if (key === dateKey(selectedDate)) cell.classList.add("selected");
 
-  const totalDays = lastDay.getDate();
+    const number = document.createElement("span");
+    number.className = "day-number";
+    number.textContent = day;
+    cell.appendChild(number);
 
-  const previousMonthLastDay = new Date(
-    currentYear,
-    currentMonth,
-    0
-  ).getDate();
+    const dots = document.createElement("div");
+    dots.className = "event-dots";
 
-  const totalCells = Math.ceil((startDay + totalDays) / 7) * 7;
-
-  for (let i = 0; i < totalCells; i++) {
-    let dateNumber;
-    let dateObject;
-    let otherMonth = false;
-
-    if (i < startDay) {
-      dateNumber = previousMonthLastDay - startDay + i + 1;
-
-      dateObject = new Date(
-        currentYear,
-        currentMonth - 1,
-        dateNumber
-      );
-
-      otherMonth = true;
-
-    } else if (i >= startDay + totalDays) {
-      dateNumber = i - startDay - totalDays + 1;
-
-      dateObject = new Date(
-        currentYear,
-        currentMonth + 1,
-        dateNumber
-      );
-
-      otherMonth = true;
-
-    } else {
-      dateNumber = i - startDay + 1;
-
-      dateObject = new Date(
-        currentYear,
-        currentMonth,
-        dateNumber
-      );
-    }
-
-    const dateString = formatDate(dateObject);
-
-    const button = document.createElement("button");
-    button.className = "calendar-day";
-
-    if (otherMonth) {
-      button.classList.add("other-month");
-    }
-
-    if (dateString === formatDate(today)) {
-      button.classList.add("today");
-    }
-
-    if (dateString === selectedDate) {
-      button.classList.add("selected");
-    }
-
-    const number = document.createElement("div");
-    number.className = "date-number";
-    number.textContent = dateNumber;
-
-    button.appendChild(number);
-
-    const dayEvents = events.filter(
-      event => event.date === dateString
-    );
-
-    if (dayEvents.length > 0) {
-      const dots = document.createElement("div");
-      dots.className = "event-dots";
-
-      dayEvents.slice(0, 3).forEach(event => {
-        const dot = document.createElement("span");
-        dot.className = "event-dot " + event.color;
-        dots.appendChild(dot);
-      });
-
-      button.appendChild(dots);
-    }
-
-    button.addEventListener("click", () => {
-      selectedDate = dateString;
-
-      if (otherMonth) {
-        currentYear = dateObject.getFullYear();
-        currentMonth = dateObject.getMonth();
-      }
-
-      renderCalendar();
-      renderEvents();
+    (events[key] || []).slice(0, 4).forEach(event => {
+      const dot = document.createElement("span");
+      dot.className = "event-dot";
+      dot.style.background = categoryColors[event.category] || categoryColors.Other;
+      dots.appendChild(dot);
     });
 
-    calendarGrid.appendChild(button);
+    cell.appendChild(dots);
+    cell.addEventListener("click", () => {
+      selectedDate = date;
+      renderCalendar();
+      renderEvents();
+      cell.animate(
+        [{ transform: "scale(.94)" }, { transform: "scale(1)" }],
+        { duration: 220, easing: "ease-out" }
+      );
+    });
+
+    grid.appendChild(cell);
   }
 }
 
 function renderEvents() {
-  eventList.innerHTML = "";
+  const key = dateKey(selectedDate);
+  const dayEvents = events[key] || [];
 
-  const dateObject = getDateFromString(selectedDate);
+  document.getElementById("selected-date").textContent =
+    `${selectedDate.getDate()} ${monthNames[selectedDate.getMonth()]}`;
 
-  document.getElementById("selected-date-label").textContent =
-    dateObject.toLocaleDateString("en", {
-      month: "short",
-      day: "numeric"
-    });
+  document.getElementById("selected-subtitle").textContent =
+    `${weekdayNames[selectedDate.getDay()]} · ${selectedDate.getFullYear()}`;
 
-  const dayEvents = events
-    .filter(event => event.date === selectedDate)
-    .sort((a, b) => a.time.localeCompare(b.time));
+  const list = document.getElementById("event-list");
+  list.innerHTML = "";
 
   if (dayEvents.length === 0) {
     const empty = document.createElement("div");
     empty.className = "empty-state";
-
-    empty.innerHTML = `
-      <div class="empty-icon">✧</div>
-      <p>No plans in orbit yet.<br>Make this day your own.</p>
-    `;
-
-    eventList.appendChild(empty);
+    empty.textContent = "Nothing planned for this day yet. Make some space for something wonderful.";
+    list.appendChild(empty);
     return;
   }
 
-  dayEvents.forEach(event => {
-    const card = document.createElement("div");
-    card.className = "event-card";
+  dayEvents.forEach((event, index) => {
+    const item = document.createElement("div");
+    item.className = "event-item";
 
     const color = document.createElement("div");
-    color.className = "event-color " + event.color;
+    color.className = "event-color";
+    color.style.background = categoryColors[event.category] || categoryColors.Other;
 
     const info = document.createElement("div");
     info.className = "event-info";
-
-    const time = document.createElement("div");
-    time.className = "event-time";
-    time.textContent = event.time;
 
     const title = document.createElement("div");
     title.className = "event-title";
     title.textContent = event.title;
 
-    info.appendChild(time);
-    info.appendChild(title);
+    const category = document.createElement("div");
+    category.className = "event-category";
+    category.textContent = event.category;
 
-    const deleteButton = document.createElement("button");
-    deleteButton.className = "delete-event";
-    deleteButton.textContent = "×";
-    deleteButton.setAttribute("aria-label", "Delete event");
+    info.append(title, category);
 
-    deleteButton.addEventListener("click", () => {
-      events = events.filter(item => item.id !== event.id);
+    const remove = document.createElement("button");
+    remove.className = "delete-event";
+    remove.type = "button";
+    remove.textContent = "×";
+    remove.setAttribute("aria-label", "Delete event");
 
+    remove.addEventListener("click", () => {
+      events[key].splice(index, 1);
+      if (events[key].length === 0) delete events[key];
       saveEvents();
       renderCalendar();
       renderEvents();
     });
 
-    card.appendChild(color);
-    card.appendChild(info);
-    card.appendChild(deleteButton);
-
-    eventList.appendChild(card);
+    item.append(color, info, remove);
+    list.appendChild(item);
   });
 }
 
-document.getElementById("event-form").addEventListener("submit", event => {
-  event.preventDefault();
-
-  const title = document.getElementById("event-title").value.trim();
-  const date = document.getElementById("event-date").value;
-  const time = document.getElementById("event-time").value;
-  const color = document.getElementById("event-color").value;
-
-  if (!title || !date || !time) {
-    return;
-  }
-
-  const newEvent = {
-    id: Date.now(),
-    title,
-    date,
-    time,
-    color
-  };
-
-  events.push(newEvent);
-
-  saveEvents();
-
-  selectedDate = date;
-
-  const dateObject = getDateFromString(date);
-  currentYear = dateObject.getFullYear();
-  currentMonth = dateObject.getMonth();
-
-  document.getElementById("event-title").value = "";
-
-  renderCalendar();
-  renderEvents();
-});
-
 document.getElementById("prev-month").addEventListener("click", () => {
   currentMonth--;
-
   if (currentMonth < 0) {
     currentMonth = 11;
     currentYear--;
   }
-
   renderCalendar();
 });
 
 document.getElementById("next-month").addEventListener("click", () => {
   currentMonth++;
-
   if (currentMonth > 11) {
     currentMonth = 0;
     currentYear++;
   }
-
   renderCalendar();
 });
 
-document.getElementById("today-button").addEventListener("click", () => {
+document.getElementById("today-btn").addEventListener("click", () => {
   currentYear = today.getFullYear();
   currentMonth = today.getMonth();
-  selectedDate = formatDate(today);
-
+  selectedDate = new Date(today.getFullYear(), today.getMonth(), today.getDate());
   renderCalendar();
   renderEvents();
 });
 
-document.getElementById("today-number").textContent =
-  today.toLocaleDateString("en", { day: "2-digit" });
+document.getElementById("event-form").addEventListener("submit", event => {
+  event.preventDefault();
 
-document.getElementById("today-label").textContent =
-  today.toLocaleDateString("en", {
-    weekday: "long",
-    month: "long"
+  const titleInput = document.getElementById("event-title");
+  const title = titleInput.value.trim();
+  const category = document.getElementById("event-category").value;
+
+  if (!title) return;
+
+  const key = dateKey(selectedDate);
+  if (!events[key]) events[key] = [];
+
+  events[key].push({ title, category });
+  saveEvents();
+
+  titleInput.value = "";
+  renderCalendar();
+  renderEvents();
+});
+
+// Animated starfield
+const canvas = document.getElementById("universe");
+const ctx = canvas.getContext("2d");
+let stars = [];
+let shootingStars = [];
+let width = 0;
+let height = 0;
+
+function resizeUniverse() {
+  const ratio = Math.min(window.devicePixelRatio || 1, 2);
+  width = window.innerWidth;
+  height = window.innerHeight;
+
+  canvas.width = Math.floor(width * ratio);
+  canvas.height = Math.floor(height * ratio);
+  canvas.style.width = width + "px";
+  canvas.style.height = height + "px";
+  ctx.setTransform(ratio, 0, 0, ratio, 0, 0);
+
+  const count = Math.min(170, Math.floor(width * height / 8500));
+  stars = Array.from({ length: count }, () => ({
+    x: Math.random() * width,
+    y: Math.random() * height,
+    radius: Math.random() * 1.4 + .2,
+    alpha: Math.random() * .7 + .2,
+    speed: Math.random() * .012 + .003,
+    phase: Math.random() * Math.PI * 2
+  }));
+}
+
+function createShootingStar() {
+  shootingStars.push({
+    x: Math.random() * width * .8,
+    y: Math.random() * height * .45,
+    length: Math.random() * 100 + 55,
+    speed: Math.random() * 7 + 6,
+    life: 1
+  });
+}
+
+function animateUniverse() {
+  ctx.clearRect(0, 0, width, height);
+
+  const time = performance.now() * .001;
+
+  stars.forEach(star => {
+    const glow = .35 + .65 * Math.abs(Math.sin(time * star.speed * 10 + star.phase));
+    ctx.beginPath();
+    ctx.arc(star.x, star.y, star.radius, 0, Math.PI * 2);
+    ctx.fillStyle = `rgba(190,225,255,${star.alpha * glow})`;
+    ctx.fill();
   });
 
-document.getElementById("year").textContent =
-  today.getFullYear();
+  shootingStars = shootingStars.filter(star => star.life > 0);
 
-document.getElementById("event-date").value = selectedDate;
+  shootingStars.forEach(star => {
+    const gradient = ctx.createLinearGradient(
+      star.x, star.y,
+      star.x - star.length, star.y - star.length * .35
+    );
+    gradient.addColorStop(0, "rgba(180,235,255,0.9)");
+    gradient.addColorStop(1, "rgba(120,190,255,0)");
+
+    ctx.beginPath();
+    ctx.moveTo(star.x, star.y);
+    ctx.lineTo(star.x - star.length, star.y - star.length * .35);
+    ctx.strokeStyle = gradient;
+    ctx.lineWidth = 2;
+    ctx.stroke();
+
+    star.x += star.speed;
+    star.y += star.speed * .35;
+    star.life -= .018;
+  });
+
+  requestAnimationFrame(animateUniverse);
+}
+
+window.addEventListener("resize", resizeUniverse);
+resizeUniverse();
+animateUniverse();
+
+function scheduleShootingStar() {
+  if (!document.hidden && Math.random() > .25) createShootingStar();
+  setTimeout(scheduleShootingStar, Math.random() * 5000 + 2500);
+}
+scheduleShootingStar();
+
+// Cursor light effect
+const cursorGlow = document.getElementById("cursor-glow");
+
+window.addEventListener("pointermove", event => {
+  cursorGlow.style.left = event.clientX + "px";
+  cursorGlow.style.top = event.clientY + "px";
+});
 
 renderCalendar();
 renderEvents();
 </script>
-
 </body>
 </html>
